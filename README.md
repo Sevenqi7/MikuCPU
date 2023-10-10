@@ -5,7 +5,8 @@
 ###### 1. 2023.10——2024.1
 
 - 以cva6为参照，实现一个单发射、乱序执行（记分牌算法）、顺序提交的CPU核。
-- 完成与chiplab（LoongArch）或是NEMU（MIPS）的Difftest框架搭建，尝试在仿真环境下启动linux（MIPS的话还需要研究用NEMU起linux的方法）。
+- 通过LoongArch2023发布包中功能测试与性能测试。
+- 完成chiplab（LoongArch）搭建，尝试在仿真环境下启动linux。
 
 ###### 2. 2024.1——2024.4
 
@@ -32,30 +33,43 @@
   }
   ```
 
-- 信号名/变量名/函数以小驼峰命名法命名。位于模块内部不同流水级的相同信号则采用<流水级>+<下划线>+<信号名>的方式命名。
+- 信号名/变量名以下划线命名法命名。
+
+  - 位于模块内部不同流水级的相同信号则采用<流水级>+<下划线>+<信号名>的方式命名。
+
+  - 中间变量采用如下两种命名法：
+    - 端到端命名：像连线一样，A_to_B
+
+    - 功能性命名：常以动词开头的命名，如：save_next_pc，可在寄存器上使用。控制类信号统一在结尾加上en。
+
 
   ```scala
+    // 1
     val f0_valid                             = Wire(Bool())
     val f0_ftq_req                           = Wire(Bool())
-    val f0_doubleLine                        = Wire(Bool())
     val f1_valid							   = RegNext(f0_valid)
+  
+    // 2
+    val BPU_to_pc_en                         = Wire(Bool())
+    val set_predict_state					   = Wire(UInt(2))
+    
   ```
 
-- 模块使用到的参数统一置于trait中。
+- 模块使用到的参数统一置于trait中。(参数名称均大写+下划线命名法)
 
   ```scala
   //wrong
   class BPU extends Module{
   	val io = IO(...)	
-  	val waySize = 123
-      val bankSize = 456
+  	val WAY_SIZE = 123
+      val BANK_SIZE = 456
       ...
   }
   
   //right
   trait BPUParams with {<other relevant trait>}{
-      val waySize = 123
-      val bankSize = 456
+      val WAY_SIZE = 123
+      val BANK_SIZE = 456
   }
   
   class BPU extends Module with BPUParams{
@@ -67,7 +81,7 @@
 
   ```scala
   class MikuMoudle extends Module{
-  	val VAddrWidth = 32
+  	val VADDR_WIDTH = 32
   }
   
   class IFU extends MikuModule{
