@@ -1,0 +1,10 @@
+these scripts can transfer qemu's single,cpu log to goden_trace.log used in mycpu verify. 
+
+--asm: select disassemble file.
+--log: select qemu single,cpu log file.
+--dump-rftrace: select output trace file.
+
+example
+python3 ./qemu_log_helper.py --asm test.s --log qemu.log --dump-rftrace trace.txt
+
+

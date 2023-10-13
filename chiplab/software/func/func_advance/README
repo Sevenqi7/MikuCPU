@@ -1,0 +1,6 @@
+
+//asm.h中WAY OFFSET INDEX选项对cache参数进行配置。
+//asm.h中TLBENTRIES选项对TLB参数进行配置。
+//asm.h中TIMER_BITS选项对timer参数进行配置。
+
+该func的内容需要开启指令权限检查

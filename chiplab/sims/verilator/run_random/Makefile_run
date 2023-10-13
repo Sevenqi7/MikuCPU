@@ -1,0 +1,27 @@
+DUMP_DELAY=0
+DUMP_WAVEFORM=0
+TIME_LIMIT=0
+BUS_DELAY=y
+BUS_DELAY_RANDOM_SEED=5570123
+
+ifeq ('${BUS_DELAY}', 'y')
+RUN_FLAG += --simu-bus-delay 
+RUN_FLAG += --simu-bus-delay-random-seed $(BUS_DELAY_RANDOM_SEED)
+endif
+
+simulation_run_random:ram.dat
+	@echo "Run test" $(CASENAME)
+	mkdir -p logs 
+	mkdir -p ../../log
+	../../output ${RUN_FLAG} --dump-delay $(DUMP_DELAY) --dump-waveform $(DUMP_WAVEFORM) --time-limit $(TIME_LIMIT) --save-bp-time 0 --restore-bp-time 0 --rand-path ./ --end-pc=9c005000 --ram ram.dat > logs/run.log
+	mkdir -p ../../log/$(CASENAME)/
+	cp logs/* ../../log/$(CASENAME)/
+
+
+golden_trace_make:golden_trace.txt
+
+golden_trace.txt:./qemu_log_helper.py test.s single.log
+	python3 ./qemu_log_helper.py --asm test.s --log single.log --dump-rftrace golden_trace.txt 
+
+ram.dat:../../../../../software/random_boot/rom.vlog inst.vlog
+	cat ../../../../../software/random_boot/rom.vlog inst.vlog > ram.dat

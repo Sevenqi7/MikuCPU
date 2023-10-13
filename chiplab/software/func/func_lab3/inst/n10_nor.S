@@ -1,0 +1,1 @@
+../../func_src/inst/n10_nor.S

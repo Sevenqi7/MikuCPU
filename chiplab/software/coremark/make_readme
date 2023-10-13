@@ -1,0 +1,2 @@
+run   
+make PORT_DIR=barebones XLFLAGS="-I./ -I./barebones/ -nostdlib -mlong-calls -static -nostdinc -fno-builtin -L../../toolchains/system_newlib/ -Wl,-T../../toolchains/system_newlib/pmon.ld -lc -lm -lg -lpmon -lgcc" XCFLAGS="-static -g -Ibarebones -I. -DPERFORMANCE_RUN=1 -DITERATIONS=1000 -c "

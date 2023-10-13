@@ -1,0 +1,1 @@
+../../func_src/inst/n17_bne.S
