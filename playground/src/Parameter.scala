@@ -4,7 +4,7 @@ import chisel3._
 import chisel3._
 
 
-trait MkParams {
+class MkParams {
     val FETCH_WIDTH = 1
     val DECODE_WIDTH = 1
     val RETIRE_WIDTH = 1
@@ -17,7 +17,7 @@ trait MkParams {
 }
 
 trait HasMkParams {
-    val mkParams : MkParams
+    val mkParams = new MkParams()
     
     val FETCH_WIDTH = mkParams.FETCH_WIDTH
     val DECODE_WIDTH = mkParams.DECODE_WIDTH
