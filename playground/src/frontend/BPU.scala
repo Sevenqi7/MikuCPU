@@ -5,10 +5,10 @@ import chisel3.util._
 
 import miku._
 
-trait BPUParams {
+// trait BPUParams {
 
-}
+// }
 
-class BranchPredictor extends MkModule {
+// class BranchPredictor extends MkModule {
     
-}
+// }
