@@ -1,0 +1,5 @@
+/* GNU ld script
+   Use the shared library, but some functions are only in
+   the static library, so try that secondarily.  */
+OUTPUT_FORMAT(elf32-loongarch)
+GROUP ( /usr/lib/../lib32/sf/libc.so.6 /usr/lib/../lib32/sf/libc_nonshared.a  AS_NEEDED ( /lib32/sf/ld-linux-loongarch-ilp32s.so.1 ) )
