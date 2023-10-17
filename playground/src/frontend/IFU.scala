@@ -17,10 +17,13 @@ class IFUIO extends MkBundle{
 class IFU extends MkModule{
     val io = IO(new IFUIO)
 
-    val s0_pc = RegInit(0.U(VADDR_WIDTH.W))    
-
     //IFU-ICache
     val fromICache = io.icacheMsg.cacheResp
     val toICache = io.icacheMsg.cacheReq
-   
+
+    val s0_pc = RegInit(0.U(VADDR_WIDTH.W))    
+    val s0_valid = toICache.ready
+
+    val s1_pc = RegEnable(s0_pc, s0_valid)
+    val s1_valid = fromICache.valid
 }

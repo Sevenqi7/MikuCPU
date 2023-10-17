@@ -22,7 +22,7 @@ class PriorityAXIArbiter(num: Int, addrWidth: Int, dataWidth: Int, idBits:Int) e
     // rreq_ongoing: set when a transaction is ongoing
     val rreq_ongoing = RegNext(MuxCase(0.B, Seq(
         (io.out.readAddr.valid & io.out.readAddr.ready, 1.B),
-        (io.out.readData.valid & io.out.readAddr.valid, 0.B)
+        (io.out.readData.valid & io.out.readData.ready, 0.B)
     )))
 
     val wreq_ongoing = RegNext(MuxCase(0.B, Seq(
