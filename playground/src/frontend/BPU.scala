@@ -4,6 +4,7 @@ import chisel3._
 import chisel3.util._
 
 import miku._
+import miku.frontend._
 
 trait BPUParams {
     val BPUEnable : Boolean
@@ -17,20 +18,33 @@ class BranchPredictorResp extends MkBundle{
     val target = UInt(VADDR_WIDTH.W)
 }
 
+class BranchPredictorUpdate extends MkBundle{
+    val pc = UInt(VADDR_WIDTH.W)
+    val redirect = Bool() 
+    val target = UInt(VADDR_WIDTH.W)
+}
+
 class BranchPredictorIO extends MkBundle{
-    val resp = new BranchPredictorResp
+    val s1_pc = Input(UInt(VADDR_WIDTH.W))
+    val s1_inst = Input(UInt(INST_BITS.W))
+    val resp = ValidIO(new BranchPredictorResp)
+    val update = Flipped(new BranchPredictorUpdate)
 }
 
-class BranchPredictor extends MkBundle {
-    
+abstract class BranchPredictor extends MkModule{
+    val io = IO(new BranchPredictorIO)
 }
 
-class BranchPredictorWrapper extends MkModule with BPUParams{
+class BranchPredictorWrapper extends BranchPredictor with BPUParams{
+    // these parameters are unused now. currently all predictor is enable defaultly.
     override val BPUEnable: Boolean = true
-    override val BHTEnable: Boolean = true
-    override val BTBEnable: Boolean = true
-    override val RASEnable: Boolean = false
+    override val BHTEnable: Boolean = false
+    override val BTBEnable: Boolean = false
+    override val RASEnable: Boolean = true
 
-    assert(BPUEnable == BTBEnable)
+    //BHT must be enabled with BTB
+    assert(BHTEnable == BTBEnable)
 
+    val ras = new MkRAS()
+    
 }
