@@ -1,8 +1,10 @@
 # MikuCPU规划
 
+MikuCPU is a LA32-based CPU developed in CHISEL and is expected to be used in NSCSCC 2024. The project is still in early development. Here are the current development plans (Chinese).
+
 本项目使用CHISEL开发，预计用于2024年龙芯杯的MIPS/LoongArch赛道。现阶段的开发计划如下：
 
-###### 1. 2023.10——2024.1
+###### 1. 2023.10——2023.12
 
 - 以cva6为参照，实现一个单发射、乱序执行（记分牌算法）、顺序提交的CPU核。
 - 通过LoongArch2023发布包中功能测试与性能测试。
