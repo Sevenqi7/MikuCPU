@@ -26,6 +26,8 @@ MikuCPU is a LA32-based CPU developed in CHISEL and is expected to be used in NS
 
 代码规范主要参照自香山南湖架构的代码。
 
+- Scala文件名使用大驼峰命名法。
+
 - 类名和对象名的单词首字母大写，单词中间不得出现下划线（大驼峰）。如果名称太长需要部分单词需要简写需要在代码注释中写明全称。
 
   ```scala
