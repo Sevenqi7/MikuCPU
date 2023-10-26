@@ -40,7 +40,7 @@ trait HasMkParams {
     val REG_ADDR_SIZE = log2Ceil(mkParams.REG_ADDR_WD)
     val FU_STATUS_SIZE = log2Ceil(mkParams.FU_STATUS)
 
-    def instBytes = FETCH_WIDTH / 8
+    def instBytes = INST_BITS / 8
     def wordBytes = WORD_WIDTH / 8
 }
 
