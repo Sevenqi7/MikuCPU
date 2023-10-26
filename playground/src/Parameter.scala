@@ -11,9 +11,14 @@ class MkParams {
     val INST_BITS = 32
     val VADDR_WIDTH = 32
     val WORD_WIDTH = 32
+    val REG_ADDR_WD = 32
 
     //BPU
     val RAS_SIZE = 8
+
+    //ScoreBoard
+    val NR_ENTRIES = 8
+    val FU_STATUS  = 4
 }
 
 trait HasMkParams {
@@ -27,6 +32,13 @@ trait HasMkParams {
     val WORD_WIDTH = mkParams.WORD_WIDTH
 
     val RAS_SIZE = mkParams.RAS_SIZE
+
+    //ScoreBoard
+    val NR_ENTRIES = mkParams.NR_ENTRIES
+    val BITS_ENTRIES = log2Ceil(mkParams.NR_ENTRIES)
+    val REG_ADDR_WD = mkParams.REG_ADDR_WD
+    val REG_ADDR_SIZE = log2Ceil(mkParams.REG_ADDR_WD)
+    val FU_STATUS_SIZE = log2Ceil(mkParams.FU_STATUS)
 
     def instBytes = FETCH_WIDTH / 8
     def wordBytes = WORD_WIDTH / 8
