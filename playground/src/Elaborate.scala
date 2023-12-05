@@ -1,4 +1,5 @@
 import chisel3._
+import chisel3.util.BitPat
 
 import miku.frontend._
 import miku.utils._

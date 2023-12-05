@@ -35,7 +35,6 @@ class CircularQueue[T <: Data](element: T, size: Int) extends Module{
         io.in.op := "b11".U
         io.out.top_data.asTypeOf(element)    
     }
-    
     val queue = RegInit(VecInit.fill(size)(0.U.asTypeOf(ValidIO(element))))
     val rear = RegInit(0.U(log2Ceil(size).W))       //point to the end of queue
     val rear_plus_one = rear + 1.U
