@@ -6,40 +6,44 @@ import chisel3.util._
 import miku._
 
 object SrcType {
-    def reg = "b00".U
-    def pc  = "b01".U
-    def imm = "b10".U
+    def num = 3
 
-    def X = BitPat("b??".U)
+    def reg = "b00".U(log2Ceil(num).W)
+    def pc  = "b01".U(log2Ceil(num).W)
+    def imm = "b10".U(log2Ceil(num).W)
 
-    def apply() = UInt(2.W)
+    def X = BitPat("b??")
+
+    def apply() = UInt(log2Ceil(num).W)
 }
 
 // Function Unit Type
 object FuType {
     def num = 5
 
-    def alu = "b000".U
-    def lsu = "b001".U
-    def mul = "b010".U
-    def div = "b011".U
-    def jmp = "b100".U
+    def alu = "b000".U(log2Ceil(num).W)
+    def lsu = "b001".U(log2Ceil(num).W)
+    def mul = "b010".U(log2Ceil(num).W)
+    def div = "b011".U(log2Ceil(num).W)
+    def jmp = "b100".U(log2Ceil(num).W)
 
-    def X = BitPat("b???".U)
+    def X = BitPat("b???")
 
-    def apply() = UInt(log2Up(num).W)
+    def apply() = UInt(log2Ceil(num).W)
 }
 
 object ALUOpType {
-    def X = BitPat("b??".U)
+    def X = BitPat("b??") 
+
+    def apply() = UInt(2.W)
 }
 
 object JumpOpType {
-    def X = BitPat("b??".U)
+    def X = BitPat("b??")
 }
 
 object LSUOpType {
-    def X = BitPat("b??".U)
+    def X = BitPat("b??")
 }
 
 object LA32Instructions {

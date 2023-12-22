@@ -5,7 +5,8 @@ import chisel3.util._
 
 import miku._
 import miku.frontend._
-
+import miku.utils.util.uintToBitPat
+import miku.frontend.LA32Instructions._
 class CircularQueueInput[T <: Data](data: T) extends Bundle{
     val op = UInt(2.W)  //op(1): valid, op(0): operation, 0 is enq, 1 is deq
     val enq_data = UInt((data.getWidth).W)
@@ -42,7 +43,6 @@ class CircularQueue[T <: Data](element: T, size: Int) extends Module{
 
     io.out.empty := !queue.map(q => q.valid).reduce(_ || _)
     io.out.top_data := queue(rear).bits
-    
     when(io.in.clear){
         for(i <- 0 until size){
             queue(i).valid := false.B

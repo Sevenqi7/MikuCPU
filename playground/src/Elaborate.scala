@@ -4,10 +4,10 @@ import chisel3.util.BitPat
 import miku.frontend._
 import miku.utils._
 object Elaborate extends App {
-  (new chisel3.stage.ChiselStage).execute(
+ 	(new chisel3.stage.ChiselStage).execute(
     args,
     Seq(chisel3.stage.ChiselGeneratorAnnotation(
-      () => new CircularQueue(UInt(2.W), 5)
+      () => new LA32DecoderUnit
     ))
   )
 }

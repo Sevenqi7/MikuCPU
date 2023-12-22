@@ -13,6 +13,8 @@ class MkParams {
     val WORD_WIDTH = 32
     val REG_ADDR_WD = 32
 
+    val INST_QUEUE_SIZE = 256
+
     //BPU
     val RAS_SIZE = 8
 
@@ -32,6 +34,7 @@ trait HasMkParams {
     val WORD_WIDTH = mkParams.WORD_WIDTH
 
     val RAS_SIZE = mkParams.RAS_SIZE
+    val INST_QUEUE_SIZE = mkParams.INST_QUEUE_SIZE
 
     //ScoreBoard
     val NR_ENTRIES = mkParams.NR_ENTRIES
