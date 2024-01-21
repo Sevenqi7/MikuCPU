@@ -4,6 +4,7 @@ import chisel3._
 import chisel3.util._
 
 import miku._
+import FuOpType.MaxOpNum
 
 object SrcType {
     def num = 3
@@ -32,18 +33,65 @@ object FuType {
     def apply() = UInt(log2Ceil(num).W)
 }
 
-object ALUOpType {
-    def X = BitPat("b??") 
+object FuOpType {
+    def MaxOpNum = List(ALUOpType.num, JumpOpType.num, LSUOpType.num).max
 
-    def apply() = UInt(2.W)
+    def X = BitPat("b????")
+
+    def apply() = UInt(log2Ceil(MaxOpNum).W)
+}
+
+object ALUOpType {
+    def num = 19
+
+    def addw   = "b00000".U(log2Ceil(MaxOpNum).W)        //R(rd) = R(rj) + R(rk)
+    def subw   = "b00001".U(log2Ceil(MaxOpNum).W)        //R(rd) = R(ri) - R(rk)
+    def lu12iw = "b00010".U(log2Ceil(MaxOpNum).W)        //R(rd) = {imm20, 12'b0}
+    def slt    = "b00011".U(log2Ceil(MaxOpNum).W)        //R(rd) = (signed(R(rj)) < signed(R(rk)))
+    def sltu   = "b00100".U(log2Ceil(MaxOpNum).W)        //R(rd) = (R(rj) < R(rk))
+    def and    = "b00101".U(log2Ceil(MaxOpNum).W)        //R(rd) = R(rj) & R(rk)
+    def or     = "b00110".U(log2Ceil(MaxOpNum).W)        //R(rd) = R(rj) | R(rk)
+    def nor    = "b00111".U(log2Ceil(MaxOpNum).W)        //R(rd) = ~(R(rj) | R(rk))
+    def xor    = "b01000".U(log2Ceil(MaxOpNum).W)        //R(rd) = R(rj) ^ R(rk)
+    def mul    = "b01001".U(log2Ceil(MaxOpNum).W)        //R(rd) = (signed(R(rj)) * signed(R(rk)))[31:0]
+    def mulhw  = "b01010".U(log2Ceil(MaxOpNum).W)        //R(rd) = (signed(R(rj)) * signed(R(rk)))[63:32]
+    def mulhwu = "b01011".U(log2Ceil(MaxOpNum).W)        //R(rd) = (R(rj) * R(rk))[63:32]
+    def divw   = "b01100".U(log2Ceil(MaxOpNum).W)        //R(rd) = (signed(R(rj)) / signed(R(rk)))[31:0]
+    def divwu  = "b01101".U(log2Ceil(MaxOpNum).W)        //R(rd) = (R(rj) / R(rk))[31:0]
+    def modw   = "b01110".U(log2Ceil(MaxOpNum).W)        //R(rd) = (signed(R(rj)) % signed(R(rk)))[31:0]
+    def modwu  = "b01111".U(log2Ceil(MaxOpNum).W)        //R(rd) = (R(rj) % R(rk))[31:0]
+    def sllw   = "b10000".U(log2Ceil(MaxOpNum).W)        //R(rd) = sll(R(rj), R(rk)[4:0])[31:0]
+    def srlw   = "b10001".U(log2Ceil(MaxOpNum).W)        //R(rd) = srl(R(rj), R(rk)[4:0])[31:0]
+    def sraw   = "b10010".U(log2Ceil(MaxOpNum).W)        //R(rd) = sra(R(rj), R(rk)[4:0])[31:0]
 }
 
 object JumpOpType {
-    def X = BitPat("b??")
+    def num  = 9
+
+    def beq  = "b0000".U(log2Ceil(MaxOpNum).W)
+    def bne  = "b0001".U(log2Ceil(MaxOpNum).W)
+    def blt  = "b0010".U(log2Ceil(MaxOpNum).W)
+    def bge  = "b0011".U(log2Ceil(MaxOpNum).W)
+    def bltu = "b0100".U(log2Ceil(MaxOpNum).W)
+    def bgeu = "b0101".U(log2Ceil(MaxOpNum).W)
+    def b    = "b0110".U(log2Ceil(MaxOpNum).W)
+    def bl   = "b0111".U(log2Ceil(MaxOpNum).W)
+    def jirl = "b1000".U(log2Ceil(MaxOpNum).W)
 }
 
 object LSUOpType {
-    def X = BitPat("b??")
+    def num  = 8
+
+    def ldb  = "b000".U(log2Ceil(MaxOpNum).W) 
+    def ldh  = "b001".U(log2Ceil(MaxOpNum).W)
+    def ldw  = "b010".U(log2Ceil(MaxOpNum).W)
+    def ldbu = "b011".U(log2Ceil(MaxOpNum).W)
+    def ldhu = "b100".U(log2Ceil(MaxOpNum).W)
+    def stb  = "b101".U(log2Ceil(MaxOpNum).W)
+    def sth  = "b110".U(log2Ceil(MaxOpNum).W)
+    def stw  = "b111".U(log2Ceil(MaxOpNum).W)
+
+    def X = BitPat("b???")
 }
 
 object LA32Instructions {
