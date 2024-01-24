@@ -8,7 +8,7 @@ import miku.utils._
 import chisel3.util.random.LFSR
 
 class CacheReqIO(addrWidth: Int, dataWidth: Int) extends MkBundle {
-    val wr       = Bool()
+    val wr       = Bool() // 0:read 1:write
     val addr     = UInt(addrWidth.W)
     val wtype    = UInt(2.W)
     val wdata    = UInt(dataWidth.W)
@@ -26,9 +26,9 @@ class CacheIO(addrWidth: Int, dataWidth: Int) extends MkBundle {
 
     val axi = new AXIMasterIF(VADDR_WIDTH, WORD_WIDTH, 4)
 
-    def reqFromIfu(inter: IFUICacheIO): Unit = {
-        req             := inter.cacheReq
-        inter.cacheResp := resp
+    def reqFromIfu(inter: IFU): Unit = {
+        inter.io.icache_msg.cache_resp <> resp
+        req                            <> inter.io.icache_msg.cache_req
     }
 
     // initialise all signals of axi interfaces
@@ -110,7 +110,8 @@ class ICache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int) exten
 
     /*              main FSM              */
     val sIdle :: sLookup :: sMiss :: sReplace :: sRefill :: Nil = Enum(5)
-    val state                                                   = RegInit(sIdle)
+
+    val state = RegInit(sIdle)
 
     // handle request
     val req_valid  = RegEnable(io.req.valid, cache_ready)

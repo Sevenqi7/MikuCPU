@@ -4,47 +4,60 @@ import chisel3._
 import chisel3.util._
 
 import miku._
+import miku.utils._
 import miku.frontend._
 
 trait BPUParams {
-    val BPUEnable : Boolean
-    val BTBEnable : Boolean
-    val BHTEnable : Boolean
-    val RASEnable : Boolean
+    val BPUEnable: Boolean
+    val BHTEnable: Boolean
+    val RASEnable: Boolean
 }
 
-class BranchPredictorResp extends MkBundle{
-    val taken = Bool()               
+class BranchPredictorResp extends MkBundle {
+    val taken  = Bool()
     val target = UInt(VADDR_WIDTH.W)
 }
 
-class BranchPredictorUpdate extends MkBundle{
-    val pc = UInt(VADDR_WIDTH.W)
-    val redirect = Bool() 
-    val target = UInt(VADDR_WIDTH.W)
+class BranchPredictorUpdate extends MkBundle {
+    val pc       = UInt(VADDR_WIDTH.W)
+    val redirect = Bool()
+    val target   = UInt(VADDR_WIDTH.W)
 }
 
-class BranchPredictorIO extends MkBundle{
-    val s1_pc = Input(UInt(VADDR_WIDTH.W))
-    val s1_inst = Input(UInt(INST_BITS.W))
-    val resp = ValidIO(new BranchPredictorResp)
+class BranchPredictorIO extends MkBundle {
+    val s0     = Flipped(ValidIO(new PCInstBundle(VADDR_WIDTH, INST_BITS)))
+    val resp   = new BranchPredictorResp
     val update = Flipped(new BranchPredictorUpdate)
 }
 
-abstract class BranchPredictor extends MkModule{
-    val io = IO(new BranchPredictorIO)
+abstract class BranchPredictor extends MkModule {
+    val io              = IO(new BranchPredictorIO)
+    val target_from_btb = false
 }
 
-class BranchPredictorWrapper extends BranchPredictor with BPUParams{
-    // these parameters are unused now. currently all predictor is enable defaultly.
+class EmptyPredictor extends BranchPredictor {
+    io.resp.taken  := false.B
+    io.resp.target := 0.U
+}
+
+class BranchPredictorWrapper extends BranchPredictor with BPUParams {
     override val BPUEnable: Boolean = true
     override val BHTEnable: Boolean = false
-    override val BTBEnable: Boolean = false
     override val RASEnable: Boolean = true
 
-    //BHT must be enabled with BTB
-    assert(BHTEnable == BTBEnable)
+    val bht = Module(new EmptyPredictor())
+    val ras = Module(if (RASEnable) new MkRAS() else new EmptyPredictor)
 
-    val ras = new MkRAS()
-    
+    val priority_predictor_list = List[BranchPredictorIO](bht.io, ras.io)
+    val priority_predtarget_list: Seq[(Bool, UInt)] = priority_predictor_list.map(i => (i.resp.taken, i.resp.target))
+
+    for (i <- priority_predictor_list) {
+        i.s0.bits.pc   := io.s0.bits.pc
+        i.s0.bits.inst := io.s0.bits.inst
+        i.s0.valid     := io.s0.valid
+        i.update       := io.update
+    }
+
+    io.resp.taken  := priority_predictor_list.map(_.resp.taken).reduce(_ || _)
+    io.resp.target := PriorityMux(priority_predtarget_list)
 }

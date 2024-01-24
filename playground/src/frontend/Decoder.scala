@@ -31,11 +31,11 @@ abstract trait DecodeConstants {
     def Y = BitPat("b1")
 
     def decodeDefault: List[BitPat] = /*
-       regWen   src1      src2       src3     FuncUnit
-         |       |         |          |          |              flush
-         |       |         |          |          |                 |
-         |       |         |          |          |                 |              SelImm
-         |       |         |          |          |                 |                |             */
+           regWen   src1      src2       src3     FuncUnit
+             |       |         |          |          |              flush
+             |       |         |          |          |                 |
+             |       |         |          |          |                 |              SelImm
+             |       |         |          |          |                 |                |             */
         List(N, SrcType.X, SrcType.X, SrcType.X, FuType.X, FuOpType.X, N, SelImm.INVALID_INSTR)
 }
 
