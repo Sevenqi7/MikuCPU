@@ -37,15 +37,16 @@ trait HasMkParams {
 
     val RAS_SIZE = mkParams.RAS_SIZE
     val INST_QUEUE_SIZE = mkParams.INST_QUEUE_SIZE
-    val BACKEND_STATUS = mkParams.BACKEND_STATUS
+    
 
     //ScoreBoard
     val NR_ENTRIES = mkParams.NR_ENTRIES
     val BITS_ENTRIES = log2Ceil(mkParams.NR_ENTRIES)
     val REG_ADDR_WD = mkParams.REG_ADDR_WD
     val REG_ADDR_SIZE = log2Ceil(mkParams.REG_ADDR_WD)
-    val FU_STATUS_SIZE = log2Ceil(mkParams.FU_STATUS)
+    val FU_STATUS_SIZE = mkParams.FU_STATUS
     val FU_TIME_SIZE = log2Ceil(mkParams.FU_TIME_MAX)
+    val BACKEND_STATUS = log2Ceil(mkParams.BACKEND_STATUS)
 
     def instBytes = INST_BITS / 8
     def wordBytes = WORD_WIDTH / 8
