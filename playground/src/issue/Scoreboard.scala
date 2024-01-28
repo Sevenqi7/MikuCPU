@@ -11,7 +11,7 @@ class ScoreBoardOutput extends MkBundle {
     // sb is scoreboard
     val sb_full      = Bool()
     val sb_issue_en  = Bool()
-    val sb_issue_way = UInt(FU_STATUS.W)
+    val sb_issue_way = UInt(FU_STATUS_SIZE.W)
 
     val sb_issue_rd = UInt(REG_ADDR_SIZE.W)
     val sb_issue_rj = UInt(REG_ADDR_SIZE.W)
@@ -31,8 +31,8 @@ class ScoreBoardInput extends MkBundle {
     val flush_unissued_instr = Bool()
     // val flush_unresolved_branch = Bool() // we have an unresolved branch
 
-    val sb_way        = UInt(FU_STATUS.W)
-    val sb_commit_way = UInt(FU_STATUS.W)
+    val sb_way        = UInt(FU_STATUS_SIZE.W)
+    val sb_commit_way = UInt(FU_STATUS_SIZE.W)
     val sb_rd         = UInt(REG_ADDR_SIZE.W)
     val sb_rj         = UInt(REG_ADDR_SIZE.W)
     val sb_rk         = UInt(REG_ADDR_SIZE.W)
@@ -48,22 +48,22 @@ class ScoreBoardInput extends MkBundle {
 
 //FU is Functional Status
 //这个table记录着每个FU的状态
-class FUStatusTable extends MkModule {
-    class FU {
-        class RegStatus {
+class FUStatusTable extends MkBundle {
+    class FU extends MkBundle {
+        class RegStatus extends MkBundle {
             // F
-            val num       = RegInit(UInt(REG_ADDR_SIZE.W), 0.U)  // reg destination
+            val num       = UInt(REG_ADDR_SIZE.W)  // reg destination
             // R
-            val ready     = RegInit(Bool(), 0.U)                 // reg number is ready
+            val ready     = Bool()                 // reg number is ready
             // Q
-            val fu_number = RegInit(UInt(FU_STATUS_SIZE.W), 0.U) // when reg isnt ready, which FU number should get
+            val fu_number = UInt(FU_STATUS_SIZE.W) // when reg isnt ready, which FU number should get
         }
-        val busy = RegInit(Bool(), 0.U)
-        val op   = RegInit(UInt(FU_STATUS_SIZE.W), 0.U)
+        val busy = Bool()
+        val op   = UInt(FU_STATUS_SIZE.W)
         val rj   = new RegStatus
         val rk   = new RegStatus
         val rd   = new RegStatus
-        val time = RegInit(UInt(FU_TIME_SIZE.W), 0.U)
+        val time = UInt(FU_TIME_SIZE.W)
     }
     val alu_fu        = new FU
     val load_store_fu = new FU
@@ -72,20 +72,17 @@ class FUStatusTable extends MkModule {
 }
 
 //这个table表示寄存器将被几号FU改写
-class RegResultTable extends MkModule {
-    val status = RegInit(Vec(REG_ADDR_WD.W, UInt(FU_STATUS_SIZE.W)), 0.U)
+class RegResultTable extends MkBundle {
+    val status = Vec(REG_ADDR_WD, UInt(FU_STATUS_SIZE.W))
 }
 
 //这个table记录着每一条指令所抵达的流水线位置
-class InstStatusTable extends MkModule {
-    class InstStatus extends MkModule {
-        val op              = RegInit(UInt(FU_STATUS_SIZE.W), 0.U)
-        val rd              = RegInit(UInt(REG_ADDR_SIZE.W), 0.U)
-        val rj              = RegInit(UInt(REG_ADDR_SIZE.W), 0.U)
-        val rk              = RegInit(UInt(REG_ADDR_SIZE.W), 0.U)
-        val now_inst_status = RegInit(UInt(BACKEND_STATUS.W), 0.U)
-    }
-    val status = Vec(NR_ENTRIES.W, new InstStatus)
+class InstStatus extends MkBundle {
+    val op              = UInt(FU_STATUS_SIZE.W)
+    val rd              = UInt(REG_ADDR_SIZE.W)
+    val rj              = UInt(REG_ADDR_SIZE.W)
+    val rk              = UInt(REG_ADDR_SIZE.W)
+    val now_inst_status = UInt(BACKEND_STATUS.W)
 }
 
 abstract class ScoreBoardIO extends MkModule {
@@ -95,7 +92,8 @@ abstract class ScoreBoardIO extends MkModule {
 
 class ScoreBoard extends ScoreBoardIO {
     val fu_status                                     = new FUStatusTable
-    val reg_result                                    = new RegResultTable
-    val inst_status                                   = new InstStatusTable
     val alu :: load_store :: branch :: mul_div :: Nil = Enum(4)
+
+    val reg_result        = RegInit(0.U.asTypeOf(new RegResultTable))
+    val inst_status_table = RegInit(VecInit(Seq.fill(NR_ENTRIES)(0.U.asTypeOf(new InstStatus))))
 }
