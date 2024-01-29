@@ -28,10 +28,20 @@ class CircularQueue[T <: Data](element: T, size: Int) extends Module {
 
     def enqData(data: T): Unit = {
         io.in.enq_valid := true.B
-        io.in.enq_data  := data
+        io.in.enq_data  := data.asUInt
+    }
+
+    def enqData(data: T, cond: Bool): Unit = { //TODO: need a better name
+        io.in.enq_valid := cond
+        io.in.enq_data  := data.asUInt
     }
 
     def deqData: T = {
+        io.in.deq_valid := true.B
+        io.out.front_data.asTypeOf(element)
+    }
+
+    def deqData(cond: Bool): T = {  //TODO: need a better name
         io.in.deq_valid := true.B
         io.out.front_data.asTypeOf(element)
     }
@@ -43,15 +53,14 @@ class CircularQueue[T <: Data](element: T, size: Int) extends Module {
     val front_plus_one = front + 1.U
 
     io.out.empty      := (rear === front)
-    io.out.front_data := queue(front).bits
+    io.out.front_data := queue(front).bits.asUInt
     when(io.in.clear) {
         for (i <- 0 until size) {
             queue(i).valid := false.B
         }
-    }
-    .otherwise {
+    }.otherwise {
         when(io.in.enq_valid) {
-            queue(rear).bits  := io.in.enq_data
+            queue(rear).bits  := io.in.enq_data.asTypeOf(element)
             queue(rear).valid := true.B
             rear              := Mux(rear === 0.U, (size - 1).U, rear_plus_one)
         }

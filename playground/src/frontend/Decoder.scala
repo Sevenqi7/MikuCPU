@@ -45,26 +45,26 @@ class DecodedInst extends MkBundle with DecodeConstants {
     val src3     = SrcType()
     val futype   = FuType()
     val fuoptype = FuOpType()
-    val regWen   = Bool()
+    val regwen   = Bool()
     val flush    = Bool()
     val selImm   = SelImm()
 }
 
 class LA32DecoderUnit extends MkModule with DecodeConstants {
-    val rawInst     = IO(Input(UInt(INST_BITS.W)))
-    val decodedInst = IO(Output(new DecodedInst))
+    val raw_inst     = IO(Input(UInt(INST_BITS.W)))
+    val decoded_inst = IO(Output(new DecodedInst))
 
-    val LA32DecodeTable = LA3RDecoder.decodeTable ++ LA2RI12Decoder.decodeTable ++ LA2RI16Decoder.decodeTable
+    val la32_decode_table = LA3RDecoder.decodeTable ++ LA2RI12Decoder.decodeTable ++ LA2RI16Decoder.decodeTable
 
     // ((instructions, decodeBits), defaultBits)
-    val LA32DecodeMaps = TruthTable(
-        LA32DecodeTable.map { case (instBits, decodeList) =>
+    val la32_decode_map = TruthTable(
+        la32_decode_table.map { case (instBits, decodeList) =>
             (instBits, decodeList.reduce(_ ## _))
         }.toMap,
         decodeDefault.reduce(_ ## _)
     )
 
-    decodedInst := decoder(rawInst, LA32DecodeMaps).asTypeOf(new DecodedInst)
+    decoded_inst := decoder(raw_inst, la32_decode_map).asTypeOf(new DecodedInst)
 }
 //3R-Type decoder
 object LA3RDecoder extends DecodeConstants {

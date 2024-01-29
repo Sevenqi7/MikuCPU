@@ -1,5 +1,16 @@
 # 接口一览表
 
+IDU.scala
+
+| signal name | description                                        | type                      |
+| ----------- | -------------------------------------------------- | ------------------------- |
+| ifu_s1      | 前端取出的指令和对应的PC                           | ValidIO(new PCInstBundle) |
+| pred_check  | 分支预测正确性检查                                 | BranchPredictorUpdate     |
+| exception   | 异常发生（现在还没做）                             | Bool                      |
+| to_issue    | issue_buffer的基本单位。目前包含pc，指令，译码信息 | IssueEntry                |
+
+
+
 Scoreboard.scala
 
 | input signal or data    | description                                                  | width |
