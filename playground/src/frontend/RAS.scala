@@ -20,22 +20,24 @@ trait RASUtils {
 
 class MkRAS extends BranchPredictor with RASUtils {
 
-    val ras = Module(new CircularQueue(UInt(VADDR_WIDTH.W), RAS_SIZE))
+    val ras = Module(new Stack(UInt(VADDR_WIDTH.W), RAS_SIZE))
 
     // initialise
-    io.resp.taken      := false.B
-    io.resp.target     := 0.U
-    ras.io.in.op       := 0.B
-    ras.io.in.enq_data := 0.U
-    ras.io.in.clear    := false.B
+    io.resp.taken     := false.B
+    io.resp.target    := 0.U
+    ras.io.in.op      := 0.B
+    ras.io.in.data_in := 0.U
+    ras.io.in.clear   := false.B
+    ras.io.in.valid   := false.B
 
     when(io.s0.valid) {
         when(isCall(io.s0.bits.inst)) {
-            ras.enqData(io.s0.bits.pc + instBytes.U)
+            ras.io.in.valid := true.B
+            ras.pushData(io.s0.bits.pc + instBytes.U)
         }
         .elsewhen(isRet(io.s0.bits.inst)) {
             io.resp.taken  := true.B
-            io.resp.target := ras.deqData
+            io.resp.target := ras.popData
         }
     }
 }
