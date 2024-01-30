@@ -17,6 +17,7 @@ class CircularQueueInput[T <: Data](data: T) extends Bundle {
 class CircularQueueOutput[T <: Data](data: T) extends Bundle {
     val front_data = UInt((data.getWidth).W)
     val empty      = Bool()
+    val full       = Bool()
 }
 
 // ? is a "full" signal needed?
@@ -51,8 +52,9 @@ class CircularQueue[T <: Data](element: T, size: Int) extends Module {
     val front          = RegInit(0.U(log2Ceil(size).W))
     val rear_plus_one  = rear + 1.U
     val front_plus_one = front + 1.U
-
-    io.out.empty      := (rear === front)
+    
+    io.out.full = queue.map(q=> q.valid).reduce(_ & _)
+    io.out.empty = queue.map(q => q.valid).reduce(_ || _)
     io.out.front_data := queue(front).bits.asUInt
     when(io.in.clear) {
         for (i <- 0 until size) {
