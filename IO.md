@@ -34,13 +34,5 @@ Scoreboard.scala
 | --------------------- | ---------------------------------------- | ----- |
 | sb_issue_en           | 该指令是否发射                           | Bool  |
 | sb_issue_way          | 该指令发射到哪条支路                     | 4     |
-| sb_issue_rd           | 所发射指令的目的寄存器编号               | 5     |
-| sb_issue_rj           | 所发射指令的j寄存器编号                  | 5     |
-| sb_issue_rk           | 所发射指令的k寄存器编号                  | 5     |
-| sb_issue_rd_en        | 是否启用目的寄存器                       | Bool  |
-| sb_issue_rj_en        | 是否启用j寄存器                          | Bool  |
-| sb_issue_rk_en        | 是否启用k寄存器                          | Bool  |
-| sb_issue_imm          | 所发射指令立即数                         | 32    |
-| sb_issue_imm_en       | 所发射指令是否启用立即数                 | Bool  |
 | sb_full               | 计分板存储空位已满，阻塞新decode好的指令 | Bool  |
 
