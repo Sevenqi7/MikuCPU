@@ -53,8 +53,8 @@ class CircularQueue[T <: Data](element: T, size: Int) extends Module {
     val rear_plus_one  = rear + 1.U
     val front_plus_one = front + 1.U
     
-    io.out.full = queue.map(q=> q.valid).reduce(_ & _)
-    io.out.empty = queue.map(q => q.valid).reduce(_ || _)
+    io.out.full := queue.map(q=> q.valid).reduce(_ & _)
+    io.out.empty := queue.map(q => q.valid).reduce(_ || _)
     io.out.front_data := queue(front).bits.asUInt
     when(io.in.clear) {
         for (i <- 0 until size) {
