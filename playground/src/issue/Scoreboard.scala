@@ -75,16 +75,16 @@ class ScoreBoard extends MkModule {
         val out = Output(new ScoreBoardOutput)
     })
 
-    val fu_status         = RegInit(VecInit(Seq.fill(FU_STATUS_SIZE)(0.U.asTypeOf(new FUStatusTable))))
-    val reg_result        = RegInit(0.U.asTypeOf(new RegResultTable))
+    val fu_status  = RegInit(VecInit(Seq.fill(FU_STATUS_SIZE)(0.U.asTypeOf(new FUStatusTable))))
+    val reg_result = RegInit(0.U.asTypeOf(new RegResultTable))
     // val inst_status_table = RegInit(VecInit(Seq.fill(NR_ENTRIES)(0.U.asTypeOf(new InstStatus))))
-    val inst_full         = RegInit(0.B)
+    val inst_full  = RegInit(0.B)
 
     io.out.sb_full     := inst_full
     io.out.sb_issue_en := 0.U
 
-    when(io.in.sb_commit_en){
-        fu_status(io.in.sb_commit_way).busy := false.B
+    when(io.in.sb_commit_en) {
+        fu_status(io.in.sb_commit_way).busy   := false.B
         fu_status(io.in.sb_commit_way).rd.num := 0.U
         fu_status(io.in.sb_commit_way).rj.num := 0.U
         fu_status(io.in.sb_commit_way).rk.num := 0.U
@@ -118,5 +118,5 @@ class ScoreBoard extends MkModule {
         when(io.in.sb_rj_en) { fu_status(io.in.sb_way).rj.num := io.in.sb_rj }
         when(io.in.sb_rk_en) { fu_status(io.in.sb_way).rk.num := io.in.sb_rk }
     }
-    
+
 }

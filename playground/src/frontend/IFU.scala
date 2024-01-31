@@ -37,7 +37,7 @@ class IFU extends MkModule {
 
     val npc_src   = io.npc_sel_info
     val s0_pc     = RegInit(0.U(VADDR_WIDTH.W))
-    val s0_valid  = true.B // !FIXME: set stall condition
+    val s0_valid  = true.B // TODO: set stall condition
     val pc_plus_4 = s0_pc + 4.U
     //                  cond   npc
     // npc-gen           |      |
@@ -66,5 +66,5 @@ class IFU extends MkModule {
     io.stage_info.s0.valid     := s0_valid
     io.stage_info.s1.bits.pc   := s1_pc
     io.stage_info.s1.bits.inst := s1_inst
-    io.stage_info.s1.valid     := s1_valid
+    io.stage_info.s1.valid     := s1_valid   
 }

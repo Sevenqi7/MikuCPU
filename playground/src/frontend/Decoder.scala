@@ -72,20 +72,20 @@ class LA32DecoderUnit extends MkModule with DecodeConstants {
 //3R-Type decoder
 object LA3RDecoder extends DecodeConstants {
     val decodeTable = Array[(BitPat, List[BitPat])](
-        ADDW   -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.alu, ALUOpType.addw  , N, SelImm.X),
-        SUBW   -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.alu, ALUOpType.subw  , N, SelImm.X),
-        SLT    -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.alu, ALUOpType.slt   , N, SelImm.X),
-        SLTU   -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.alu, ALUOpType.sltu  , N, SelImm.X),
-        NOR    -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.alu, ALUOpType.nor   , N, SelImm.X),
-        AND    -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.alu, ALUOpType.and   , N, SelImm.X),
-        OR     -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.alu, ALUOpType.or    , N, SelImm.X),
-        XOR    -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.alu, ALUOpType.xor   , N, SelImm.X),
-        SLLW   -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.mul, ALUOpType.sllw  , N, SelImm.X),
-        MULHWU -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.mul, ALUOpType.mulhwu, N, SelImm.X),
-        DIVW   -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.div, ALUOpType.divw  , N, SelImm.X),
-        MODW   -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.div, ALUOpType.modw  , N, SelImm.X),
-        DIVWU  -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.div, ALUOpType.divwu , N, SelImm.X),
-        MODWU  -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.div, ALUOpType.modwu , N, SelImm.X)
+        ADDW   -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.alu, ALUOpType.addw     , N, SelImm.X),
+        SUBW   -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.alu, ALUOpType.subw     , N, SelImm.X),
+        SLT    -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.alu, ALUOpType.slt      , N, SelImm.X),
+        SLTU   -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.alu, ALUOpType.sltu     , N, SelImm.X),
+        NOR    -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.alu, ALUOpType.nor      , N, SelImm.X),
+        AND    -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.alu, ALUOpType.and      , N, SelImm.X),
+        OR     -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.alu, ALUOpType.or       , N, SelImm.X),
+        XOR    -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.alu, ALUOpType.xor      , N, SelImm.X),
+        SLLW   -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.mul, ALUOpType.sllw     , N, SelImm.X),
+        MULHWU -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.mul, MulDivOpType.mulhwu, N, SelImm.X),
+        DIVW   -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.mul, MulDivOpType.divw  , N, SelImm.X),
+        MODW   -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.mul, MulDivOpType.modw  , N, SelImm.X),
+        DIVWU  -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.mul, MulDivOpType.divwu , N, SelImm.X),
+        MODWU  -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.mul, MulDivOpType.modwu , N, SelImm.X)
     )
 }
 

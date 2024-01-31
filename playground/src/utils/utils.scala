@@ -12,3 +12,23 @@ class PCInstBundle(pc_width: Int, inst_width: Int) extends Bundle {
     val pc   = UInt(pc_width.W)
     val inst = UInt(inst_width.W)
 }
+
+class DelayN[T <: Data](gen: T, n: Int) extends Module {
+  val io = IO(new Bundle() {
+    val in = Input(gen)
+    val out = Output(gen)
+  })
+  var out = io.in
+  for (i <- 0 until n) {
+    out = RegNext(out)
+  }
+  io.out := out
+}
+
+object DelayN {
+  def apply[T <: Data](in: T, n: Int): T = {
+    val delay = Module(new DelayN(in.cloneType, n))
+    delay.io.in := in
+    delay.io.out
+  }
+}
