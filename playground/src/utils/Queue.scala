@@ -32,7 +32,7 @@ class CircularQueue[T <: Data](element: T, size: Int) extends Module {
         io.in.enq_data  := data.asUInt
     }
 
-    def enqData(data: T, cond: Bool): Unit = { //TODO: need a better name
+    def enqData(data: T, cond: Bool): Unit = { // TODO: need a better name
         io.in.enq_valid := cond
         io.in.enq_data  := data.asUInt
     }
@@ -42,7 +42,7 @@ class CircularQueue[T <: Data](element: T, size: Int) extends Module {
         io.out.front_data.asTypeOf(element)
     }
 
-    def deqData(cond: Bool): T = {  //TODO: need a better name
+    def deqData(cond: Bool): T = { // TODO: need a better name
         io.in.deq_valid := true.B
         io.out.front_data.asTypeOf(element)
     }
@@ -52,9 +52,9 @@ class CircularQueue[T <: Data](element: T, size: Int) extends Module {
     val front          = RegInit(0.U(log2Ceil(size).W))
     val rear_plus_one  = rear + 1.U
     val front_plus_one = front + 1.U
-    
-    io.out.full := queue.map(q=> q.valid).reduce(_ & _)
-    io.out.empty := queue.map(q => q.valid).reduce(_ || _)
+
+    io.out.full       := queue.map(q => q.valid).reduce(_ & _)
+    io.out.empty      := !queue.map(q => q.valid).reduce(_ || _)
     io.out.front_data := queue(front).bits.asUInt
     when(io.in.clear) {
         for (i <- 0 until size) {
