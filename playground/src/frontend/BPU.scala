@@ -13,7 +13,7 @@ trait BPUParams {
     val RASEnable: Boolean
 }
 
-class BranchPredictorResp extends MkBundle {
+class BranchPredictorResult extends MkBundle {
     val taken  = Bool()
     val target = UInt(VADDR_WIDTH.W)
 }
@@ -26,7 +26,7 @@ class BranchPredictorUpdate extends MkBundle {
 
 class BranchPredictorIO extends MkBundle {
     val s0     = Flipped(ValidIO(new PCInstBundle(VADDR_WIDTH, INST_BITS)))
-    val resp   = new BranchPredictorResp
+    val resp   = new BranchPredictorResult
     val update = Flipped(new BranchPredictorUpdate)
 }
 

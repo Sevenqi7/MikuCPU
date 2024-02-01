@@ -6,13 +6,15 @@ import chisel3.util._
 import miku._
 import miku.utils._
 import miku.backend._
-import miku.frontend.MulDivOpType._
+import miku.MulDivOpType._
 
 //This is a fake multiplier that use '*' operator to generate result
 //and delay the output for 5 cycles
 class FakeMultiplierInput extends BaseFuInput {}
 
-class FakeMultiplierOutput extends BaseFuOutput {}
+class FakeMultiplierOutput extends BaseFuOutput {
+    val result = UInt(WORD_WIDTH.W)
+}
 
 class FakeMultiplierIO extends MkBundle {
     val in  = Flipped(Decoupled(new FakeMultiplierInput()))
@@ -48,5 +50,4 @@ class FakeMultiplier extends MkModule {
     // delay 5 cycles
     io.out.valid       := DelayN(io.in.valid, 5)
     io.out.bits.result := DelayN(result, 5)
-
 }

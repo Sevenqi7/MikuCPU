@@ -5,12 +5,13 @@ import chisel3.util._
 
 import miku._
 import miku.backend._
-import miku.frontend.ALUOpType._
-import miku.frontend.ALUOpType
+import miku.ALUOpType._
 
 class ALUInput extends BaseFuInput {}
 
-class ALUOutput extends BaseFuOutput {}
+class ALUOutput extends BaseFuOutput {
+    val result  = UInt(WORD_WIDTH.W)
+}
 
 class ALUIO extends MkBundle {
     val in  = Flipped(Decoupled(new ALUInput))
@@ -20,17 +21,20 @@ class ALUIO extends MkBundle {
 class ALUResulutSelector extends MkModule {
     val io = IO(new MkBundle {
         val op        = Input(ALUOpType())
-        val operand_a = Input(UInt(WORD_WIDTH.W))
-        val operand_b = Input(UInt(WORD_WIDTH.W))
+        val operand_a = Input(UInt(WORD_WIDTH.W))       //rk or imms
+        val operand_b = Input(UInt(WORD_WIDTH.W))       //rj
         val result    = Output(UInt(WORD_WIDTH.W))
     })
+
+    val slt_result  = io.operand_a.asSInt < io.operand_b.asSInt
+    val sltu_result = io.operand_a < io.operand_b
 
     val result_table = Seq[(UInt, UInt)](
         addw   -> (io.operand_a + io.operand_b),
         subw   -> (io.operand_a - io.operand_b),
         lu12iw -> Cat(io.operand_b(19, 0), 0.U(12.W)),
-        slt    -> (io.operand_a.asSInt < io.operand_b.asSInt),
-        sltu   -> (io.operand_a < io.operand_b),
+        slt    -> slt_result,
+        sltu   -> sltu_result,
         and    -> (io.operand_a & io.operand_b),
         or     -> (io.operand_a | io.operand_b),
         nor    -> ~(io.operand_a | io.operand_b),
@@ -40,7 +44,7 @@ class ALUResulutSelector extends MkModule {
         sraw   -> (io.operand_a.asSInt >> io.operand_b(4, 0)).asUInt
     )
 
-    io.result := MuxLookup(io.op, 0.U)(result_table)
+    io.result  := MuxLookup(io.op, 0.U)(result_table)
 }
 
 class MkALU extends MkModule {
@@ -55,5 +59,5 @@ class MkALU extends MkModule {
     result_gen.io.operand_a := io.in.bits.operand_a
     result_gen.io.operand_b := io.in.bits.operand_b
 
-    io.out.bits.result := result_gen.io.result
+    io.out.bits.result  := result_gen.io.result
 }

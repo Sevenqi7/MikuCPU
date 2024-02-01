@@ -12,7 +12,7 @@ class IFUICacheIO extends MkBundle {
 }
 
 class NpcSelInfo extends MkBundle {
-    val pred_result = new BranchPredictorResp
+    val pred_result = new BranchPredictorResult
     val mispredict  = new BranchPredictorUpdate
     val excepetion  = Bool()
 }
