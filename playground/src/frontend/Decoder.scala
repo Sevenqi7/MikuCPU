@@ -9,7 +9,7 @@ import miku.LA32Instructions._
 import miku.utils.util.uintToBitPat
 
 object SelImm {
-    def num         = 9
+    def num         = 8
     def IMM_MAX_LEN = 20
 
     def IMM_U8        = "b000".U(log2Ceil(num).W)
@@ -57,8 +57,7 @@ class LA32DecoderUnit extends MkModule with DecodeConstants {
     val raw_inst     = IO(Input(UInt(INST_BITS.W)))
     val decoded_inst = IO(Output(new DecodedInst))
 
-    val la32_decode_table = LA3RDecoder.decodeTable ++ LA2RI12Decoder.decodeTable ++
-        LA2RI8Decoder.decodeTable ++ LA2RI16Decoder.decodeTable
+    val la32_decode_table = LA3RDecoder.decodeTable ++ LA2RI12Decoder.decodeTable ++ LA2RI8Decoder.decodeTable ++ LA2RI16Decoder.decodeTable
 
     // ((instructions, decodeBits), defaultBits)
     val la32_decode_map = TruthTable(
@@ -67,7 +66,6 @@ class LA32DecoderUnit extends MkModule with DecodeConstants {
         }.toMap,
         decodeDefault.reduce(_ ## _)
     )
-
     decoded_inst := decoder(raw_inst, la32_decode_map).asTypeOf(new DecodedInst)
 }
 
