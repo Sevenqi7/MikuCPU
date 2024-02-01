@@ -78,9 +78,9 @@ class ScoreBoard extends MkModule {
     val fu_status  = RegInit(VecInit(Seq.fill(FU_STATUS_SIZE)(0.U.asTypeOf(new FUStatusTable))))
     val reg_result = RegInit(0.U.asTypeOf(new RegResultTable))
     // val inst_status_table = RegInit(VecInit(Seq.fill(NR_ENTRIES)(0.U.asTypeOf(new InstStatus))))
-    val inst_full  = RegInit(0.B)
+    // val inst_full  = RegInit(0.B)
 
-    io.out.sb_full     := inst_full
+    io.out.sb_full     := 0.U
     io.out.sb_issue_en := 0.U
 
     when(io.in.sb_commit_en) {
