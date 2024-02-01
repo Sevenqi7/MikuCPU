@@ -5,8 +5,8 @@ import chisel3.util._
 import chisel3.util.experimental.decode._
 
 import miku._
+import miku.LA32Instructions._
 import miku.utils.util.uintToBitPat
-import miku.frontend.LA32Instructions._
 
 object SelImm {
     def num         = 8

@@ -13,22 +13,29 @@ class PCInstBundle(pc_width: Int, inst_width: Int) extends Bundle {
     val inst = UInt(inst_width.W)
 }
 
+object SEXT {
+    def apply(in: Data, width: Int): UInt = {
+        val highest = in.asUInt(in.getWidth - 1).asUInt
+		Cat(Seq.fill(width - in.getWidth)(highest) :+ in.asUInt)
+    }
+}
+
 class DelayN[T <: Data](gen: T, n: Int) extends Module {
-  val io = IO(new Bundle() {
-    val in = Input(gen)
-    val out = Output(gen)
-  })
-  var out = io.in
-  for (i <- 0 until n) {
-    out = RegNext(out)
-  }
-  io.out := out
+    val io  = IO(new Bundle() {
+        val in  = Input(gen)
+        val out = Output(gen)
+    })
+    var out = io.in
+    for (i <- 0 until n) {
+        out = RegNext(out)
+    }
+    io.out := out
 }
 
 object DelayN {
-  def apply[T <: Data](in: T, n: Int): T = {
-    val delay = Module(new DelayN(in.cloneType, n))
-    delay.io.in := in
-    delay.io.out
-  }
+    def apply[T <: Data](in: T, n: Int): T = {
+        val delay = Module(new DelayN(in.cloneType, n))
+        delay.io.in := in
+        delay.io.out
+    }
 }

@@ -5,8 +5,8 @@ import chisel3.util._
 
 import miku._
 import miku.frontend._
+import miku.LA32Instructions._
 import miku.utils.util.uintToBitPat
-import miku.frontend.LA32Instructions._
 class CircularQueueInput[T <: Data](data: T) extends Bundle {
     val clear     = Bool()
     val enq_data  = UInt((data.getWidth).W)
