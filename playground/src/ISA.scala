@@ -7,11 +7,12 @@ import miku._
 import FuOpType.MaxOpNum
 
 object SrcType {
-    def num = 3
+    def num = 4
 
-    def reg = "b00".U(log2Ceil(num).W)
-    def pc  = "b01".U(log2Ceil(num).W)
-    def imm = "b10".U(log2Ceil(num).W)
+    def reg  = "b00".U(log2Ceil(num).W)
+    def pc   = "b01".U(log2Ceil(num).W)
+    def imm  = "b10".U(log2Ceil(num).W)
+    def none = "b11".U(log2Ceil(num).W)
 
     def X = BitPat("b??")
 
