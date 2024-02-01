@@ -18,11 +18,13 @@ class MkParams {
     //BPU
     val RAS_SIZE = 8
 
-    //ScoreBoard
+    //ScoreBoard and issue
     val NR_ENTRIES = 8
     val FU_STATUS  = 4
     val BACKEND_STATUS = 3
     val FU_TIME_MAX = 35
+    val MAX_OP = 14
+    val SEL_IMM_WIDTH = 3
 }
 
 trait HasMkParams {
@@ -37,7 +39,7 @@ trait HasMkParams {
 
     val RAS_SIZE = mkParams.RAS_SIZE
     val INST_QUEUE_SIZE = mkParams.INST_QUEUE_SIZE
-    
+    val MAX_OP_WIDTH = mkParams.MAX_OP
 
     //ScoreBoard
     val NR_ENTRIES = mkParams.NR_ENTRIES
@@ -47,7 +49,8 @@ trait HasMkParams {
     val FU_STATUS_SIZE = mkParams.FU_STATUS
     val FU_TIME_SIZE = log2Ceil(mkParams.FU_TIME_MAX)
     val BACKEND_STATUS = log2Ceil(mkParams.BACKEND_STATUS)
-
+    val SEL_IMM_WIDTH = mkParams.SEL_IMM_WIDTH
+    
     def instBytes = INST_BITS / 8
     def wordBytes = WORD_WIDTH / 8
 }
