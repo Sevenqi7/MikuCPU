@@ -20,6 +20,13 @@ object SEXT {
     }
 }
 
+object UEXT {
+    def apply(in: Data, width: Int): UInt = {
+        val highest = in.asUInt(in.getWidth - 1).asUInt
+		Cat(0.U((width - in.getWidth).W), in.asUInt)
+    }
+}
+
 class DelayN[T <: Data](gen: T, n: Int) extends Module {
     val io  = IO(new Bundle() {
         val in  = Input(gen)

@@ -21,16 +21,16 @@ object SrcType {
 
 // Function Unit Type
 object FuType {
-    def num = 5
+    def hot_num = 4
 
-    def alu = "b0001".U(log2Ceil(num).W)
-    def lsu = "b0010".U(log2Ceil(num).W)
-    def mul = "b0100".U(log2Ceil(num).W)
-    def jmp = "b1000".U(log2Ceil(num).W)
+    def alu = "b0001".U(hot_num.W)
+    def lsu = "b0010".U(hot_num.W)
+    def mul = "b0100".U(hot_num.W)
+    def jmp = "b1000".U(hot_num.W)
 
-    def X = BitPat("b???")
+    def X = BitPat("b????")
 
-    def apply() = UInt(log2Ceil(num).W)
+    def apply() = UInt(hot_num.W)
 }
 
 object FuOpType {
