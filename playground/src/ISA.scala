@@ -22,10 +22,10 @@ object SrcType {
 object FuType {
     def num = 5
 
-    def alu = "b000".U(log2Ceil(num).W)
-    def lsu = "b001".U(log2Ceil(num).W)
-    def mul = "b010".U(log2Ceil(num).W)
-    def jmp = "b100".U(log2Ceil(num).W)
+    def alu = "b0001".U(log2Ceil(num).W)
+    def lsu = "b0010".U(log2Ceil(num).W)
+    def mul = "b0100".U(log2Ceil(num).W)
+    def jmp = "b1000".U(log2Ceil(num).W)
 
     def X = BitPat("b???")
 

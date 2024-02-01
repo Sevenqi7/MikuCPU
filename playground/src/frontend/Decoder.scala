@@ -9,15 +9,17 @@ import miku.LA32Instructions._
 import miku.utils.util.uintToBitPat
 
 object SelImm {
-    def num         = 8
-    def IMM_MAX_LEN = 26
+    def num         = 7
+    def IMM_MAX_LEN = 20
 
-    def IMM_8         = "b000".U(log2Ceil(num).W)
-    def IMM_12        = "b001".U(log2Ceil(num).W)
-    def IMM_14        = "b010".U(log2Ceil(num).W)
-    def IMM_16        = "b011".U(log2Ceil(num).W)
-    def IMM_21        = "b100".U(log2Ceil(num).W)
-    def IMM_26        = "b101".U(log2Ceil(num).W)
+    def IMM_U8        = "b000".U(log2Ceil(num).W)
+    def IMM_S12       = "b001".U(log2Ceil(num).W)
+    def IMM_U12       = "b010".U(log2Ceil(num).W)
+    def IMM_S14       = "b011".U(log2Ceil(num).W)
+    def IMM_S16       = "b100".U(log2Ceil(num).W)
+    def IMM_S20       = "b101".U(log2Ceil(num).W)
+    // def IMM_U14       = "b100".U(log2Ceil(num).W)    //这玩意我没找到在哪
+    def IMM_S26       = "b110".U(log2Ceil(num).W)
     def INVALID_INSTR = "b111".U(log2Ceil(num).W)
     // def IMM_B6 = "b1000".U
 
@@ -55,7 +57,8 @@ class LA32DecoderUnit extends MkModule with DecodeConstants {
     val raw_inst     = IO(Input(UInt(INST_BITS.W)))
     val decoded_inst = IO(Output(new DecodedInst))
 
-    val la32_decode_table = LA3RDecoder.decodeTable ++ LA2RI12Decoder.decodeTable ++ LA2RI16Decoder.decodeTable
+    val la32_decode_table = LA3RDecoder.decodeTable ++ LA2RI12Decoder.decodeTable ++
+        LA2RI8Decoder.decodeTable ++ LA2RI16Decoder.decodeTable
 
     // ((instructions, decodeBits), defaultBits)
     val la32_decode_map = TruthTable(
@@ -80,7 +83,10 @@ object LA3RDecoder extends DecodeConstants {
         AND    -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.alu, ALUOpType.and      , N, SelImm.X),
         OR     -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.alu, ALUOpType.or       , N, SelImm.X),
         XOR    -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.alu, ALUOpType.xor      , N, SelImm.X),
-        SLLW   -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.mul, ALUOpType.sllw     , N, SelImm.X),
+        SLLW   -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.alu, ALUOpType.sllw     , N, SelImm.X),
+        SRLW   -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.alu, ALUOpType.srlw     , N, SelImm.X),
+        SRAW   -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.alu, ALUOpType.sraw     , N, SelImm.X),
+        MULW   -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.mul, MulDivOpType.mulw  , N, SelImm.X),
         MULHWU -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.mul, MulDivOpType.mulhwu, N, SelImm.X),
         DIVW   -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.mul, MulDivOpType.divw  , N, SelImm.X),
         MODW   -> List(Y, SrcType.reg, SrcType.reg, SrcType.X, FuType.mul, MulDivOpType.modw  , N, SelImm.X),
@@ -89,22 +95,30 @@ object LA3RDecoder extends DecodeConstants {
     )
 }
 
+object LA2RI8Decoder extends DecodeConstants {
+    val decodeTable = Array[(BitPat, List[BitPat])](
+        SLLIW -> List(Y, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, ALUOpType.sllw),
+        SRLIW -> List(Y, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, ALUOpType.srlw),
+        SRAIW -> List(Y, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, ALUOpType.sraw)
+    )
+}
+
 object LA2RI12Decoder extends DecodeConstants {
     val decodeTable = Array[(BitPat, List[BitPat])](
-        SLTI  -> List(Y, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, ALUOpType.slt , N, SelImm.IMM_12),
-        SLTUI -> List(Y, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, ALUOpType.sltu, N, SelImm.IMM_12),
-        ADDIW -> List(Y, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, ALUOpType.addw, N, SelImm.IMM_12),
-        ANDI  -> List(Y, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, ALUOpType.and , N, SelImm.IMM_12),
-        ORI   -> List(Y, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, ALUOpType.or  , N, SelImm.IMM_12),
-        XORI  -> List(Y, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, ALUOpType.xor , N, SelImm.IMM_12),
-        LDB   -> List(Y, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, LSUOpType.ldb , N, SelImm.IMM_12),
-        LDH   -> List(Y, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, LSUOpType.ldh , N, SelImm.IMM_12),
-        LDW   -> List(Y, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, LSUOpType.ldw , N, SelImm.IMM_12),
-        STB   -> List(N, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, LSUOpType.stb , N, SelImm.IMM_12),
-        STH   -> List(N, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, LSUOpType.sth , N, SelImm.IMM_12),
-        STW   -> List(N, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, LSUOpType.stw , N, SelImm.IMM_12),
-        LDBU  -> List(Y, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, LSUOpType.ldbu, N, SelImm.IMM_12),
-        LDHU  -> List(Y, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, LSUOpType.ldhu, N, SelImm.IMM_12)
+        SLTI  -> List(Y, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, ALUOpType.slt , N, SelImm.IMM_S12),
+        SLTUI -> List(Y, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, ALUOpType.sltu, N, SelImm.IMM_S12),
+        ADDIW -> List(Y, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, ALUOpType.addw, N, SelImm.IMM_S12),
+        ANDI  -> List(Y, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, ALUOpType.and , N, SelImm.IMM_U12),
+        ORI   -> List(Y, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, ALUOpType.or  , N, SelImm.IMM_U12),
+        XORI  -> List(Y, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, ALUOpType.xor , N, SelImm.IMM_U12),
+        LDB   -> List(Y, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, LSUOpType.ldb , N, SelImm.IMM_S12),
+        LDH   -> List(Y, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, LSUOpType.ldh , N, SelImm.IMM_S12),
+        LDW   -> List(Y, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, LSUOpType.ldw , N, SelImm.IMM_S12),
+        STB   -> List(N, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, LSUOpType.stb , N, SelImm.IMM_S12),
+        STH   -> List(N, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, LSUOpType.sth , N, SelImm.IMM_S12),
+        STW   -> List(N, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, LSUOpType.stw , N, SelImm.IMM_S12),
+        LDBU  -> List(Y, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, LSUOpType.ldbu, N, SelImm.IMM_S12),
+        LDHU  -> List(Y, SrcType.reg, SrcType.imm, SrcType.X, FuType.alu, LSUOpType.ldhu, N, SelImm.IMM_S12)
     )
 }
 
@@ -112,15 +126,15 @@ object LA2RI16Decoder extends DecodeConstants {
     val decodeTable = Array[(BitPat, List[BitPat])](
         // BCECQZ -> List(N, SrcType.reg, SrcType.reg, SrcType.X, FuOpType.X,      Y, SelImm.X     ), floating branch inst not supported yet
         // BCENEZ -> List(N, SrcType.reg, SrcType.reg, SrcType.X, FuOpType.X,      Y, SelImm.X     ),
-        JIRL   -> List(N, SrcType.reg, SrcType.reg, SrcType.X, FuType.jmp, JumpOpType.jirl, Y, SelImm.IMM_16),
-        B      -> List(N, SrcType.reg, SrcType.reg, SrcType.X, FuType.jmp, JumpOpType.b,    Y, SelImm.IMM_16),
-        BL     -> List(N, SrcType.reg, SrcType.reg, SrcType.X, FuType.jmp, JumpOpType.bl,   Y, SelImm.IMM_16),
-        BEQ    -> List(N, SrcType.reg, SrcType.reg, SrcType.X, FuType.jmp, JumpOpType.beq,  Y, SelImm.IMM_16),
-        BNE    -> List(N, SrcType.reg, SrcType.reg, SrcType.X, FuType.jmp, JumpOpType.bne,  Y, SelImm.IMM_16),
-        BLT    -> List(N, SrcType.reg, SrcType.reg, SrcType.X, FuType.jmp, JumpOpType.blt,  Y, SelImm.IMM_16),
-        BGE    -> List(N, SrcType.reg, SrcType.reg, SrcType.X, FuType.jmp, JumpOpType.bge,  Y, SelImm.IMM_16),
-        BLTU   -> List(N, SrcType.reg, SrcType.reg, SrcType.X, FuType.jmp, JumpOpType.bltu, Y, SelImm.IMM_16),
-        BGEU   -> List(N, SrcType.reg, SrcType.reg, SrcType.X, FuType.jmp, JumpOpType.bgeu, Y, SelImm.IMM_16)
+        JIRL   -> List(Y, SrcType.reg, SrcType.reg, SrcType.X,   FuType.jmp, JumpOpType.jirl, Y, SelImm.IMM_S16),
+        B      -> List(N, SrcType.reg, SrcType.reg, SrcType.X,   FuType.jmp, JumpOpType.b,    Y, SelImm.IMM_S26),
+        BL     -> List(Y, SrcType.reg, SrcType.reg, SrcType.X,   FuType.jmp, JumpOpType.bl,   Y, SelImm.IMM_S16),
+        BEQ    -> List(N, SrcType.reg, SrcType.reg, SrcType.imm, FuType.jmp, JumpOpType.beq,  Y, SelImm.IMM_S16),
+        BNE    -> List(N, SrcType.reg, SrcType.reg, SrcType.imm, FuType.jmp, JumpOpType.bne,  Y, SelImm.IMM_S16),
+        BLT    -> List(N, SrcType.reg, SrcType.reg, SrcType.imm, FuType.jmp, JumpOpType.blt,  Y, SelImm.IMM_S16),
+        BGE    -> List(N, SrcType.reg, SrcType.reg, SrcType.imm, FuType.jmp, JumpOpType.bge,  Y, SelImm.IMM_S16),
+        BLTU   -> List(N, SrcType.reg, SrcType.reg, SrcType.imm, FuType.jmp, JumpOpType.bltu, Y, SelImm.IMM_S16),
+        BGEU   -> List(N, SrcType.reg, SrcType.reg, SrcType.imm, FuType.jmp, JumpOpType.bgeu, Y, SelImm.IMM_S16)
     )
 }
 // format: on
