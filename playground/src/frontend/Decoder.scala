@@ -35,29 +35,33 @@ abstract trait DecodeConstants {
 
     def decodeDefault: List[BitPat] = /*
            regWen   src1      src2       src3     FuncUnit
-             |       |         |          |          |              flush
-             |       |         |          |          |                 |
-             |       |         |          |          |                 |              SelImm
-             |       |         |          |          |                 |                |             */
+             |       |         |          |          |      operation
+             |       |         |          |          |          |    flush
+             |       |         |          |          |          |      |              SelImm
+             |       |         |          |          |          |      |                |             */
         List(N, SrcType.X, SrcType.X, SrcType.X, FuType.X, FuOpType.X, N, SelImm.INVALID_INSTR)
 }
 
 class DecodedInst extends MkBundle with DecodeConstants {
-    val src1     = SrcType()
-    val src2     = SrcType()
-    val src3     = SrcType()
+    val src      = Vec(3, SrcType())
     val futype   = FuType()
     val fuoptype = FuOpType()
     val regwen   = Bool()
     val flush    = Bool()
     val selImm   = SelImm()
+
+    // src(0), src(1), src(2) seperately represent rk, rj, rd if there value is reg
+    def needRk = src(0) === SrcType.reg
+    def needRj = src(1) === SrcType.reg
+    def needRd = src(2) === SrcType.reg
 }
 
 class LA32DecoderUnit extends MkModule with DecodeConstants {
     val raw_inst     = IO(Input(UInt(INST_BITS.W)))
     val decoded_inst = IO(Output(new DecodedInst))
 
-    val la32_decode_table = LA3RDecoder.decodeTable ++ LA2RI12Decoder.decodeTable ++ LA2RI8Decoder.decodeTable ++ LA2RI16Decoder.decodeTable
+    val la32_decode_table =
+        LA3RDecoder.decodeTable ++ LA2RI12Decoder.decodeTable ++ LA2RI8Decoder.decodeTable ++ LA2RI16Decoder.decodeTable
 
     // ((instructions, decodeBits), defaultBits)
     val la32_decode_map = TruthTable(
@@ -124,15 +128,15 @@ object LA2RI16Decoder extends DecodeConstants {
     val decodeTable = Array[(BitPat, List[BitPat])](
         // BCECQZ -> List(N, SrcType.reg, SrcType.reg, SrcType.X, FuOpType.X,      Y, SelImm.X     ), floating branch inst not supported yet
         // BCENEZ -> List(N, SrcType.reg, SrcType.reg, SrcType.X, FuOpType.X,      Y, SelImm.X     ),
-        JIRL   -> List(Y, SrcType.reg, SrcType.reg, SrcType.none,   FuType.jmp, JumpOpType.jirl, Y, SelImm.IMM_S16),
-        B      -> List(N, SrcType.reg, SrcType.reg, SrcType.none,   FuType.jmp, JumpOpType.b   , Y, SelImm.IMM_S26),
-        BL     -> List(Y, SrcType.reg, SrcType.reg, SrcType.none,   FuType.jmp, JumpOpType.bl  , Y, SelImm.IMM_S16),
-        BEQ    -> List(N, SrcType.reg, SrcType.reg, SrcType.imm ,   FuType.jmp, JumpOpType.beq , Y, SelImm.IMM_S16),
-        BNE    -> List(N, SrcType.reg, SrcType.reg, SrcType.imm ,   FuType.jmp, JumpOpType.bne , Y, SelImm.IMM_S16),
-        BLT    -> List(N, SrcType.reg, SrcType.reg, SrcType.imm ,   FuType.jmp, JumpOpType.blt , Y, SelImm.IMM_S16),
-        BGE    -> List(N, SrcType.reg, SrcType.reg, SrcType.imm ,   FuType.jmp, JumpOpType.bge , Y, SelImm.IMM_S16),
-        BLTU   -> List(N, SrcType.reg, SrcType.reg, SrcType.imm ,   FuType.jmp, JumpOpType.bltu, Y, SelImm.IMM_S16),
-        BGEU   -> List(N, SrcType.reg, SrcType.reg, SrcType.imm ,   FuType.jmp, JumpOpType.bgeu, Y, SelImm.IMM_S16)
+        JIRL   -> List(Y, SrcType.reg, SrcType.reg, SrcType.none,   FuType.bru, JumpOpType.jirl, Y, SelImm.IMM_S16),
+        B      -> List(N, SrcType.reg, SrcType.reg, SrcType.none,   FuType.bru, JumpOpType.b   , Y, SelImm.IMM_S26),
+        BL     -> List(Y, SrcType.reg, SrcType.reg, SrcType.none,   FuType.bru, JumpOpType.bl  , Y, SelImm.IMM_S16),
+        BEQ    -> List(N, SrcType.reg, SrcType.reg, SrcType.imm ,   FuType.bru, JumpOpType.beq , Y, SelImm.IMM_S16),
+        BNE    -> List(N, SrcType.reg, SrcType.reg, SrcType.imm ,   FuType.bru, JumpOpType.bne , Y, SelImm.IMM_S16),
+        BLT    -> List(N, SrcType.reg, SrcType.reg, SrcType.imm ,   FuType.bru, JumpOpType.blt , Y, SelImm.IMM_S16),
+        BGE    -> List(N, SrcType.reg, SrcType.reg, SrcType.imm ,   FuType.bru, JumpOpType.bge , Y, SelImm.IMM_S16),
+        BLTU   -> List(N, SrcType.reg, SrcType.reg, SrcType.imm ,   FuType.bru, JumpOpType.bltu, Y, SelImm.IMM_S16),
+        BGEU   -> List(N, SrcType.reg, SrcType.reg, SrcType.imm ,   FuType.bru, JumpOpType.bgeu, Y, SelImm.IMM_S16)
     )
 }
 // format: on

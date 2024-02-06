@@ -26,7 +26,7 @@ object FuType {
     def alu = "b0001".U(num.W)
     def lsu = "b0010".U(num.W)
     def mul = "b0100".U(num.W)
-    def jmp = "b1000".U(num.W)
+    def bru = "b1000".U(num.W)
 
     def X = BitPat("b????")
 

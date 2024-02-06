@@ -19,19 +19,19 @@ class ScoreBoardInput extends MkBundle {
     val flush_unissued_instr = Bool()
     val sb_new_inst          = Bool() // scoreboard received a new unissued inst
 
-    val sb_way = UInt(FU_STATUS_SIZE.W)
+    val sb_way = FuType()
 
-    val sb_rd = UInt(REG_ADDR_SIZE.W)
-    val sb_rj = UInt(REG_ADDR_SIZE.W)
-    val sb_rk = UInt(REG_ADDR_SIZE.W)
+    val sb_rd = UInt(REG_ADDR_WD.W)
+    val sb_rj = UInt(REG_ADDR_WD.W)
+    val sb_rk = UInt(REG_ADDR_WD.W)
 
     val sb_rd_en = Bool()
     val sb_rj_en = Bool()
     val sb_rk_en = Bool()
 
     // val sb_inst_time = UInt(FU_TIME_SIZE.W)
-    val sb_commit_way = UInt(FU_STATUS_SIZE.W)
-    val sb_commit_rd  = UInt(REG_ADDR_SIZE.W)
+    val sb_commit_way = FuType()
+    val sb_commit_rd  = UInt(REG_ADDR_WD.W)
     val sb_commit_en  = Bool()
 }
 
@@ -40,11 +40,11 @@ class ScoreBoardInput extends MkBundle {
 class FUStatusTable extends MkBundle {
     class RegStatus extends MkBundle {
         // F
-        val num       = UInt(REG_ADDR_SIZE.W)  // reg destination
+        val num       = UInt(REG_ADDR_WD.W)  // reg destination
         // R
         val ready     = Bool()                 // reg number is ready
         // Q
-        val fu_number = UInt(FU_STATUS_SIZE.W) // when reg isnt ready, which FU number should get
+        val fu_number = FuType() // when reg isnt ready, which FU number should get
     }
     val busy = Bool()
     val rj   = new RegStatus
@@ -55,16 +55,16 @@ class FUStatusTable extends MkBundle {
 
 //这个table表示寄存器将被几号FU改写
 class RegResultTable extends MkBundle {
-    val status = Vec(REG_ADDR_WD, UInt(FU_STATUS_SIZE.W))
+    val status = Vec(REG_ADDR_WD, FuType())
 }
 
 //这个table记录着每一条指令所抵达的流水线位置,cva6中可以不存在这个结构
 class InstStatus extends MkBundle {
     val valid           = Bool() // 指令空位=false，存在指令=true
-    val op              = UInt(FU_STATUS_SIZE.W)
-    val rd              = UInt(REG_ADDR_SIZE.W)
-    val rj              = UInt(REG_ADDR_SIZE.W)
-    val rk              = UInt(REG_ADDR_SIZE.W)
+    val op              = FuType()
+    val rd              = UInt(REG_ADDR_WD.W)
+    val rj              = UInt(REG_ADDR_WD.W)
+    val rk              = UInt(REG_ADDR_WD.W)
     val now_inst_status = Bool() // 没发射=false，发射后=True
 }
 
@@ -75,7 +75,7 @@ class ScoreBoard extends MkModule {
         val out = Output(new ScoreBoardOutput)
     })
 
-    val fu_status  = RegInit(VecInit(Seq.fill(FU_STATUS_SIZE)(0.U.asTypeOf(new FUStatusTable))))
+    val fu_status  = RegInit(VecInit(Seq.fill(FuType.num)(0.U.asTypeOf(new FUStatusTable))))
     val reg_result = RegInit(0.U.asTypeOf(new RegResultTable))
     // val inst_status_table = RegInit(VecInit(Seq.fill(NR_ENTRIES)(0.U.asTypeOf(new InstStatus))))
     // val inst_full  = RegInit(0.B)

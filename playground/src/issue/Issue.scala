@@ -24,17 +24,21 @@ class IssueOutput extends MkBundle {
 
 class IssueQueueBundle extends MkBundle {
     class Status extends MkBundle {
-        val num   = UInt(REG_ADDR_SIZE.W) // reg number
+        val num   = UInt(REG_ADDR_WD.W) // reg number
         val valid = Bool()                // is reg valid?
     }
     val rj        = new Status
     val rk        = new Status
     val rd        = new Status
     val imm       = UInt(WORD_WIDTH.W)
-    val sel_imm   = UInt(SEL_IMM_WIDTH.W)
+    val sel_imm   = SelImm()
     val imm_valid = Bool()
-    val fuoptype  = UInt(MAX_OP_WIDTH.W)
-    val futype    = UInt(FU_STATUS_SIZE.W)
+    val fuoptype  = FuOpType()
+    val futype    = FuType()
+}
+
+class IssueStageIO extends MkBundle{
+    
 }
 
 class IssueStage extends MkModule {
@@ -43,35 +47,33 @@ class IssueStage extends MkModule {
         val out = Output(new IssueOutput)
     })
 
-    val alu :: load_store :: branch :: mul_div :: Nil = Enum(4)
-    val alu_hot                                       = UIntToOH(alu)
-    val lsu_hot                                       = UIntToOH(load_store)
-    val bru_hot                                       = UIntToOH(branch)
-    val mdu_hot                                       = UIntToOH(mul_div)
+    val alu_hot = FuType.alu
+    val lsu_hot = FuType.lsu
+    val bru_hot = FuType.bru
+    val mdu_hot = FuType.mul
 
     val scoreboard    = Module(new ScoreBoard)
     val issue_queue   = Module(new CircularQueue(new IssueQueueBundle, NR_ENTRIES))
-    val unissued_inst = new IssueQueueBundle
+    val unissued_inst = Wire(new IssueQueueBundle)
 
-    
-    
+    val q_imm_type   = io.in.decoded_inst.selImm
+    val q_reg_type   = io.in.decoded_inst.src
+    val inst         = io.in.inst
+    val decoded_inst = io.in.decoded_inst
 
-    val q_imm_type = io.in.decoded_inst.selImm
-    val q_reg_type = io.in.decoded_inst.src1
-    val inst       = io.in.inst
-    val is_issue   = scoreboard.io.out.sb_issue_en
+    val is_issue = scoreboard.io.out.sb_issue_en
 
     // 入队
-    unissued_inst.rd.valid := ~((q_imm_type === SelImm.IMM_S20) || (q_imm_type === SelImm.IMM_S26))
-    unissued_inst.rj.valid := ~(q_imm_type === SelImm.IMM_S26)
-    unissued_inst.rk.valid := ((q_reg_type === SrcType.reg) || (q_reg_type === SrcType.reg))
-    unissued_inst.rd.num   := inst(4, 0)
-    unissued_inst.rj.num   := inst(9, 5)
-    unissued_inst.rk.num   := inst(14, 10)
-    unissued_inst.sel_imm  := q_imm_type
-    unissued_inst.imm_valid := (io.in.decoded_inst.src1 === SrcType.none) && (io.in.decoded_inst.src2 === SrcType.none) && (io.in.decoded_inst.src3 === SrcType.none)
-    unissued_inst.futype   := io.in.decoded_inst.futype
-    unissued_inst.fuoptype := io.in.decoded_inst.fuoptype // TODO: 'UInt<14>' must be hardware, not a bare Chisel type.
+    unissued_inst.rd.valid  := decoded_inst.needRd
+    unissued_inst.rj.valid  := decoded_inst.needRj
+    unissued_inst.rk.valid  := decoded_inst.needRk
+    unissued_inst.rd.num    := inst(4, 0)
+    unissued_inst.rj.num    := inst(9, 5)
+    unissued_inst.rk.num    := inst(14, 10)
+    unissued_inst.sel_imm   := q_imm_type
+    unissued_inst.imm_valid := decoded_inst.src.map(s => s === SrcType.imm).reduce(_ | _)
+    unissued_inst.futype    := decoded_inst.futype
+    unissued_inst.fuoptype  := decoded_inst.fuoptype
 
     val imm_table = Seq[(UInt, UInt)](
         SelImm.IMM_U8  -> UEXT(inst(17, 10), WORD_WIDTH),
