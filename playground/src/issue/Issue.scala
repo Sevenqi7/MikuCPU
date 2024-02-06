@@ -6,26 +6,42 @@ import chisel3.util._
 import miku._
 import miku.utils._
 import miku.frontend._
+import miku.backend._
+
+class IssueSrc extends BaseFuInput {}
 
 class IssueEntry extends MkBundle {
     val pc           = UInt(VADDR_WIDTH.W)
     val inst         = UInt(INST_BITS.W)
     val decoded_inst = new DecodedInst()
     val valid        = Bool()
+
+    // commit
+    val commit_way = FuType()
+    val commit_rd  = UInt(REG_ADDR_WD.W)
+    val commit_en  = Bool()
+    val commit_wd  = UInt(WORD_WIDTH.W) // input regfile
 }
 
 class IssueOutput extends MkBundle {
-    val alu_valid   = Bool()
-    val lsu_valid   = Bool() // load store
-    val bru_valid   = Bool() // branch
-    val mdu_valid   = Bool() // mul and div
+    // 是否发射到这几个单元
+    val alu_valid = Bool()
+    val lsu_valid = Bool() // load store
+    val bru_valid = Bool() // branch
+    val mdu_valid = Bool() // mul and div
+
+    // 是否发射
     val issue_valid = Bool()
+
+    // 传入给EXU的值
+    val src = new IssueSrc()
 }
 
+// 队列中每条指令的Bundle
 class IssueQueueBundle extends MkBundle {
     class Status extends MkBundle {
         val num   = UInt(REG_ADDR_WD.W) // reg number
-        val valid = Bool()                // is reg valid?
+        val valid = Bool()              // is reg valid?
     }
     val rj        = new Status
     val rk        = new Status
@@ -35,11 +51,10 @@ class IssueQueueBundle extends MkBundle {
     val imm_valid = Bool()
     val fuoptype  = FuOpType()
     val futype    = FuType()
+    val pc        = UInt(VADDR_WIDTH.W)
 }
 
-class IssueStageIO extends MkBundle{
-    
-}
+class IssueStageIO extends MkBundle {}
 
 class IssueStage extends MkModule {
     val io = IO(new Bundle {
@@ -62,6 +77,7 @@ class IssueStage extends MkModule {
     val decoded_inst = io.in.decoded_inst
 
     val is_issue = scoreboard.io.out.sb_issue_en
+    io.out.issue_valid := is_issue
 
     // 入队
     unissued_inst.rd.valid  := decoded_inst.needRd
@@ -74,6 +90,7 @@ class IssueStage extends MkModule {
     unissued_inst.imm_valid := decoded_inst.src.map(s => s === SrcType.imm).reduce(_ | _)
     unissued_inst.futype    := decoded_inst.futype
     unissued_inst.fuoptype  := decoded_inst.fuoptype
+    unissued_inst.pc        := io.in.pc
 
     val imm_table = Seq[(UInt, UInt)](
         SelImm.IMM_U8  -> UEXT(inst(17, 10), WORD_WIDTH),
@@ -104,4 +121,33 @@ class IssueStage extends MkModule {
     scoreboard.io.in.sb_flush             := 0.U // TODO: branch predict failed flush
     scoreboard.io.in.flush_unissued_instr := 0.U // TODO: unissued flush
 
+    // 寄存器获取值
+    val regfile = new Regfiles
+    when(is_issue) {
+        when(issue_inst.rd.valid) {
+            regfile.read_io(0).rf_rs_i := issue_inst.rd
+            io.out.src.operand_c       := regfile.read_io(0).rf_rs_o
+        }
+        when(issue_inst.rj.valid) {
+            regfile.read_io(1).rf_rs_i := issue_inst.rj
+            io.out.src.operand_c       := regfile.read_io(1).rf_rs_o
+        }
+        when(issue_inst.rk.valid) {
+            regfile.read_io(2).rf_rs_i := issue_inst.rk
+            io.out.src.operand_c       := regfile.read_io(2).rf_rs_o
+        }.elsewhen(issue_inst.imm_valid) {
+            io.out.src.operand_b := issue_inst.imm
+        }
+        io.out.src.pc    := issue_inst.pc
+        io.out.src.flush := 0.U // TODO: issued flush
+    }
+
+    // commit
+    scoreboard.io.in.sb_commit_en  := io.in.commit_en
+    scoreboard.io.in.sb_commit_way := io.in.commit_way
+    scoreboard.io.in.sb_commit_rd  := io.in.commit_rd
+
+    regfile.write_io.rf_ws_data := io.in.commit_wd
+    regfile.write_io.rf_ws_i    := io.in.commit_rd
+    regfile.write_io.rf_ws_en   := io.in.commit_en
 }

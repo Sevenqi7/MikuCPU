@@ -40,11 +40,11 @@ class ScoreBoardInput extends MkBundle {
 class FUStatusTable extends MkBundle {
     class RegStatus extends MkBundle {
         // F
-        val num       = UInt(REG_ADDR_WD.W)  // reg destination
+        val num       = UInt(REG_ADDR_WD.W) // reg destination
         // R
-        val ready     = Bool()                 // reg number is ready
+        val ready     = Bool()              // reg number is ready
         // Q
-        val fu_number = FuType() // when reg isnt ready, which FU number should get
+        val fu_number = FuType()            // when reg isnt ready, which FU number should get
     }
     val busy = Bool()
     val rj   = new RegStatus
