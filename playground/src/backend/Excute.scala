@@ -12,10 +12,11 @@ abstract class BaseFuInput extends MkBundle {
     val pc        = UInt(VADDR_WIDTH.W)
     val flush     = Bool()
     val optype    = FuOpType()
-    val operand_a = UInt(WORD_WIDTH.W) // rj or imm20 in lui12w
-    val operand_b = UInt(WORD_WIDTH.W) // rk or imm
-    val operand_c = UInt(WORD_WIDTH.W) // imm16 for branch insts, imm5 for INVTLB or src3 for some floating insts
+    val operand_a = UInt(WORD_WIDTH.W) // rj
+    val operand_b = UInt(WORD_WIDTH.W) // rk or imms
+    val operand_c = UInt(WORD_WIDTH.W) // rd for branch and store insts or src3 for some floating insts
 }
+
 
 abstract class BaseFuOutput extends MkBundle {
     val result: Data
