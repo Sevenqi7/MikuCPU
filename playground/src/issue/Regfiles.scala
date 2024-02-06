@@ -22,13 +22,13 @@ class RegfileWriteIO extends MkBundle {
 }
 
 abstract class RegfileIO extends MkModule {
-    val read_io  = VecInit(Seq.fill(3)(IO(new RegfileReadIO)))
+    val read_io  = VecInit(Seq.fill(REG_RD_PORTS)(IO(new RegfileReadIO)))
     val write_io = IO(new RegfileWriteIO)
 }
 
 class Regfiles extends RegfileIO {
-    val registers = RegInit(VecInit(Seq.fill(32)(0.U(32.W))))
-    for (i <- 0 until 3) {
+    val registers = RegInit(VecInit(Seq.fill(REG_ADDR_WIDTH)(0.U(WORD_WIDTH.W))))
+    for (i <- 0 until REG_RD_PORTS) {
         read_io(i).rf_rs_o := registers(read_io(i).rf_rs_i)
     }
     when(write_io.rf_ws_en) {
