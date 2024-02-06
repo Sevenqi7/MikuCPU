@@ -9,7 +9,7 @@ import miku.utils._
 class RegfileReadIO extends MkBundle {
     // rs is read stage
     // rf is regfile
-    val rf_rs_i = Input(UInt(REG_ADDR_SIZE.W))
+    val rf_rs_i = Input(UInt(REG_ADDR_WD.W))
     val rf_rs_o = Output(UInt(WORD_WIDTH.W))
 }
 
@@ -17,7 +17,7 @@ class RegfileWriteIO extends MkBundle {
     // ws is write stage
     // rf is regfile
     val rf_ws_en = Input(Bool())
-    val rf_ws_i  = Input(UInt(REG_ADDR_SIZE.W))
+    val rf_ws_i  = Input(UInt(REG_ADDR_WD.W))
 }
 
 abstract class RegfileIO extends MkModule {
