@@ -53,14 +53,13 @@ class FUStatusTable extends MkBundle {
     // val time = UInt(FU_TIME_SIZE.W)
 }
 
-//这个table表示寄存器将被几号FU改写
+//这个table表示寄存器将被几号FU改写,解决WAW和RAW
 class RegResultTable extends MkBundle {
     val status = Vec(REG_ADDR_WD, FuType())
 }
 
-//这个table记录着每一条指令所抵达的流水线位置,cva6中可以不存在这个结构
+//这个table记录着每一条指令所抵达的流水线位置,解决WAR
 class InstStatus extends MkBundle {
-    val valid           = Bool() // 指令空位=false，存在指令=true
     val op              = FuType()
     val rd              = UInt(REG_ADDR_WD.W)
     val rj              = UInt(REG_ADDR_WD.W)
@@ -77,8 +76,8 @@ class ScoreBoard extends MkModule {
 
     val fu_status  = RegInit(VecInit(Seq.fill(FuType.num)(0.U.asTypeOf(new FUStatusTable))))
     val reg_result = RegInit(0.U.asTypeOf(new RegResultTable))
-    // val inst_status_table = RegInit(VecInit(Seq.fill(NR_ENTRIES)(0.U.asTypeOf(new InstStatus))))
-    // val inst_full  = RegInit(0.B)
+    // val inst_status_table = Module(new CircularQueue(new InstStatus, NR_ENTRIES))
+
 
     io.out.sb_full     := 0.U
     io.out.sb_issue_en := 0.U
@@ -91,21 +90,17 @@ class ScoreBoard extends MkModule {
         reg_result.status(io.in.sb_commit_rd) := 0.U
     }
 
+    // // commit 阶段解决 WAR
     // when(io.in.sb_new_inst) {
-    //     for (i <- 0 until NR_ENTRIES) {
-    //         when(inst_status_table(i).valid === false.B) {
-    //             inst_status_table(i).valid := true.B
-    //             inst_status_table(i).op    := io.in.sb_way
-    //             inst_status_table(i).rd    := io.in.sb_rd
-    //             inst_status_table(i).rj    := io.in.sb_rj
-    //             inst_status_table(i).rk    := io.in.sb_rk
-    //         }.otherwise {
-    //             inst_full := true.B
-    //         }
+    //     when(inst_status_table.io.out.full) {
+    //         io.out.sb_full := true.B
+    //     }.otherwise {
+            
     //     }
+
     // }
 
-    when(reg_result.status(io.in.sb_rj) === 0.U && reg_result.status(io.in.sb_rk) === 0.U) {
+    when(reg_result.status(io.in.sb_rd) === 0.U && reg_result.status(io.in.sb_rj) === 0.U && reg_result.status(io.in.sb_rk) === 0.U  ){
         io.out.sb_issue_en := ~fu_status(io.in.sb_way).busy
     }
 
