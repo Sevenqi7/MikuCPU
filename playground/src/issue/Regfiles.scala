@@ -21,12 +21,14 @@ class RegfileWriteIO extends MkBundle {
     val rf_ws_data = Input(UInt(WORD_WIDTH.W))
 }
 
-abstract class RegfileIO extends MkModule {
-    val read_io  = VecInit(Seq.fill(REG_RD_PORTS)(IO(new RegfileReadIO)))
+class Regfiles extends MkModule {
+    val read_io  = IO(Vec(REG_RD_PORTS, new RegfileReadIO))
     val write_io = IO(new RegfileWriteIO)
-}
 
-class Regfiles extends RegfileIO {
+    for (i <- 0 until REG_RD_PORTS) {
+        read_io(i).rf_rs_o := 0.U
+    }
+
     val registers = RegInit(VecInit(Seq.fill(REG_ADDR_WIDTH)(0.U(WORD_WIDTH.W))))
     for (i <- 0 until REG_RD_PORTS) {
         read_io(i).rf_rs_o := registers(read_io(i).rf_rs_i)

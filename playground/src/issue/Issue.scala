@@ -17,10 +17,11 @@ class IssueEntry extends MkBundle {
     val valid        = Bool()
 
     // commit
-    val commit_way = FuType()
-    val commit_rd  = UInt(REG_ADDR_WD.W)
-    val commit_en  = Bool()
-    val commit_wd  = UInt(WORD_WIDTH.W) // input regfile
+    val commit_way  = FuType()
+    val commit_rd   = UInt(REG_ADDR_WD.W)
+    val commit_en   = Bool()
+    val commit_wd   = UInt(WORD_WIDTH.W) // input regfile
+    val issue_clear = Bool()
 }
 
 class IssueOutput extends MkBundle {
@@ -77,7 +78,8 @@ class IssueStage extends MkModule {
     val decoded_inst = io.in.decoded_inst
 
     val is_issue = scoreboard.io.out.sb_issue_en
-    io.out.issue_valid := is_issue
+    io.out.issue_valid      := is_issue
+    issue_queue.io.in.clear := io.in.issue_clear
 
     // 入队
     unissued_inst.rd.valid  := decoded_inst.needRd
@@ -113,27 +115,39 @@ class IssueStage extends MkModule {
     scoreboard.io.in.sb_rd_en := issue_inst.rd.valid
     scoreboard.io.in.sb_rj_en := issue_inst.rj.valid
     scoreboard.io.in.sb_rk_en := issue_inst.rk.valid
-    scoreboard.io.in.sb_rd    := issue_inst.rd
-    scoreboard.io.in.sb_rj    := issue_inst.rj
-    scoreboard.io.in.sb_rk    := issue_inst.rk
+    scoreboard.io.in.sb_rd    := issue_inst.rd.num
+    scoreboard.io.in.sb_rj    := issue_inst.rj.num
+    scoreboard.io.in.sb_rk    := issue_inst.rk.num
     scoreboard.io.in.sb_way   := issue_inst.futype
+    scoreboard.io.in.sb_new_inst := DelayN(is_issue,1)
 
     scoreboard.io.in.sb_flush             := 0.U // TODO: branch predict failed flush
     scoreboard.io.in.flush_unissued_instr := 0.U // TODO: unissued flush
 
     // 寄存器获取值
-    val regfile = new Regfiles
+    val regfile = Module(new Regfiles)
+    for (i <- 0 until REG_RD_PORTS) {
+        regfile.read_io(i).rf_rs_i := 0.U
+    }
+
+    io.out.src.pc        := 0.U
+    io.out.src.operand_a := 0.U
+    io.out.src.operand_b := 0.U
+    io.out.src.operand_c := 0.U
+    io.out.src.optype    := 0.U
+    io.out.src.flush     := 0.U
+
     when(is_issue) {
         when(issue_inst.rd.valid) {
-            regfile.read_io(0).rf_rs_i := issue_inst.rd
+            regfile.read_io(0).rf_rs_i := issue_inst.rd.num
             io.out.src.operand_c       := regfile.read_io(0).rf_rs_o
         }
         when(issue_inst.rj.valid) {
-            regfile.read_io(1).rf_rs_i := issue_inst.rj
+            regfile.read_io(1).rf_rs_i := issue_inst.rj.num
             io.out.src.operand_c       := regfile.read_io(1).rf_rs_o
         }
         when(issue_inst.rk.valid) {
-            regfile.read_io(2).rf_rs_i := issue_inst.rk
+            regfile.read_io(2).rf_rs_i := issue_inst.rk.num
             io.out.src.operand_c       := regfile.read_io(2).rf_rs_o
         }.elsewhen(issue_inst.imm_valid) {
             io.out.src.operand_b := issue_inst.imm

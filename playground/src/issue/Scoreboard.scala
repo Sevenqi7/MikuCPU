@@ -58,7 +58,7 @@ class RegResultTable extends MkBundle {
     val status = Vec(REG_ADDR_WD, FuType())
 }
 
-//这个table记录着每一条指令所抵达的流水线位置,解决WAR
+//这个table记录着每一条指令所抵达的流水线位置
 class InstStatus extends MkBundle {
     val op              = FuType()
     val rd              = UInt(REG_ADDR_WD.W)
