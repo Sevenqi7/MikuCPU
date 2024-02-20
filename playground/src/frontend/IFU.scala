@@ -8,7 +8,7 @@ import miku.utils._
 
 class IFUICacheIO extends MkBundle {
     val cache_req  = Decoupled(new CacheReqIO(VADDR_WIDTH, WORD_WIDTH))
-    val cache_resp = Flipped(ValidIO(new CacheRespIO(WORD_WIDTH)))
+    val cache_resp = Flipped(new CacheRespIO(WORD_WIDTH))
 }
 
 class NpcSelInfo extends MkBundle {
@@ -37,7 +37,7 @@ class IFU extends MkModule {
 
     val npc_src   = io.npc_sel_info
     val s0_pc     = RegInit(0.U(VADDR_WIDTH.W))
-    val s0_valid  = true.B // TODO: set stall condition
+    val s0_valid  = RegInit(true.B) // TODO: set stall condition
     val pc_plus_4 = s0_pc + 4.U
     //                  cond   npc
     // npc-gen           |      |
@@ -47,24 +47,25 @@ class IFU extends MkModule {
         (true.B, s0_pc + 4.U)
     )
     val npc = PriorityMux(npc_gen)
-    s0_pc := npc
+    s0_pc    := npc
+    s0_valid := to_icache.valid & to_icache.ready
 
     val s1_pc    = RegEnable(s0_pc, s0_valid)
-    val s1_inst  = RegEnable(from_icache.bits.rdata, from_icache.bits.done)
-    val s1_valid = RegNext(from_icache.bits.done)
+    val s1_inst  = RegEnable(from_icache.rdata, from_icache.done)
+    val s1_valid = RegNext(from_icache.done)
 
     // fetch unit doesn't write cache
     to_icache.bits.wr       := 0.B
     to_icache.bits.addr     := npc
     to_icache.bits.wdata    := 0.U
     to_icache.bits.wtype    := 0.U
-    to_icache.bits.uncached := 0.B
+    to_icache.bits.uncached := false.B
     to_icache.valid         := true.B
 
     io.stage_info.s0.bits.pc   := s0_pc
-    io.stage_info.s0.bits.inst := from_icache.bits.rdata
+    io.stage_info.s0.bits.inst := from_icache.rdata
     io.stage_info.s0.valid     := s0_valid
     io.stage_info.s1.bits.pc   := s1_pc
     io.stage_info.s1.bits.inst := s1_inst
-    io.stage_info.s1.valid     := s1_valid   
+    io.stage_info.s1.valid     := s1_valid
 }

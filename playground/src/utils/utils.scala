@@ -13,17 +13,22 @@ class PCInstBundle(pc_width: Int, inst_width: Int) extends Bundle {
     val inst = UInt(inst_width.W)
 }
 
+class ReadyValidBundle extends Bundle {
+    val valid = Output(Bool())
+    val ready = Input(Bool())
+}
+
 object SEXT {
     def apply(in: Data, width: Int): UInt = {
         val highest = in.asUInt(in.getWidth - 1).asUInt
-		Cat(Seq.fill(width - in.getWidth)(highest) :+ in.asUInt)
+        Cat(Seq.fill(width - in.getWidth)(highest) :+ in.asUInt)
     }
 }
 
 object UEXT {
     def apply(in: Data, width: Int): UInt = {
         val highest = in.asUInt(in.getWidth - 1).asUInt
-		Cat(0.U((width - in.getWidth).W), in.asUInt)
+        Cat(0.U((width - in.getWidth).W), in.asUInt)
     }
 }
 

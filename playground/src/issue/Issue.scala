@@ -26,11 +26,11 @@ class IssueEntry extends MkBundle {
 
 class IssueOutput extends MkBundle {
     // 是否发射到这几个单元
-    val alu_valid = Bool()
-    val lsu_valid = Bool() // load store
-    val bru_valid = Bool() // branch
-    val mdu_valid = Bool() // mul and div
-
+    // val alu_valid = Bool()
+    // val lsu_valid = Bool() // load store
+    // val bru_valid = Bool() // branch
+    // val mdu_valid = Bool() // mul and div
+    val futype      = FuType()
     // 是否发射
     val issue_valid = Bool()
 
@@ -55,13 +55,13 @@ class IssueQueueBundle extends MkBundle {
     val pc        = UInt(VADDR_WIDTH.W)
 }
 
-class IssueStageIO extends MkBundle {}
+class IssueStageIO extends MkBundle {
+    val in  = Flipped(new IssueEntry)
+    val out = Decoupled(new IssueOutput)
+}
 
 class IssueStage extends MkModule {
-    val io = IO(new Bundle {
-        val in  = Input(new IssueEntry)
-        val out = Output(new IssueOutput)
-    })
+    val io = IO(new IssueStageIO)
 
     val alu_hot = FuType.alu
     val lsu_hot = FuType.lsu
@@ -78,7 +78,7 @@ class IssueStage extends MkModule {
     val decoded_inst = io.in.decoded_inst
 
     val is_issue = scoreboard.io.out.sb_issue_en
-    io.out.issue_valid      := is_issue
+    io.out.bits.issue_valid := is_issue
     issue_queue.io.in.clear := io.in.issue_clear
 
     // 入队
@@ -108,18 +108,19 @@ class IssueStage extends MkModule {
 
     // 出队
     val issue_inst = issue_queue.deqData(is_issue)
-    io.out.alu_valid          := (alu_hot & is_issue).asBools.reduce(_ | _)
-    io.out.lsu_valid          := (lsu_hot & is_issue).asBools.reduce(_ | _)
-    io.out.bru_valid          := (bru_hot & is_issue).asBools.reduce(_ | _)
-    io.out.mdu_valid          := (mdu_hot & is_issue).asBools.reduce(_ | _)
-    scoreboard.io.in.sb_rd_en := issue_inst.rd.valid
-    scoreboard.io.in.sb_rj_en := issue_inst.rj.valid
-    scoreboard.io.in.sb_rk_en := issue_inst.rk.valid
-    scoreboard.io.in.sb_rd    := issue_inst.rd.num
-    scoreboard.io.in.sb_rj    := issue_inst.rj.num
-    scoreboard.io.in.sb_rk    := issue_inst.rk.num
-    scoreboard.io.in.sb_way   := issue_inst.futype
-    scoreboard.io.in.sb_new_inst := DelayN(is_issue,1)
+    // io.out.bits.alu_valid        := (alu_hot & is_issue).asBools.reduce(_ | _)
+    // io.out.bits.lsu_valid        := (lsu_hot & is_issue).asBools.reduce(_ | _)
+    // io.out.bits.bru_valid        := (bru_hot & is_issue).asBools.reduce(_ | _)
+    // io.out.bits.mdu_valid        := (mdu_hot & is_issue).asBools.reduce(_ | _)
+    io.out.bits.futype           := issue_inst.futype
+    scoreboard.io.in.sb_rd_en    := issue_inst.rd.valid
+    scoreboard.io.in.sb_rj_en    := issue_inst.rj.valid
+    scoreboard.io.in.sb_rk_en    := issue_inst.rk.valid
+    scoreboard.io.in.sb_rd       := issue_inst.rd.num
+    scoreboard.io.in.sb_rj       := issue_inst.rj.num
+    scoreboard.io.in.sb_rk       := issue_inst.rk.num
+    scoreboard.io.in.sb_way      := issue_inst.futype
+    scoreboard.io.in.sb_new_inst := DelayN(is_issue, 1)
 
     scoreboard.io.in.sb_flush             := 0.U // TODO: branch predict failed flush
     scoreboard.io.in.flush_unissued_instr := 0.U // TODO: unissued flush
@@ -130,30 +131,30 @@ class IssueStage extends MkModule {
         regfile.read_io(i).rf_rs_i := 0.U
     }
 
-    io.out.src.pc        := 0.U
-    io.out.src.operand_a := 0.U
-    io.out.src.operand_b := 0.U
-    io.out.src.operand_c := 0.U
-    io.out.src.optype    := 0.U
-    io.out.src.flush     := 0.U
+    io.out.bits.src.pc        := 0.U
+    io.out.bits.src.operand_a := 0.U
+    io.out.bits.src.operand_b := 0.U
+    io.out.bits.src.operand_c := 0.U
+    io.out.bits.src.optype    := 0.U
+    io.out.bits.src.flush     := 0.U
 
     when(is_issue) {
         when(issue_inst.rd.valid) {
             regfile.read_io(0).rf_rs_i := issue_inst.rd.num
-            io.out.src.operand_c       := regfile.read_io(0).rf_rs_o
+            io.out.bits.src.operand_c  := regfile.read_io(0).rf_rs_o
         }
         when(issue_inst.rj.valid) {
             regfile.read_io(1).rf_rs_i := issue_inst.rj.num
-            io.out.src.operand_c       := regfile.read_io(1).rf_rs_o
+            io.out.bits.src.operand_c  := regfile.read_io(1).rf_rs_o
         }
         when(issue_inst.rk.valid) {
             regfile.read_io(2).rf_rs_i := issue_inst.rk.num
-            io.out.src.operand_c       := regfile.read_io(2).rf_rs_o
+            io.out.bits.src.operand_c  := regfile.read_io(2).rf_rs_o
         }.elsewhen(issue_inst.imm_valid) {
-            io.out.src.operand_b := issue_inst.imm
+            io.out.bits.src.operand_b := issue_inst.imm
         }
-        io.out.src.pc    := issue_inst.pc
-        io.out.src.flush := 0.U // TODO: issued flush
+        io.out.bits.src.pc    := issue_inst.pc
+        io.out.bits.src.flush := 0.U // TODO: issued flush
     }
 
     // commit

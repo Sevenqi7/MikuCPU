@@ -91,14 +91,18 @@ object JumpOpType {
 object LSUOpType {
     def num = 8
 
-    def ldb  = "b000".U(log2Ceil(MaxOpNum).W)
-    def ldh  = "b001".U(log2Ceil(MaxOpNum).W)
-    def ldw  = "b010".U(log2Ceil(MaxOpNum).W)
-    def ldbu = "b011".U(log2Ceil(MaxOpNum).W)
+    def isLoadType(optype: UInt)  = optype(2, 0) & "b100".U
+    def isStoreType(optype: UInt) = !(optype(2, 0) & "b100".U)
+    def toWriteMask(optype: UInt) = ~0.U(4.W) >> (4.U - optype(1, 0)) 
+
+    def ldb  = "b100".U(log2Ceil(MaxOpNum).W)
+    def ldh  = "b101".U(log2Ceil(MaxOpNum).W)
+    def ldw  = "b110".U(log2Ceil(MaxOpNum).W)
+    def ldbu = "b111".U(log2Ceil(MaxOpNum).W)
     def ldhu = "b100".U(log2Ceil(MaxOpNum).W)
-    def stb  = "b101".U(log2Ceil(MaxOpNum).W)
-    def sth  = "b110".U(log2Ceil(MaxOpNum).W)
-    def stw  = "b111".U(log2Ceil(MaxOpNum).W)
+    def stb  = "b000".U(log2Ceil(MaxOpNum).W)
+    def sth  = "b001".U(log2Ceil(MaxOpNum).W)
+    def stw  = "b010".U(log2Ceil(MaxOpNum).W)
 
     def X = BitPat("b???")
 }
