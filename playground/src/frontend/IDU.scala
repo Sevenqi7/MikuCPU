@@ -13,7 +13,7 @@ class IDUIO extends MkBundle {
     val ifu_s1     = Flipped(ValidIO(new PCInstBundle(VADDR_WIDTH, INST_BITS)))
     val pred_check = Flipped(new BranchPredictorUpdate())
     val exception  = Input(Bool())
-    val to_issue   = ValidIO(new IssueEntry()) // TODO: need a better name
+    val to_issue   = Decoupled(new IssueEntry()) // TODO: need a better name
 }
 
 class IDU extends MkModule {

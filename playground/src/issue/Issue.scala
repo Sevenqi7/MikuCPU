@@ -7,162 +7,88 @@ import miku._
 import miku.utils._
 import miku.frontend._
 import miku.backend._
-
-class IssueSrc extends BaseFuInput {}
+import miku.FuType._
 
 class IssueEntry extends MkBundle {
     val pc           = UInt(VADDR_WIDTH.W)
     val inst         = UInt(INST_BITS.W)
     val decoded_inst = new DecodedInst()
-    val valid        = Bool()
-
-    // commit
-    val commit_way  = FuType()
-    val commit_rd   = UInt(REG_ADDR_WD.W)
-    val commit_en   = Bool()
-    val commit_wd   = UInt(WORD_WIDTH.W) // input regfile
-    val issue_clear = Bool()
-}
-
-class IssueOutput extends MkBundle {
-    // 是否发射到这几个单元
-    // val alu_valid = Bool()
-    // val lsu_valid = Bool() // load store
-    // val bru_valid = Bool() // branch
-    // val mdu_valid = Bool() // mul and div
-    val futype      = FuType()
-    // 是否发射
-    val issue_valid = Bool()
-
-    // 传入给EXU的值
-    val src = new IssueSrc()
-}
-
-// 队列中每条指令的Bundle
-class IssueQueueBundle extends MkBundle {
-    class Status extends MkBundle {
-        val num   = UInt(REG_ADDR_WD.W) // reg number
-        val valid = Bool()              // is reg valid?
-    }
-    val rj        = new Status
-    val rk        = new Status
-    val rd        = new Status
-    val imm       = UInt(WORD_WIDTH.W)
-    val sel_imm   = SelImm()
-    val imm_valid = Bool()
-    val fuoptype  = FuOpType()
-    val futype    = FuType()
-    val pc        = UInt(VADDR_WIDTH.W)
 }
 
 class IssueStageIO extends MkBundle {
-    val in  = Flipped(new IssueEntry)
-    val out = Decoupled(new IssueOutput)
+    val from_decoder = Flipped(Decoupled(new IssueEntry))
+    val wb_data      = Flipped(ValidIO(new WriteBackResult))
+    val trans        = Decoupled(new EXUInput) // transcation that will be excuted in function unit
 }
 
 class IssueStage extends MkModule {
     val io = IO(new IssueStageIO)
 
-    val alu_hot = FuType.alu
-    val lsu_hot = FuType.lsu
-    val bru_hot = FuType.bru
-    val mdu_hot = FuType.mul
+    val scoreboard   = Module(new Scoreboard)
+    //  Both below two are the same instruction with the input one from deconder, just different representation
+    val issued_inst  = scoreboard.io.issue_inst
+    val decoded_inst = io.from_decoder.bits.decoded_inst
+    scoreboard.io.wb_data          := io.wb_data
+    scoreboard.io.flush            := false.B // TODO: add condition
+    scoreboard.io.from_decoder     <> io.from_decoder
+    scoreboard.io.issue_inst.ready := io.trans.ready
 
-    val scoreboard    = Module(new ScoreBoard)
-    val issue_queue   = Module(new CircularQueue(new IssueQueueBundle, NR_ENTRIES))
-    val unissued_inst = Wire(new IssueQueueBundle)
+    // read operands of the issued instruction from scoreboard
+    val gpr = Module(new MkRegfiles)
+    gpr.read_io(0).rf_rs_i := issued_inst.bits.sbe.rk_num
+    gpr.read_io(1).rf_rs_i := issued_inst.bits.sbe.rj_num
+    gpr.read_io(2).rf_rs_i := issued_inst.bits.sbe.rd_num
 
-    val q_imm_type   = io.in.decoded_inst.selImm
-    val q_reg_type   = io.in.decoded_inst.src
-    val inst         = io.in.inst
-    val decoded_inst = io.in.decoded_inst
+    val rk_gpr_data = gpr.read_io(0).rf_rs_o
+    val rk_fwd_data = scoreboard.io.forward_msg.rk_fwd_data
+    val rj_gpr_data = gpr.read_io(1).rf_rs_o
+    val rj_fwd_data = scoreboard.io.forward_msg.rj_fwd_data
+    val rd_gpr_data = gpr.read_io(2).rf_rs_o
+    val rd_fwd_data = scoreboard.io.forward_msg.rd_fwd_data
 
-    val is_issue = scoreboard.io.out.sb_issue_en
-    io.out.bits.issue_valid := is_issue
-    issue_queue.io.in.clear := io.in.issue_clear
+    val rk_data = Mux(rk_fwd_data.valid, rk_fwd_data.bits, rk_gpr_data)
+    val rj_data = Mux(rj_fwd_data.valid, rj_fwd_data.bits, rj_gpr_data)
+    val rd_data = Mux(rd_fwd_data.valid, rd_fwd_data.bits, rd_gpr_data)
 
-    // 入队
-    unissued_inst.rd.valid  := decoded_inst.needRd
-    unissued_inst.rj.valid  := decoded_inst.needRj
-    unissued_inst.rk.valid  := decoded_inst.needRk
-    unissued_inst.rd.num    := inst(4, 0)
-    unissued_inst.rj.num    := inst(9, 5)
-    unissued_inst.rk.num    := inst(14, 10)
-    unissued_inst.sel_imm   := q_imm_type
-    unissued_inst.imm_valid := decoded_inst.src.map(s => s === SrcType.imm).reduce(_ | _)
-    unissued_inst.futype    := decoded_inst.futype
-    unissued_inst.fuoptype  := decoded_inst.fuoptype
-    unissued_inst.pc        := io.in.pc
+    // immdiate number selection
 
+    val imm_sel   = decoded_inst.selImm
     val imm_table = Seq[(UInt, UInt)](
-        SelImm.IMM_U8  -> UEXT(inst(17, 10), WORD_WIDTH),
-        SelImm.IMM_S12 -> SEXT(inst(21, 10), WORD_WIDTH),
-        SelImm.IMM_U12 -> UEXT(inst(21, 10), WORD_WIDTH),
-        SelImm.IMM_S14 -> SEXT(inst(23, 10), WORD_WIDTH),
-        SelImm.IMM_S16 -> SEXT(inst(25, 10), WORD_WIDTH),
-        SelImm.IMM_S20 -> SEXT(Cat(inst(4, 0), inst(21, 10)), WORD_WIDTH),
-        SelImm.IMM_S26 -> SEXT(Cat(inst(9, 0), inst(21, 10)), WORD_WIDTH)
+        SelImm.IMM_U8  -> UEXT(io.from_decoder.bits.inst(17, 10), WORD_WIDTH),
+        SelImm.IMM_S12 -> SEXT(io.from_decoder.bits.inst(21, 10), WORD_WIDTH),
+        SelImm.IMM_U12 -> UEXT(io.from_decoder.bits.inst(21, 10), WORD_WIDTH),
+        SelImm.IMM_S14 -> SEXT(io.from_decoder.bits.inst(23, 10), WORD_WIDTH),
+        SelImm.IMM_S16 -> SEXT(io.from_decoder.bits.inst(25, 10), WORD_WIDTH),
+        SelImm.IMM_S20 -> SEXT(Cat(io.from_decoder.bits.inst(4, 0), io.from_decoder.bits.inst(21, 10)), WORD_WIDTH),
+        SelImm.IMM_S26 -> SEXT(Cat(io.from_decoder.bits.inst(9, 0), io.from_decoder.bits.inst(21, 10)), WORD_WIDTH)
     )
-    unissued_inst.imm := MuxLookup(q_imm_type, 0.U)(imm_table)
-    issue_queue.enqData(unissued_inst, io.in.valid)
+    val imm       = MuxLookup(imm_sel, DEBUG_MAGICNUM.U)(imm_table)
 
-    // 出队
-    val issue_inst = issue_queue.deqData(is_issue)
-    // io.out.bits.alu_valid        := (alu_hot & is_issue).asBools.reduce(_ | _)
-    // io.out.bits.lsu_valid        := (lsu_hot & is_issue).asBools.reduce(_ | _)
-    // io.out.bits.bru_valid        := (bru_hot & is_issue).asBools.reduce(_ | _)
-    // io.out.bits.mdu_valid        := (mdu_hot & is_issue).asBools.reduce(_ | _)
-    io.out.bits.futype           := issue_inst.futype
-    scoreboard.io.in.sb_rd_en    := issue_inst.rd.valid
-    scoreboard.io.in.sb_rj_en    := issue_inst.rj.valid
-    scoreboard.io.in.sb_rk_en    := issue_inst.rk.valid
-    scoreboard.io.in.sb_rd       := issue_inst.rd.num
-    scoreboard.io.in.sb_rj       := issue_inst.rj.num
-    scoreboard.io.in.sb_rk       := issue_inst.rk.num
-    scoreboard.io.in.sb_way      := issue_inst.futype
-    scoreboard.io.in.sb_new_inst := DelayN(is_issue, 1)
+    io.trans.valid          := issued_inst.valid
+    io.trans.bits.id        := issued_inst.bits.id
+    io.trans.bits.pc        := io.from_decoder.bits.pc
+    io.trans.bits.flush     := false.B // TODO: add conditon
+    io.trans.bits.operand_a := rj_data
+    io.trans.bits.operand_b := MuxCase(
+        DEBUG_MAGICNUM.U,
+        Seq(
+            (decoded_inst.needRk, rk_data),
+            (decoded_inst.needImm, imm)
+        )
+    )
+    io.trans.bits.operand_c := rd_data
+    io.trans.bits.optype    := decoded_inst.fuoptype
+    io.trans.bits.futype    := decoded_inst.futype
 
-    scoreboard.io.in.sb_flush             := 0.U // TODO: branch predict failed flush
-    scoreboard.io.in.flush_unissued_instr := 0.U // TODO: unissued flush
+    val opr_a_valid = decoded_inst.needRj & !scoreboard.io.forward_msg.rj_raw_hazard
+    val opr_b_valid = decoded_inst.needRk & !scoreboard.io.forward_msg.rk_raw_hazard
+    val opr_c_valid = decoded_inst.needRd & !scoreboard.io.forward_msg.rd_raw_hazard
+    scoreboard.io.operands_rdy := opr_a_valid & opr_b_valid & opr_c_valid
 
-    // 寄存器获取值
-    val regfile = Module(new Regfiles)
-    for (i <- 0 until REG_RD_PORTS) {
-        regfile.read_io(i).rf_rs_i := 0.U
-    }
-
-    io.out.bits.src.pc        := 0.U
-    io.out.bits.src.operand_a := 0.U
-    io.out.bits.src.operand_b := 0.U
-    io.out.bits.src.operand_c := 0.U
-    io.out.bits.src.optype    := 0.U
-    io.out.bits.src.flush     := 0.U
-
-    when(is_issue) {
-        when(issue_inst.rd.valid) {
-            regfile.read_io(0).rf_rs_i := issue_inst.rd.num
-            io.out.bits.src.operand_c  := regfile.read_io(0).rf_rs_o
-        }
-        when(issue_inst.rj.valid) {
-            regfile.read_io(1).rf_rs_i := issue_inst.rj.num
-            io.out.bits.src.operand_c  := regfile.read_io(1).rf_rs_o
-        }
-        when(issue_inst.rk.valid) {
-            regfile.read_io(2).rf_rs_i := issue_inst.rk.num
-            io.out.bits.src.operand_c  := regfile.read_io(2).rf_rs_o
-        }.elsewhen(issue_inst.imm_valid) {
-            io.out.bits.src.operand_b := issue_inst.imm
-        }
-        io.out.bits.src.pc    := issue_inst.pc
-        io.out.bits.src.flush := 0.U // TODO: issued flush
-    }
-
-    // commit
-    scoreboard.io.in.sb_commit_en  := io.in.commit_en
-    scoreboard.io.in.sb_commit_way := io.in.commit_way
-    scoreboard.io.in.sb_commit_rd  := io.in.commit_rd
-
-    regfile.write_io.rf_ws_data := io.in.commit_wd
-    regfile.write_io.rf_ws_i    := io.in.commit_rd
-    regfile.write_io.rf_ws_en   := io.in.commit_en
+    // commit logic
+    val commit_inst = scoreboard.io.commit_inst
+    commit_inst.ready       := true.B // ?: correctness need checked
+    gpr.write_io.rf_ws_i    := commit_inst.bits.sbe.rd_num
+    gpr.write_io.rf_ws_en   := commit_inst.valid && commit_inst.bits.sbe.decoded_inst.regwen
+    gpr.write_io.rf_ws_data := commit_inst.bits.sbe.result
 }

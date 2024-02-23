@@ -5,52 +5,46 @@ import chisel3.util._
 
 import miku._
 import miku.utils._
+import miku.frontend.DecodedInst
 
-class ScoreBoardOutput extends MkBundle {
-    // sb is scoreboard
-    val sb_full     = Bool()
-    val sb_issue_en = Bool()
-
+class WriteBackResult extends MkBundle {
+    val id        = UInt(log2Ceil(NR_ENTRIES).W) // unique id for each issued instruction
+    val result    = UInt(WORD_WIDTH.W)
+    val exception = Bool()
 }
 
-class ScoreBoardInput extends MkBundle {
-    // sb is scoreboard
-    val sb_flush             = Bool()
-    val flush_unissued_instr = Bool()
-    val sb_new_inst          = Bool() // scoreboard received a new unissued inst
-
-    val sb_way = FuType()
-
-    val sb_rd = UInt(REG_ADDR_WD.W)
-    val sb_rj = UInt(REG_ADDR_WD.W)
-    val sb_rk = UInt(REG_ADDR_WD.W)
-
-    val sb_rd_en = Bool()
-    val sb_rj_en = Bool()
-    val sb_rk_en = Bool()
-
-    // val sb_inst_time = UInt(FU_TIME_SIZE.W)
-    val sb_commit_way = FuType()
-    val sb_commit_rd  = UInt(REG_ADDR_WD.W)
-    val sb_commit_en  = Bool()
+class ScoreboardEntry extends MkBundle {
+    val decoded_inst = new DecodedInst
+    val rj_num       = UInt(REG_ADDR_WD.W)
+    val rk_num       = UInt(REG_ADDR_WD.W)
+    val rd_num       = UInt(REG_ADDR_WD.W)
+    val exception    = Bool()
+    val result       = UInt(WORD_WIDTH.W)
+    val executed     = Bool()
 }
 
-//FU is Functional Status
-//这个table记录着每个FU的状态
-class FUStatusTable extends MkBundle {
-    class RegStatus extends MkBundle {
-        // F
-        val num       = UInt(REG_ADDR_WD.W) // reg destination
-        // R
-        val ready     = Bool()              // reg number is ready
-        // Q
-        val fu_number = FuType()            // when reg isnt ready, which FU number should get
-    }
-    val busy = Bool()
-    val rj   = new RegStatus
-    val rk   = new RegStatus
-    val rd   = new RegStatus
-    // val time = UInt(FU_TIME_SIZE.W)
+class ScoreboardFowardInfo extends MkBundle {
+    val rj_fwd_data   = ValidIO(UInt(WORD_WIDTH.W))
+    val rj_raw_hazard = Bool()
+    val rk_fwd_data   = ValidIO(UInt(WORD_WIDTH.W))
+    val rk_raw_hazard = Bool()
+    val rd_fwd_data   = ValidIO(UInt(WORD_WIDTH.W))
+    val rd_raw_hazard = Bool()
+}
+
+class IssuedInst extends MkBundle {
+    val id  = UInt(log2Ceil(NR_ENTRIES).W) // unique id for each issued instruction
+    val sbe = new ScoreboardEntry
+}
+
+class ScoreboardIO extends MkBundle {
+    val from_decoder = Flipped(Decoupled(new IssueEntry)) // decoded inst from IDU
+    val issue_inst   = Decoupled(new IssuedInst)          // issued inst to EXU
+    val commit_inst  = Decoupled(new IssuedInst)          // instruction to be committed
+    val flush        = Input(Bool())
+    val operands_rdy = Input(Bool())
+    val wb_data      = Flipped(ValidIO(new WriteBackResult))
+    val forward_msg  = new ScoreboardFowardInfo
 }
 
 //这个table表示寄存器将被几号FU改写,解决WAW和RAW
@@ -58,60 +52,172 @@ class RegResultTable extends MkBundle {
     val status = Vec(REG_ADDR_WD, FuType())
 }
 
-//这个table记录着每一条指令所抵达的流水线位置
-class InstStatus extends MkBundle {
-    val op              = FuType()
-    val rd              = UInt(REG_ADDR_WD.W)
-    val rj              = UInt(REG_ADDR_WD.W)
-    val rk              = UInt(REG_ADDR_WD.W)
-    val now_inst_status = Bool() // 没发射=false，发射后=True
-}
+class Scoreboard extends MkModule {
+    val io = IO(new ScoreboardIO)
 
-class ScoreBoard extends MkModule {
+    val sb_mem = RegInit(VecInit.fill(NR_ENTRIES)(0.U.asTypeOf(ValidIO(new ScoreboardEntry))))
 
-    val io = IO(new Bundle {
-        val in  = Input(new ScoreBoardInput)
-        val out = Output(new ScoreBoardOutput)
-    })
+    val commit_ptr = RegInit(0.U(log2Ceil(NR_ENTRIES).W))
+    val issue_ptr  = RegInit(0.U(log2Ceil(NR_ENTRIES).W))
+    val issued_cnt = RegInit(0.U(log2Ceil(NR_ENTRIES).W))
 
-    val fu_status  = RegInit(VecInit(Seq.fill(FuType.num)(0.U.asTypeOf(new FUStatusTable))))
-    val reg_result = RegInit(0.U.asTypeOf(new RegResultTable))
-    // val inst_status_table = Module(new CircularQueue(new InstStatus, NR_ENTRIES))
+    val commit_ack = io.commit_inst.valid & io.commit_inst.ready
+    val issue_ack  = io.issue_inst.valid & io.issue_inst.ready
 
-
-    io.out.sb_full     := 0.U
-    io.out.sb_issue_en := 0.U
-
-    when(io.in.sb_commit_en) {
-        fu_status(io.in.sb_commit_way).busy   := false.B
-        fu_status(io.in.sb_commit_way).rd.num := 0.U
-        fu_status(io.in.sb_commit_way).rj.num := 0.U
-        fu_status(io.in.sb_commit_way).rk.num := 0.U
-        reg_result.status(io.in.sb_commit_rd) := 0.U
+    // update the counter of issued insts
+    when(issue_ack) {
+        issued_cnt := issued_cnt + 1.U
+    }
+    when(commit_ack) {
+        issued_cnt := issued_cnt - 1.U
     }
 
-    // // commit 阶段解决 WAR
-    // when(io.in.sb_new_inst) {
-    //     when(inst_status_table.io.out.full) {
-    //         io.out.sb_full := true.B
-    //     }.otherwise {
-            
-    //     }
+    val sb_full      = issued_cnt === NR_ENTRIES.U
+    val decoded_inst = io.from_decoder.bits.decoded_inst
 
-    // }
-
-    when(reg_result.status(io.in.sb_rd) === 0.U && reg_result.status(io.in.sb_rj) === 0.U && reg_result.status(io.in.sb_rk) === 0.U  ){
-        io.out.sb_issue_en := ~fu_status(io.in.sb_way).busy
+    // issue inst when respective function unit is ready
+    when(issue_ack) {
+        issue_ptr                           := issue_ptr + 1.U
+        sb_mem(issue_ptr).valid             := true.B // set valid bit as true when successfully issue this instruction
+        sb_mem(issue_ptr).bits.rk_num       := io.from_decoder.bits.inst(14, 10)
+        sb_mem(issue_ptr).bits.rj_num       := io.from_decoder.bits.inst(9, 5)
+        sb_mem(issue_ptr).bits.rd_num       := io.from_decoder.bits.inst(4, 0)
+        sb_mem(issue_ptr).bits.decoded_inst := io.from_decoder.bits.decoded_inst
     }
 
-    when(io.out.sb_issue_en) {
-        fu_status(io.in.sb_way).busy := true.B
-        when(io.in.sb_rd_en) {
-            fu_status(io.in.sb_way).rd.num := io.in.sb_rd
-            reg_result.status(io.in.sb_rd) := io.in.sb_way
+    // default - initialise all fieled with zero
+    val init_sbe = 0.U.asTypeOf(new ScoreboardEntry)
+    io.issue_inst.bits.sbe := init_sbe
+
+    io.issue_inst.bits.id := issue_ptr
+    // issue an instruction when operands are ready and there
+    // are no other currently issued instruction to write the same destination register
+    val waw_hazard = decoded_inst.regwen && sb_mem.zipWithIndex
+        .map { case (sbe, id) =>
+            sbe.valid && sbe.bits.decoded_inst.regwen &&
+            (sbe.bits.rd_num === io.issue_inst.bits.sbe.rd_num) &&
+            (id.U =/= commit_ptr)
+        }.reduce(_ || _)
+
+    io.issue_inst.valid           := io.from_decoder.valid && io.operands_rdy && !waw_hazard
+    io.issue_inst.bits.sbe.rk_num := io.from_decoder.bits.inst(14, 10)
+    io.issue_inst.bits.sbe.rj_num := io.from_decoder.bits.inst(9, 5)
+    io.issue_inst.bits.sbe.rd_num := io.from_decoder.bits.inst(4, 0)
+    io.from_decoder.ready         := !sb_full
+
+    // commit inst
+    when(commit_ack) {
+        commit_ptr                       := commit_ptr + 1.U
+        sb_mem(commit_ptr).valid         := false.B
+        sb_mem(commit_ptr).bits.executed := false.B
+    }
+
+    // write-back from exu
+    val wb_id = io.wb_data.bits.id
+    when(io.wb_data.valid) {
+        sb_mem(wb_id).bits.result    := io.wb_data.bits.result
+        sb_mem(wb_id).bits.exception := io.wb_data.bits.exception
+        sb_mem(wb_id).bits.executed  := true.B
+    }
+
+    // flush
+    when(io.flush) {
+        commit_ptr := 0.U
+        issue_ptr  := 0.U
+        issued_cnt := 0.U
+        for (i <- 0 until NR_ENTRIES) {
+            sb_mem(i).valid         := false.B
+            sb_mem(i).bits.executed := false.B
         }
-        when(io.in.sb_rj_en) { fu_status(io.in.sb_way).rj.num := io.in.sb_rj }
-        when(io.in.sb_rk_en) { fu_status(io.in.sb_way).rk.num := io.in.sb_rk }
     }
 
+    io.commit_inst.bits.id  := commit_ptr
+    io.commit_inst.bits.sbe := sb_mem(commit_ptr).bits
+    io.commit_inst.valid    := sb_mem(commit_ptr).bits.executed
+
+    // bypass arbiter
+    // this priority arbiter choose the most up-to-date reg data
+    // from all the sb_mem entry and write-back data from EXU.
+    // Further selection such as selecting immediate result from EXU will be processed
+    // during GPR's accessing
+
+    // rj arbibter
+    val rj_arb = Module(new Arbiter(UInt(WORD_WIDTH.W), NR_ENTRIES + 1))
+    rj_arb.io.in(0).valid := io.wb_data.valid &&
+        (io.issue_inst.bits.sbe.rj_num === sb_mem(wb_id).bits.rd_num) &&
+        sb_mem(wb_id).bits.decoded_inst.regwen
+    rj_arb.io.in(0).bits  := io.wb_data.bits.result
+    rj_arb.io.out.ready   := true.B
+
+    for (i <- 0 until NR_ENTRIES) {
+        val result_valid = sb_mem(i).valid &&
+            (io.issue_inst.bits.sbe.rj_num === sb_mem(i).bits.rd_num) &&
+            sb_mem(i).bits.executed &&
+            sb_mem(i).bits.decoded_inst.regwen
+        rj_arb.io.in(i + 1).valid := result_valid
+        rj_arb.io.in(i + 1).bits  := sb_mem(i).bits.result
+    }
+
+    // rk arbiter
+    val rk_arb = Module(new Arbiter(UInt(WORD_WIDTH.W), NR_ENTRIES + 1))
+    rk_arb.io.in(0).valid := io.wb_data.valid &&
+        (io.issue_inst.bits.sbe.rk_num === sb_mem(wb_id).bits.rd_num) &&
+        sb_mem(wb_id).bits.decoded_inst.regwen
+    rk_arb.io.in(0).bits  := io.wb_data.bits.result
+    rk_arb.io.out.ready   := true.B
+
+    for (i <- 0 until NR_ENTRIES) {
+        val result_valid = sb_mem(i).valid &&
+            (io.issue_inst.bits.sbe.rk_num === sb_mem(i).bits.rd_num) &&
+            sb_mem(i).bits.executed &&
+            sb_mem(i).bits.decoded_inst.regwen
+        rk_arb.io.in(i + 1).valid := result_valid
+        rk_arb.io.in(i + 1).bits  := sb_mem(i).bits.result
+    }
+
+    // rd arbiter
+    val rd_arb = Module(new Arbiter(UInt(WORD_WIDTH.W), NR_ENTRIES + 1))
+    rd_arb.io.in(0).valid := io.wb_data.valid &&
+        (io.issue_inst.bits.sbe.rd_num === sb_mem(wb_id).bits.rd_num) &&
+        sb_mem(wb_id).bits.decoded_inst.regwen
+    rd_arb.io.in(0).bits  := io.wb_data.bits.result
+    rd_arb.io.out.ready   := true.B
+
+    for (i <- 0 until NR_ENTRIES) {
+        val result_valid = sb_mem(i).valid &&
+            (io.issue_inst.bits.sbe.rd_num === sb_mem(i).bits.rd_num) &&
+            sb_mem(i).bits.executed &&
+            sb_mem(i).bits.decoded_inst.regwen
+        rd_arb.io.in(i + 1).valid := result_valid
+        rd_arb.io.in(i + 1).bits  := sb_mem(i).bits.result
+    }
+
+    io.forward_msg.rj_fwd_data := rj_arb.io.out
+    io.forward_msg.rk_fwd_data := rk_arb.io.out
+    io.forward_msg.rd_fwd_data := rd_arb.io.out
+
+    io.forward_msg.rj_raw_hazard := sb_mem
+        .map(sbe =>
+            sbe.valid && !sbe.bits.executed
+                && sbe.bits.decoded_inst.regwen
+                && (sbe.bits.rd_num === io.issue_inst.bits.sbe.rj_num)
+                && !rj_arb.io.in(0).valid
+        )
+        .reduce(_ || _)
+    io.forward_msg.rk_raw_hazard := sb_mem
+        .map(sbe =>
+            sbe.valid && !sbe.bits.executed
+                && sbe.bits.decoded_inst.regwen
+                && (sbe.bits.rd_num === io.issue_inst.bits.sbe.rk_num)
+                && !rk_arb.io.in(0).valid
+        )
+        .reduce(_ || _)
+    io.forward_msg.rd_raw_hazard := sb_mem
+        .map(sbe =>
+            sbe.valid && !sbe.bits.executed
+                && sbe.bits.decoded_inst.regwen
+                && (sbe.bits.rd_num === io.issue_inst.bits.sbe.rd_num)
+                && !rd_arb.io.in(0).valid
+        )
+        .reduce(_ || _)
 }

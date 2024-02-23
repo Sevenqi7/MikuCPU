@@ -9,7 +9,7 @@ import miku.frontend._
 import miku.FuType._
 
 abstract class BaseFuInput extends MkBundle {
-    // val id        = UInt(TRANS_ID_BITS.W)
+    val id        = UInt(TRANS_ID_BITS.W)
     val pc        = UInt(VADDR_WIDTH.W)
     val flush     = Bool()
     val optype    = FuOpType()
@@ -19,7 +19,12 @@ abstract class BaseFuInput extends MkBundle {
 }
 
 abstract class BaseFuOutput extends MkBundle {
+    val id = UInt(TRANS_ID_BITS.W)
     val result: Data
+}
+
+class EXUInput extends BaseFuInput {
+    val futype = FuType()
 }
 
 class EXUIO extends MkBundle {}
@@ -35,3 +40,4 @@ class EXU extends MkModule {
     )
 
 }
+

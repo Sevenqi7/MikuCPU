@@ -23,10 +23,11 @@ object SrcType {
 object FuType {
     def num = 4
 
-    def alu = "b0001".U(num.W)
-    def lsu = "b0010".U(num.W)
-    def mul = "b0100".U(num.W)
-    def bru = "b1000".U(num.W)
+    def alu  = "b0001".U(num.W)
+    def lsu  = "b0010".U(num.W)
+    def mul  = "b0100".U(num.W)
+    def bru  = "b1000".U(num.W)
+    def none = "b0000".U(num.W)
 
     def X = BitPat("b????")
 
@@ -93,7 +94,7 @@ object LSUOpType {
 
     def isLoadType(optype: UInt)  = optype(2, 0) & "b100".U
     def isStoreType(optype: UInt) = !(optype(2, 0) & "b100".U)
-    def toWriteMask(optype: UInt) = ~0.U(4.W) >> (4.U - optype(1, 0)) 
+    def toWriteMask(optype: UInt) = ~0.U(4.W) >> (4.U - optype(1, 0))
 
     def ldb  = "b100".U(log2Ceil(MaxOpNum).W)
     def ldh  = "b101".U(log2Ceil(MaxOpNum).W)

@@ -22,6 +22,8 @@ class MkParams {
     val NR_ENTRIES     = 8
     val BACKEND_STATUS = 3
     val FU_TIME_MAX    = 35
+
+    val DEBUG_MAGICNUM = 0x77777777
 }
 
 trait HasMkParams {
@@ -46,6 +48,8 @@ trait HasMkParams {
     val REG_RD_PORTS   = mkParams.REG_RD_PORTS
     val FU_TIME_SIZE   = log2Ceil(mkParams.FU_TIME_MAX)
     val BACKEND_STATUS = log2Ceil(mkParams.BACKEND_STATUS)
+
+    val DEBUG_MAGICNUM = mkParams.DEBUG_MAGICNUM
 
     def instBytes = INST_BITS / 8
     def wordBytes = WORD_WIDTH / 8

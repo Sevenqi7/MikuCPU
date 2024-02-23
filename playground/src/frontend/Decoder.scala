@@ -51,9 +51,10 @@ class DecodedInst extends MkBundle with DecodeConstants {
     val selImm   = SelImm()
 
     // src(0), src(1), src(2) seperately represent rk, rj, rd if there value is reg
-    def needRk = src(0) === SrcType.reg
-    def needRj = src(1) === SrcType.reg
-    def needRd = src(2) === SrcType.reg
+    def needRk  = src(0) === SrcType.reg
+    def needRj  = src(1) === SrcType.reg
+    def needRd  = src(2) === SrcType.reg
+    def needImm = src.map(s => s === SrcType.imm).reduce(_ || _)
 }
 
 class LA32DecoderUnit extends MkModule with DecodeConstants {
