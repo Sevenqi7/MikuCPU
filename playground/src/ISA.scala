@@ -20,14 +20,15 @@ object SrcType {
 }
 
 // Function Unit Type
+// IT MUST BE ONE-HOT since we use OHtoUInt when indexing function unit
 object FuType {
     def num = 4
 
-    def alu  = "b0001".U(num.W)
-    def lsu  = "b0010".U(num.W)
-    def mul  = "b0100".U(num.W)
-    def bru  = "b1000".U(num.W)
-    def none = "b0000".U(num.W)
+    def alu = "b0001".U(num.W)
+    def lsu = "b0010".U(num.W)
+    def mul = "b0100".U(num.W)
+    def bru = "b1000".U(num.W)
+    // def none = "b0000".U(num.W)
 
     def X = BitPat("b????")
 
@@ -87,6 +88,8 @@ object JumpOpType {
     def b    = "b0110".U(log2Ceil(MaxOpNum).W)
     def bl   = "b0111".U(log2Ceil(MaxOpNum).W)
     def jirl = "b1000".U(log2Ceil(MaxOpNum).W)
+
+    def apply() = UInt(log2Ceil(num).W)
 }
 
 object LSUOpType {

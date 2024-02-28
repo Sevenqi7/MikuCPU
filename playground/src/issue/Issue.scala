@@ -13,12 +13,17 @@ class IssueEntry extends MkBundle {
     val pc           = UInt(VADDR_WIDTH.W)
     val inst         = UInt(INST_BITS.W)
     val decoded_inst = new DecodedInst()
+    val br_pred      = new BranchPredictorResult
 }
 
 class IssueStageIO extends MkBundle {
     val from_decoder = Flipped(Decoupled(new IssueEntry))
-    val wb_data      = Flipped(ValidIO(new WriteBackResult))
-    val trans        = Decoupled(new EXUInput) // transcation that will be excuted in function unit
+    val wb_data      = Flipped(Vec(NR_WB_PORTS, Decoupled(new WriteBackResult)))
+    val trans        = Decoupled(new Bundle {
+        val fuinput = new BaseFuInput {}
+        val futype  = FuType()
+    })
+    // transcation that will be excuted in function unit
 }
 
 class IssueStage extends MkModule {
@@ -28,7 +33,7 @@ class IssueStage extends MkModule {
     //  Both below two are the same instruction with the input one from deconder, just different representation
     val issued_inst  = scoreboard.io.issue_inst
     val decoded_inst = io.from_decoder.bits.decoded_inst
-    scoreboard.io.wb_data          := io.wb_data
+    scoreboard.io.wb_data          <> io.wb_data
     scoreboard.io.flush            := false.B // TODO: add condition
     scoreboard.io.from_decoder     <> io.from_decoder
     scoreboard.io.issue_inst.ready := io.trans.ready
@@ -64,21 +69,21 @@ class IssueStage extends MkModule {
     )
     val imm       = MuxLookup(imm_sel, DEBUG_MAGICNUM.U)(imm_table)
 
-    io.trans.valid          := issued_inst.valid
-    io.trans.bits.id        := issued_inst.bits.id
-    io.trans.bits.pc        := io.from_decoder.bits.pc
-    io.trans.bits.flush     := false.B // TODO: add conditon
-    io.trans.bits.operand_a := rj_data
-    io.trans.bits.operand_b := MuxCase(
+    io.trans.valid                  := issued_inst.valid
+    io.trans.bits.fuinput.id        := issued_inst.bits.id
+    io.trans.bits.fuinput.pc        := io.from_decoder.bits.pc
+    io.trans.bits.fuinput.flush     := false.B // TODO: add conditon
+    io.trans.bits.fuinput.operand_a := rj_data
+    io.trans.bits.fuinput.operand_b := MuxCase(
         DEBUG_MAGICNUM.U,
         Seq(
             (decoded_inst.needRk, rk_data),
             (decoded_inst.needImm, imm)
         )
     )
-    io.trans.bits.operand_c := rd_data
-    io.trans.bits.optype    := decoded_inst.fuoptype
-    io.trans.bits.futype    := decoded_inst.futype
+    io.trans.bits.fuinput.operand_c := rd_data
+    io.trans.bits.fuinput.optype    := decoded_inst.fuoptype
+    io.trans.bits.futype            := decoded_inst.futype
 
     val opr_a_valid = decoded_inst.needRj & !scoreboard.io.forward_msg.rj_raw_hazard
     val opr_b_valid = decoded_inst.needRk & !scoreboard.io.forward_msg.rk_raw_hazard

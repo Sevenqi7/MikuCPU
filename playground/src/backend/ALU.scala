@@ -7,22 +7,11 @@ import miku._
 import miku.backend._
 import miku.ALUOpType._
 
-class ALUInput extends BaseFuInput {}
-
-class ALUOutput extends BaseFuOutput {
-    val result  = UInt(WORD_WIDTH.W)
-}
-
-class ALUIO extends MkBundle {
-    val in  = Flipped(Decoupled(new ALUInput))
-    val out = ValidIO(new ALUOutput)
-}
-
 class ALUResulutSelector extends MkModule {
     val io = IO(new MkBundle {
         val op        = Input(ALUOpType())
-        val operand_a = Input(UInt(WORD_WIDTH.W))       //rk or imms
-        val operand_b = Input(UInt(WORD_WIDTH.W))       //rj
+        val operand_a = Input(UInt(WORD_WIDTH.W)) // rk or imms
+        val operand_b = Input(UInt(WORD_WIDTH.W)) // rj
         val result    = Output(UInt(WORD_WIDTH.W))
     })
 
@@ -44,12 +33,10 @@ class ALUResulutSelector extends MkModule {
         sraw   -> (io.operand_a.asSInt >> io.operand_b(4, 0)).asUInt
     )
 
-    io.result  := MuxLookup(io.op, 0.U)(result_table)
+    io.result := MuxLookup(io.op, 0.U)(result_table)
 }
 
-class MkALU extends MkModule {
-    val io = IO(new ALUIO)
-
+class MkALU extends BaseFunctionUnit {
     io.in.ready  := true.B // all operation in ALU complete in 1 cycle
     io.out.valid := io.in.valid
 
@@ -59,5 +46,7 @@ class MkALU extends MkModule {
     result_gen.io.operand_a := io.in.bits.operand_a
     result_gen.io.operand_b := io.in.bits.operand_b
 
-    io.out.bits.result  := result_gen.io.result
+    io.out.bits.exception := false.B
+    io.out.bits.id        := io.in.bits.id
+    io.out.bits.result    := result_gen.io.result
 }

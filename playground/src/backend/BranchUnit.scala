@@ -9,21 +9,13 @@ import miku.JumpOpType._
 import miku.frontend.BranchPredictorUpdate
 import miku.frontend.BranchPredictorResult
 
-class BranchUnitInput extends BaseFuInput {
-    val br_pred = new BranchPredictorResult
-}
-
-class BranchUnitOutput extends BaseFuOutput {
-    val result = new BranchPredictorUpdate()
-}
-
 class BranchUnitIO extends MkBundle {
-    val in  = Flipped(Decoupled(new BranchUnitInput))
-    val out = ValidIO(new BranchUnitOutput)
+    val br_pred = Flipped(new BranchPredictorResult)
+    val update  = ValidIO(new BranchPredictorUpdate)
 }
 
-class BranchUnit extends MkModule {
-    val io = IO(new BranchUnitIO)
+class BranchUnit extends BaseFunctionUnit {
+    val bru_io = IO(new BranchUnitIO)
 
     io.in.ready := true.B // mis-prediction check could complete within 1 cycle
 
@@ -33,7 +25,7 @@ class BranchUnit extends MkModule {
     val imm16 = io.in.bits.operand_c
 
     // generate target address of branch
-    val pred_taken = io.in.bits.br_pred.taken
+    val pred_taken = bru_io.br_pred.taken
     val taken      = MuxLookup(io.in.bits.optype, false.B)(
         Seq(
             beq  -> (rj === rd),
@@ -49,8 +41,13 @@ class BranchUnit extends MkModule {
     val br_target = Mux(taken, pc + SEXT(imm16, VADDR_WIDTH), pc + 4.U)
 
     // check if there is a mis-prediction
-    io.out.bits.result.pc       := pc
-    io.out.bits.result.redirect := taken ^ pred_taken
-    io.out.bits.result.target   := br_target
+    bru_io.update.bits.pc       := pc
+    bru_io.update.bits.redirect := taken ^ pred_taken
+    bru_io.update.bits.target   := br_target
+    bru_io.update.valid         := io.in.valid
+    io.out.bits.exception       := false.B
+    io.out.bits.result          := DEBUG_MAGICNUM.U
+    io.out.bits.id              := io.in.bits.id
     io.out.valid                := io.in.valid
+
 }

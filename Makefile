@@ -1,6 +1,6 @@
 
 BUILD_DIR = ./build
-BUILD_FILE = $(BUILD_DIR)/Top.v
+BUILD_FILE = $(BUILD_DIR)/core_top.v
 
 # If you are using this playground for the first time
 # and you want to use IntelliJ IDEA IDE,  you should 
@@ -24,13 +24,18 @@ test-only:
 
 CHISEL_FILES = $(shell find $(abspath ./playground/src) -name "*.scala")
 $(BUILD_FILE): $(CHISEL_FILES)
-	$(call git_commit, "generate verilog")
+# 	$(call git_commit, "generate verilog")
 	mkdir -p $(BUILD_DIR)
 	mill -i __.test.runMain Elaborate -td $(BUILD_DIR)
 
 verilog: $(BUILD_FILE)
 	@echo "The Verilog file is generated successfully."
-
+ifneq ($(CHIPLAB_HOME),)
+	@echo "NOTE: CHIPLAB_HOME variable is set."
+	@echo "Copy generated verilog files to chiplab..."
+	@cp $(BUILD_FILE) $(CHIPLAB_HOME)/IP/myCPU/core_top.v
+	@echo "Done."
+endif
 help:
 	mill -i __.test.runMain Elaborate --help
 

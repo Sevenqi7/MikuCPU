@@ -6,9 +6,8 @@ import chisel3.util._
 import miku._
 import miku.utils._
 import miku.frontend._
-import miku.FuType._
 
-abstract class BaseFuInput extends MkBundle {
+class BaseFuInput extends MkBundle {
     val id        = UInt(TRANS_ID_BITS.W)
     val pc        = UInt(VADDR_WIDTH.W)
     val flush     = Bool()
@@ -18,26 +17,74 @@ abstract class BaseFuInput extends MkBundle {
     val operand_c = UInt(WORD_WIDTH.W) // rd for branch and store insts or src3 for some floating insts
 }
 
-abstract class BaseFuOutput extends MkBundle {
-    val id = UInt(TRANS_ID_BITS.W)
-    val result: Data
+class BaseFuOutput extends MkBundle {
+    val id        = UInt(TRANS_ID_BITS.W)
+    val result    = UInt(WORD_WIDTH.W)
+    val exception = Bool()
 }
 
-class EXUInput extends BaseFuInput {
-    val futype = FuType()
+class WriteBackResult extends BaseFuOutput {}
+
+abstract class BaseFunctionUnit extends MkModule {
+    val io = IO(new Bundle {
+        val in  = Flipped(Decoupled(new BaseFuInput))
+        val out = Decoupled(new BaseFuOutput)
+    })
 }
 
-class EXUIO extends MkBundle {}
+class EXUIO extends MkBundle {
+    val in         = Flipped(Decoupled(new BaseFuInput))
+    val out        = new Bundle {
+        val flu_out = Decoupled(new BaseFuOutput)
+        val lsu_out = Decoupled(new BaseFuOutput)
+    }
+    val futype     = Input(FuType())
+    val pred_check = new BranchUnitIO
+    val lsu_io     = new LSUIO
+}
 
 class EXU extends MkModule {
     val io = IO(new EXUIO)
 
-    val excute_units = Array(
-        alu -> Module(new MkALU),
-        mul -> Module(new FakeMultiplier),
-        lsu -> Module(new LSU),
-        bru -> Module(new BranchUnit)
+    val alu = Module(new MkALU)
+    val lsu = Module(new LSU)
+    val mul = Module(new FakeMultiplier)
+    val bru = Module(new BranchUnit)
+
+    val function_units = Seq(
+        FuType.bru -> bru,
+        FuType.alu -> alu,
+        FuType.mul -> mul,
+        FuType.lsu -> lsu
     )
 
-}
+    val fixed_latency_units = Seq(
+        FuType.bru -> bru,
+        FuType.alu -> alu,
+        FuType.mul -> mul
+    )
 
+    io.in.ready                             := false.B // default
+    function_units.foreach(_._2.io.in.valid := false.B)
+    function_units.foreach(_._2.io.in.bits  := io.in.bits)
+    for (fu <- function_units) {
+        when(io.futype === fu._1) {
+            fu._2.io.in.valid := true.B
+            io.in.ready       := fu._2.io.in.ready
+        }
+    }
+
+    // result MUX from fixed latency function unit
+    // alu, bru complete operation within 1 cycle, so they two don't need
+    // a buffer to store write-back result since there is only 1 write-back port
+    // and 1 issue port. 
+    val result_arb = Module(new Arbiter(new BaseFuOutput, fixed_latency_units.length))
+    for ((arb_i, fu_o) <- result_arb.io.in.zip(fixed_latency_units.map(_._2.io.out))) {
+        arb_i <> fu_o
+    }
+    io.pred_check <> bru.bru_io
+    io.out.flu_out <> result_arb.io.out
+    io.out.lsu_out <> lsu.io.out
+
+    io.lsu_io <> lsu.lsu_io
+}

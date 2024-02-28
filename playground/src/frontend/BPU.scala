@@ -27,7 +27,7 @@ class BranchPredictorUpdate extends MkBundle {
 class BranchPredictorIO extends MkBundle {
     val s0     = Flipped(ValidIO(new PCInstBundle(VADDR_WIDTH, INST_BITS)))
     val resp   = new BranchPredictorResult
-    val update = Flipped(new BranchPredictorUpdate)
+    val update = Flipped(ValidIO(new BranchPredictorUpdate))
 }
 
 abstract class BranchPredictor extends MkModule {

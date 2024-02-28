@@ -11,7 +11,7 @@ import miku.issue.IssueEntry
 
 class IDUIO extends MkBundle {
     val ifu_s1     = Flipped(ValidIO(new PCInstBundle(VADDR_WIDTH, INST_BITS)))
-    val pred_check = Flipped(new BranchPredictorUpdate())
+    val pred_check = Flipped(ValidIO(new BranchPredictorUpdate()))
     val exception  = Input(Bool())
     val to_issue   = Decoupled(new IssueEntry()) // TODO: need a better name
 }
@@ -20,12 +20,12 @@ class IDU extends MkModule {
     val io = IO(new IDUIO)
 
     val inst_queue = Module(new CircularQueue(new PCInstBundle(VADDR_WIDTH, INST_BITS), INST_QUEUE_SIZE))
-    inst_queue.io.in.clear := io.pred_check.redirect | io.exception
+    inst_queue.io.in.clear := io.pred_check.bits.redirect | io.exception
     inst_queue.enqData(io.ifu_s1.bits, io.ifu_s1.valid)
-    inst_queue.deqData(true.B) // TODO: replace this with a ready signal from issue stage
+    inst_queue.deqData(io.to_issue.ready) // TODO: replace this with a ready signal from issue stage
 
     val decoder = Module(new LA32DecoderUnit)
-    decoder.raw_inst := inst_queue.io.out.front_data
+    decoder.raw_inst := inst_queue.io.out.front_data.inst
 
     val issue_entry_r = RegInit(0.U.asTypeOf(new IssueEntry)) // TODO: need a better name
     issue_entry_r.decoded_inst := decoder.decoded_inst

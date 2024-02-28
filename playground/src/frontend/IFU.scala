@@ -8,12 +8,12 @@ import miku.utils._
 
 class IFUICacheIO extends MkBundle {
     val cache_req  = Decoupled(new CacheReqIO(VADDR_WIDTH, WORD_WIDTH))
-    val cache_resp = Flipped(new CacheRespIO(WORD_WIDTH))
+    val cache_resp = Flipped(ValidIO(new CacheRespIO(WORD_WIDTH)))
 }
 
 class NpcSelInfo extends MkBundle {
     val pred_result = new BranchPredictorResult
-    val mispredict  = new BranchPredictorUpdate
+    val mispredict  = ValidIO(new BranchPredictorUpdate)
     val excepetion  = Bool()
 }
 
@@ -36,13 +36,13 @@ class IFU extends MkModule {
     val to_icache   = io.icache_msg.cache_req
 
     val npc_src   = io.npc_sel_info
-    val s0_pc     = RegInit(0.U(VADDR_WIDTH.W))
+    val s0_pc     = RegInit(RESET_VECTOR.U(VADDR_WIDTH.W))
     val s0_valid  = RegInit(true.B) // TODO: set stall condition
     val pc_plus_4 = s0_pc + 4.U
     //                  cond   npc
     // npc-gen           |      |
     val npc_gen: Seq[(Bool, UInt)] = Seq(
-        (npc_src.mispredict.redirect, npc_src.mispredict.target),
+        (npc_src.mispredict.valid & npc_src.mispredict.bits.redirect, npc_src.mispredict.bits.target),
         (npc_src.pred_result.taken, npc_src.pred_result.target),
         (true.B, s0_pc + 4.U)
     )
@@ -51,9 +51,9 @@ class IFU extends MkModule {
     s0_valid := to_icache.valid & to_icache.ready
 
     val s1_pc    = RegEnable(s0_pc, s0_valid)
-    val s1_inst  = RegEnable(from_icache.rdata, from_icache.done)
-    val s1_valid = RegNext(from_icache.done)
-
+    val s1_inst  = RegEnable(from_icache.bits.rdata, from_icache.bits.done & from_icache.valid)
+    val s1_valid = RegNext(from_icache.bits.done & from_icache.valid)
+    
     // fetch unit doesn't write cache
     to_icache.bits.wr       := 0.B
     to_icache.bits.addr     := npc
@@ -63,7 +63,7 @@ class IFU extends MkModule {
     to_icache.valid         := true.B
 
     io.stage_info.s0.bits.pc   := s0_pc
-    io.stage_info.s0.bits.inst := from_icache.rdata
+    io.stage_info.s0.bits.inst := from_icache.bits.rdata
     io.stage_info.s0.valid     := s0_valid
     io.stage_info.s1.bits.pc   := s1_pc
     io.stage_info.s1.bits.inst := s1_inst

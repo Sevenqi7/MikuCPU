@@ -2,7 +2,7 @@ set TOOLCHAIN /home/seven7/Application/loongson-gnu-toolchain-8.3-x86_64-loongar
 
 set -x PATH $TOOLCHAIN $PATH
 
-set -x CHIPLAB_HOME $(realpath ./)
+set -x CHIPLAB_HOME $(realpath ./chiplab)
 
 echo "Loongson toolchain path is set to $TOOLCHAIN"
-echo "CHIPLAB_HOME is set to $CHIPLAB_HOME $(realpath ./)"
+echo "CHIPLAB_HOME is set to $CHIPLAB_HOME"

@@ -10,19 +10,8 @@ import miku.MulDivOpType._
 
 //This is a fake multiplier that use '*' operator to generate result
 //and delay the output for 5 cycles
-class FakeMultiplierInput extends BaseFuInput {}
 
-class FakeMultiplierOutput extends BaseFuOutput {
-    val result = UInt(WORD_WIDTH.W)
-}
-
-class FakeMultiplierIO extends MkBundle {
-    val in  = Flipped(Decoupled(new FakeMultiplierInput()))
-    val out = ValidIO(new FakeMultiplierOutput())
-}
-
-class FakeMultiplier extends MkModule {
-    val io = IO(new FakeMultiplierIO)
+class FakeMultiplier extends BaseFunctionUnit {
 
     val operand_a = io.in.bits.operand_a
     val operand_b = io.in.bits.operand_b
@@ -39,15 +28,25 @@ class FakeMultiplier extends MkModule {
 
     val result = MuxLookup(io.in.bits.optype, 0.U)(result_sel_table)
 
-    val ready_r = RegInit(true.B)
+    val ready_r      = RegInit(true.B)
+    val result_buf   = RegInit(0.U.asTypeOf(new BaseFuOutput))
+    val result_valid = RegInit(false.B)
     io.in.ready := ready_r
-    when(io.in.valid & io.in.ready) {
-        ready_r := false.B
-    }.otherwise {
-        ready_r := DelayN(true.B, 4)
+    when(io.in.valid & io.in.ready & (!result_valid)) {
+        ready_r              := false.B
+        result_buf.id        := io.in.bits.id
+        result_buf.result    := result
+        result_buf.exception := false.B
+        result_valid         := true.B
+    }
+
+    when(io.out.valid & io.out.ready) {
+        ready_r      := true.B
+        result_valid := false.B
     }
 
     // delay 5 cycles
-    io.out.valid       := DelayN(io.in.valid, 5)
-    io.out.bits.result := DelayN(result, 5)
+    io.out.valid := DelayN(result_valid, 5)
+    io.out.bits  := DelayN(result_buf, 5)
+
 }
