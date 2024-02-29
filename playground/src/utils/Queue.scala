@@ -46,7 +46,7 @@ class CircularQueue[T <: Data](element: T, size: Int, enable_contents_output: Bo
     }
 
     def deqData(cond: Bool): T = { // TODO: need a better name
-        io.in.deq_valid := true.B
+        io.in.deq_valid := cond
         io.out.front_data
     }
     val queue = RegInit(VecInit.fill(size)(0.U.asTypeOf(ValidIO(element))))
@@ -71,7 +71,7 @@ class CircularQueue[T <: Data](element: T, size: Int, enable_contents_output: Bo
         when(io.in.enq_valid) {
             queue(rear).bits  := io.in.enq_data.asTypeOf(element)
             queue(rear).valid := true.B
-            rear              := Mux(rear === 0.U, (size - 1).U, rear_plus_one)
+            rear              := Mux(rear === (size - 1).U, 0.U, rear_plus_one)
         }
         when(io.in.deq_valid) {
             queue(front).valid := false.B

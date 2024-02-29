@@ -1,4 +1,4 @@
-
+MK_HOME = $(realpath ./)
 BUILD_DIR = ./build
 BUILD_FILE = $(BUILD_DIR)/core_top.v
 
@@ -36,6 +36,15 @@ ifneq ($(CHIPLAB_HOME),)
 	@cp $(BUILD_FILE) $(CHIPLAB_HOME)/IP/myCPU/core_top.v
 	@echo "Done."
 endif
+
+sim:
+	@echo "Using chiplab to simulate..."
+ifeq ($(CHIPLAB_HOME), )
+	@echo "Error! Variable CHIPLAB_HOME is not set!"
+else
+	$(MAKE) -C $(CHIPLAB_HOME)/sims/verilator/run_prog
+endif
+
 help:
 	mill -i __.test.runMain Elaborate --help
 

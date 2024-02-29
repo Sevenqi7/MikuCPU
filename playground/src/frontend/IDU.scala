@@ -20,18 +20,21 @@ class IDU extends MkModule {
     val io = IO(new IDUIO)
 
     val inst_queue = Module(new CircularQueue(new PCInstBundle(VADDR_WIDTH, INST_BITS), INST_QUEUE_SIZE))
-    inst_queue.io.in.clear := io.pred_check.bits.redirect | io.exception
+    inst_queue.io.in.clear := (io.pred_check.bits.redirect & io.pred_check.valid) | io.exception
     inst_queue.enqData(io.ifu_s1.bits, io.ifu_s1.valid)
-    inst_queue.deqData(io.to_issue.ready) // TODO: replace this with a ready signal from issue stage
+    inst_queue.deqData(
+        io.to_issue.ready & !inst_queue.io.out.empty
+    ) // TODO: replace this with a ready signal from issue stage
 
     val decoder = Module(new LA32DecoderUnit)
     decoder.raw_inst := inst_queue.io.out.front_data.inst
 
-    val issue_entry_r = RegInit(0.U.asTypeOf(new IssueEntry)) // TODO: need a better name
-    issue_entry_r.decoded_inst := decoder.decoded_inst
-    issue_entry_r.inst         := io.ifu_s1.bits.inst
-    issue_entry_r.pc           := io.ifu_s1.bits.pc
+    val issue_entry_r = RegInit(0.U.asTypeOf(ValidIO(new IssueEntry))) // TODO: need a better name
+    issue_entry_r.bits.decoded_inst := decoder.decoded_inst
+    issue_entry_r.bits.inst         := io.ifu_s1.bits.inst
+    issue_entry_r.bits.pc           := io.ifu_s1.bits.pc
+    issue_entry_r.valid             := !inst_queue.io.out.empty // TODO: need condition
 
-    io.to_issue.bits  := issue_entry_r
-    io.to_issue.valid := true.B // TODO: need condition
+    io.to_issue.bits  := issue_entry_r.bits
+    io.to_issue.valid := issue_entry_r.valid
 }

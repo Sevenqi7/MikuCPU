@@ -46,18 +46,19 @@ object FuOpType {
 object ALUOpType {
     def num = 12
 
-    def addw   = "b0001".U(log2Ceil(MaxOpNum).W) // R(rd) = R(rj) + R(rk)
-    def subw   = "b0010".U(log2Ceil(MaxOpNum).W) // R(rd) = R(ri) - R(rk)
-    def lu12iw = "b0011".U(log2Ceil(MaxOpNum).W) // R(rd) = {imm20, 12'b0}
-    def slt    = "b0100".U(log2Ceil(MaxOpNum).W) // R(rd) = (signed(R(rj)) < signed(R(rk)))
-    def sltu   = "b0101".U(log2Ceil(MaxOpNum).W) // R(rd) = (R(rj) < R(rk))
-    def and    = "b0110".U(log2Ceil(MaxOpNum).W) // R(rd) = R(rj) & R(rk)
-    def or     = "b0111".U(log2Ceil(MaxOpNum).W) // R(rd) = R(rj) | R(rk)
-    def nor    = "b1000".U(log2Ceil(MaxOpNum).W) // R(rd) = ~(R(rj) | R(rk))
-    def xor    = "b1001".U(log2Ceil(MaxOpNum).W) // R(rd) = R(rj) ^ R(rk)
-    def sllw   = "b1010".U(log2Ceil(MaxOpNum).W) // R(rd) = sll(R(rj), R(rk)[4:0])[31:0]
-    def srlw   = "b1011".U(log2Ceil(MaxOpNum).W) // R(rd) = srl(R(rj), R(rk)[4:0])[31:0]
-    def sraw   = "b1100".U(log2Ceil(MaxOpNum).W) // R(rd) = sra(R(rj), R(rk)[4:0])[31:0]
+    def addw      = "b0001".U(log2Ceil(MaxOpNum).W) // R(rd) = R(rj) + R(rk)
+    def subw      = "b0010".U(log2Ceil(MaxOpNum).W) // R(rd) = R(ri) - R(rk)
+    def lu12iw    = "b0011".U(log2Ceil(MaxOpNum).W) // R(rd) = {imm20, 12'b0}
+    def slt       = "b0100".U(log2Ceil(MaxOpNum).W) // R(rd) = (signed(R(rj)) < signed(R(rk)))
+    def sltu      = "b0101".U(log2Ceil(MaxOpNum).W) // R(rd) = (R(rj) < R(rk))
+    def and       = "b0110".U(log2Ceil(MaxOpNum).W) // R(rd) = R(rj) & R(rk)
+    def or        = "b0111".U(log2Ceil(MaxOpNum).W) // R(rd) = R(rj) | R(rk)
+    def nor       = "b1000".U(log2Ceil(MaxOpNum).W) // R(rd) = ~(R(rj) | R(rk))
+    def xor       = "b1001".U(log2Ceil(MaxOpNum).W) // R(rd) = R(rj) ^ R(rk)
+    def sllw      = "b1010".U(log2Ceil(MaxOpNum).W) // R(rd) = sll(R(rj), R(rk)[4:0])[31:0]
+    def srlw      = "b1011".U(log2Ceil(MaxOpNum).W) // R(rd) = srl(R(rj), R(rk)[4:0])[31:0]
+    def sraw      = "b1100".U(log2Ceil(MaxOpNum).W) // R(rd) = sra(R(rj), R(rk)[4:0])[31:0]
+    def pcaddu12i = "b1101".U(log2Ceil(MaxOpNum).W) // R(rd) = PC + SEXT({imm20, 12'b0})
 
     def apply() = UInt(log2Ceil(MaxOpNum).W)
 }
@@ -156,6 +157,14 @@ object LA32Instructions {
     def STW   = BitPat("b00101 00110 ????? ?? ????? ????? ?????")
     def LDBU  = BitPat("b00101 01000 ????? ?? ????? ????? ?????")
     def LDHU  = BitPat("b00101 01001 ????? ?? ????? ????? ?????")
+
+    // I20-Type
+    def LU12IW    = BitPat("b00010 10??? ????? ?? ????? ????? ?????")
+    def LU32ID    = BitPat("b00010 11??? ????? ?? ????? ????? ?????")
+    def PCADDI    = BitPat("b00011 00??? ????? ?? ????? ????? ?????")
+    def PCALAU12I = BitPat("b00011 01??? ????? ?? ????? ????? ?????")
+    def PCADDU12I = BitPat("b00011 10??? ????? ?? ????? ????? ?????")
+    def PCADDU18I = BitPat("b00011 11??? ????? ?? ????? ????? ?????")
 
     // ! CSR is not supported yet
 

@@ -101,7 +101,7 @@ class Scoreboard extends MkModule {
     io.issue_inst.bits.sbe.rk_num := io.from_decoder.bits.inst(14, 10)
     io.issue_inst.bits.sbe.rj_num := io.from_decoder.bits.inst(9, 5)
     io.issue_inst.bits.sbe.rd_num := io.from_decoder.bits.inst(4, 0)
-    io.from_decoder.ready         := !sb_full
+    io.from_decoder.ready         := io.operands_rdy && io.issue_inst.ready && !sb_full
 
     // commit inst
     when(commit_ack) {

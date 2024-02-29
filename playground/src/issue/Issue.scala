@@ -73,7 +73,7 @@ class IssueStage extends MkModule {
     io.trans.bits.fuinput.id        := issued_inst.bits.id
     io.trans.bits.fuinput.pc        := io.from_decoder.bits.pc
     io.trans.bits.fuinput.flush     := false.B // TODO: add conditon
-    io.trans.bits.fuinput.operand_a := rj_data
+    io.trans.bits.fuinput.operand_a := Mux(decoded_inst.needRj, rj_data, io.from_decoder.bits.pc)
     io.trans.bits.fuinput.operand_b := MuxCase(
         DEBUG_MAGICNUM.U,
         Seq(
@@ -85,9 +85,9 @@ class IssueStage extends MkModule {
     io.trans.bits.fuinput.optype    := decoded_inst.fuoptype
     io.trans.bits.futype            := decoded_inst.futype
 
-    val opr_a_valid = decoded_inst.needRj & !scoreboard.io.forward_msg.rj_raw_hazard
-    val opr_b_valid = decoded_inst.needRk & !scoreboard.io.forward_msg.rk_raw_hazard
-    val opr_c_valid = decoded_inst.needRd & !scoreboard.io.forward_msg.rd_raw_hazard
+    val opr_a_valid = !decoded_inst.needRj || (decoded_inst.needRj & !scoreboard.io.forward_msg.rj_raw_hazard)
+    val opr_b_valid = !decoded_inst.needRk || (decoded_inst.needRk & !scoreboard.io.forward_msg.rk_raw_hazard)
+    val opr_c_valid = !decoded_inst.needRd || (decoded_inst.needRd & !scoreboard.io.forward_msg.rd_raw_hazard)
     scoreboard.io.operands_rdy := opr_a_valid & opr_b_valid & opr_c_valid
 
     // commit logic

@@ -34,10 +34,12 @@ class IFU extends MkModule {
     // IFU-ICache
     val from_icache = io.icache_msg.cache_resp
     val to_icache   = io.icache_msg.cache_req
+    val addr_ok     = to_icache.valid & to_icache.ready
+    val data_ok     = from_icache.valid & from_icache.bits.done
 
     val npc_src   = io.npc_sel_info
     val s0_pc     = RegInit(RESET_VECTOR.U(VADDR_WIDTH.W))
-    val s0_valid  = RegInit(true.B) // TODO: set stall condition
+    val s0_valid  = RegInit(false.B) // TODO: set stall condition
     val pc_plus_4 = s0_pc + 4.U
     //                  cond   npc
     // npc-gen           |      |
@@ -47,13 +49,13 @@ class IFU extends MkModule {
         (true.B, s0_pc + 4.U)
     )
     val npc = PriorityMux(npc_gen)
-    s0_pc    := npc
-    s0_valid := to_icache.valid & to_icache.ready
+    s0_valid := addr_ok
+    s0_pc    := Mux(addr_ok, npc, s0_pc)
 
-    val s1_pc    = RegEnable(s0_pc, s0_valid)
-    val s1_inst  = RegEnable(from_icache.bits.rdata, from_icache.bits.done & from_icache.valid)
-    val s1_valid = RegNext(from_icache.bits.done & from_icache.valid)
-    
+    val s1_pc    = RegEnable(s0_pc, data_ok)
+    val s1_inst  = RegEnable(from_icache.bits.rdata, data_ok)
+    val s1_valid = RegNext(data_ok)
+
     // fetch unit doesn't write cache
     to_icache.bits.wr       := 0.B
     to_icache.bits.addr     := npc

@@ -43,10 +43,10 @@ abstract trait DecodeConstants {
 }
 
 class DecodedInst extends MkBundle with DecodeConstants {
+    val regwen   = Bool()
     val src      = Vec(3, SrcType())
     val futype   = FuType()
     val fuoptype = FuOpType()
-    val regwen   = Bool()
     val flush    = Bool()
     val selImm   = SelImm()
 
@@ -62,7 +62,7 @@ class LA32DecoderUnit extends MkModule with DecodeConstants {
     val decoded_inst = IO(Output(new DecodedInst))
 
     val la32_decode_table =
-        LA3RDecoder.decodeTable ++ LA2RI12Decoder.decodeTable ++ LA2RI8Decoder.decodeTable ++ LA2RI16Decoder.decodeTable
+        LA3RDecoder.decodeTable ++ LA2RI12Decoder.decodeTable ++ LA2RI8Decoder.decodeTable ++ LA2RI16Decoder.decodeTable ++ LAI20Decoder.decodeTable
 
     // ((instructions, decodeBits), defaultBits)
     val la32_decode_map = TruthTable(
@@ -138,6 +138,13 @@ object LA2RI16Decoder extends DecodeConstants {
         BGE    -> List(N, SrcType.reg, SrcType.reg, SrcType.imm ,   FuType.bru, JumpOpType.bge , Y, SelImm.IMM_S16),
         BLTU   -> List(N, SrcType.reg, SrcType.reg, SrcType.imm ,   FuType.bru, JumpOpType.bltu, Y, SelImm.IMM_S16),
         BGEU   -> List(N, SrcType.reg, SrcType.reg, SrcType.imm ,   FuType.bru, JumpOpType.bgeu, Y, SelImm.IMM_S16)
+    )
+}
+
+object LAI20Decoder extends DecodeConstants {
+    val decodeTable = Array[(BitPat, List[BitPat])](
+        LU12IW     -> List(Y, SrcType.none, SrcType.imm, SrcType.none, FuType.alu, ALUOpType.lu12iw     , N, SelImm.IMM_S20),
+        PCADDU12I  -> List(Y, SrcType.pc  , SrcType.imm, SrcType.none, FuType.alu, ALUOpType.pcaddu12i  , N, SelImm.IMM_S20)
     )
 }
 // format: on

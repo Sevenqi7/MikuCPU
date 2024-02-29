@@ -14,7 +14,7 @@ trait RASUtils {
     def isRet(inst: UInt): Bool = {
         val rd = inst(4, 0)
         val rj = inst(9, 5)
-        inst === LA32Instructions.JIRL || rd === 0.U || rj === 1.U
+        inst === LA32Instructions.JIRL && rd === 0.U && rj === 1.U
     }
 }
 
@@ -34,8 +34,7 @@ class MkRAS extends BranchPredictor with RASUtils {
         when(isCall(io.s0.bits.inst)) {
             ras.io.in.valid := true.B
             ras.pushData(io.s0.bits.pc + instBytes.U)
-        }
-        .elsewhen(isRet(io.s0.bits.inst)) {
+        }.elsewhen(isRet(io.s0.bits.inst)) {
             io.resp.taken  := true.B
             io.resp.target := ras.popData
         }

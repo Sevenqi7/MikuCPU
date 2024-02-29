@@ -16,7 +16,7 @@ class CacheReqIO(addr_wd: Int, data_wd: Int) extends MkBundle {
 }
 
 class CacheRespIO(data_wd: Int) extends MkBundle {
-    val done  = Bool()      
+    val done  = Bool()
     val rdata = UInt(data_wd.W)
 }
 
@@ -151,7 +151,7 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
     val req_offset = WireInit(req_addr(offsetWidth - 1, 0))
 
     val replace_way  = RegEnable(LFSR(8)(log2Ceil(wayNum), 0), state === sMiss)
-    val data_ram_sel = req_offset(log2Ceil(WORDS_PER_LINE) - 1, log2Ceil(WORDS_PER_LINE) - 2)
+    val data_ram_sel = req_offset(offsetWidth - log2Ceil(WORDS_PER_LINE) + 1, offsetWidth - log2Ceil(WORDS_PER_LINE))
     // SRAM output
 
     // initialise
@@ -170,12 +170,12 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
     io.resp.bits.done  := 0.B
     io.resp.bits.rdata := 0x7777.U // Magic Number for debug
 
-    val tagv_out  = VecInit((0 until wayNum).map(tagv => tagv_ram(tagv).dout.asTypeOf(new TagvBundle(tagWidth))))
-    val totalHits = VecInit((0 until wayNum).map(i => tagv_out(i).valid && (tagv_out(i).tag === req_tag)))
-    val hit       = totalHits.reduce(_ || _)
-    val hitWay    = OHToUInt(totalHits)
-    val recv_data = RegInit(VecInit(Seq.fill(WORDS_PER_LINE)(0.U(WORD_WIDTH.W))))
-    val recv_cnt  = RegInit(0.U(log2Ceil(lineWidth).W))
+    val tagv_out   = VecInit((0 until wayNum).map(tagv => tagv_ram(tagv).dout.asTypeOf(new TagvBundle(tagWidth))))
+    val total_hits = VecInit((0 until wayNum).map(i => tagv_out(i).valid && (tagv_out(i).tag === req_tag)))
+    val hit        = total_hits.reduce(_ || _)
+    val hitWay     = OHToUInt(total_hits)
+    val recv_data  = RegInit(VecInit(Seq.fill(WORDS_PER_LINE)(0.U(WORD_WIDTH.W))))
+    val recv_cnt   = RegInit(0.U(log2Ceil(lineWidth).W))
     cache_ready := (state === sIdle) || ((state === sLookup) && hit)
 
     //format: off 
@@ -191,7 +191,8 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
     // tag comparison and generate rdata & hit_way
     .elsewhen(state === sLookup) {
         io.resp.bits.rdata := getLineData(hitWay)(data_ram_sel)
-        io.resp.valid      := 1.B
+        io.resp.valid      := hit
+        io.resp.bits.done  := hit
         state              := MuxCase(
             sIdle,
             Seq(
@@ -205,7 +206,7 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
     // wait for axi bus idle and send read request
     .elsewhen(state === sMiss) {
         val handshake =
-            io.sendReadReq(req_addr(VADDR_WIDTH - 1, offsetWidth) << offsetWidth, "b010".U, WORDS_PER_LINE.U, 0.U)
+            io.sendReadReq(req_addr(VADDR_WIDTH - 1, offsetWidth) << offsetWidth, "b010".U, (WORDS_PER_LINE - 1).U, 0.U)
         state    := Mux(handshake, sReplace, sMiss)
         recv_cnt := 0.U
     }
@@ -229,7 +230,7 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
             data_ram(replace_way)(i).wen := 1.B
             data_ram(replace_way)(i).din := recv_data(i)
         }
-        tagv_ram(replace_way).din := req_tag
+        tagv_ram(replace_way).din := Cat(true.B, req_tag)
         tagv_ram(replace_way).wen := 1.B
     }
 

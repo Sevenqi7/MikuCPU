@@ -12,7 +12,7 @@ class BaseFuInput extends MkBundle {
     val pc        = UInt(VADDR_WIDTH.W)
     val flush     = Bool()
     val optype    = FuOpType()
-    val operand_a = UInt(WORD_WIDTH.W) // rj
+    val operand_a = UInt(WORD_WIDTH.W) // rj or pc
     val operand_b = UInt(WORD_WIDTH.W) // rk or imms
     val operand_c = UInt(WORD_WIDTH.W) // rd for branch and store insts or src3 for some floating insts
 }
@@ -68,7 +68,7 @@ class EXU extends MkModule {
     function_units.foreach(_._2.io.in.valid := false.B)
     function_units.foreach(_._2.io.in.bits  := io.in.bits)
     for (fu <- function_units) {
-        when(io.futype === fu._1) {
+        when(io.in.valid && (io.futype === fu._1)) {
             fu._2.io.in.valid := true.B
             io.in.ready       := fu._2.io.in.ready
         }
@@ -77,7 +77,7 @@ class EXU extends MkModule {
     // result MUX from fixed latency function unit
     // alu, bru complete operation within 1 cycle, so they two don't need
     // a buffer to store write-back result since there is only 1 write-back port
-    // and 1 issue port. 
+    // and 1 issue port.
     val result_arb = Module(new Arbiter(new BaseFuOutput, fixed_latency_units.length))
     for ((arb_i, fu_o) <- result_arb.io.in.zip(fixed_latency_units.map(_._2.io.out))) {
         arb_i <> fu_o
