@@ -24,13 +24,20 @@ class RegfileWriteIO extends MkBundle {
 class MkRegfiles extends MkModule {
     val read_io  = IO(Vec(REG_RD_PORTS, new RegfileReadIO))
     val write_io = IO(new RegfileWriteIO)
+    val diff_gpr = if (DIFFTEST_MODE) Some(IO(Vec(REG_ADDR_NUM, UInt(WORD_WIDTH.W)))) else None
 
-    val registers = RegInit(VecInit(Seq.fill(REG_ADDR_WIDTH)(0.U(WORD_WIDTH.W))))
+    val registers = RegInit(VecInit(Seq.fill(REG_ADDR_NUM)(0.U(WORD_WIDTH.W))))
     for (i <- 0 until REG_RD_PORTS) {
-        read_io(i).rf_rs_o := registers(read_io(i).rf_rs_i)
+        read_io(i).rf_rs_o := Mux(read_io(i).rf_rs_i =/= 0.U, registers(read_io(i).rf_rs_i), 0.U)
     }
 
-    when(write_io.rf_ws_en) {
+    when(write_io.rf_ws_en && (write_io.rf_ws_i =/= 0.U)) {
         registers(write_io.rf_ws_i) := write_io.rf_ws_data
+    }
+
+    if (DIFFTEST_MODE) {
+        for (i <- 0 until REG_ADDR_NUM) {
+            diff_gpr.get(i) := registers(i)
+        }
     }
 }

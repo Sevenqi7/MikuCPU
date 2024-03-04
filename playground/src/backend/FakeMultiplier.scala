@@ -13,14 +13,8 @@ import miku.MulDivOpType._
 
 class FakeMultiplier extends BaseFunctionUnit {
 
-    val fu_in = RegInit(0.U.asTypeOf(ValidIO(new BaseFuInput)))
-    when(io.in.valid & io.in.ready) {
-        fu_in.bits  := io.in.bits
-        fu_in.valid := io.in.valid
-    }
-
-    val operand_a = fu_in.bits.operand_a
-    val operand_b = fu_in.bits.operand_b
+    val operand_a = io.in.bits.operand_a
+    val operand_b = io.in.bits.operand_b
 
     val result_sel_table = Seq(
         mulw   -> (operand_a * operand_b),
@@ -32,15 +26,15 @@ class FakeMultiplier extends BaseFunctionUnit {
         modw   -> (operand_a.asSInt % operand_b.asSInt).asUInt
     )
 
-    val result = MuxLookup(fu_in.bits.optype, 0.U)(result_sel_table)
+    val result = MuxLookup(io.in.bits.optype, 0.U)(result_sel_table)
 
     val ready_r      = RegInit(true.B)
     val result_buf   = RegInit(0.U.asTypeOf(new BaseFuOutput))
     val result_valid = RegInit(false.B)
     io.in.ready := ready_r
-    when(fu_in.valid & !result_valid) {
+    when(io.in.valid & io.in.ready & (!result_valid)) {
         ready_r              := false.B
-        result_buf.id        := fu_in.bits.id
+        result_buf.id        := io.in.bits.id
         result_buf.result    := result
         result_buf.exception := false.B
         result_valid         := true.B

@@ -19,20 +19,14 @@ class BranchUnit extends BaseFunctionUnit {
 
     io.in.ready := true.B // mis-prediction check could complete within 1 cycle
 
-    val fu_in = RegInit(0.U.asTypeOf(ValidIO(new BaseFuInput)))
-    when(io.in.valid & io.in.ready) {
-        fu_in.bits  := io.in.bits
-        fu_in.valid := io.in.valid
-    }
-
-    val pc    = fu_in.bits.pc
-    val rj    = fu_in.bits.operand_a
-    val rd    = fu_in.bits.operand_b
-    val imm16 = fu_in.bits.operand_c
+    val pc    = io.in.bits.pc
+    val rj    = io.in.bits.operand_a
+    val rd    = io.in.bits.operand_b
+    val imm16 = io.in.bits.operand_c
 
     // generate target address of branch
     val pred_taken = bru_io.br_pred.taken
-    val taken      = MuxLookup(fu_in.bits.optype, false.B)(
+    val taken      = MuxLookup(io.in.bits.optype, false.B)(
         Seq(
             beq  -> (rj === rd),
             bne  -> (rj =/= rd),
@@ -50,10 +44,10 @@ class BranchUnit extends BaseFunctionUnit {
     bru_io.update.bits.pc       := pc
     bru_io.update.bits.redirect := taken ^ pred_taken
     bru_io.update.bits.target   := br_target
-    bru_io.update.valid         := fu_in.valid
+    bru_io.update.valid         := io.in.valid
     io.out.bits.exception       := false.B
     io.out.bits.result          := DEBUG_MAGICNUM.U
-    io.out.bits.id              := fu_in.bits.id
-    io.out.valid                := fu_in.valid
+    io.out.bits.id              := io.in.bits.id
+    io.out.valid                := io.in.valid
 
 }

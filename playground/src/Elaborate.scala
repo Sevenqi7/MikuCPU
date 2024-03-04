@@ -2,6 +2,7 @@ import circt.stage._
 
 import chisel3._
 
+import miku._
 import miku.utils._
 import miku.frontend._
 import miku.backend._

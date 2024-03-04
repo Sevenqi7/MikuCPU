@@ -18,7 +18,7 @@ class SRAMTemplate[T <: Data](addrWidth: Int,
     })
 
     val mem_size = 1 << addrWidth
-    val mem = SyncReadMem(addrWidth, UInt(data.getWidth.W))
+    val mem = SyncReadMem(mem_size, UInt(data.getWidth.W))
 
     io.dout := mem.read(io.addr)
     when(io.wen){

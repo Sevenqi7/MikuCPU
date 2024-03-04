@@ -26,10 +26,19 @@ class BaseFuOutput extends MkBundle {
 class WriteBackResult extends BaseFuOutput {}
 
 abstract class BaseFunctionUnit extends MkModule {
-    val io = IO(new Bundle {
+    lazy val io = IO(new Bundle {
         val in  = Flipped(Decoupled(new BaseFuInput))
         val out = Decoupled(new BaseFuOutput)
     })
+}
+
+// Do nothing
+class FakeFunctionUnit extends BaseFunctionUnit {
+    io.out.bits.id        := io.in.bits.id
+    io.out.bits.exception := false.B
+    io.out.bits.result    := DEBUG_MAGICNUM.U
+    io.out.valid          := io.in.valid
+    io.in.ready           := true.B
 }
 
 class EXUIO extends MkBundle {
@@ -46,30 +55,39 @@ class EXUIO extends MkBundle {
 class EXU extends MkModule {
     val io = IO(new EXUIO)
 
-    val alu = Module(new MkALU)
-    val lsu = Module(new LSU)
-    val mul = Module(new FakeMultiplier)
-    val bru = Module(new BranchUnit)
+    val alu  = Module(new MkALU)
+    val lsu  = Module(new LSU)
+    val mul  = Module(new FakeMultiplier)
+    val bru  = Module(new BranchUnit)
+    val none = Module(new FakeFunctionUnit)
 
     val function_units = Seq(
-        FuType.bru -> bru,
-        FuType.alu -> alu,
-        FuType.mul -> mul,
-        FuType.lsu -> lsu
+        FuType.bru  -> bru,
+        FuType.alu  -> alu,
+        FuType.mul  -> mul,
+        FuType.lsu  -> lsu,
+        FuType.none -> none
     )
 
     val fixed_latency_units = Seq(
-        FuType.bru -> bru,
-        FuType.alu -> alu,
-        FuType.mul -> mul
+        FuType.bru  -> bru,
+        FuType.alu  -> alu,
+        FuType.mul  -> mul,
+        FuType.none -> none
     )
+
+    val fu_base_in = RegInit(0.U.asTypeOf(ValidIO(new BaseFuInput)))
+    val futype_r   = RegNext(io.futype)
+
+    fu_base_in.bits  := io.in.bits
+    fu_base_in.valid := io.in.valid
 
     io.in.ready                             := false.B // default
     function_units.foreach(_._2.io.in.valid := false.B)
-    function_units.foreach(_._2.io.in.bits  := io.in.bits)
+    function_units.foreach(_._2.io.in.bits  := fu_base_in.bits)
     for (fu <- function_units) {
-        when(io.in.valid && (io.futype === fu._1)) {
-            fu._2.io.in.valid := true.B
+        when(futype_r === fu._1) {
+            fu._2.io.in.valid := fu_base_in.valid
             io.in.ready       := fu._2.io.in.ready
         }
     }

@@ -22,7 +22,7 @@ class ALUResulutSelector extends MkModule {
     val result_table = Seq[(UInt, UInt)](
         addw      -> (io.operand_a + io.operand_b),
         subw      -> (io.operand_a - io.operand_b),
-        lu12iw    -> Cat(io.operand_b(19, 0), 0.U(12.W)),
+        lu12iw    -> SEXT(io.operand_b(19, 0) << 12, WORD_WIDTH),
         slt       -> slt_result,
         sltu      -> sltu_result,
         and       -> (io.operand_a & io.operand_b),
@@ -32,29 +32,23 @@ class ALUResulutSelector extends MkModule {
         sllw      -> (io.operand_a << io.operand_b(4, 0)),
         srlw      -> (io.operand_a >> io.operand_b(4, 0)),
         sraw      -> (io.operand_a.asSInt >> io.operand_b(4, 0)).asUInt,
-        pcaddu12i -> (io.operand_a + SEXT(io.operand_b, WORD_WIDTH))
+        pcaddu12i -> (io.operand_a + SEXT(io.operand_b << 12, WORD_WIDTH))
     )
 
     io.result := MuxLookup(io.op, 0.U)(result_table)
 }
 
 class MkALU extends BaseFunctionUnit {
-    io.in.ready := true.B // all operation in ALU complete in 1 cycle
-
-    val fu_in = RegInit(0.U.asTypeOf(ValidIO(new BaseFuInput)))
-    when(io.in.valid & io.in.ready) {
-        fu_in.bits  := io.in.bits
-        fu_in.valid := io.in.valid
-    }
+    io.in.ready  := true.B // all operation in ALU complete in 1 cycle
+    io.out.valid := io.in.valid
 
     // generate result
     val result_gen = Module(new ALUResulutSelector)
-    result_gen.io.op        := fu_in.bits.optype
-    result_gen.io.operand_a := fu_in.bits.operand_a
-    result_gen.io.operand_b := fu_in.bits.operand_b
+    result_gen.io.op        := io.in.bits.optype
+    result_gen.io.operand_a := io.in.bits.operand_a
+    result_gen.io.operand_b := io.in.bits.operand_b
 
-    io.out.valid          := fu_in.valid
     io.out.bits.exception := false.B
-    io.out.bits.id        := fu_in.bits.id
+    io.out.bits.id        := io.in.bits.id
     io.out.bits.result    := result_gen.io.result
 }

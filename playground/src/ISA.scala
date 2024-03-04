@@ -28,7 +28,7 @@ object FuType {
     def lsu = "b0010".U(num.W)
     def mul = "b0100".U(num.W)
     def bru = "b1000".U(num.W)
-    // def none = "b0000".U(num.W)
+    def none = "b0000".U(num.W)
 
     def X = BitPat("b????")
 
@@ -96,7 +96,7 @@ object JumpOpType {
 object LSUOpType {
     def num = 8
 
-    def isLoadType(optype: UInt)  = optype(2, 0) & "b100".U
+    def isLoadType(optype: UInt)  = (optype(2, 0) & "b100".U) =/= 0.U
     def isStoreType(optype: UInt) = !(optype(2, 0) & "b100".U)
     def toWriteMask(optype: UInt) = ~0.U(4.W) >> (4.U - optype(1, 0))
 

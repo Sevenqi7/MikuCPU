@@ -10,10 +10,11 @@ import miku.frontend._
 import miku.issue.IssueEntry
 
 class IDUIO extends MkBundle {
-    val ifu_s1     = Flipped(ValidIO(new PCInstBundle(VADDR_WIDTH, INST_BITS)))
-    val pred_check = Flipped(ValidIO(new BranchPredictorUpdate()))
-    val exception  = Input(Bool())
-    val to_issue   = Decoupled(new IssueEntry()) // TODO: need a better name
+    val ifu_s1          = Flipped(ValidIO(new PCInstBundle(VADDR_WIDTH, INST_BITS)))
+    val inst_queue_full = Output(Bool())
+    val pred_check      = Flipped(ValidIO(new BranchPredictorUpdate()))
+    val exception       = Input(Bool())
+    val to_issue        = Decoupled(new IssueEntry()) // TODO: need a better name
 }
 
 class IDU extends MkModule {
@@ -30,11 +31,14 @@ class IDU extends MkModule {
     decoder.raw_inst := inst_queue.io.out.front_data.inst
 
     val issue_entry_r = RegInit(0.U.asTypeOf(ValidIO(new IssueEntry))) // TODO: need a better name
-    issue_entry_r.bits.decoded_inst := decoder.decoded_inst
-    issue_entry_r.bits.inst         := io.ifu_s1.bits.inst
-    issue_entry_r.bits.pc           := io.ifu_s1.bits.pc
-    issue_entry_r.valid             := !inst_queue.io.out.empty // TODO: need condition
+    when(io.to_issue.ready){
+        issue_entry_r.bits.decoded_inst := decoder.decoded_inst
+        issue_entry_r.bits.inst         := inst_queue.io.out.front_data.inst
+        issue_entry_r.bits.pc           := inst_queue.io.out.front_data.pc
+        issue_entry_r.valid             := !inst_queue.io.out.empty 
+    }
 
-    io.to_issue.bits  := issue_entry_r.bits
-    io.to_issue.valid := issue_entry_r.valid
+    io.to_issue.bits   := issue_entry_r.bits
+    io.to_issue.valid  := issue_entry_r.valid
+    io.inst_queue_full := inst_queue.io.out.full
 }

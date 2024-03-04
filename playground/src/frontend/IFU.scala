@@ -23,9 +23,10 @@ class IFUStageInfo extends MkBundle {
 }
 
 class IFUIO extends MkBundle {
-    val icache_msg   = new IFUICacheIO()
-    val stage_info   = new IFUStageInfo()
-    val npc_sel_info = Flipped(new NpcSelInfo)
+    val icache_msg      = new IFUICacheIO()
+    val stage_info      = new IFUStageInfo()
+    val npc_sel_info    = Flipped(new NpcSelInfo)
+    val inst_queue_full = Input(Bool())
 }
 
 class IFU extends MkModule {
@@ -37,32 +38,35 @@ class IFU extends MkModule {
     val addr_ok     = to_icache.valid & to_icache.ready
     val data_ok     = from_icache.valid & from_icache.bits.done
 
-    val npc_src   = io.npc_sel_info
-    val s0_pc     = RegInit(RESET_VECTOR.U(VADDR_WIDTH.W))
-    val s0_valid  = RegInit(false.B) // TODO: set stall condition
-    val pc_plus_4 = s0_pc + 4.U
+    // ifu stage 0:
+    val s0_pc    = Wire(UInt(WORD_WIDTH.W))
+    val s0_valid = Wire(Bool())
+
+    // ifu stage 1:
+    val s1_pc    = RegEnable(s0_pc, RESET_VECTOR.U(VADDR_WIDTH.W), addr_ok)
+    val s1_valid = Wire(Bool())
+    val s1_inst  = from_icache.bits.rdata
     //                  cond   npc
     // npc-gen           |      |
+    val npc_src  = io.npc_sel_info
     val npc_gen: Seq[(Bool, UInt)] = Seq(
         (npc_src.mispredict.valid & npc_src.mispredict.bits.redirect, npc_src.mispredict.bits.target),
         (npc_src.pred_result.taken, npc_src.pred_result.target),
-        (true.B, s0_pc + 4.U)
+        (true.B, s1_pc + 4.U)
     )
-    val npc = PriorityMux(npc_gen)
     s0_valid := addr_ok
-    s0_pc    := Mux(addr_ok, npc, s0_pc)
+    s0_pc    := PriorityMux(npc_gen)
 
-    val s1_pc    = RegEnable(s0_pc, data_ok)
-    val s1_inst  = RegEnable(from_icache.bits.rdata, data_ok)
-    val s1_valid = RegNext(data_ok)
+    s1_valid := data_ok
+    s1_pc    := Mux(addr_ok, s0_pc, s1_pc)
 
     // fetch unit doesn't write cache
     to_icache.bits.wr       := 0.B
-    to_icache.bits.addr     := npc
+    to_icache.bits.addr     := s0_pc
     to_icache.bits.wdata    := 0.U
     to_icache.bits.wtype    := 0.U
     to_icache.bits.uncached := false.B
-    to_icache.valid         := true.B
+    to_icache.valid         := !io.inst_queue_full
 
     io.stage_info.s0.bits.pc   := s0_pc
     io.stage_info.s0.bits.inst := from_icache.bits.rdata

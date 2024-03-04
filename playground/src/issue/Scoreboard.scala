@@ -12,6 +12,7 @@ import miku.frontend.BranchInstInfo
 
 class ScoreboardEntry extends MkBundle {
     val decoded_inst = new DecodedInst
+    val raw_inst     = if (DIFFTEST_MODE) Some(UInt(WORD_WIDTH.W)) else None
     val rj_num       = UInt(REG_ADDR_WD.W)
     val rk_num       = UInt(REG_ADDR_WD.W)
     val rd_num       = UInt(REG_ADDR_WD.W)
@@ -58,14 +59,16 @@ class Scoreboard extends MkModule {
     val issue_ack  = io.issue_inst.valid & io.issue_inst.ready
 
     // update the counter of issued insts
-    when(issue_ack) {
-        issued_cnt := issued_cnt + 1.U
-    }
-    when(commit_ack) {
-        issued_cnt := issued_cnt - 1.U
-    }
+    issued_cnt := MuxCase(
+        issued_cnt,
+        Seq(
+            (issue_ack & !commit_ack, issued_cnt + 1.U),
+            (!issue_ack & commit_ack, issued_cnt - 1.U)
+        )
+    )
 
     val sb_full      = issued_cnt === NR_ENTRIES.U
+    val sb_empty     = issued_cnt === 0.U
     val decoded_inst = io.from_decoder.bits.decoded_inst
 
     // issue inst when respective function unit is ready
@@ -76,6 +79,9 @@ class Scoreboard extends MkModule {
         sb_mem(issue_ptr).bits.rj_num       := io.from_decoder.bits.inst(9, 5)
         sb_mem(issue_ptr).bits.rd_num       := io.from_decoder.bits.inst(4, 0)
         sb_mem(issue_ptr).bits.decoded_inst := decoded_inst
+        if (DIFFTEST_MODE) {
+            sb_mem(issue_ptr).bits.raw_inst.get := io.from_decoder.bits.inst
+        }
 
         sb_mem(issue_ptr).bits.br_info.bits.pc         := io.from_decoder.bits.pc
         sb_mem(issue_ptr).bits.br_info.bits.pred       := io.from_decoder.bits.br_pred
@@ -101,7 +107,7 @@ class Scoreboard extends MkModule {
     io.issue_inst.bits.sbe.rk_num := io.from_decoder.bits.inst(14, 10)
     io.issue_inst.bits.sbe.rj_num := io.from_decoder.bits.inst(9, 5)
     io.issue_inst.bits.sbe.rd_num := io.from_decoder.bits.inst(4, 0)
-    io.from_decoder.ready         := io.operands_rdy && io.issue_inst.ready && !sb_full
+    io.from_decoder.ready         := (io.operands_rdy && io.issue_inst.ready && !sb_full & !waw_hazard) 
 
     // commit inst
     when(commit_ack) {

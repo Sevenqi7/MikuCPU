@@ -14,11 +14,12 @@ class BranchInstInfo extends MkBundle {
 }
 
 class FrontendIO extends MkBundle {
-    val s1         = ValidIO(new PCInstBundle(VADDR_WIDTH, INST_BITS))
-    val update     = Flipped(ValidIO(new BranchPredictorUpdate))
-    val br_pred    = new BranchPredictorResult
+    val s1              = ValidIO(new PCInstBundle(VADDR_WIDTH, INST_BITS))
+    val update          = Flipped(ValidIO(new BranchPredictorUpdate))
+    val br_pred         = new BranchPredictorResult
     // val exception  = Input(Bool())
-    val icache_msg = new IFUICacheIO()
+    val icache_msg      = new IFUICacheIO()
+    val inst_queue_full = Input(Bool())
 }
 
 class MkFrontend extends MkModule {
@@ -32,10 +33,11 @@ class MkFrontend extends MkModule {
     npc_set.pred_result := bpu.io.resp
     // npc_set.excepetion  := io.exception
 
-    io.s1               := ifu.io.stage_info.s1
-    io.icache_msg       <> ifu.io.icache_msg
-    io.br_pred          := bpu.io.resp
-    bpu.io.s0           := ifu.io.stage_info.s0
-    bpu.io.update       := io.update
-    ifu.io.npc_sel_info := npc_set
+    io.s1                  := ifu.io.stage_info.s1
+    io.icache_msg          <> ifu.io.icache_msg
+    io.br_pred             := bpu.io.resp
+    bpu.io.s0              := ifu.io.stage_info.s0
+    bpu.io.update          := io.update
+    ifu.io.npc_sel_info    := npc_set
+    ifu.io.inst_queue_full := io.inst_queue_full
 }

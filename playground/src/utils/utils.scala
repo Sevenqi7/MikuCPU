@@ -16,6 +16,7 @@ class PCInstBundle(pc_width: Int, inst_width: Int) extends Bundle {
 class ReadyValidBundle extends Bundle {
     val valid = Output(Bool())
     val ready = Input(Bool())
+   
 }
 
 object SEXT {

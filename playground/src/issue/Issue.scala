@@ -23,6 +23,8 @@ class IssueStageIO extends MkBundle {
         val fuinput = new BaseFuInput {}
         val futype  = FuType()
     })
+    val store_commit = new ReadyValidBundle
+    val diff         = if (DIFFTEST_MODE) Some(new DifftestIO) else None
     // transcation that will be excuted in function unit
 }
 
@@ -64,8 +66,8 @@ class IssueStage extends MkModule {
         SelImm.IMM_U12 -> UEXT(io.from_decoder.bits.inst(21, 10), WORD_WIDTH),
         SelImm.IMM_S14 -> SEXT(io.from_decoder.bits.inst(23, 10), WORD_WIDTH),
         SelImm.IMM_S16 -> SEXT(io.from_decoder.bits.inst(25, 10), WORD_WIDTH),
-        SelImm.IMM_S20 -> SEXT(Cat(io.from_decoder.bits.inst(4, 0), io.from_decoder.bits.inst(21, 10)), WORD_WIDTH),
-        SelImm.IMM_S26 -> SEXT(Cat(io.from_decoder.bits.inst(9, 0), io.from_decoder.bits.inst(21, 10)), WORD_WIDTH)
+        SelImm.IMM_S20 -> SEXT(io.from_decoder.bits.inst(24, 5), WORD_WIDTH)
+        // SelImm.IMM_S26 -> SEXT(io.from_decoder.bits.inst(21, 5), WORD_WIDTH)
     )
     val imm       = MuxLookup(imm_sel, DEBUG_MAGICNUM.U)(imm_table)
 
@@ -91,9 +93,23 @@ class IssueStage extends MkModule {
     scoreboard.io.operands_rdy := opr_a_valid & opr_b_valid & opr_c_valid
 
     // commit logic
-    val commit_inst = scoreboard.io.commit_inst
-    commit_inst.ready       := true.B // ?: correctness need checked
+    val commit_inst     = scoreboard.io.commit_inst
+    val commit_inst_sbe = commit_inst.bits.sbe
+
+    // check whether we are committing a store inst
+    val is_commit_store =
+        (commit_inst_sbe.decoded_inst.futype === FuType.lsu) &&
+            LSUOpType.isStoreType(commit_inst_sbe.decoded_inst.fuoptype)
+    io.store_commit.valid   := is_commit_store & commit_inst.valid
+    commit_inst.ready       := Mux(is_commit_store, io.store_commit.ready, true.B)
+
     gpr.write_io.rf_ws_i    := commit_inst.bits.sbe.rd_num
-    gpr.write_io.rf_ws_en   := commit_inst.valid && commit_inst.bits.sbe.decoded_inst.regwen
+    gpr.write_io.rf_ws_en   := commit_inst.valid && commit_inst_sbe.decoded_inst.regwen
     gpr.write_io.rf_ws_data := commit_inst.bits.sbe.result
+
+    if (DIFFTEST_MODE) {
+        io.diff.get.commit_inst.bits  := commit_inst.bits
+        io.diff.get.commit_inst.valid := commit_inst.valid
+        io.diff.get.gpr               := gpr.diff_gpr.get
+    }
 }
