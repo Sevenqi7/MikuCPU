@@ -52,3 +52,10 @@ object DelayN {
         delay.io.out
     }
 }
+
+object HoldUnless {
+  def apply[T <: Data](x: T, en: Bool, init: Option[T] = None): T = {
+    val hold_data = if (init.isDefined) RegEnable(x, init.get, en) else RegEnable(x, en)
+    Mux(en, x, hold_data)
+  }
+}

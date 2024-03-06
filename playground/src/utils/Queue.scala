@@ -64,8 +64,10 @@ class CircularQueue[T <: Data](element: T, size: Int, enable_contents_output: Bo
     io.out.front_data := queue(front).bits
 
     when(io.in.clear) {
+        front := 0.U
+        rear  := 0.U
         for (i <- 0 until size) {
-            queue(i).valid := false.B
+            queue(i) := 0.U.asTypeOf(ValidIO(element))
         }
     }.otherwise {
         when(io.in.enq_valid) {
