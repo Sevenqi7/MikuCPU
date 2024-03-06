@@ -10,7 +10,7 @@ import miku.utils.util.uintToBitPat
 
 object SelImm {
     def num         = 8
-    def IMM_MAX_LEN = 20
+    def IMM_MAX_LEN = 26
 
     def IMM_U8        = "b000".U(log2Ceil(num).W)
     def IMM_S12       = "b001".U(log2Ceil(num).W)
@@ -50,10 +50,10 @@ class DecodedInst extends MkBundle with DecodeConstants {
     val flush    = Bool()
     val selImm   = SelImm()
 
-    // src(0), src(1), src(2) seperately represent rk, rj, rd if there value is reg
-    def needRk  = src(0) === SrcType.reg
+    // src(2), src(1), src(0) seperately represent rk, rj, rd if there value is reg
+    def needRk  = src(2) === SrcType.reg
     def needRj  = src(1) === SrcType.reg
-    def needRd  = src(2) === SrcType.reg
+    def needRd  = src(0) === SrcType.reg
     def needImm = src.map(s => s === SrcType.imm).reduce(_ || _)
 }
 
@@ -129,15 +129,15 @@ object LA2RI16Decoder extends DecodeConstants {
     val decodeTable = Array[(BitPat, List[BitPat])](
         // BCECQZ -> List(N, SrcType.reg, SrcType.reg, SrcType.X, FuOpType.X,      Y, SelImm.X     ), floating branch inst not supported yet
         // BCENEZ -> List(N, SrcType.reg, SrcType.reg, SrcType.X, FuOpType.X,      Y, SelImm.X     ),
-        JIRL   -> List(Y, SrcType.reg, SrcType.reg, SrcType.none,   FuType.bru, JumpOpType.jirl, Y, SelImm.IMM_S16),
-        B      -> List(N, SrcType.reg, SrcType.reg, SrcType.none,   FuType.bru, JumpOpType.b   , Y, SelImm.IMM_S26),
-        BL     -> List(Y, SrcType.reg, SrcType.reg, SrcType.none,   FuType.bru, JumpOpType.bl  , Y, SelImm.IMM_S16),
-        BEQ    -> List(N, SrcType.reg, SrcType.reg, SrcType.imm ,   FuType.bru, JumpOpType.beq , Y, SelImm.IMM_S16),
-        BNE    -> List(N, SrcType.reg, SrcType.reg, SrcType.imm ,   FuType.bru, JumpOpType.bne , Y, SelImm.IMM_S16),
-        BLT    -> List(N, SrcType.reg, SrcType.reg, SrcType.imm ,   FuType.bru, JumpOpType.blt , Y, SelImm.IMM_S16),
-        BGE    -> List(N, SrcType.reg, SrcType.reg, SrcType.imm ,   FuType.bru, JumpOpType.bge , Y, SelImm.IMM_S16),
-        BLTU   -> List(N, SrcType.reg, SrcType.reg, SrcType.imm ,   FuType.bru, JumpOpType.bltu, Y, SelImm.IMM_S16),
-        BGEU   -> List(N, SrcType.reg, SrcType.reg, SrcType.imm ,   FuType.bru, JumpOpType.bgeu, Y, SelImm.IMM_S16)
+        JIRL   -> List(Y, SrcType.imm, SrcType.reg , SrcType.none,   FuType.bru, JumpOpType.jirl, Y, SelImm.IMM_S16),
+        B      -> List(N, SrcType.imm, SrcType.none, SrcType.none,   FuType.bru, JumpOpType.b   , Y, SelImm.IMM_S26),
+        BL     -> List(Y, SrcType.imm, SrcType.none, SrcType.none,   FuType.bru, JumpOpType.bl  , Y, SelImm.IMM_S26),
+        BEQ    -> List(N, SrcType.imm, SrcType.reg , SrcType.reg ,   FuType.bru, JumpOpType.beq , N, SelImm.IMM_S16),
+        BNE    -> List(N, SrcType.imm, SrcType.reg , SrcType.reg ,   FuType.bru, JumpOpType.bne , N, SelImm.IMM_S16),
+        BLT    -> List(N, SrcType.imm, SrcType.reg , SrcType.reg ,   FuType.bru, JumpOpType.blt , N, SelImm.IMM_S16),
+        BGE    -> List(N, SrcType.imm, SrcType.reg , SrcType.reg ,   FuType.bru, JumpOpType.bge , N, SelImm.IMM_S16),
+        BLTU   -> List(N, SrcType.imm, SrcType.reg , SrcType.reg ,   FuType.bru, JumpOpType.bltu, N, SelImm.IMM_S16),
+        BGEU   -> List(N, SrcType.imm, SrcType.reg , SrcType.reg ,   FuType.bru, JumpOpType.bgeu, N, SelImm.IMM_S16)
     )
 }
 

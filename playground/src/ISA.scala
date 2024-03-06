@@ -24,10 +24,10 @@ object SrcType {
 object FuType {
     def num = 4
 
-    def alu = "b0001".U(num.W)
-    def lsu = "b0010".U(num.W)
-    def mul = "b0100".U(num.W)
-    def bru = "b1000".U(num.W)
+    def alu  = "b0001".U(num.W)
+    def lsu  = "b0010".U(num.W)
+    def mul  = "b0100".U(num.W)
+    def bru  = "b1000".U(num.W)
     def none = "b0000".U(num.W)
 
     def X = BitPat("b????")
@@ -80,6 +80,10 @@ object MulDivOpType {
 object JumpOpType {
     def num = 9
 
+    def isBr(optype: UInt)    = ((optype <= bgeu))
+    def isBorBl(optype: UInt) = ((optype === b) || (optype === bl))
+    def isJirl(optype: UInt)  = (optype === jirl)
+
     def beq  = "b0000".U(log2Ceil(MaxOpNum).W)
     def bne  = "b0001".U(log2Ceil(MaxOpNum).W)
     def blt  = "b0010".U(log2Ceil(MaxOpNum).W)
@@ -96,20 +100,22 @@ object JumpOpType {
 object LSUOpType {
     def num = 8
 
-    def isLoadType(optype: UInt)  = (optype(2, 0) & "b100".U) =/= 0.U
-    def isStoreType(optype: UInt) = !(optype(2, 0) & "b100".U)
-    def toWriteMask(optype: UInt) = ~0.U(4.W) >> (4.U - optype(1, 0))
+    def isLoadType(optype: UInt)  = optype(2, 0) >= ldb
+    def isStoreType(optype: UInt) = optype(2, 0) <= stw
+    def toWriteMask(optype: UInt) = ~0.U(4.W) >> (3.U - optype(1, 0))
 
-    def ldb  = "b100".U(log2Ceil(MaxOpNum).W)
-    def ldh  = "b101".U(log2Ceil(MaxOpNum).W)
-    def ldw  = "b110".U(log2Ceil(MaxOpNum).W)
-    def ldbu = "b111".U(log2Ceil(MaxOpNum).W)
-    def ldhu = "b100".U(log2Ceil(MaxOpNum).W)
+    def ldb  = "b011".U(log2Ceil(MaxOpNum).W)
+    def ldh  = "b100".U(log2Ceil(MaxOpNum).W)
+    def ldw  = "b101".U(log2Ceil(MaxOpNum).W)
+    def ldbu = "b110".U(log2Ceil(MaxOpNum).W)
+    def ldhu = "b111".U(log2Ceil(MaxOpNum).W)
     def stb  = "b000".U(log2Ceil(MaxOpNum).W)
     def sth  = "b001".U(log2Ceil(MaxOpNum).W)
     def stw  = "b010".U(log2Ceil(MaxOpNum).W)
 
     def X = BitPat("b???")
+
+    def apply() = UInt(log2Ceil(num).W)
 }
 
 object LA32Instructions {
