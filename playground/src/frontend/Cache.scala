@@ -132,7 +132,7 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
 
     val cache_ready = io.req.ready
     val tagv_ram    = VecInit.fill(wayNum)(Module(new SRAMTemplate(indexWidth, new TagvBundle(tagWidth))).io)
-    val data_ram    = VecInit.fill(wayNum, WORDS_PER_LINE)(Module(new SRAMTemplate(indexWidth, UInt(WORD_WIDTH.W))).io)
+    val data_ram    = VecInit.fill(wayNum, WORDS_PER_LINE)(Module(new SRAMTemplate(indexWidth, UInt(WORD_WIDTH.W), true)).io)
     val dirty_bits_it = if (!readOnly) Some(RegInit(VecInit.fill(wayNum, setNum)(false.B))) else None
 
     def dirty_bits: Vec[Vec[Bool]] = {
@@ -178,7 +178,7 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
         for (j <- 0 until (WORDS_PER_LINE)) {
             data_ram(i)(j).addr := Mux(cache_ready, index, req_idx)
             data_ram(i)(j).din  := DontCare
-            data_ram(i)(j).wen  := 0.B
+            data_ram(i)(j).wen  := 0.U
         }
     }
     io.initAXIInterfaces()
@@ -251,7 +251,7 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
         is(sRefill) {
             state                     := sLookup
             for (i <- 0 until WORDS_PER_LINE) {
-                data_ram(replace_way)(i).wen := 1.B
+                data_ram(replace_way)(i).wen := ~0.U(WORD_WIDTH.W)
                 data_ram(replace_way)(i).din := recv_data(i)
             }
             tagv_ram(replace_way).din := Cat(true.B, req_tag)
@@ -284,6 +284,7 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
                 data_ram(wreq_way)(wdata_ram_sel).addr := wreq_idx
                 data_ram(wreq_way)(wdata_ram_sel).din  := wreq_wdata
                 data_ram(wreq_way)(wdata_ram_sel).wen  := wreq_wstrb
+                dirty_bits(wreq_way)(wreq_idx)         := true.B
 
                 wstate := Mux(hit & req_wr, wsWrite, wsIdle)
             }
