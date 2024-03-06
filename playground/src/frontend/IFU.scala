@@ -13,7 +13,7 @@ class IFUICacheIO extends MkBundle {
 
 class NpcSelInfo extends MkBundle {
     val pred_result = new BranchPredictorResult
-    val mispredict  = ValidIO(new BranchPredictorUpdate)
+    val pred_check  = ValidIO(new BranchPredictorUpdate)
     val excepetion  = Bool()
 }
 
@@ -49,15 +49,16 @@ class IFU extends MkModule {
     //                  cond   npc
     // npc-gen           |      |
     val npc_src  = io.npc_sel_info
+    val mispred  = npc_src.pred_check.valid & npc_src.pred_check.bits.redirect
     val npc_gen: Seq[(Bool, UInt)] = Seq(
-        (npc_src.mispredict.valid & npc_src.mispredict.bits.redirect, npc_src.mispredict.bits.target),
+        (mispred, npc_src.pred_check.bits.target),
         (npc_src.pred_result.taken, npc_src.pred_result.target),
         (true.B, s1_pc + 4.U)
     )
     s0_valid := addr_ok
     s0_pc    := PriorityMux(npc_gen)
 
-    s1_valid := data_ok
+    s1_valid := data_ok & !mispred
     s1_pc    := Mux(addr_ok, s0_pc, s1_pc)
 
     // fetch unit doesn't write cache

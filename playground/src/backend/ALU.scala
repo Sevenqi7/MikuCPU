@@ -49,6 +49,7 @@ class MkALU extends BaseFunctionUnit {
     result_gen.io.operand_b := io.in.bits.operand_b
 
     io.out.bits.exception := false.B
+    io.out.bits.mispred   := false.B
     io.out.bits.id        := io.in.bits.id
     io.out.bits.result    := result_gen.io.result
 }

@@ -21,6 +21,7 @@ class BaseFuOutput extends MkBundle {
     val id        = UInt(TRANS_ID_BITS.W)
     val result    = UInt(WORD_WIDTH.W)
     val exception = Bool()
+    val mispred   = Bool()
 }
 
 class WriteBackResult extends BaseFuOutput {}
@@ -38,6 +39,7 @@ class FakeFunctionUnit extends BaseFunctionUnit {
     io.out.bits.exception := false.B
     io.out.bits.result    := DEBUG_MAGICNUM.U
     io.out.valid          := io.in.valid
+    io.out.bits.mispred   := false.B
     io.in.ready           := true.B
 }
 

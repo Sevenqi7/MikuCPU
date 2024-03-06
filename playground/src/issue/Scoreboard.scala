@@ -9,6 +9,8 @@ import miku.backend._
 import miku.frontend.DecodedInst
 import miku.frontend.BranchPredictorResult
 import miku.frontend.BranchInstInfo
+import miku.frontend.BranchPredictorUpdate
+import java.util.concurrent.Future
 
 class ScoreboardEntry extends MkBundle {
     val decoded_inst = new DecodedInst
@@ -67,9 +69,10 @@ class Scoreboard extends MkModule {
         )
     )
 
+    val decoded_inst = io.from_decoder.bits.decoded_inst
     val sb_full      = issued_cnt === NR_ENTRIES.U
     val sb_empty     = issued_cnt === 0.U
-    val decoded_inst = io.from_decoder.bits.decoded_inst
+    val is_bl        = (decoded_inst.futype === FuType.bru) && (decoded_inst.fuoptype === JumpOpType.bl)
 
     // issue inst when respective function unit is ready
     when(issue_ack) {
@@ -77,16 +80,17 @@ class Scoreboard extends MkModule {
         sb_mem(issue_ptr).valid             := true.B // set valid bit as true when successfully issue this instruction
         sb_mem(issue_ptr).bits.rk_num       := io.from_decoder.bits.inst(14, 10)
         sb_mem(issue_ptr).bits.rj_num       := io.from_decoder.bits.inst(9, 5)
-        sb_mem(issue_ptr).bits.rd_num       := io.from_decoder.bits.inst(4, 0)
+        // BL has a fixed destination register R1
+        sb_mem(issue_ptr).bits.rd_num       := Mux(is_bl, 1.U, io.from_decoder.bits.inst(4, 0))
         sb_mem(issue_ptr).bits.decoded_inst := decoded_inst
         if (DIFFTEST_MODE) {
             sb_mem(issue_ptr).bits.raw_inst.get := io.from_decoder.bits.inst
         }
 
-        sb_mem(issue_ptr).bits.br_info.bits.pc         := io.from_decoder.bits.pc
-        sb_mem(issue_ptr).bits.br_info.bits.pred       := io.from_decoder.bits.br_pred
-        sb_mem(issue_ptr).bits.br_info.bits.mispredict := false.B
-        sb_mem(issue_ptr).bits.br_info.valid           := (decoded_inst.futype === FuType.bru)
+        sb_mem(issue_ptr).bits.br_info.bits.pc      := io.from_decoder.bits.pc
+        sb_mem(issue_ptr).bits.br_info.bits.pred    := io.from_decoder.bits.br_pred
+        sb_mem(issue_ptr).bits.br_info.bits.mispred := false.B
+        sb_mem(issue_ptr).bits.br_info.valid        := (decoded_inst.futype === FuType.bru)
     }
 
     // default - initialise all fieled with zero
@@ -103,11 +107,22 @@ class Scoreboard extends MkModule {
             (id.U =/= commit_ptr)
         }.reduce(_ || _)
 
-    io.issue_inst.valid           := io.from_decoder.valid && io.operands_rdy && !waw_hazard
+    // only issue an branch instruction when no other unresolved branch inst in scoreboard
+    val unresolved_branch =
+        sb_mem
+            .map(sbe =>
+                sbe.valid &&
+                    sbe.bits.br_info.valid
+            ).reduce(_ || _)
+
+    io.issue_inst.valid := io.from_decoder.valid && io.operands_rdy && !waw_hazard &&
+        ((decoded_inst.futype =/= FuType.bru) || ((decoded_inst.futype === FuType.bru) && !unresolved_branch))
+
     io.issue_inst.bits.sbe.rk_num := io.from_decoder.bits.inst(14, 10)
     io.issue_inst.bits.sbe.rj_num := io.from_decoder.bits.inst(9, 5)
     io.issue_inst.bits.sbe.rd_num := io.from_decoder.bits.inst(4, 0)
-    io.from_decoder.ready         := (io.operands_rdy && io.issue_inst.ready && !sb_full & !waw_hazard) 
+    io.from_decoder.ready         := (io.operands_rdy && io.issue_inst.ready && !sb_full & !waw_hazard) &&
+        ((decoded_inst.futype =/= FuType.bru) || ((decoded_inst.futype === FuType.bru) && !unresolved_branch))
 
     // commit inst
     when(commit_ack) {
@@ -118,11 +133,22 @@ class Scoreboard extends MkModule {
 
     // write-back from exu
     for (wb <- io.wb_data) {
-        val wb_id = wb.bits.id
+        val wb_id  = wb.bits.id
+        val wb_sbe = sb_mem(wb_id).bits
         when(wb.valid) {
-            sb_mem(wb_id).bits.result    := wb.bits.result
-            sb_mem(wb_id).bits.exception := wb.bits.exception
-            sb_mem(wb_id).bits.executed  := true.B
+            wb_sbe.br_info.bits.mispred := wb.bits.mispred
+            wb_sbe.result               := wb.bits.result
+            wb_sbe.exception            := wb.bits.exception
+            wb_sbe.executed             := true.B
+            // misprediction flush
+            when(wb_sbe.br_info.valid & wb_sbe.br_info.bits.mispred) {
+                issue_ptr := commit_ptr + 1.U
+                for (i <- 0 until NR_ENTRIES) {
+                    when((commit_ptr + i.U)(TRANS_ID_BITS - 1, 0) < issue_ptr) {
+                        sb_mem(i) := 0.U.asTypeOf(ValidIO(new ScoreboardEntry))
+                    }
+                }
+            }
         }
         wb.ready := true.B
     }
@@ -140,7 +166,7 @@ class Scoreboard extends MkModule {
 
     io.commit_inst.bits.id  := commit_ptr
     io.commit_inst.bits.sbe := sb_mem(commit_ptr).bits
-    io.commit_inst.valid    := sb_mem(commit_ptr).bits.executed
+    io.commit_inst.valid    := sb_mem(commit_ptr).bits.executed & sb_mem(commit_ptr).valid
 
     // bypass arbiter
     // this priority arbiter choose the most up-to-date reg data

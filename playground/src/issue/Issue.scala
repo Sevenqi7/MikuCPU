@@ -58,16 +58,16 @@ class IssueStage extends MkModule {
     val rd_data = Mux(rd_fwd_data.valid, rd_fwd_data.bits, rd_gpr_data)
 
     // immdiate number selection
-
     val imm_sel   = decoded_inst.selImm
+    val raw_inst  = io.from_decoder.bits.inst
     val imm_table = Seq[(UInt, UInt)](
-        SelImm.IMM_U8  -> UEXT(io.from_decoder.bits.inst(17, 10), WORD_WIDTH),
-        SelImm.IMM_S12 -> SEXT(io.from_decoder.bits.inst(21, 10), WORD_WIDTH),
-        SelImm.IMM_U12 -> UEXT(io.from_decoder.bits.inst(21, 10), WORD_WIDTH),
-        SelImm.IMM_S14 -> SEXT(io.from_decoder.bits.inst(23, 10), WORD_WIDTH),
-        SelImm.IMM_S16 -> SEXT(io.from_decoder.bits.inst(25, 10), WORD_WIDTH),
-        SelImm.IMM_S20 -> SEXT(io.from_decoder.bits.inst(24, 5), WORD_WIDTH)
-        // SelImm.IMM_S26 -> SEXT(io.from_decoder.bits.inst(21, 5), WORD_WIDTH)
+        SelImm.IMM_U8  -> UEXT(raw_inst(17, 10), WORD_WIDTH),
+        SelImm.IMM_S12 -> SEXT(raw_inst(21, 10), WORD_WIDTH),
+        SelImm.IMM_U12 -> UEXT(raw_inst(21, 10), WORD_WIDTH),
+        SelImm.IMM_S14 -> SEXT(raw_inst(23, 10), WORD_WIDTH),
+        SelImm.IMM_S16 -> SEXT(raw_inst(25, 10), WORD_WIDTH),
+        SelImm.IMM_S20 -> SEXT(raw_inst(24, 5), WORD_WIDTH),
+        SelImm.IMM_S26 -> SEXT(Cat(raw_inst(9, 0), raw_inst(25, 10)), WORD_WIDTH)
     )
     val imm       = MuxLookup(imm_sel, DEBUG_MAGICNUM.U)(imm_table)
 
@@ -100,8 +100,8 @@ class IssueStage extends MkModule {
     val is_commit_store =
         (commit_inst_sbe.decoded_inst.futype === FuType.lsu) &&
             LSUOpType.isStoreType(commit_inst_sbe.decoded_inst.fuoptype)
-    io.store_commit.valid   := is_commit_store & commit_inst.valid
-    commit_inst.ready       := Mux(is_commit_store, io.store_commit.ready, true.B)
+    io.store_commit.valid := is_commit_store & commit_inst.valid
+    commit_inst.ready     := Mux(is_commit_store, io.store_commit.ready, true.B)
 
     gpr.write_io.rf_ws_i    := commit_inst.bits.sbe.rd_num
     gpr.write_io.rf_ws_en   := commit_inst.valid && commit_inst_sbe.decoded_inst.regwen
@@ -109,7 +109,7 @@ class IssueStage extends MkModule {
 
     if (DIFFTEST_MODE) {
         io.diff.get.commit_inst.bits  := commit_inst.bits
-        io.diff.get.commit_inst.valid := commit_inst.valid
+        io.diff.get.commit_inst.valid := commit_inst.valid & commit_inst.ready
         io.diff.get.gpr               := gpr.diff_gpr.get
     }
 }
