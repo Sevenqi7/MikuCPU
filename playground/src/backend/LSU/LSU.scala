@@ -18,7 +18,7 @@ class LSUIO extends MkBundle {
 class StoreQueueEntry extends MkBundle {
     val id    = UInt(TRANS_ID_BITS.W)
     val addr  = UInt(VADDR_WIDTH.W)
-    val wstrb = UInt(wordBytes.W)
+    val wtype = UInt(2.W)
     val wdata = UInt(WORD_WIDTH.W)
     // val commit_en = Bool()
 }
@@ -31,7 +31,8 @@ class LSU extends BaseFunctionUnit {
     val imm_s12 = io.in.bits.operand_b
     val vaddr   = rj + imm_s12
     val wdata   = rd
-    val wstrb   = LSUOpType.toWriteMask(io.in.bits.optype)
+    // val wtype   = LSUOpType.toWriteMask(io.in.bits.optype)
+    val wtype   = io.in.bits.optype(1, 0)
 
     val store_queue = Module(new CircularQueue(new StoreQueueEntry, 8, true))
 
@@ -112,15 +113,13 @@ class LSU extends BaseFunctionUnit {
             }
         }
         is(lWriteback) {
-            lstate                 := lIdle
+            lstate                 := Mux(load_wb.ready, lIdle, lWriteback)
             load_wb.valid          := true.B
             load_wb.bits.id        := load_buf.id
             load_wb.bits.exception := false.B
             load_wb.bits.mispred   := false.B
             load_wb.bits.result    := load_buf.rdata
-            // val store_queue_hit = store_queue.io.out.element_vec.get.map(
-            //     i => i.valid && i.bits.addr
-            // )
+            // TODO: search in the store queue
         }
     }
 
@@ -130,8 +129,8 @@ class LSU extends BaseFunctionUnit {
     val store_ready      = !store_queue.io.out.full
     new_store_inst.id    := io.in.bits.id
     new_store_inst.addr  := vaddr
-    new_store_inst.wstrb := wstrb
-    new_store_inst.wdata := wdata
+    new_store_inst.wtype := wtype
+    new_store_inst.wdata := wdata << vaddr(1, 0)
 
     val store_req  = Wire(Decoupled(new CacheReqIO(VADDR_WIDTH, WORD_WIDTH)))
     val store_resp = lsu_io.cache_resp
@@ -160,7 +159,7 @@ class LSU extends BaseFunctionUnit {
 
     store_req.bits.addr     := front_store_inst.addr
     store_req.bits.wdata    := front_store_inst.wdata
-    store_req.bits.wtype    := front_store_inst.wstrb
+    store_req.bits.wtype    := front_store_inst.wtype
     store_req.bits.uncached := false.B
     store_req.bits.wr       := true.B
 
