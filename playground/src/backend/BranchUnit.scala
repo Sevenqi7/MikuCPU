@@ -41,7 +41,7 @@ class BranchUnit extends BaseFunctionUnit {
         )
     )
 
-    val link_flag = isJirl(io.in.bits.optype) || isBorBl(io.in.bits.optype)
+    val link_flag = isJirl(io.in.bits.optype) || (io.in.bits.optype === bl)
 
     val br_target = MuxCase(
         pc + 4.U,

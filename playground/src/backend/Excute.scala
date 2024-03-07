@@ -79,10 +79,13 @@ class EXU extends MkModule {
     )
 
     val fu_base_in = RegInit(0.U.asTypeOf(ValidIO(new BaseFuInput)))
-    val futype_r   = RegNext(io.futype)
+    val futype_r   = RegInit(0.U.asTypeOf(FuType()))
 
-    fu_base_in.bits  := io.in.bits
-    fu_base_in.valid := io.in.valid
+    when(io.in.ready) {
+        fu_base_in.bits  := io.in.bits
+        fu_base_in.valid := io.in.valid
+        futype_r         := io.futype
+    }
 
     io.in.ready                             := false.B // default
     function_units.foreach(_._2.io.in.valid := false.B)

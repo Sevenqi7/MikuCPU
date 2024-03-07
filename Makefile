@@ -37,7 +37,7 @@ ifneq ($(CHIPLAB_HOME),)
 	@echo "Done."
 endif
 
-sim:
+sim: verilog
 	@echo "Using chiplab to simulate..."
 ifeq ($(CHIPLAB_HOME), )
 	@echo "Error! Variable CHIPLAB_HOME is not set!"

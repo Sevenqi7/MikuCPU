@@ -130,7 +130,7 @@ class LSU extends BaseFunctionUnit {
     new_store_inst.id    := io.in.bits.id
     new_store_inst.addr  := vaddr
     new_store_inst.wtype := wtype
-    new_store_inst.wdata := wdata << vaddr(1, 0)
+    new_store_inst.wdata := wdata << (vaddr(1, 0) << 3.U)
 
     val store_req  = Wire(Decoupled(new CacheReqIO(VADDR_WIDTH, WORD_WIDTH)))
     val store_resp = lsu_io.cache_resp

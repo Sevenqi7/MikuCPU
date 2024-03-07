@@ -34,7 +34,7 @@ abstract trait DecodeConstants {
     def Y = BitPat("b1")
 
     def decodeDefault: List[BitPat] = /*
-           regWen   src1      src2       src3     FuncUnit
+           regWen   src0      src1       src2     FuncUnit
              |       |         |          |          |         operation
              |       |         |          |          |             |    flush
              |       |         |          |          |             |      |          SelImm
@@ -100,9 +100,9 @@ object LA3RDecoder extends DecodeConstants {
 
 object LA2RI8Decoder extends DecodeConstants {
     val decodeTable = Array[(BitPat, List[BitPat])](
-        SLLIW -> List(Y, SrcType.reg, SrcType.imm, SrcType.none, FuType.alu, ALUOpType.sllw, N, SelImm.IMM_U8),
-        SRLIW -> List(Y, SrcType.reg, SrcType.imm, SrcType.none, FuType.alu, ALUOpType.srlw, N, SelImm.IMM_U8),
-        SRAIW -> List(Y, SrcType.reg, SrcType.imm, SrcType.none, FuType.alu, ALUOpType.sraw, N, SelImm.IMM_U8)
+        SLLIW -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.alu, ALUOpType.sllw, N, SelImm.IMM_U8),
+        SRLIW -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.alu, ALUOpType.srlw, N, SelImm.IMM_U8),
+        SRAIW -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.alu, ALUOpType.sraw, N, SelImm.IMM_U8)
     )
 }
 
@@ -117,9 +117,9 @@ object LA2RI12Decoder extends DecodeConstants {
         LDB   -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.lsu, LSUOpType.ldb , N, SelImm.IMM_S12),
         LDH   -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.lsu, LSUOpType.ldh , N, SelImm.IMM_S12),
         LDW   -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.lsu, LSUOpType.ldw , N, SelImm.IMM_S12),
-        STB   -> List(N, SrcType.imm, SrcType.reg, SrcType.none, FuType.lsu, LSUOpType.stb , N, SelImm.IMM_S12),
-        STH   -> List(N, SrcType.imm, SrcType.reg, SrcType.none, FuType.lsu, LSUOpType.sth , N, SelImm.IMM_S12),
-        STW   -> List(N, SrcType.imm, SrcType.reg, SrcType.none, FuType.lsu, LSUOpType.stw , N, SelImm.IMM_S12),
+        STB   -> List(N, SrcType.imm, SrcType.reg, SrcType.reg , FuType.lsu, LSUOpType.stb , N, SelImm.IMM_S12),
+        STH   -> List(N, SrcType.imm, SrcType.reg, SrcType.reg , FuType.lsu, LSUOpType.sth , N, SelImm.IMM_S12),
+        STW   -> List(N, SrcType.imm, SrcType.reg, SrcType.reg , FuType.lsu, LSUOpType.stw , N, SelImm.IMM_S12),
         LDBU  -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.lsu, LSUOpType.ldbu, N, SelImm.IMM_S12),
         LDHU  -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.lsu, LSUOpType.ldhu, N, SelImm.IMM_S12)
     )
@@ -145,6 +145,12 @@ object LAI20Decoder extends DecodeConstants {
     val decodeTable = Array[(BitPat, List[BitPat])](
         LU12IW     -> List(Y, SrcType.none, SrcType.imm, SrcType.none, FuType.alu, ALUOpType.lu12iw     , N, SelImm.IMM_S20),
         PCADDU12I  -> List(Y, SrcType.pc  , SrcType.imm, SrcType.none, FuType.alu, ALUOpType.pcaddu12i  , N, SelImm.IMM_S20)
+    )
+}
+
+object LACSRDecoder extends DecodeConstants {
+    val decodeTable = Array[(BitPat, List[BitPat])](
+        
     )
 }
 // format: on

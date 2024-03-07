@@ -6,6 +6,8 @@ import chisel3.util._
 import miku._
 import miku.utils._
 import chisel3.util.random.LFSR
+import upickle.default
+import dataclass.data
 
 class CacheReqIO(addr_wd: Int, data_wd: Int) extends MkBundle {
     val wr       = Bool()    // 0:read 1:write
@@ -130,9 +132,10 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
     val WORDS_PER_LINE = lineWidth / WORD_WIDTH
     val setNum         = 1 << indexWidth
 
-    val cache_ready = io.req.ready
-    val tagv_ram    = VecInit.fill(wayNum)(Module(new SRAMTemplate(indexWidth, new TagvBundle(tagWidth))).io)
-    val data_ram    = VecInit.fill(wayNum, WORDS_PER_LINE)(Module(new SRAMTemplate(indexWidth, UInt(WORD_WIDTH.W), true)).io)
+    val cache_ready   = io.req.ready
+    val tagv_ram      = VecInit.fill(wayNum)(Module(new SRAMTemplate(indexWidth, new TagvBundle(tagWidth))).io)
+    val data_ram      =
+        VecInit.fill(wayNum, WORDS_PER_LINE)(Module(new SRAMTemplate(indexWidth, UInt(WORD_WIDTH.W), true)).io)
     val dirty_bits_it = if (!readOnly) Some(RegInit(VecInit.fill(wayNum, setNum)(false.B))) else None
 
     def dirty_bits: Vec[Vec[Bool]] = {
@@ -145,6 +148,12 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
     def getLineData(way: UInt): Vec[UInt] = {
         VecInit((0 until WORDS_PER_LINE).map(i => data_ram(way)(i.U).dout))
     }
+    def toWriteMask(optype: UInt) = ~0.U(4.W) >> (3.U - optype(1, 0))
+
+    def getWstrbFromWtype(wtype: UInt, offset: UInt): UInt = {
+
+        ~0.U(4.W) >> (4.U - (1.U << wtype)) << offset(log2Ceil(wordBytes) - 1, 0)
+    }
     // val dirty = RegInit(VecInit.fill(setNum, wayNum)(0.B))
 
     /*              main FSM              */
@@ -155,7 +164,7 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
     // handle request
     val req_valid = RegEnable(io.req.valid, cache_ready)
     val req_addr  = RegEnable(io.req.bits.addr, io.req.valid & cache_ready)
-    val req_wstrb = RegEnable(io.req.bits.wtype, io.req.valid & cache_ready)
+    val req_wtype = RegEnable(io.req.bits.wtype, io.req.valid & cache_ready)
     val req_wr    = RegEnable(io.req.bits.wr, io.req.valid & cache_ready)
     val req_wdata = RegEnable(io.req.bits.wdata, io.req.valid & cache_ready)
 
@@ -182,26 +191,29 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
         }
     }
     io.initAXIInterfaces()
-    io.resp.valid      := 0.B
-    io.resp.bits.done  := 0.B
+    io.resp.valid      := false.B
+    io.resp.bits.done  := false.B
     io.resp.bits.rdata := 0x7777.U // Magic Number for debug
 
     val tagv_out   = VecInit((0 until wayNum).map(tagv => tagv_ram(tagv).dout.asTypeOf(new TagvBundle(tagWidth))))
     val total_hits = VecInit((0 until wayNum).map(i => tagv_out(i).valid && (tagv_out(i).tag === req_tag)))
-    val hit        = total_hits.reduce(_ || _)
+    val hit        = total_hits.reduce(_ || _) && (state === sLookup)
     val hitWay     = OHToUInt(total_hits)
     val recv_data  = RegInit(VecInit(Seq.fill(WORDS_PER_LINE)(0.U(WORD_WIDTH.W))))
     val recv_cnt   = RegInit(0.U(log2Ceil(lineWidth).W))
+    val war_stall  = Wire(Bool())
+    war_stall := false.B
 
-    val wreq_way = RegInit(0.U(lineWidth.W))
+    val wreq_way = RegInit(0.U(log2Ceil(wayNum).W))
 
-    cache_ready := (state === sIdle) || ((state === sLookup) && hit)
+    cache_ready := (state === sIdle) || ((state === sLookup) && hit && !war_stall)
 
     switch(state) {
         // sIdle:
         // wait for request, store request
         is(sIdle) {
-            when(req_valid) {
+            state := sIdle
+            when(io.req.valid) {
                 state := sLookup
             }
         }
@@ -209,12 +221,13 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
         // tag comparison and generate rdata, wline & hit_way
         is(sLookup) {
             io.resp.bits.rdata := getLineData(hitWay)(data_ram_sel)
-            io.resp.valid      := hit
-            io.resp.bits.done  := hit
+            io.resp.valid      := hit & !war_stall
+            io.resp.bits.done  := hit & !war_stall
             wreq_way           := hitWay
             state              := MuxCase(
                 sIdle,
                 Seq(
+                    (hit & war_stall, sLookup),
                     (hit & io.req.valid, sLookup),
                     (!hit, sMiss)
                 )
@@ -267,12 +280,16 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
 
         val wreq_wdata    = RegEnable(req_wdata, hit & req_wr)
         val wreq_addr     = RegEnable(req_addr, hit & req_wr)
-        val wreq_wstrb    = RegEnable(req_wstrb, hit & req_wr)
+        val wreq_wtype    = RegEnable(req_wtype, hit & req_wr)
         val wreq_tag      = WireInit(wreq_addr(VADDR_WIDTH - 1, VADDR_WIDTH - tagWidth))
         val wreq_idx      = WireInit(wreq_addr(VADDR_WIDTH - tagWidth - 1, offsetWidth))
         val wreq_offset   = WireInit(wreq_addr(offsetWidth - 1, 0))
         val wdata_ram_sel =
             wreq_offset(offsetWidth - log2Ceil(WORDS_PER_LINE) + 1, offsetWidth - log2Ceil(WORDS_PER_LINE))
+
+        // val war_case1 = (wstate === wsWrite) && (hitWay === wreq_way) && (wdata_ram_sel === data_ram_sel)
+        val war_case2 = (RegNext(wstate) === wsWrite) && (hitWay === RegNext(wreq_way)) && (data_ram_sel === RegNext(wdata_ram_sel))
+        war_stall := war_case2 & !req_wr & req_valid
 
         switch(wstate) {
             is(wsIdle) {
@@ -283,11 +300,14 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
             is(wsWrite) {
                 data_ram(wreq_way)(wdata_ram_sel).addr := wreq_idx
                 data_ram(wreq_way)(wdata_ram_sel).din  := wreq_wdata
-                data_ram(wreq_way)(wdata_ram_sel).wen  := wreq_wstrb
+                data_ram(wreq_way)(wdata_ram_sel).wen  := getWstrbFromWtype(wreq_wtype, wreq_offset)
                 dirty_bits(wreq_way)(wreq_idx)         := true.B
 
                 wstate := Mux(hit & req_wr, wsWrite, wsIdle)
             }
+            // is(wsCleanup) {
+            //     wstate := Mux(hit & req_wr, wsWrite, wsIdle)
+            // }
         }
 
         // write-back of dirty cache line
@@ -306,7 +326,8 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
         switch(dstate) {
             is(dsIdle) {
                 when((state === sReplace) && dirty_bits(replace_way)(req_idx)) {
-                    dstate := dsWrite
+                    dstate                           := dsReq
+                    dirty_bits(replace_way)(req_idx) := false.B
                 }
             }
             is(dsReq) {
@@ -315,7 +336,8 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
                 val awlen     = (WORDS_PER_LINE - 1).U
                 val handshake = io.sendWriteReq(awaddr, awsize, awlen, 0.U)
 
-                dstate := Mux(handshake, dsWrite, dsReq)
+                send_cnt := 0.U
+                dstate   := Mux(handshake, dsWrite, dsReq)
             }
             is(dsWrite) {
                 val wstrb     = VecInit.fill(wordBytes)(1.B).asUInt
@@ -323,7 +345,8 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
                 val wdata     = dreq_data(send_cnt)
                 val handshake = io.writeToMem(wstrb, wlast, wdata)
 
-                dstate := Mux(handshake & wlast, dsIdle, dsWrite)
+                send_cnt := Mux(handshake, send_cnt + 1.U, send_cnt)
+                dstate   := Mux(handshake & wlast, dsIdle, dsWrite)
             }
         }
     }
