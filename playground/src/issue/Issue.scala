@@ -53,9 +53,9 @@ class IssueStage extends MkModule {
     val rd_gpr_data = gpr.read_io(2).rf_rs_o
     val rd_fwd_data = scoreboard.io.forward_msg.rd_fwd_data
 
-    val rk_data = Mux(rk_fwd_data.valid, rk_fwd_data.bits, rk_gpr_data)
-    val rj_data = Mux(rj_fwd_data.valid, rj_fwd_data.bits, rj_gpr_data)
-    val rd_data = Mux(rd_fwd_data.valid, rd_fwd_data.bits, rd_gpr_data)
+    val rk_data = Mux(rk_fwd_data.valid && (issued_inst.bits.sbe.rk_num > 0.U), rk_fwd_data.bits, rk_gpr_data)
+    val rj_data = Mux(rj_fwd_data.valid && (issued_inst.bits.sbe.rj_num > 0.U), rj_fwd_data.bits, rj_gpr_data)
+    val rd_data = Mux(rd_fwd_data.valid && (issued_inst.bits.sbe.rd_num > 0.U), rd_fwd_data.bits, rd_gpr_data)
 
     // immdiate number selection
     val imm_sel   = decoded_inst.selImm

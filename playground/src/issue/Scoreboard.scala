@@ -70,7 +70,7 @@ class Scoreboard extends MkModule {
     )
 
     val decoded_inst = io.from_decoder.bits.decoded_inst
-    val sb_full      = issued_cnt === NR_ENTRIES.U
+    val sb_full      = issued_cnt === (NR_ENTRIES - 1).U
     val sb_empty     = issued_cnt === 0.U
     val is_bl        = (decoded_inst.futype === FuType.bru) && (decoded_inst.fuoptype === JumpOpType.bl)
 
@@ -115,7 +115,7 @@ class Scoreboard extends MkModule {
                     sbe.bits.br_info.valid
             ).reduce(_ || _)
 
-    io.issue_inst.valid := io.from_decoder.valid && io.operands_rdy && !waw_hazard &&
+    io.issue_inst.valid := io.from_decoder.valid && io.operands_rdy && !waw_hazard && !sb_full &&
         ((decoded_inst.futype =/= FuType.bru) || ((decoded_inst.futype === FuType.bru) && !unresolved_branch))
 
     io.issue_inst.bits.sbe.rk_num := io.from_decoder.bits.inst(14, 10)
