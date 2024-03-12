@@ -155,6 +155,25 @@ class core_top extends RawModule with HasMkParams {
             DifftestInstrCommit.io.csr_data  := DelayN(0.U, delay_cycles)
         }
 
+        val DifftestTrapEvent = Module(new DifftestTrapEvent)
+        DifftestTrapEvent.io.clock    := aclk
+        DifftestTrapEvent.io.coreid   := 0.U
+        DifftestTrapEvent.io.valid    := false.B
+        DifftestTrapEvent.io.code     := 0.U
+        DifftestTrapEvent.io.pc       := diff_info.commit_inst.bits.sbe.br_info.bits.pc
+        DifftestTrapEvent.io.instrCnt := 0.U
+        DifftestTrapEvent.io.cycleCnt := 0.U
+
+        val DifftestExcpEvent = Module(new DifftestExcpEvent)
+        DifftestExcpEvent.io.clock         := aclk
+        DifftestExcpEvent.io.coreid        := 0.U
+        DifftestExcpEvent.io.excp_valid    := false.B
+        DifftestExcpEvent.io.eret          := false.B
+        DifftestExcpEvent.io.intrNo        := 0.U
+        DifftestExcpEvent.io.cause         := 0.U
+        DifftestExcpEvent.io.exceptionPC   := diff_info.commit_inst.bits.sbe.br_info.bits.pc
+        DifftestExcpEvent.io.exceptionInst := diff_info.commit_inst.bits.sbe.raw_inst.get
+
         val DifftestGRegState = Module(new DifftestGRegState)
         DifftestGRegState.io.clock  := aclk
         DifftestGRegState.io.coreid := 0.U
@@ -335,5 +354,30 @@ class DifftestCSRRegState extends BlackBox {
         val tlbrentry = Input(UInt(63.W))
         val dmw0      = Input(UInt(63.W))
         val dmw1      = Input(UInt(63.W))
+    })
+}
+
+class DifftestExcpEvent extends BlackBox {
+    val io = IO(new Bundle {
+        val clock         = Input(Clock())
+        val coreid        = Input(UInt(8.W))
+        val excp_valid    = Input(Bool())
+        val eret          = Input(Bool())
+        val intrNo        = Input(UInt(31.W))
+        val cause         = Input(UInt(31.W))
+        val exceptionPC   = Input(UInt(63.W))
+        val exceptionInst = Input(UInt(31.W))
+    })
+}
+
+class DifftestTrapEvent extends BlackBox {
+    val io = IO(new Bundle {
+        val clock    = Input(Clock())
+        val coreid   = Input(UInt(8.W))
+        val valid    = Input(Bool())
+        val code     = Input(UInt(2.W))
+        val pc       = Input(UInt(63.W))
+        val cycleCnt = Input(UInt(63.W))
+        val instrCnt = Input(UInt(63.W))
     })
 }

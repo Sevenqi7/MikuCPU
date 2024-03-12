@@ -26,6 +26,13 @@ class StoreQueueEntry extends MkBundle {
 class LSU extends BaseFunctionUnit {
     val lsu_io = IO(new LSUIO)
 
+    def is_addr_peripheral(addr: UInt): Bool = {
+        (addr >= 0xbfc0_0000L.U && addr <= 0xbfcf_ffffL.U) ||
+        (addr >= 0xbfe8_0000L.U && addr <= 0xbfe8_ffffL.U) ||
+        (addr >= 0xbfaf_0000L.U && addr <= 0xbfaf_ffffL.U) ||
+        (addr >= 0xbfe4_0000L.U && addr <= 0xbfe4_3fffL.U)
+    }
+
     val rj      = io.in.bits.operand_a
     val rd      = io.in.bits.operand_c
     val imm_s12 = io.in.bits.operand_b
@@ -90,7 +97,8 @@ class LSU extends BaseFunctionUnit {
         is(lReq) {
             load_req.valid         := true.B
             load_req.bits.addr     := load_buf.vaddr
-            load_req.bits.uncached := true.B
+            load_req.bits.uncached := is_addr_peripheral(load_buf.vaddr)
+            // load_req.bits.uncached := true.B
             load_req.bits.wr       := false.B
             load_req.bits.wtype    := 0.U
             load_req.bits.wdata    := 0.U
@@ -160,7 +168,8 @@ class LSU extends BaseFunctionUnit {
     store_req.bits.addr     := front_store_inst.addr
     store_req.bits.wdata    := front_store_inst.wdata
     store_req.bits.wtype    := front_store_inst.wtype
-    store_req.bits.uncached := true.B
+    store_req.bits.uncached := is_addr_peripheral(front_store_inst.addr)
+    // store_req.bits.uncached := true.B
     store_req.bits.wr       := true.B
 
     val req_arb = Module(new Arbiter(new CacheReqIO(VADDR_WIDTH, WORD_WIDTH), 2))
