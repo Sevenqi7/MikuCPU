@@ -36,10 +36,10 @@ abstract trait DecodeConstants {
     def decodeDefault: List[BitPat] = /*
            regWen   src0      src1       src2     FuncUnit
              |       |         |          |          |         operation
-             |       |         |          |          |             |    flush
-             |       |         |          |          |             |      |          SelImm
-             |       |         |          |          |             |      |            |             */
-        List(N, SrcType.X, SrcType.X, SrcType.X, FuType.none, FuOpType.X, N, SelImm.INVALID_INSTR)
+             |       |         |          |          |             |         flush
+             |       |         |          |          |             |           |          SelImm
+             |       |         |          |          |             |           |            |             */
+        List(N, SrcType.X, SrcType.X, SrcType.X, FuType.misc, MiscOpType.none, N, SelImm.INVALID_INSTR)
 }
 
 class DecodedInst extends MkBundle with DecodeConstants {
@@ -108,20 +108,21 @@ object LA2RI8Decoder extends DecodeConstants {
 
 object LA2RI12Decoder extends DecodeConstants {
     val decodeTable = Array[(BitPat, List[BitPat])](
-        SLTI  -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.alu, ALUOpType.slt , N, SelImm.IMM_S12),
-        SLTUI -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.alu, ALUOpType.sltu, N, SelImm.IMM_S12),
-        ADDIW -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.alu, ALUOpType.addw, N, SelImm.IMM_S12),
-        ANDI  -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.alu, ALUOpType.and , N, SelImm.IMM_U12),
-        ORI   -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.alu, ALUOpType.or  , N, SelImm.IMM_U12),
-        XORI  -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.alu, ALUOpType.xor , N, SelImm.IMM_U12),
-        LDB   -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.lsu, LSUOpType.ldb , N, SelImm.IMM_S12),
-        LDH   -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.lsu, LSUOpType.ldh , N, SelImm.IMM_S12),
-        LDW   -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.lsu, LSUOpType.ldw , N, SelImm.IMM_S12),
-        STB   -> List(N, SrcType.imm, SrcType.reg, SrcType.reg , FuType.lsu, LSUOpType.stb , N, SelImm.IMM_S12),
-        STH   -> List(N, SrcType.imm, SrcType.reg, SrcType.reg , FuType.lsu, LSUOpType.sth , N, SelImm.IMM_S12),
-        STW   -> List(N, SrcType.imm, SrcType.reg, SrcType.reg , FuType.lsu, LSUOpType.stw , N, SelImm.IMM_S12),
-        LDBU  -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.lsu, LSUOpType.ldbu, N, SelImm.IMM_S12),
-        LDHU  -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.lsu, LSUOpType.ldhu, N, SelImm.IMM_S12)
+        SLTI  -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.alu , ALUOpType.slt   , N, SelImm.IMM_S12),
+        SLTUI -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.alu , ALUOpType.sltu  , N, SelImm.IMM_S12),
+        ADDIW -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.alu , ALUOpType.addw  , N, SelImm.IMM_S12),
+        ANDI  -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.alu , ALUOpType.and   , N, SelImm.IMM_U12),
+        ORI   -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.alu , ALUOpType.or    , N, SelImm.IMM_U12),
+        XORI  -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.alu , ALUOpType.xor   , N, SelImm.IMM_U12),
+        LDB   -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.lsu , LSUOpType.ldb   , N, SelImm.IMM_S12),
+        LDH   -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.lsu , LSUOpType.ldh   , N, SelImm.IMM_S12),
+        LDW   -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.lsu , LSUOpType.ldw   , N, SelImm.IMM_S12),
+        STB   -> List(N, SrcType.imm, SrcType.reg, SrcType.reg , FuType.lsu , LSUOpType.stb   , N, SelImm.IMM_S12),
+        STH   -> List(N, SrcType.imm, SrcType.reg, SrcType.reg , FuType.lsu , LSUOpType.sth   , N, SelImm.IMM_S12),
+        STW   -> List(N, SrcType.imm, SrcType.reg, SrcType.reg , FuType.lsu , LSUOpType.stw   , N, SelImm.IMM_S12),
+        LDBU  -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.lsu , LSUOpType.ldbu  , N, SelImm.IMM_S12),
+        LDHU  -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.lsu , LSUOpType.ldhu  , N, SelImm.IMM_S12),
+        CACOP -> List(N, SrcType.imm, SrcType.reg, SrcType.none, FuType.misc, MiscOpType.cacop, N, SelImm.IMM_S12)
     )
 }
 
