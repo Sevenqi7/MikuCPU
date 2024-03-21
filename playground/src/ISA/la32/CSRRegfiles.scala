@@ -5,7 +5,9 @@ import chisel3.util._
 import chisel3.internal.firrtl.Width
 import miku.utils.UEXT
 
-import miku.LA32CSRRegisters._
+import miku.LA32CSRRegisters.csr_defns
+import miku.issue.RegfileReadIO
+import miku.issue.RegfileWriteIO
 
 // class foobar extends MkModule {
 //     val io = IO(new Bundle {
@@ -21,28 +23,39 @@ import miku.LA32CSRRegisters._
 //     io.out := Cat(aa.asUInt(4, 3), io.in & aa.asUInt(1, 0))
 // }
 
+class LA32CSRReadIO extends RegfileReadIO(14, 32) {}
+class LA32CSRWriteIO extends RegfileWriteIO(14, 32) {}
+
 class LA32CSRRegfiles extends MkModule {
     val io = IO(new Bundle {
-        val raddr = Input(UInt(14.W))
-        val rdata = Output(UInt(WORD_WIDTH.W))
-        val waddr = Input(UInt(14.W))
-        val wdata = Input(UInt(WORD_WIDTH.W))
-        val wen   = Input(Bool())
+        val read_io   = new LA32CSRReadIO
+        val write_io  = new LA32CSRWriteIO
+        val csr_datas = Vec(csr_defns.length, UInt(32.W))
+        val timer64_o = UInt(64.W)
     })
 
-    val la32_csrs = LA32CSRRegisters.csr_defns.map {
+    val la32_csrs = csr_defns.map {
         case (addr, csr) => {
-            (addr, RegInit(0.U.asTypeOf(csr())))
+            (addr, RegInit(csr().initData.asTypeOf(csr())))
         }
     }
-    io.rdata := 0.U
+    io.csr_datas.zip(la32_csrs.map(_._2)).foreach(i => i._1 := i._2.rdata)
+
+    io.read_io.rdata := 0.U
 
     for ((addr, csr) <- la32_csrs) {
-        when(io.raddr === addr) {
-            io.rdata := csr.rdata
+        when(io.read_io.raddr === addr) {
+            io.read_io.rdata := csr.rdata
         }
-        when(io.wen && io.waddr === addr) {
-            csr.write(io.wdata)
+        when(io.write_io.wen && io.write_io.waddr === addr) {
+            csr.write(io.write_io.wdata)
         }
     }
+
+    val stable_counter = RegInit(0.U(64.W))
+    stable_counter := stable_counter + 1.U
+    io.timer64_o   := stable_counter
+
+    // pgh
+
 }

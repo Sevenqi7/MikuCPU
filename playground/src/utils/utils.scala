@@ -16,7 +16,7 @@ class PCInstBundle(pc_width: Int, inst_width: Int) extends Bundle {
 class ReadyValidBundle extends Bundle {
     val valid = Output(Bool())
     val ready = Input(Bool())
-   
+
 }
 
 object SEXT {
@@ -54,8 +54,14 @@ object DelayN {
 }
 
 object HoldUnless {
-  def apply[T <: Data](x: T, en: Bool, init: Option[T] = None): T = {
-    val hold_data = if (init.isDefined) RegEnable(x, init.get, en) else RegEnable(x, en)
-    Mux(en, x, hold_data)
-  }
+    def apply[T <: Data](x: T, en: Bool, init: Option[T] = None): T = {
+        val hold_data = if (init.isDefined) RegEnable(x, init.get, en) else RegEnable(x, en)
+        Mux(en, x, hold_data)
+    }
 }
+
+// class ZeroUInt(width: Int) extends UInt(width) {
+//     override def :=(that: Data): Unit = {
+//         this.:=(0.U)
+//     }
+// }

@@ -8,6 +8,7 @@ import miku.utils._
 import miku.frontend._
 import miku.backend._
 import miku.FuType._
+import java.util.concurrent.Future
 
 class IssueEntry extends MkBundle {
     val pc           = UInt(VADDR_WIDTH.W)
@@ -24,7 +25,14 @@ class IssueStageIO extends MkBundle {
         val futype  = FuType()
     })
     val store_commit = new ReadyValidBundle
-    val diff         = if (DIFFTEST_MODE) Some(new DifftestIO) else None
+    val csr_commit   = new ReadyValidBundle
+    val diff         =
+        if (DIFFTEST_MODE) Some(new Bundle {
+            val gpr         = Vec(32, UInt(WORD_WIDTH.W))
+            val commit_inst = ValidIO(new IssuedInst)
+            val is_CNTinst  = Bool()
+        })
+        else None
     // transcation that will be excuted in function unit
 }
 
@@ -42,15 +50,15 @@ class IssueStage extends MkModule {
 
     // read operands of the issued instruction from scoreboard
     val gpr = Module(new MkRegfiles)
-    gpr.read_io(0).rf_rs_i := issued_inst.bits.sbe.rk_num
-    gpr.read_io(1).rf_rs_i := issued_inst.bits.sbe.rj_num
-    gpr.read_io(2).rf_rs_i := issued_inst.bits.sbe.rd_num
+    gpr.read_io(0).raddr := issued_inst.bits.sbe.rk_num
+    gpr.read_io(1).raddr := issued_inst.bits.sbe.rj_num
+    gpr.read_io(2).raddr := issued_inst.bits.sbe.rd_num
 
-    val rk_gpr_data = gpr.read_io(0).rf_rs_o
+    val rk_gpr_data = gpr.read_io(0).rdata
     val rk_fwd_data = scoreboard.io.forward_msg.rk_fwd_data
-    val rj_gpr_data = gpr.read_io(1).rf_rs_o
+    val rj_gpr_data = gpr.read_io(1).rdata
     val rj_fwd_data = scoreboard.io.forward_msg.rj_fwd_data
-    val rd_gpr_data = gpr.read_io(2).rf_rs_o
+    val rd_gpr_data = gpr.read_io(2).rdata
     val rd_fwd_data = scoreboard.io.forward_msg.rd_fwd_data
 
     val rk_data = Mux(rk_fwd_data.valid && (issued_inst.bits.sbe.rk_num > 0.U), rk_fwd_data.bits, rk_gpr_data)
@@ -83,7 +91,8 @@ class IssueStage extends MkModule {
             (decoded_inst.needImm, imm)
         )
     )
-    io.trans.bits.fuinput.operand_c := rd_data
+    val need_imm5 = (decoded_inst.futype === FuType.misc && decoded_inst.fuoptype === MiscOpType.cacop)
+    io.trans.bits.fuinput.operand_c := Mux(need_imm5, issued_inst.bits.sbe.rd_num, rd_data)
     io.trans.bits.fuinput.optype    := decoded_inst.fuoptype
     io.trans.bits.futype            := decoded_inst.futype
 
@@ -100,16 +109,29 @@ class IssueStage extends MkModule {
     val is_commit_store =
         (commit_inst_sbe.decoded_inst.futype === FuType.lsu) &&
             LSUOpType.isStoreType(commit_inst_sbe.decoded_inst.fuoptype)
+    val is_commit_csr   = (commit_inst_sbe.decoded_inst.futype === FuType.csr)
+    io.csr_commit.valid   := is_commit_csr & commit_inst.valid
     io.store_commit.valid := is_commit_store & commit_inst.valid
-    commit_inst.ready     := Mux(is_commit_store, io.store_commit.ready, true.B)
+    commit_inst.ready     := MuxCase(
+        true.B,
+        Seq(
+            (is_commit_store, io.store_commit.ready),
+            (is_commit_csr, io.csr_commit.ready)
+        )
+    )
 
-    gpr.write_io.rf_ws_i    := commit_inst.bits.sbe.rd_num
-    gpr.write_io.rf_ws_en   := commit_inst.valid && commit_inst_sbe.decoded_inst.regwen
-    gpr.write_io.rf_ws_data := commit_inst.bits.sbe.result
+    gpr.write_io.waddr := commit_inst.bits.sbe.rd_num
+    gpr.write_io.wen   := commit_inst.valid && commit_inst_sbe.decoded_inst.regwen
+    gpr.write_io.wdata := commit_inst.bits.sbe.result
 
     if (DIFFTEST_MODE) {
         io.diff.get.commit_inst.bits  := commit_inst.bits
         io.diff.get.commit_inst.valid := commit_inst.valid & commit_inst.ready
         io.diff.get.gpr               := gpr.diff_gpr.get
+        io.diff.get.is_CNTinst        := commit_inst.valid &&
+            (commit_inst_sbe.decoded_inst.futype === FuType.misc) &&
+            ((commit_inst_sbe.decoded_inst.fuoptype === MiscOpType.rdcntid) ||
+                (commit_inst_sbe.decoded_inst.fuoptype === MiscOpType.rdcntvh) ||
+                (commit_inst_sbe.decoded_inst.fuoptype === MiscOpType.rdcntvl))
     }
 }

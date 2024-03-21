@@ -29,13 +29,13 @@ class IDU extends MkModule {
     ) // TODO: replace this with a ready signal from issue stage
 
     val decoder = Module(new LA32DecoderUnit)
-    decoder.raw_inst := inst_queue.io.out.front_data.inst
+    decoder.io.raw_inst := inst_queue.io.out.front_data.inst
 
     val issue_entry_r = RegInit(0.U.asTypeOf(ValidIO(new IssueEntry))) // TODO: need a better name
     when(mispred) {
         issue_entry_r := 0.U.asTypeOf(ValidIO(new IssueEntry))
     }.elsewhen(io.to_issue.ready) {
-        issue_entry_r.bits.decoded_inst := decoder.decoded_inst
+        issue_entry_r.bits.decoded_inst := decoder.io.decoded_inst
         issue_entry_r.bits.inst         := inst_queue.io.out.front_data.inst
         issue_entry_r.bits.pc           := inst_queue.io.out.front_data.pc
         issue_entry_r.valid             := !inst_queue.io.out.empty

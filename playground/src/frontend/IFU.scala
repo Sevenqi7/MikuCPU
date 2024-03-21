@@ -62,12 +62,14 @@ class IFU extends MkModule {
     s1_pc    := Mux(addr_ok, s0_pc, s1_pc)
 
     // fetch unit doesn't write cache
-    to_icache.bits.wr       := 0.B
-    to_icache.bits.addr     := s0_pc
-    to_icache.bits.wdata    := 0.U
-    to_icache.bits.wtype    := 0.U
-    to_icache.bits.uncached := false.B
-    to_icache.valid         := !io.inst_queue_full
+    to_icache.bits.wr         := 0.B
+    to_icache.bits.addr       := s0_pc
+    to_icache.bits.wdata      := 0.U
+    to_icache.bits.wtype      := 0.U
+    to_icache.bits.uncached   := false.B
+    to_icache.bits.cacop_en   := false.B
+    to_icache.bits.cacop_func := 0.U
+    to_icache.valid           := !io.inst_queue_full
 
     io.stage_info.s0.bits.pc   := s0_pc
     io.stage_info.s0.bits.inst := from_icache.bits.rdata

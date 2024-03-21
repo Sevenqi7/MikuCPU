@@ -22,15 +22,16 @@ object SrcType {
 // Function Unit Type
 // IT MUST BE ONE-HOT since we use OHtoUInt when indexing function unit
 object FuType {
-    def num = 4
+    def num = 5
 
-    def alu  = "b0001".U(num.W)
-    def lsu  = "b0010".U(num.W)
-    def mul  = "b0100".U(num.W)
-    def bru  = "b1000".U(num.W)
-    def misc = "b0000".U(num.W)
+    def alu  = "b00001".U(num.W)
+    def lsu  = "b00010".U(num.W)
+    def mul  = "b00100".U(num.W)
+    def bru  = "b01000".U(num.W)
+    def csr  = "b10000".U(num.W)
+    def misc = "b00000".U(num.W)
 
-    def X = BitPat("b????")
+    def X = BitPat("b?????")
 
     def apply() = UInt(num.W)
 }
@@ -129,10 +130,13 @@ object CSROpType {
 }
 
 object MiscOpType {
-    def num = 2
+    def num = 3
 
-    def none  = "b00".U(log2Ceil(MaxOpNum).W)
-    def cacop = "b11".U(log2Ceil(MaxOpNum).W)
+    def none    = "b000".U(log2Ceil(MaxOpNum).W)
+    def rdcntid = "b001".U(log2Ceil(MaxOpNum).W)
+    def rdcntvl = "b010".U(log2Ceil(MaxOpNum).W)
+    def rdcntvh = "b011".U(log2Ceil(MaxOpNum).W)
+    def cacop   = "b100".U(log2Ceil(MaxOpNum).W)
 
     def apply() = UInt(log2Ceil(num).W)
 }
@@ -197,6 +201,10 @@ object LA32Instructions {
     def CSRWR   = BitPat("b00000 100?? ????? ?? ????? 00001 ?????")
     def CSRXCHG = BitPat("b00000 100?? ????? ?? ????? ????? ?????")
     // ! TLB is not supported yet
+
+    def RDCNTIDW = BitPat("b00000 00000 00000 00 11000 ????? 00000")
+    def RDCNTVLW = BitPat("b00000 00000 00000 00 11000 00000 ?????")
+    def RDCNTVHW = BitPat("b00000 00000 00000 00 11001 00000 ?????")
 
     // 2RI16-Type
     def BCECQZ = BitPat("b01001 0???? ????? ?? ????? 00??? ?????")

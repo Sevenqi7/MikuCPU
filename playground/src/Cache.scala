@@ -8,13 +8,16 @@ import miku.utils._
 import chisel3.util.random.LFSR
 import upickle.default
 import dataclass.data
+import scala.annotation.meta.param
 
 class CacheReqIO(addr_wd: Int, data_wd: Int) extends MkBundle {
-    val wr       = Bool()    // 0:read 1:write
-    val addr     = UInt(addr_wd.W)
-    val wtype    = UInt(2.W) // 2'b00:byte, 2'b01:half-word 2'b10: word
-    val wdata    = UInt(data_wd.W)
-    val uncached = Bool()
+    val wr         = Bool()    // 0:read 1:write
+    val addr       = UInt(addr_wd.W)
+    val wtype      = UInt(2.W) // 2'b00:byte, 2'b01:half-word 2'b10: word
+    val wdata      = UInt(data_wd.W)
+    val uncached   = Bool()
+    val cacop_en   = Bool()
+    val cacop_func = UInt(2.W)
 }
 
 class CacheRespIO(data_wd: Int) extends MkBundle {
@@ -121,8 +124,8 @@ class TagvBundle(tagWidth: Int) extends MkBundle {
     val tag   = UInt(tagWidth.W)
 }
 
-//TODO: add write logic
 // write-back, write-alloc cache
+// TODO: add support of CACOP instruction
 class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, readOnly: Boolean = false)
     extends MkModule {
     val indexWidth = VADDR_WIDTH - tagWidth - offsetWidth
@@ -137,6 +140,10 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
     val data_ram      =
         VecInit.fill(wayNum, WORDS_PER_LINE)(Module(new SRAMTemplate(indexWidth, UInt(WORD_WIDTH.W), true)).io)
     val dirty_bits_it = if (!readOnly) Some(RegInit(VecInit.fill(wayNum, setNum)(false.B))) else None
+
+    def this(params: (Int, Int, Int, Int, Boolean)) = {
+        this(params._1, params._2, params._3, params._4, params._5)
+    }
 
     def dirty_bits: Vec[Vec[Bool]] = {
         if (readOnly) {
@@ -153,7 +160,6 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
     def getWstrbFromWtype(wtype: UInt, offset: UInt): UInt = {
         ~0.U(4.W) >> (4.U - (1.U << wtype)) << offset(log2Ceil(wordBytes) - 1, 0)
     }
-    // val dirty = RegInit(VecInit.fill(setNum, wayNum)(0.B))
 
     /*              main FSM              */
     val sIdle :: sLookup :: sMiss :: sReplace :: sRefill :: Nil = Enum(5)
@@ -175,8 +181,7 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
     val req_idx    = WireInit(req_addr(VADDR_WIDTH - tagWidth - 1, offsetWidth))
     val req_offset = WireInit(req_addr(offsetWidth - 1, 0))
 
-    val replace_way  = RegEnable(LFSR(8)(log2Ceil(wayNum), 0), state === sMiss)
-    val data_ram_sel = req_offset(offsetWidth - log2Ceil(WORDS_PER_LINE) + 1, offsetWidth - log2Ceil(WORDS_PER_LINE))
+    // val replace_way  = RegEnable(LFSR(8)(log2Ceil(wayNum) - 1, 0), state === sReplace)
     // SRAM output
 
     // initialise
@@ -206,13 +211,23 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
     war_stall   := false.B
     dstate_idle := false.B
 
+    val replace_way      = RegInit(0.U(log2Ceil(wayNum).W))
+    val total_way_valids = VecInit(tagv_out.map(_.valid))
+    val idle_way_exist   = !total_way_valids.reduce(_ & _)
+    val idle_way         = PriorityEncoder(total_way_valids)
+    when((state === sMiss) && !req_uncached) {
+        replace_way := Mux(idle_way_exist, idle_way, LFSR(4)(log2Ceil(wayNum) - 1, 0))
+    }
+
+    val data_ram_sel = req_offset(offsetWidth - log2Ceil(WORDS_PER_LINE) + 1, offsetWidth - log2Ceil(WORDS_PER_LINE))
+
     val wreq_way = RegInit(0.U(log2Ceil(wayNum).W))
 
     cache_ready := (state === sIdle) || ((state === sLookup) && hit && !war_stall)
 
     switch(state) {
         // sIdle:
-        // wait for request, store request
+        // wait and store valid request
         is(sIdle) {
             state := sIdle
             when(io.req.valid) {
@@ -308,12 +323,20 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
         val wdata_ram_sel =
             wreq_offset(offsetWidth - log2Ceil(WORDS_PER_LINE) + 1, offsetWidth - log2Ceil(WORDS_PER_LINE))
 
-        // val war_case1 = (wstate === wsWrite) && (hit_way === wreq_way) && (wdata_ram_sel === data_ram_sel)
-        val war_case2 =
+        val war_case_1 =
             (RegNext(wstate) === wsWrite) && (hit_way === RegNext(wreq_way)) && (data_ram_sel === RegNext(
                 wdata_ram_sel
             ))
-        war_stall := war_case2 & !req_wr & req_valid & !req_uncached
+        val war_case_2 = (wstate === wsWrite) && (hit_way === wreq_way) && (data_ram_sel === wdata_ram_sel)
+        war_stall := (war_case_1 | war_case_2) & !req_wr & req_valid & !req_uncached
+        // when(war_stall) {
+        //     when(war_case_1) {
+        //         printf("war stall occurs, case %d\n", 1.U)
+        //     }
+        //     when(war_case_2) {
+        //         printf("war stall occurs, case %d\n", 2.U)
+        //     }
+        // }
 
         switch(wstate) {
             is(wsIdle) {
@@ -350,7 +373,7 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
             for (i <- 0 until WORDS_PER_LINE) {
                 dreq_data(i) := data_ram(replace_way)(i).dout
             }
-            dreq_addr     := Cat(Seq(tagv_ram(replace_way).dout, req_idx, req_offset))
+            dreq_addr     := Cat(Seq(tagv_ram(replace_way).dout, req_idx, 0.U(4.W)))
             dreq_wtype    := "b10".U
             dreq_uncached := false.B
         }.elsewhen((state === sMiss) && req_uncached && req_wr && dstate_idle) {

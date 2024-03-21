@@ -14,7 +14,7 @@ class BaseFuInput extends MkBundle {
     val optype    = FuOpType()
     val operand_a = UInt(WORD_WIDTH.W) // rj or pc
     val operand_b = UInt(WORD_WIDTH.W) // rk or imms
-    val operand_c = UInt(WORD_WIDTH.W) // rd for branch and store insts or src3 for some floating insts
+    val operand_c = UInt(WORD_WIDTH.W) // rd for branch and store insts or src3 for some insts
 }
 
 class BaseFuOutput extends MkBundle {
@@ -33,16 +33,6 @@ abstract class BaseFunctionUnit extends MkModule {
     })
 }
 
-// Do nothing
-class FakeFunctionUnit extends BaseFunctionUnit {
-    io.out.bits.id        := io.in.bits.id
-    io.out.bits.exception := false.B
-    io.out.bits.result    := DEBUG_MAGICNUM.U
-    io.out.valid          := io.in.valid
-    io.out.bits.mispred   := false.B
-    io.in.ready           := true.B
-}
-
 class EXUIO extends MkBundle {
     val in         = Flipped(Decoupled(new BaseFuInput))
     val out        = new Bundle {
@@ -52,6 +42,8 @@ class EXUIO extends MkBundle {
     val futype     = Input(FuType())
     val pred_check = new BranchUnitIO
     val lsu_io     = new LSUIO
+    val csr_io     = new CSRBufferIO
+    val misc_io    = new MiscFuIO
 }
 
 class EXU extends MkModule {
@@ -61,21 +53,24 @@ class EXU extends MkModule {
     val lsu  = Module(new LSU)
     val mul  = Module(new FakeMultiplier)
     val bru  = Module(new BranchUnit)
-    val none = Module(new FakeFunctionUnit)
+    val csr  = Module(new CSRBuffer)
+    val misc = Module(new MiscFunctionUnit)
 
     val function_units = Seq(
         FuType.bru  -> bru,
         FuType.alu  -> alu,
         FuType.mul  -> mul,
         FuType.lsu  -> lsu,
-        FuType.none -> none
+        FuType.csr  -> csr,
+        FuType.misc -> misc
     )
 
     val fixed_latency_units = Seq(
         FuType.bru  -> bru,
         FuType.alu  -> alu,
         FuType.mul  -> mul,
-        FuType.none -> none
+        FuType.csr  -> csr,
+        FuType.misc -> misc
     )
 
     val fu_base_in = RegInit(0.U.asTypeOf(ValidIO(new BaseFuInput)))
@@ -109,5 +104,7 @@ class EXU extends MkModule {
     io.out.flu_out <> result_arb.io.out
     io.out.lsu_out <> lsu.io.out
 
-    io.lsu_io <> lsu.lsu_io
+    io.lsu_io  <> lsu.lsu_io
+    io.csr_io  <> csr.csr_io
+    io.misc_io <> misc.misc_io
 }

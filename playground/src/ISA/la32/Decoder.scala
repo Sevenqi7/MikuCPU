@@ -7,6 +7,7 @@ import chisel3.util.experimental.decode._
 import miku._
 import miku.LA32Instructions._
 import miku.utils.util.uintToBitPat
+import java.util.concurrent.Future
 
 object SelImm {
     def num         = 8
@@ -58,8 +59,10 @@ class DecodedInst extends MkBundle with DecodeConstants {
 }
 
 class LA32DecoderUnit extends MkModule with DecodeConstants {
-    val raw_inst     = IO(Input(UInt(INST_BITS.W)))
-    val decoded_inst = IO(Output(new DecodedInst))
+    val io = IO(new Bundle {
+        val raw_inst     = Input(UInt(INST_BITS.W))
+        val decoded_inst = Output(new DecodedInst)
+    })
 
     val la32_decode_table =
         LA3RDecoder.decodeTable ++ LA2RI12Decoder.decodeTable ++ LA2RI8Decoder.decodeTable ++ LA2RI16Decoder.decodeTable ++ LAI20Decoder.decodeTable
@@ -71,7 +74,17 @@ class LA32DecoderUnit extends MkModule with DecodeConstants {
         }.toMap,
         decodeDefault.reduce(_ ## _)
     )
-    decoded_inst := decoder(raw_inst, la32_decode_map).asTypeOf(new DecodedInst)
+
+    // Since CSRXCHG has the same instruction code with CSRRD & CSRWR except its rd field not equal to 0 or 1,
+    // and the decoder api in chisel3.experimental we use requires all input BitPat are orthogonal to each other,
+    // we have to use ListLookup to independently handle CSR instruction here.
+    val decoded_inst     = decoder(io.raw_inst, la32_decode_map).asTypeOf(new DecodedInst)
+    val decoded_csr_inst =
+        ListLookup(io.raw_inst, List.fill(decodeDefault.length)(0.U), LAMiscDecoder.decodeTable)
+            .reduce(_ ## _).asTypeOf(new DecodedInst)
+    val csr_inst_flag    = decoded_csr_inst.asUInt =/= 0.U
+
+    io.decoded_inst := Mux(csr_inst_flag, decoded_csr_inst, decoded_inst)
 }
 
 //format: off
@@ -90,6 +103,7 @@ object LA3RDecoder extends DecodeConstants {
         SRLW   -> List(Y, SrcType.reg, SrcType.reg, SrcType.none, FuType.alu, ALUOpType.srlw     , N, SelImm.X),
         SRAW   -> List(Y, SrcType.reg, SrcType.reg, SrcType.none, FuType.alu, ALUOpType.sraw     , N, SelImm.X),
         MULW   -> List(Y, SrcType.reg, SrcType.reg, SrcType.none, FuType.mul, MulDivOpType.mulw  , N, SelImm.X),
+        MULHW  -> List(Y, SrcType.reg, SrcType.reg, SrcType.none, FuType.mul, MulDivOpType.mulhw , N, SelImm.X),
         MULHWU -> List(Y, SrcType.reg, SrcType.reg, SrcType.none, FuType.mul, MulDivOpType.mulhwu, N, SelImm.X),
         DIVW   -> List(Y, SrcType.reg, SrcType.reg, SrcType.none, FuType.mul, MulDivOpType.divw  , N, SelImm.X),
         MODW   -> List(Y, SrcType.reg, SrcType.reg, SrcType.none, FuType.mul, MulDivOpType.modw  , N, SelImm.X),
@@ -149,9 +163,17 @@ object LAI20Decoder extends DecodeConstants {
     )
 }
 
-object LACSRDecoder extends DecodeConstants {
-    val decodeTable = Array[(BitPat, List[BitPat])](
-        
+// this decodeTable is used with ListLookup API, not chisel3.experimental.decoder
+object LAMiscDecoder extends DecodeConstants {
+    import scala.language.implicitConversions
+    implicit def bitPatToUInt(x: BitPat) : UInt = x.value.U
+    val decodeTable = Array[(BitPat, List[UInt])](
+        RDCNTIDW -> List(Y, SrcType.none, SrcType.none, SrcType.none, FuType.misc, MiscOpType.rdcntid, N, SelImm.X),
+        RDCNTVLW -> List(Y, SrcType.none ,SrcType.none, SrcType.none, FuType.misc, MiscOpType.rdcntvl, N, SelImm.X),
+        RDCNTVHW -> List(Y, SrcType.none ,SrcType.none, SrcType.none, FuType.misc, MiscOpType.rdcntvh, N, SelImm.X),
+        CSRRD   -> List(Y, SrcType.imm, SrcType.none, SrcType.reg, FuType.csr, CSROpType.csrrd  , N, SelImm.IMM_S14),
+        CSRWR   -> List(Y, SrcType.imm, SrcType.none, SrcType.reg, FuType.csr, CSROpType.csrwr  , N, SelImm.IMM_S14),
+        CSRXCHG -> List(Y, SrcType.imm, SrcType.reg , SrcType.reg, FuType.csr, CSROpType.csrxchg, N, SelImm.IMM_S14)
     )
 }
 // format: on

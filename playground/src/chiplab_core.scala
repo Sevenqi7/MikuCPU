@@ -11,6 +11,9 @@ import miku.frontend._
 
 class DifftestIO extends MkBundle {
     val gpr         = Vec(32, UInt(WORD_WIDTH.W))
+    val csr         = Vec(LA32CSRRegisters.csr_defns.length, UInt(32.W))
+    val timer_64    = UInt(64.W)
+    val is_CNTinst  = Bool()
     val commit_inst = ValidIO(new IssuedInst)
 }
 
@@ -146,8 +149,8 @@ class core_top extends RawModule with HasMkParams {
             DifftestInstrCommit.io.instr         := DelayN(diff_info.commit_inst.bits.sbe.raw_inst.get, delay_cycles)
             DifftestInstrCommit.io.is_TLBFILL    := DelayN(false.B, delay_cycles)
             DifftestInstrCommit.io.TLBFILL_index := DelayN(0.U, delay_cycles)
-            DifftestInstrCommit.io.is_CNTinst    := DelayN(false.B, delay_cycles)
-            DifftestInstrCommit.io.timer_64_value := DelayN(0.U, delay_cycles)
+            DifftestInstrCommit.io.is_CNTinst    := DelayN(diff_info.is_CNTinst, delay_cycles)
+            DifftestInstrCommit.io.timer_64_value := DelayN(diff_info.commit_inst.bits.sbe.result, delay_cycles)
             DifftestInstrCommit.io.wen       := DelayN(diff_info.commit_inst.bits.sbe.decoded_inst.regwen, delay_cycles)
             DifftestInstrCommit.io.wdest     := DelayN(diff_info.commit_inst.bits.sbe.rd_num, delay_cycles)
             DifftestInstrCommit.io.wdata     := DelayN(diff_info.commit_inst.bits.sbe.result, delay_cycles)
@@ -184,35 +187,10 @@ class core_top extends RawModule with HasMkParams {
         // and since there is a TLB refill exception at the start of the simulation we should mannually
         // set its value becaust TLB is also implemented yet.
         val DifftestCSRRegState = Module(new DifftestCSRRegState)
-        DifftestCSRRegState.io.clock     := aclk
-        DifftestCSRRegState.io.coreid    := 0.U
-        DifftestCSRRegState.io.crmd      := DEBUG_MAGICNUM.U
-        DifftestCSRRegState.io.prmd      := DEBUG_MAGICNUM.U
-        DifftestCSRRegState.io.euen      := DEBUG_MAGICNUM.U
-        DifftestCSRRegState.io.ecfg      := DEBUG_MAGICNUM.U
-        DifftestCSRRegState.io.estat     := (0x3f.U << 16)
-        DifftestCSRRegState.io.era       := DEBUG_MAGICNUM.U
-        DifftestCSRRegState.io.badv      := DEBUG_MAGICNUM.U
-        DifftestCSRRegState.io.eentry    := DEBUG_MAGICNUM.U
-        DifftestCSRRegState.io.tlbidx    := DEBUG_MAGICNUM.U
-        DifftestCSRRegState.io.tlbehi    := DEBUG_MAGICNUM.U
-        DifftestCSRRegState.io.tlbelo0   := DEBUG_MAGICNUM.U
-        DifftestCSRRegState.io.tlbelo1   := DEBUG_MAGICNUM.U
-        DifftestCSRRegState.io.asid      := DEBUG_MAGICNUM.U
-        DifftestCSRRegState.io.pgdl      := DEBUG_MAGICNUM.U
-        DifftestCSRRegState.io.pgdh      := DEBUG_MAGICNUM.U
-        DifftestCSRRegState.io.save0     := DEBUG_MAGICNUM.U
-        DifftestCSRRegState.io.save1     := DEBUG_MAGICNUM.U
-        DifftestCSRRegState.io.save2     := DEBUG_MAGICNUM.U
-        DifftestCSRRegState.io.save3     := DEBUG_MAGICNUM.U
-        DifftestCSRRegState.io.tid       := DEBUG_MAGICNUM.U
-        DifftestCSRRegState.io.tcfg      := DEBUG_MAGICNUM.U
-        DifftestCSRRegState.io.tval      := DEBUG_MAGICNUM.U
-        DifftestCSRRegState.io.ticlr     := DEBUG_MAGICNUM.U
-        DifftestCSRRegState.io.llbctl    := DEBUG_MAGICNUM.U
-        DifftestCSRRegState.io.tlbrentry := DEBUG_MAGICNUM.U
-        DifftestCSRRegState.io.dmw0      := DEBUG_MAGICNUM.U
-        DifftestCSRRegState.io.dmw1      := DEBUG_MAGICNUM.U
+        DifftestCSRRegState.io.clock  := aclk
+        DifftestCSRRegState.io.coreid := 0.U
+        DifftestCSRRegState.connect_csr_vec(diff_info.csr)
+
     } else {
         ws_valid           := false.B
         rf_rdata           := DEBUG_MAGICNUM.U
@@ -327,34 +305,69 @@ class DifftestCSRRegState extends BlackBox {
     val io = IO(new Bundle {
         val clock     = Input(Clock())
         val coreid    = Input(UInt(8.W))
-        val crmd      = Input(UInt(63.W))
-        val prmd      = Input(UInt(63.W))
-        val euen      = Input(UInt(63.W))
-        val ecfg      = Input(UInt(63.W))
-        val estat     = Input(UInt(63.W))
-        val era       = Input(UInt(63.W))
-        val badv      = Input(UInt(63.W))
-        val eentry    = Input(UInt(63.W))
-        val tlbidx    = Input(UInt(63.W))
-        val tlbehi    = Input(UInt(63.W))
-        val tlbelo0   = Input(UInt(63.W))
-        val tlbelo1   = Input(UInt(63.W))
-        val asid      = Input(UInt(63.W))
-        val pgdl      = Input(UInt(63.W))
-        val pgdh      = Input(UInt(63.W))
-        val save0     = Input(UInt(63.W))
-        val save1     = Input(UInt(63.W))
-        val save2     = Input(UInt(63.W))
-        val save3     = Input(UInt(63.W))
-        val tid       = Input(UInt(63.W))
-        val tcfg      = Input(UInt(63.W))
-        val tval      = Input(UInt(63.W))
-        val ticlr     = Input(UInt(63.W))
-        val llbctl    = Input(UInt(63.W))
-        val tlbrentry = Input(UInt(63.W))
-        val dmw0      = Input(UInt(63.W))
-        val dmw1      = Input(UInt(63.W))
+        val crmd      = Input(UInt(64.W))
+        val prmd      = Input(UInt(64.W))
+        val euen      = Input(UInt(64.W))
+        val ecfg      = Input(UInt(64.W))
+        val estat     = Input(UInt(64.W))
+        val era       = Input(UInt(64.W))
+        val badv      = Input(UInt(64.W))
+        val eentry    = Input(UInt(64.W))
+        val tlbidx    = Input(UInt(64.W))
+        val tlbehi    = Input(UInt(64.W))
+        val tlbelo0   = Input(UInt(64.W))
+        val tlbelo1   = Input(UInt(64.W))
+        val asid      = Input(UInt(64.W))
+        val pgdl      = Input(UInt(64.W))
+        val pgdh      = Input(UInt(64.W))
+        val save0     = Input(UInt(64.W))
+        val save1     = Input(UInt(64.W))
+        val save2     = Input(UInt(64.W))
+        val save3     = Input(UInt(64.W))
+        val tid       = Input(UInt(64.W))
+        val tcfg      = Input(UInt(64.W))
+        val tval      = Input(UInt(64.W))
+        val ticlr     = Input(UInt(64.W))
+        val llbctl    = Input(UInt(64.W))
+        val tlbrentry = Input(UInt(64.W))
+        val dmw0      = Input(UInt(64.W))
+        val dmw1      = Input(UInt(64.W))
     })
+    def connect_csr_vec(csrs: Vec[UInt]): Unit = {
+        val port_seq = Seq(
+            io.crmd,
+            io.prmd,
+            io.euen,
+            io.ecfg,
+            io.estat,
+            io.era,
+            io.badv,
+            io.eentry,
+            io.tlbidx,
+            io.tlbehi,
+            io.tlbelo0,
+            io.tlbelo1,
+            io.asid,
+            io.pgdl,
+            io.pgdh,
+            io.save0,
+            io.save1,
+            io.save2,
+            io.save3,
+            io.tid,
+            io.tcfg,
+            io.tval,
+            io.ticlr,
+            io.llbctl,
+            io.tlbrentry,
+            io.dmw0,
+            io.dmw1
+        )
+
+        require(csrs.length == port_seq.length)
+        require(csrs.length == LA32CSRRegisters.csr_defns.length)
+        port_seq.zip(csrs).foreach(i => i._1 := i._2)
+    }
 }
 
 class DifftestExcpEvent extends BlackBox {
@@ -363,10 +376,10 @@ class DifftestExcpEvent extends BlackBox {
         val coreid        = Input(UInt(8.W))
         val excp_valid    = Input(Bool())
         val eret          = Input(Bool())
-        val intrNo        = Input(UInt(31.W))
-        val cause         = Input(UInt(31.W))
-        val exceptionPC   = Input(UInt(63.W))
-        val exceptionInst = Input(UInt(31.W))
+        val intrNo        = Input(UInt(32.W))
+        val cause         = Input(UInt(32.W))
+        val exceptionPC   = Input(UInt(64.W))
+        val exceptionInst = Input(UInt(32.W))
     })
 }
 

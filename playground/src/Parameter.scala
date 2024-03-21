@@ -9,6 +9,7 @@ class MkParams {
     val RETIRE_WIDTH = 1
     val INST_BITS    = 32
     val VADDR_WIDTH  = 32
+    val PADDR_WIDTH  = 32
     val WORD_WIDTH   = 32
     val REG_ADDR_NUM = 32
     val REG_RD_PORTS = 3
@@ -18,11 +19,23 @@ class MkParams {
     // BPU
     val RAS_SIZE = 8
 
+    // TLB
+    val TLB_NUM = 32
+
+    /* Cache
+                        tag_wd
+                          | offset_wd
+                          |  | way line_wd
+                          |  |  |    | read-only
+                          |  |  |    |    |         */
+    val ICACHE_PARAMS = (20, 4, 2, 128, true)
+    val DCACHE_PARAMS = (20, 4, 2, 128, false)
+
     // ScoreBoard and issue
-    val NR_ENTRIES     = 8
-    val BACKEND_STATUS = 3
-    val FU_TIME_MAX    = 35
-    val NR_WB_PORTS    = 2
+    val NR_ENTRIES  = 8
+    val NR_WB_PORTS = 2
+
+    val TIMER_WD = 20
 
     val DIFFTEST_MODE  = true // used to generate port for difftest
     val RESET_VECTOR   = 0x1bfffffc
@@ -37,20 +50,26 @@ trait HasMkParams {
     val RETIRE_WIDTH = mkParams.RETIRE_WIDTH
     val INST_BITS    = mkParams.INST_BITS
     val VADDR_WIDTH  = mkParams.VADDR_WIDTH
+    val PADDR_WIDTH  = mkParams.PADDR_WIDTH
     val WORD_WIDTH   = mkParams.WORD_WIDTH
 
     val RAS_SIZE        = mkParams.RAS_SIZE
     val INST_QUEUE_SIZE = mkParams.INST_QUEUE_SIZE
 
     // ScoreBoard
-    val NR_ENTRIES     = mkParams.NR_ENTRIES
-    val BITS_ENTRIES   = log2Ceil(mkParams.NR_ENTRIES)
-    val TRANS_ID_BITS  = log2Ceil(mkParams.NR_ENTRIES)
-    val REG_ADDR_WD    = log2Ceil(mkParams.REG_ADDR_NUM)
-    val REG_ADDR_NUM   = mkParams.REG_ADDR_NUM
-    val REG_RD_PORTS   = mkParams.REG_RD_PORTS
-    val FU_TIME_SIZE   = log2Ceil(mkParams.FU_TIME_MAX)
-    val BACKEND_STATUS = log2Ceil(mkParams.BACKEND_STATUS)
+    val NR_ENTRIES    = mkParams.NR_ENTRIES
+    val BITS_ENTRIES  = log2Ceil(mkParams.NR_ENTRIES)
+    val TRANS_ID_BITS = log2Ceil(mkParams.NR_ENTRIES)
+    val REG_ADDR_WD   = log2Ceil(mkParams.REG_ADDR_NUM)
+    val REG_ADDR_NUM  = mkParams.REG_ADDR_NUM
+    val REG_RD_PORTS  = mkParams.REG_RD_PORTS
+
+    // TLB
+    val TLB_NUM = mkParams.TLB_NUM
+
+    // Cache
+    val ICACHE_PARAMS = mkParams.ICACHE_PARAMS
+    val DCACHE_PARAMS = mkParams.DCACHE_PARAMS
 
     val DIFFTEST_MODE  = mkParams.DIFFTEST_MODE
     val RESET_VECTOR   = mkParams.RESET_VECTOR

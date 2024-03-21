@@ -165,12 +165,13 @@ class LSU extends BaseFunctionUnit {
         store_req.valid := true.B
     }
 
-    store_req.bits.addr     := front_store_inst.addr
-    store_req.bits.wdata    := front_store_inst.wdata
-    store_req.bits.wtype    := front_store_inst.wtype
-    store_req.bits.uncached := is_addr_peripheral(front_store_inst.addr)
-    // store_req.bits.uncached := true.B
-    store_req.bits.wr       := true.B
+    store_req.bits.addr       := front_store_inst.addr
+    store_req.bits.wdata      := front_store_inst.wdata
+    store_req.bits.wtype      := front_store_inst.wtype
+    store_req.bits.uncached   := is_addr_peripheral(front_store_inst.addr)
+    store_req.bits.cacop_en   := false.B
+    store_req.bits.cacop_func := 0.U
+    store_req.bits.wr         := true.B
 
     val req_arb = Module(new Arbiter(new CacheReqIO(VADDR_WIDTH, WORD_WIDTH), 2))
     req_arb.io.in(0) <> store_req

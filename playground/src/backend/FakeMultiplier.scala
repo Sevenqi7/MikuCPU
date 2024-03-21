@@ -47,7 +47,6 @@ class FakeMultiplier extends BaseFunctionUnit {
     }
 
     // delay 5 cycles
-    io.out.valid := DelayN(result_valid, 5)
-    io.out.bits  := DelayN(result_buf, 5)
-
+    io.out.valid := DelayN(io.in.valid & io.in.ready, 5)
+    io.out.bits  := result_buf
 }
