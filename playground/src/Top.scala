@@ -38,13 +38,13 @@ class MkTop extends MkModule {
     val icacop_en   = cacop_inter.req.valid && (cacop_inter.dest === 0.U)
     val dcacop_en   = cacop_inter.req.valid && (cacop_inter.dest === 1.U)
     val cacop_req   = cacop_inter.req
+    cacop_req.ready := false.B
 
     when(icacop_en && icache.io.req.ready) {
         frontend.io.icache_msg.cache_req.ready := false.B
         icache.io.req                          <> cacop_req
     }.otherwise {
-        cacop_req.ready := false.B
-        icache.io.req   <> frontend.io.icache_msg.cache_req
+        icache.io.req <> frontend.io.icache_msg.cache_req
     }
     icache.io.resp <> frontend.io.icache_msg.cache_resp
 
@@ -75,8 +75,7 @@ class MkTop extends MkModule {
         excute.io.lsu_io.cache_req.ready := false.B
         dcache.io.req                    <> cacop_req
     }.otherwise {
-        cacop_req.ready := false.B
-        dcache.io.req   <> excute.io.lsu_io.cache_req
+        dcache.io.req <> excute.io.lsu_io.cache_req
     }
     dcache.io.resp <> excute.io.lsu_io.cache_resp
 

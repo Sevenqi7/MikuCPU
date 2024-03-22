@@ -30,7 +30,7 @@ class MiscFunctionUnit extends BaseFunctionUnit {
 
     val cacop_valid = (io.in.bits.optype === MiscOpType.cacop) && io.in.valid
     val handshake   = misc_io.cacop_inter.req.ready & misc_io.cacop_inter.req.valid
-    assert(!cacop_valid)
+    // assert(!cacop_valid)
     misc_io.cacop_inter.req.bits            := 0.U.asTypeOf(misc_io.cacop_inter.req.bits) // initialise
     misc_io.cacop_inter.req.valid           := cacop_valid
     misc_io.cacop_inter.dest                := code(4, 2)

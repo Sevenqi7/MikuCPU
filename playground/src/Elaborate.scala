@@ -13,3 +13,31 @@ object Elaborate extends App {
     val generator = Seq(chisel3.stage.ChiselGeneratorAnnotation(() => top))
     (new ChiselStage).execute(args, generator :+ CIRCTTargetAnnotation(CIRCTTarget.Verilog))
 }
+// crmd_type
+// prmd_type
+// ecfg_type
+// estattype
+// era_ttype
+// badv_type
+// eentrtype
+// tlbidtype
+// tlbehtype
+// tlbeltype
+// tlbeltype
+// asid_type
+// pgdl_type
+// pgdh_type
+// pgd_ttype
+// cpuidtype
+// save0type
+// save1type
+// save2type
+// save3type
+// tid_ttype
+// tcfg_type
+// tval_type
+// cntc_type
+// ticlrtype
+// llbcttype
+// tlbretype
+// dmw0_type
