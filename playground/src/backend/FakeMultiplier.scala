@@ -13,17 +13,19 @@ import miku.MulDivOpType._
 
 class FakeMultiplier extends BaseFunctionUnit {
 
-    val operand_a = io.in.bits.operand_a
-    val operand_b = io.in.bits.operand_b
+    val rj = io.in.bits.operand_a
+    val rk = io.in.bits.operand_b
 
     val result_sel_table = Seq(
-        mulw   -> (operand_a * operand_b),
-        mulhw  -> (operand_a.asSInt * operand_b.asSInt).asUInt(63, 32),
-        mulhwu -> (operand_a * operand_b)(63, 32),
-        divwu  -> (operand_a / operand_b),
-        divw   -> (operand_a.asSInt / operand_a.asSInt).asUInt,
-        modwu  -> (operand_a % operand_b),
-        modw   -> (operand_a.asSInt % operand_b.asSInt).asUInt
+        mulw   -> (rj * rk),
+        mulhw  -> (rj.asSInt * rk.asSInt).asUInt(63, 32),
+        mulhwu -> (rj * rk)(63, 32),
+        divw   -> (rj.asSInt / rk.asSInt).asUInt(31, 0),
+        divwu  -> (rj / rk)(31, 0),
+        modw   -> (rj.asSInt - (rj.asSInt / rk.asSInt) * rk.asSInt).asUInt(31, 0),
+        modwu  -> (rj - (rj / rk) * rk)(31, 0)
+        // modw   -> (rj.asSInt % rk.asSInt).asUInt(31, 0),
+        // modwu  -> (rj % rk)(31, 0)
     )
 
     val result = MuxLookup(io.in.bits.optype, 0.U)(result_sel_table)
@@ -38,7 +40,7 @@ class FakeMultiplier extends BaseFunctionUnit {
         result_buf.result    := result
         result_buf.exception := false.B
         result_buf.mispred   := false.B
-        result_valid         := true.B
+        result_valid         := DelayN(true.B, 5)
     }
 
     when(io.out.valid & io.out.ready) {
@@ -47,6 +49,6 @@ class FakeMultiplier extends BaseFunctionUnit {
     }
 
     // delay 5 cycles
-    io.out.valid := DelayN(io.in.valid & io.in.ready, 5)
+    io.out.valid := result_valid
     io.out.bits  := result_buf
 }
