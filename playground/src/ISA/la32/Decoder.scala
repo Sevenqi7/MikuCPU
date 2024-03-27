@@ -7,7 +7,6 @@ import chisel3.util.experimental.decode._
 import miku._
 import miku.LA32Instructions._
 import miku.utils.util.uintToBitPat
-import java.util.concurrent.Future
 
 object SelImm {
     def num         = 8
@@ -169,11 +168,13 @@ object LAMiscDecoder extends DecodeConstants {
     implicit def bitPatToUInt(x: BitPat) : UInt = x.value.U
     val decodeTable = Array[(BitPat, List[UInt])](
         RDCNTIDW -> List(Y, SrcType.none, SrcType.none, SrcType.none, FuType.misc, MiscOpType.rdcntid, N, SelImm.X),
-        RDCNTVLW -> List(Y, SrcType.none ,SrcType.none, SrcType.none, FuType.misc, MiscOpType.rdcntvl, N, SelImm.X),
-        RDCNTVHW -> List(Y, SrcType.none ,SrcType.none, SrcType.none, FuType.misc, MiscOpType.rdcntvh, N, SelImm.X),
-        CSRRD   -> List(Y, SrcType.imm, SrcType.none, SrcType.reg, FuType.csr, CSROpType.csrrd  , N, SelImm.IMM_S14),
-        CSRWR   -> List(Y, SrcType.imm, SrcType.none, SrcType.reg, FuType.csr, CSROpType.csrwr  , N, SelImm.IMM_S14),
-        CSRXCHG -> List(Y, SrcType.imm, SrcType.reg , SrcType.reg, FuType.csr, CSROpType.csrxchg, N, SelImm.IMM_S14)
+        RDCNTVLW -> List(Y, SrcType.none, SrcType.none, SrcType.none, FuType.misc, MiscOpType.rdcntvl, N, SelImm.X),
+        RDCNTVHW -> List(Y, SrcType.none, SrcType.none, SrcType.none, FuType.misc, MiscOpType.rdcntvh, N, SelImm.X),
+        CSRRD   ->  List(Y, SrcType.imm , SrcType.none, SrcType.reg , FuType.csr , CSROpType.csrrd   , N, SelImm.IMM_S14),
+        CSRWR   ->  List(Y, SrcType.imm , SrcType.none, SrcType.reg , FuType.csr , CSROpType.csrwr   , N, SelImm.IMM_S14),
+        CSRXCHG ->  List(Y, SrcType.imm , SrcType.reg , SrcType.reg , FuType.csr , CSROpType.csrxchg , N, SelImm.IMM_S14),
+        SYSCALL ->  List(Y, SrcType.imm , SrcType.none, SrcType.none, FuType.misc, MiscOpType.syscall, N, SelImm.X)
+        
     )
 }
 // format: on

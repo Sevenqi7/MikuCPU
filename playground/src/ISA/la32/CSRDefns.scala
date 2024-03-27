@@ -50,13 +50,22 @@ class LA32CSR_Crmd extends LA32CSRBundle {
 
 // 0x1: PRMD
 class LA32CSR_Prmd extends LA32CSRBundle {
-    // RESERVED BTIS (31, 4)
+    // RESERVED BITS (31, 4)
     val PWE  = Bool()
     val PIE  = Bool()
     val PPLV = UInt(2.W)
 
     def rdata                     = Cat(0.U(28.W), this.asUInt)
     def getRealWdata(wdata: UInt) = wdata(3, 0)
+}
+
+// 0x2: EUEN
+class LA32CSR_Euen extends LA32CSRBundle {
+    // RESERVED BITS (31m 1)
+    val FPE = Bool()
+
+    def rdata                     = FPE
+    def getRealWdata(wdata: UInt) = wdata(0)
 }
 
 // 0x4: ECFG
@@ -101,10 +110,10 @@ class LA32CSR_Badv extends LA32CSRBundle {
 
 // 0xc: EENTRY
 class LA32CSR_Eentry extends LA32CSRBundle {
-    val VPN                       = UInt((VADDR_WIDTH - 12).W)
+    val VA                        = UInt((VADDR_WIDTH - 6).W)
     // RESERVED BITS (11, 0)
-    def rdata                     = VPN << 12.U
-    def getRealWdata(wdata: UInt) = wdata(VADDR_WIDTH - 1, 12)
+    def rdata                     = VA << 6.U
+    def getRealWdata(wdata: UInt) = wdata(VADDR_WIDTH - 1, 6)
 }
 
 // 0x10: TLBIDX
@@ -267,65 +276,76 @@ class LA32CSR_Dmw extends LA32CSRBundle {
     def getRealWdata(wdata: UInt) = Cat(Seq(wdata(31, 29), wdata(27, 25), wdata(5, 3), wdata(0)))
 }
 
+// CSR type used for debug
+class FakeLA32CSR extends LA32CSRBundle {
+    val fakedata = UInt(WORD_WIDTH.W)
+    def rdata:                     UInt = DEBUG_MAGICNUM.U
+    def getRealWdata(wdata: UInt): UInt = DEBUG_MAGICNUM.U
+}
+
 // list of implemented (or to be implemented) csr registers
 object LA32CSRRegisters extends MkParams {
-    val CRMD      = 0x0.U
-    val PRMD      = 0x1.U
-    val ECFG      = 0x4.U
-    val ESTAT     = 0x5.U
-    val ERA       = 0x6.U
-    val BADV      = 0x7.U
-    val EENTRY    = 0xc.U
-    val TLBIDX    = 0x10.U
-    val TLBEHI    = 0x11.U
-    val TLBELO0   = 0x12.U
-    val TLBELO1   = 0x13.U
-    val ASID      = 0x18.U
-    val PGDL      = 0x19.U
-    val PGDH      = 0x1a.U
-    val PGD       = 0x1b.U
-    val CPUID     = 0x20.U
-    val SAVE0     = 0x30.U
-    val SAVE1     = 0x31.U
-    val SAVE2     = 0x32.U
-    val SAVE3     = 0x33.U
-    val TID       = 0x40.U
-    val TCFG      = 0x41.U
-    val TVAL      = 0x42.U
-    // val CNTC      = 0x43.U
-    val TICLR     = 0x44.U
-    val LLBCTL    = 0x60.U
-    val TLBRENTRY = 0x88.U
-    val DMW0      = 0x180.U
+    //               addr       () => new <csr_type>
+    //                |                 |
+    val CRMD      = (0x0.U, () => new LA32CSR_Crmd)
+    val PRMD      = (0x1.U, () => new LA32CSR_Prmd)
+    val EUEN      = (0x2.U, () => new LA32CSR_Euen)
+    val ECFG      = (0x4.U, () => new LA32CSR_Ecfg)
+    val ESTAT     = (0x5.U, () => new LA32CSR_Estat)
+    val ERA       = (0x6.U, () => new LA32CSR_Era)
+    val BADV      = (0x7.U, () => new LA32CSR_Badv)
+    val EENTRY    = (0xc.U, () => new LA32CSR_Eentry)
+    val TLBIDX    = (0x10.U, () => new LA32CSR_Tlbidx(log2Ceil(TLB_NUM)))
+    val TLBEHI    = (0x11.U, () => new LA32CSR_Tlbehi)
+    val TLBELO0   = (0x12.U, () => new LA32CSR_Tlbelo)
+    val TLBELO1   = (0x13.U, () => new LA32CSR_Tlbelo)
+    val ASID      = (0x18.U, () => new LA32CSR_Asid)
+    val PGDL      = (0x19.U, () => new LA32CSR_Pgdlh)
+    val PGDH      = (0x1a.U, () => new LA32CSR_Pgdlh)
+    val PGD       = (0x1b.U, () => new LA32CSR_Pgd)
+    val CPUID     = (0x20.U, () => new LA32CSR_Cpuid)
+    val SAVE0     = (0x30.U, () => new LA32CSR_Save)
+    val SAVE1     = (0x31.U, () => new LA32CSR_Save)
+    val SAVE2     = (0x32.U, () => new LA32CSR_Save)
+    val SAVE3     = (0x33.U, () => new LA32CSR_Save)
+    val TID       = (0x40.U, () => new LA32CSR_Tid)
+    val TCFG      = (0x41.U, () => new LA32CSR_Tcfg(TIMER_WD))
+    val TVAL      = (0x42.U, () => new LA32CSR_Tval(TIMER_WD))
+    val TICLR     = (0x44.U, () => new LA32CSR_Ticlr)
+    val LLBCTL    = (0x60.U, () => new LA32CSR_Llbctl)
+    val TLBRENTRY = (0x88.U, () => new LA32CSR_Tlbrentry)
+    val DMW0      = (0x180.U, () => new LA32CSR_Dmw)
+    val DMW1      = (0x181.U, () => new LA32CSR_Dmw)
 
+    //format: off
     val csr_defns = Seq(
-        (CRMD, () => new LA32CSR_Crmd),
-        (PRMD, () => new LA32CSR_Prmd),
-        (ECFG, () => new LA32CSR_Ecfg),
-        (ESTAT, () => new LA32CSR_Estat),
-        (ERA, () => new LA32CSR_Era),
-        (BADV, () => new LA32CSR_Badv),
-        (EENTRY, () => new LA32CSR_Eentry),
-        (TLBIDX, () => new LA32CSR_Tlbidx(log2Ceil(TLB_NUM))),
-        (TLBEHI, () => new LA32CSR_Tlbehi),
-        (TLBELO0, () => new LA32CSR_Tlbelo),
-        (TLBELO1, () => new LA32CSR_Tlbelo),
-        (ASID, () => new LA32CSR_Asid),
-        (PGDL, () => new LA32CSR_Pgdlh),
-        (PGDH, () => new LA32CSR_Pgdlh),
-        (PGD, () => new LA32CSR_Pgd),
-        (CPUID, () => new LA32CSR_Cpuid),
-        (SAVE0, () => new LA32CSR_Save),
-        (SAVE1, () => new LA32CSR_Save),
-        (SAVE2, () => new LA32CSR_Save),
-        (SAVE3, () => new LA32CSR_Save),
-        (TID, () => new LA32CSR_Tid),
-        (TCFG, () => new LA32CSR_Tcfg(TIMER_WD)),
-        (TVAL, () => new LA32CSR_Tval(TIMER_WD)),
-        // (CNTC, () => new LA32CSR_Cntc),
-        (TICLR, () => new LA32CSR_Ticlr),
-        (LLBCTL, () => new LA32CSR_Llbctl),
-        (TLBRENTRY, () => new LA32CSR_Tlbrentry),
-        (DMW0, () => new LA32CSR_Dmw)
+        CRMD     ,
+        PRMD     ,
+        EUEN     ,
+        ECFG     ,
+        ESTAT    ,
+        ERA      ,
+        BADV     ,
+        EENTRY   ,
+        TLBIDX   ,
+        TLBEHI   ,
+        TLBELO0  ,
+        TLBELO1  ,
+        ASID     ,
+        PGDL     ,
+        PGDH     ,
+        SAVE0    ,
+        SAVE1    ,
+        SAVE2    ,
+        SAVE3    ,
+        TID      ,
+        TCFG     ,
+        TVAL     ,
+        TICLR    ,
+        LLBCTL   ,
+        TLBRENTRY,
+        DMW0     ,
+        DMW1     ,
     )
+    //format: on
 }

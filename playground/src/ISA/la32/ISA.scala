@@ -137,6 +137,7 @@ object MiscOpType {
     def rdcntvl = "b010".U(log2Ceil(MaxOpNum).W)
     def rdcntvh = "b011".U(log2Ceil(MaxOpNum).W)
     def cacop   = "b100".U(log2Ceil(MaxOpNum).W)
+    def syscall = "b101".U(log2Ceil(MaxOpNum).W)
 
     def apply() = UInt(log2Ceil(num).W)
 }
