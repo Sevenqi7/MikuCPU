@@ -12,7 +12,8 @@ import scala.annotation.meta.param
 
 class CacheReqIO(addr_wd: Int, data_wd: Int) extends MkBundle {
     val wr         = Bool()    // 0:read 1:write
-    val addr       = UInt(addr_wd.W)
+    val vaddr      = UInt(addr_wd.W)
+    val paddr      = UInt(addr_wd.W)
     val wtype      = UInt(2.W) // 2'b00:byte, 2'b01:half-word 2'b10: word
     val wdata      = UInt(data_wd.W)
     val uncached   = Bool()
@@ -28,12 +29,13 @@ class CacheRespIO(data_wd: Int) extends MkBundle {
 class CacheIO(addr_wd: Int, data_wd: Int) extends MkBundle {
     val req  = Flipped(Decoupled(new CacheReqIO(addr_wd, data_wd)))
     val resp = ValidIO(new CacheRespIO(data_wd))
+    // val trans = nep
 
     val axi = new AXIMasterIF(VADDR_WIDTH, WORD_WIDTH, 4)
 
-    def reqFromIfu(inter: IFU): Unit = {
-        inter.io.icache_msg.cache_resp <> resp
-        req                            <> inter.io.icache_msg.cache_req
+    def reqFromIfu(inter: MkFrontend): Unit = {
+        inter.io.icache_inter.resp <> resp
+        req                        <> inter.io.icache_inter.req
     }
 
     // initialise all signals of axi interfaces
@@ -168,7 +170,7 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
 
     // handle request
     val req_valid      = RegEnable(io.req.valid, cache_ready)
-    val req_addr       = RegEnable(io.req.bits.addr, io.req.valid & cache_ready)
+    // val req_addr       = RegEnable(io.req.bits.vaddr, io.req.valid & cache_ready)
     val req_wtype      = RegEnable(io.req.bits.wtype, io.req.valid & cache_ready)
     val req_uncached   = RegEnable(io.req.bits.uncached, io.req.valid & cache_ready)
     val req_wr         = RegEnable(io.req.bits.wr, io.req.valid & cache_ready)
@@ -176,12 +178,14 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
     val req_cacop_en   = RegEnable(io.req.bits.cacop_en, io.req.valid & cache_ready)
     val req_cacop_func = RegEnable(io.req.bits.cacop_func, io.req.valid & cache_ready)
 
-    val tag             = io.req.bits.addr(VADDR_WIDTH - 1, VADDR_WIDTH - tagWidth)
-    val index           = io.req.bits.addr(VADDR_WIDTH - tagWidth - 1, offsetWidth)
-    val offset          = io.req.bits.addr(offsetWidth - 1, 0)
-    val req_tag         = WireInit(req_addr(VADDR_WIDTH - 1, VADDR_WIDTH - tagWidth))
-    val req_idx         = WireInit(req_addr(VADDR_WIDTH - tagWidth - 1, offsetWidth))
-    val req_offset      = WireInit(req_addr(offsetWidth - 1, 0))
+    val vtag            = io.req.bits.vaddr(VADDR_WIDTH - 1, VADDR_WIDTH - tagWidth)
+    val ptag            = io.req.bits.paddr(VADDR_WIDTH - 1, VADDR_WIDTH - tagWidth)
+    val index           = io.req.bits.vaddr(VADDR_WIDTH - tagWidth - 1, offsetWidth)
+    val offset          = io.req.bits.vaddr(offsetWidth - 1, 0)
+    val req_tag         = RegEnable(vtag, io.req.valid & io.req.ready)
+    val req_idx         = RegEnable(index, io.req.valid & io.req.ready)
+    val req_offset      = RegEnable(offset, io.req.valid & io.req.ready)
+    val req_addr        = Cat(Seq(req_tag, req_idx, req_offset))
     val cacop_store_tag = (req_cacop_func === "b00".U) & req_cacop_en
     val cacop_idx_inv   = (req_cacop_func === "b01".U) & req_cacop_en
     val cacop_hit_inv   = (req_cacop_func === "b10".U) & req_cacop_en
@@ -206,7 +210,10 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
     io.resp.bits.rdata := 0x7777.U // Magic Number for debug
 
     val tagv_out    = VecInit((0 until wayNum).map(tagv => tagv_ram(tagv).dout.asTypeOf(new TagvBundle(tagWidth))))
-    val total_hits  = VecInit((0 until wayNum).map(i => tagv_out(i).valid && (tagv_out(i).tag === req_tag)))
+    // val real_tag    = req_tag
+    val cache_miss  = RegInit(false.B)
+    val real_tag    = Mux(req_cacop_en | cache_miss, req_tag, ptag)
+    val total_hits  = VecInit((0 until wayNum).map(i => tagv_out(i).valid && (tagv_out(i).tag === real_tag)))
     val hit         = total_hits.reduce(_ || _) && (state === sLookup) && !req_cacop_en
     val hit_way     = OHToUInt(total_hits)
     val hit_way_r   = RegNext(hit_way)
@@ -263,6 +270,10 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
                     (!hit, sMiss)
                 )
             )
+            when(!hit & !req_cacop_en) {
+                cache_miss := !hit
+                req_tag    := real_tag
+            }
         }
 
         // sMiss:
@@ -317,7 +328,7 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
         // refill data into Cache bank
         is(sRefill) {
             when(!req_cacop_en) {
-                state := sLookup
+                state                     := sLookup
                 for (i <- 0 until WORDS_PER_LINE) {
                     data_ram(replace_way)(i).wen := ~0.U(WORD_WIDTH.W)
                     data_ram(replace_way)(i).din := recv_data(i)
@@ -325,7 +336,7 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
                 tagv_ram(replace_way).din := Cat(true.B, req_tag)
                 tagv_ram(replace_way).wen := true.B
             }.otherwise {
-                state := sIdle
+                state        := sIdle
                 when(cacop_store_tag || cacop_idx_inv) {
                     val way = req_addr(log2Ceil(wayNum) - 1, 0)
                     tagv_ram(way).din := 0.U

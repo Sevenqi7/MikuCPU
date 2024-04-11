@@ -57,7 +57,7 @@ class BranchUnit extends BaseFunctionUnit {
     bru_io.update.bits.redirect := taken ^ pred_taken
     bru_io.update.bits.target   := br_target
     bru_io.update.valid         := io.in.valid
-    io.out.bits.exception       := false.B
+    io.out.bits.exception       := io.in.bits.exception
     io.out.bits.mispred         := taken ^ pred_taken
     io.out.bits.result          := Mux(link_flag, pc + 4.U, 0.U)
     io.out.bits.id              := io.in.bits.id

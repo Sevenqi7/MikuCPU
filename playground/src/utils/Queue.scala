@@ -50,14 +50,18 @@ class CircularQueue[T <: Data](element: T, size: Int, enable_contents_output: Bo
         io.out.front_data
     }
     val queue = RegInit(VecInit.fill(size)(0.U.asTypeOf(ValidIO(element))))
-    if (enable_contents_output) {
-        io.out.element_vec.get := queue
-    }
 
     val rear           = RegInit(0.U(log2Ceil(size).W)) // point to the end of queue
     val front          = RegInit(0.U(log2Ceil(size).W))
     val rear_plus_one  = rear + 1.U
     val front_plus_one = front + 1.U
+
+    if (enable_contents_output) {
+        for (i <- 0 until size) {
+            val idx = Mux((front + i.U) >= size.U, front + i.U - size.U, front + i.U)
+            io.out.element_vec.get(i) := queue(idx)
+        }
+    }
 
     io.out.full       := queue.map(q => q.valid).reduce(_ & _)
     io.out.empty      := !queue.map(q => q.valid).reduce(_ || _)

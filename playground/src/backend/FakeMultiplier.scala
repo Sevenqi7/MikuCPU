@@ -38,7 +38,7 @@ class FakeMultiplier extends BaseFunctionUnit {
         ready_r              := false.B
         result_buf.id        := io.in.bits.id
         result_buf.result    := result
-        result_buf.exception := false.B
+        result_buf.exception := io.in.bits.exception
         result_buf.mispred   := false.B
         result_valid         := DelayN(true.B, 5)
     }

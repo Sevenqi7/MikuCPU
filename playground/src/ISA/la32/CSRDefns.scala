@@ -71,12 +71,12 @@ class LA32CSR_Euen extends LA32CSRBundle {
 // 0x4: ECFG
 class LA32CSR_Ecfg extends LA32CSRBundle {
     // RESERVED BITS (31, 19)
-    val VS  = UInt(3.W)
+    // val VS  = UInt(3.W) -- unimplemented field
     // RESERVED BITS (15, 13)
-    val LIE = UInt(13.W)
+    val LIE = UInt(13.W) // Since PMI is unimplemented, LIE(10) is assigned to 0
 
-    def rdata                     = Cat(Seq(0.U(13.W), VS, 0.U(3.W), LIE))
-    def getRealWdata(wdata: UInt) = Cat(wdata(18, 16), wdata(12, 0))
+    def rdata                     = UEXT(LIE, WORD_WIDTH)
+    def getRealWdata(wdata: UInt) = Cat(Seq(wdata(12, 11), 0.B, wdata(9, 0)))
 }
 
 // 0x5: ESTAT
@@ -87,11 +87,17 @@ class LA32CSR_Estat extends LA32CSRBundle {
     // RESERVED BITS (15, 15)
     // Unimplemented MsgInt (14, 14)
     // Reserved Bits (13, 13)
-    val IS       = MixedVec(Seq(UInt(11.W), UInt(2.W)))
+    val IS       = new Bundle {
+        val IPI = Bool()
+        val TI  = Bool()
+        val PMI = Bool()
+        val HWI = Vec(8, Bool())
+        val SWI = Vec(2, Bool())
+    }
 
     def rdata                     = Cat(Seq(0.B, EsubCode, Ecode, 0.U(3.W), IS.asUInt))
     def getRealWdata(wdata: UInt) = UEXT(wdata(1, 0), this.getWidth)
-    override def wmask            = Cat(0.U(26.W), ~0.U(2.W))
+    override def wmask            = UEXT(~0.U(2.W), this.getWidth)
 }
 
 // 0x6: ERA

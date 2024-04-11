@@ -10,11 +10,13 @@ import miku.backend._
 import miku.frontend._
 
 class DifftestIO extends MkBundle {
-    val gpr         = Vec(32, UInt(WORD_WIDTH.W))
-    val csr         = Vec(LA32CSRRegisters.csr_defns.length, UInt(32.W))
-    val timer_64    = UInt(64.W)
-    val is_CNTinst  = Bool()
-    val commit_inst = ValidIO(new IssuedInst)
+    val gpr            = Vec(32, UInt(WORD_WIDTH.W))
+    // val csr         = Vec(LA32CSRRegisters.csr_defns.length, UInt(32.W))
+    val csr            = new LA32CSR_RawData
+    val timer_64       = UInt(64.W)
+    val is_CNTinst     = Bool()
+    val commit_inst    = ValidIO(new IssuedInst)
+    val is_commit_excp = Bool()
 }
 
 class core_top extends RawModule with HasMkParams {
@@ -131,12 +133,17 @@ class core_top extends RawModule with HasMkParams {
         val diff_info = mkcpu.io.diff.get
         rf_rdata           := DEBUG_MAGICNUM.U
         ws_valid           := diff_info.commit_inst.valid
-        debug0_wb_ins      := DEBUG_MAGICNUM.U
+        debug0_wb_ins      := diff_info.commit_inst.bits.sbe.raw_inst.get
         debug0_wb_pc       := diff_info.commit_inst.bits.sbe.br_info.bits.pc
         debug0_wb_rf_wdata := diff_info.commit_inst.bits.sbe.result
         debug0_wb_rf_wen   := diff_info.commit_inst.bits.sbe.decoded_inst.regwen
         debug0_wb_rf_wnum  := diff_info.commit_inst.bits.sbe.rd_num
 
+        val dest_reg            = Mux(
+            diff_info.commit_inst.bits.sbe.decoded_inst.dest_rj,
+            diff_info.commit_inst.bits.sbe.rj_num,
+            diff_info.commit_inst.bits.sbe.rd_num
+        )
         val DifftestInstrCommit = Module(new DifftestInstrCommit)
         withClockAndReset(aclk, !aresetn) {
             val delay_cycles = 1
@@ -152,7 +159,7 @@ class core_top extends RawModule with HasMkParams {
             DifftestInstrCommit.io.is_CNTinst    := DelayN(diff_info.is_CNTinst, delay_cycles)
             DifftestInstrCommit.io.timer_64_value := DelayN(diff_info.commit_inst.bits.sbe.result, delay_cycles)
             DifftestInstrCommit.io.wen       := DelayN(diff_info.commit_inst.bits.sbe.decoded_inst.regwen, delay_cycles)
-            DifftestInstrCommit.io.wdest     := DelayN(diff_info.commit_inst.bits.sbe.rd_num, delay_cycles)
+            DifftestInstrCommit.io.wdest     := DelayN(dest_reg, delay_cycles)
             DifftestInstrCommit.io.wdata     := DelayN(diff_info.commit_inst.bits.sbe.result, delay_cycles)
             DifftestInstrCommit.io.csr_rstat := DelayN(false.B, delay_cycles)
             DifftestInstrCommit.io.csr_data  := DelayN(0.U, delay_cycles)
@@ -167,16 +174,23 @@ class core_top extends RawModule with HasMkParams {
         DifftestTrapEvent.io.instrCnt := 0.U
         DifftestTrapEvent.io.cycleCnt := 0.U
 
+        val excp_valid        = diff_info.is_commit_excp
+        val eret_valid        = (diff_info.commit_inst.bits.sbe.decoded_inst.futype === FuType.misc) &&
+            (diff_info.commit_inst.bits.sbe.decoded_inst.fuoptype === MiscOpType.ertn) &&
+            diff_info.commit_inst.valid
+        val estat             = diff_info.csr.getTargetCSR(LA32CSRRegisters.ESTAT)
         val DifftestExcpEvent = Module(new DifftestExcpEvent)
-        DifftestExcpEvent.io.clock         := aclk
-        DifftestExcpEvent.io.coreid        := 0.U
-        DifftestExcpEvent.io.excp_valid    := false.B
-        DifftestExcpEvent.io.eret          := false.B
-        DifftestExcpEvent.io.intrNo        := 0.U
-        DifftestExcpEvent.io.cause         := 0.U
-        DifftestExcpEvent.io.exceptionPC   := diff_info.commit_inst.bits.sbe.br_info.bits.pc
-        DifftestExcpEvent.io.exceptionInst := diff_info.commit_inst.bits.sbe.raw_inst.get
-
+        withClockAndReset(aclk, !aresetn) {
+            val delay_cycles = 1
+            DifftestExcpEvent.io.clock         := aclk
+            DifftestExcpEvent.io.coreid        := 0.U
+            DifftestExcpEvent.io.excp_valid    := DelayN(excp_valid, delay_cycles)
+            DifftestExcpEvent.io.eret          := DelayN(eret_valid, delay_cycles)
+            DifftestExcpEvent.io.intrNo        := estat.IS.asUInt(12, 2)
+            DifftestExcpEvent.io.cause         := estat.Ecode
+            DifftestExcpEvent.io.exceptionPC   := DelayN(diff_info.commit_inst.bits.sbe.br_info.bits.pc, delay_cycles)
+            DifftestExcpEvent.io.exceptionInst := DelayN(diff_info.commit_inst.bits.sbe.raw_inst.get, delay_cycles)
+        }
         val DifftestGRegState = Module(new DifftestGRegState)
         DifftestGRegState.io.clock  := aclk
         DifftestGRegState.io.coreid := 0.U
@@ -186,10 +200,11 @@ class core_top extends RawModule with HasMkParams {
         // the only exception is the estat, with its ecode field signifies the last happned exception
         // and since there is a TLB refill exception at the start of the simulation we should mannually
         // set its value becaust TLB is also implemented yet.
+        val csr_rdata_vec       = VecInit(LA32CSRRegisters.csr_defns.map(diff_info.csr.getTargetCSR(_).rdata))
         val DifftestCSRRegState = Module(new DifftestCSRRegState)
         DifftestCSRRegState.io.clock  := aclk
         DifftestCSRRegState.io.coreid := 0.U
-        DifftestCSRRegState.connect_csr_vec(diff_info.csr)
+        DifftestCSRRegState.connect_csr_vec(csr_rdata_vec)
 
     } else {
         ws_valid           := false.B

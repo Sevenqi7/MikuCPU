@@ -7,23 +7,29 @@ import miku._
 import miku.utils._
 
 class IFUICacheIO extends MkBundle {
-    val cache_req  = Decoupled(new CacheReqIO(VADDR_WIDTH, WORD_WIDTH))
-    val cache_resp = Flipped(ValidIO(new CacheRespIO(WORD_WIDTH)))
+    val addr_ok = Bool()
+    val data_ok = Bool()
+    val rdata   = UInt(VADDR_WIDTH.W)
 }
 
 class NpcSelInfo extends MkBundle {
     val pred_result = new BranchPredictorResult
     val pred_check  = ValidIO(new BranchPredictorUpdate)
-    val excepetion  = Bool()
+    val exception   = ValidIO(new Bundle {
+        val entry = UInt(VADDR_WIDTH.W)
+    })
+    val ertn_target = ValidIO(new Bundle {
+        val era = UInt(VADDR_WIDTH.W)
+    })
 }
 
 class IFUStageInfo extends MkBundle {
-    val s0 = ValidIO(new PCInstBundle(VADDR_WIDTH, INST_BITS))
-    val s1 = ValidIO(new PCInstBundle(VADDR_WIDTH, INST_BITS))
+    val s0 = ValidIO(new InstQueueEntry)
+    val s1 = ValidIO(new InstQueueEntry)
 }
 
 class IFUIO extends MkBundle {
-    val icache_msg      = new IFUICacheIO()
+    val icache_msg      = Flipped(new IFUICacheIO())
     val stage_info      = new IFUStageInfo()
     val npc_sel_info    = Flipped(new NpcSelInfo)
     val inst_queue_full = Input(Bool())
@@ -33,48 +39,49 @@ class IFU extends MkModule {
     val io = IO(new IFUIO)
 
     // IFU-ICache
-    val from_icache = io.icache_msg.cache_resp
-    val to_icache   = io.icache_msg.cache_req
-    val addr_ok     = to_icache.valid & to_icache.ready
-    val data_ok     = from_icache.valid & from_icache.bits.done
 
     // ifu stage 0:
     val s0_pc    = Wire(UInt(WORD_WIDTH.W))
     val s0_valid = Wire(Bool())
 
     // ifu stage 1:
-    val s1_pc    = RegEnable(s0_pc, RESET_VECTOR.U(VADDR_WIDTH.W), addr_ok)
+    val s1_pc    = RegInit(RESET_VECTOR.U(VADDR_WIDTH.W))
     val s1_valid = Wire(Bool())
-    val s1_inst  = from_icache.bits.rdata
+    val s1_inst  = io.icache_msg.rdata
     //                  cond   npc
     // npc-gen           |      |
     val npc_src  = io.npc_sel_info
     val mispred  = npc_src.pred_check.valid & npc_src.pred_check.bits.redirect
-    val npc_gen: Seq[(Bool, UInt)] = Seq(
-        (mispred, npc_src.pred_check.bits.target),
-        (npc_src.pred_result.taken, npc_src.pred_result.target),
-        (true.B, s1_pc + 4.U)
+
+    val flush_slot = Module(new CircularQueue(UInt(VADDR_WIDTH.W), 1))
+    val npc_flush: Seq[(Bool, UInt)] = Seq(
+        (npc_src.exception.valid   -> npc_src.exception.bits.entry),
+        (npc_src.ertn_target.valid -> npc_src.ertn_target.bits.era),
+        (mispred                   -> npc_src.pred_check.bits.target),
+        (npc_src.pred_result.taken -> npc_src.pred_result.target)
     )
-    s0_valid := addr_ok
-    s0_pc    := PriorityMux(npc_gen)
+    flush_slot.io.in.clear := false.B
+    flush_slot.io.in.enq_data  := MuxCase(DontCare, npc_flush)
+    flush_slot.io.in.enq_valid := npc_flush.map(_._1).reduce(_ || _) && !s0_valid
+    flush_slot.io.in.deq_valid := !flush_slot.io.out.empty & s0_valid
 
-    s1_valid := data_ok & !mispred
-    s1_pc    := Mux(addr_ok, s0_pc, s1_pc)
+    val npc_gen      = npc_flush :+ (!flush_slot.io.out.empty -> flush_slot.io.out.front_data)
+    val next_pc      = MuxCase(s1_pc + 4.U, npc_gen)
+    val s0_excp_adef = s0_pc(0) | s0_pc(1)
+    val s1_excp_adef = s1_pc(0) | s1_pc(1)
+    s0_pc    := next_pc
+    s0_valid := io.icache_msg.addr_ok
+    when(s0_valid) {
+        s1_pc := s0_pc
+    }
+    s1_valid := (io.icache_msg.data_ok || s1_excp_adef) & !npc_flush.map(_._1).reduce(_ || _) & flush_slot.io.out.empty
 
-    // fetch unit doesn't write cache
-    to_icache.bits.wr         := 0.B
-    to_icache.bits.addr       := s0_pc
-    to_icache.bits.wdata      := 0.U
-    to_icache.bits.wtype      := 0.U
-    to_icache.bits.uncached   := false.B
-    to_icache.bits.cacop_en   := false.B
-    to_icache.bits.cacop_func := 0.U
-    to_icache.valid           := !io.inst_queue_full
-
-    io.stage_info.s0.bits.pc   := s0_pc
-    io.stage_info.s0.bits.inst := from_icache.bits.rdata
-    io.stage_info.s0.valid     := s0_valid
-    io.stage_info.s1.bits.pc   := s1_pc
-    io.stage_info.s1.bits.inst := s1_inst
-    io.stage_info.s1.valid     := s1_valid
+    io.stage_info.s0.bits.pc        := s0_pc
+    io.stage_info.s0.bits.inst      := DEBUG_MAGICNUM.U
+    io.stage_info.s0.bits.excp_adef := s0_excp_adef
+    io.stage_info.s0.valid          := s0_valid
+    io.stage_info.s1.bits.pc        := s1_pc
+    io.stage_info.s1.bits.inst      := s1_inst
+    io.stage_info.s1.bits.excp_adef := s1_excp_adef
+    io.stage_info.s1.valid          := s1_valid
 }

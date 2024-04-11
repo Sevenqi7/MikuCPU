@@ -130,14 +130,17 @@ object CSROpType {
 }
 
 object MiscOpType {
-    def num = 3
+    def num = 9
 
-    def none    = "b000".U(log2Ceil(MaxOpNum).W)
-    def rdcntid = "b001".U(log2Ceil(MaxOpNum).W)
-    def rdcntvl = "b010".U(log2Ceil(MaxOpNum).W)
-    def rdcntvh = "b011".U(log2Ceil(MaxOpNum).W)
-    def cacop   = "b100".U(log2Ceil(MaxOpNum).W)
-    def syscall = "b101".U(log2Ceil(MaxOpNum).W)
+    def none    = "b0000".U(log2Ceil(MaxOpNum).W)
+    def rdcntid = "b0001".U(log2Ceil(MaxOpNum).W)
+    def rdcntvl = "b0010".U(log2Ceil(MaxOpNum).W)
+    def rdcntvh = "b0011".U(log2Ceil(MaxOpNum).W)
+    def cacop   = "b0100".U(log2Ceil(MaxOpNum).W)
+    def syscall = "b0101".U(log2Ceil(MaxOpNum).W)
+    def break   = "b0110".U(log2Ceil(MaxOpNum).W)
+    def ertn    = "b0111".U(log2Ceil(MaxOpNum).W)
+    def unknown = "b1111".U(log2Ceil(MaxOpNum).W)
 
     def apply() = UInt(log2Ceil(num).W)
 }
@@ -165,6 +168,7 @@ object LA32Instructions {
     // special
     def BREAK   = BitPat("b00000 00000 10101 00 ????? ????? ?????")
     def SYSCALL = BitPat("b00000 00000 10101 10 ????? ????? ?????")
+    def ERTN    = BitPat("b00000 11001 00100 00 01110 00000 00000")
 
     def SLLIW = BitPat("b00000 00001 00000 01 ????? ????? ?????")
     def SRLIW = BitPat("b00000 00001 00010 01 ????? ????? ?????")

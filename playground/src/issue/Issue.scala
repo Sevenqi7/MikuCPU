@@ -15,6 +15,7 @@ class IssueEntry extends MkBundle {
     val inst         = UInt(INST_BITS.W)
     val decoded_inst = new DecodedInst()
     val br_pred      = new BranchPredictorResult
+    val exception    = LA32ExceptionType()
 }
 
 class IssueStageIO extends MkBundle {
@@ -26,11 +27,16 @@ class IssueStageIO extends MkBundle {
     })
     val store_commit = new ReadyValidBundle
     val csr_commit   = new ReadyValidBundle
+    val excp_commit  = Bool()
+    val ertn_commit  = Bool()
+    val excp_info    = ValidIO(new LA32ExceptionInfo)
+    val int_flag     = Input(Bool())
     val diff         =
         if (DIFFTEST_MODE) Some(new Bundle {
-            val gpr         = Vec(32, UInt(WORD_WIDTH.W))
-            val commit_inst = ValidIO(new IssuedInst)
-            val is_CNTinst  = Bool()
+            val gpr            = Vec(32, UInt(WORD_WIDTH.W))
+            val commit_inst    = ValidIO(new IssuedInst)
+            val is_CNTinst     = Bool()
+            val is_commit_excp = Bool()
         })
         else None
     // transcation that will be excuted in function unit
@@ -44,9 +50,10 @@ class IssueStage extends MkModule {
     val issued_inst  = scoreboard.io.issue_inst
     val decoded_inst = io.from_decoder.bits.decoded_inst
     scoreboard.io.wb_data          <> io.wb_data
-    scoreboard.io.flush            := false.B // TODO: add condition
     scoreboard.io.from_decoder     <> io.from_decoder
     scoreboard.io.issue_inst.ready := io.trans.ready
+    scoreboard.io.int_flag         := io.int_flag
+    io.excp_info                   := scoreboard.io.excp_info
 
     // read operands of the issued instruction from scoreboard
     val gpr = Module(new MkRegfiles)
@@ -82,7 +89,6 @@ class IssueStage extends MkModule {
     io.trans.valid                  := issued_inst.valid
     io.trans.bits.fuinput.id        := issued_inst.bits.id
     io.trans.bits.fuinput.pc        := io.from_decoder.bits.pc
-    io.trans.bits.fuinput.flush     := false.B // TODO: add conditon
     io.trans.bits.fuinput.operand_a := Mux(decoded_inst.needRj, rj_data, io.from_decoder.bits.pc)
     io.trans.bits.fuinput.operand_b := MuxCase(
         DEBUG_MAGICNUM.U,
@@ -93,6 +99,7 @@ class IssueStage extends MkModule {
     )
     val need_imm5 = (decoded_inst.futype === FuType.misc && decoded_inst.fuoptype === MiscOpType.cacop)
     io.trans.bits.fuinput.operand_c := Mux(need_imm5, issued_inst.bits.sbe.rd_num, rd_data)
+    io.trans.bits.fuinput.exception := io.from_decoder.bits.exception
     io.trans.bits.fuinput.optype    := decoded_inst.fuoptype
     io.trans.bits.futype            := decoded_inst.futype
 
@@ -110,8 +117,13 @@ class IssueStage extends MkModule {
         (commit_inst_sbe.decoded_inst.futype === FuType.lsu) &&
             LSUOpType.isStoreType(commit_inst_sbe.decoded_inst.fuoptype)
     val is_commit_csr   = (commit_inst_sbe.decoded_inst.futype === FuType.csr)
+    val is_commit_excp  = (scoreboard.io.excp_info.valid)
+    val is_commit_ertn  =
+        (commit_inst_sbe.decoded_inst.futype === FuType.misc) && (commit_inst_sbe.decoded_inst.fuoptype === MiscOpType.ertn)
     io.csr_commit.valid   := is_commit_csr & commit_inst.valid
-    io.store_commit.valid := is_commit_store & commit_inst.valid
+    io.store_commit.valid := is_commit_store & commit_inst.valid & !is_commit_excp
+    io.excp_commit        := is_commit_excp & commit_inst.valid
+    io.ertn_commit        := is_commit_ertn & commit_inst.valid
     commit_inst.ready     := MuxCase(
         true.B,
         Seq(
@@ -120,14 +132,17 @@ class IssueStage extends MkModule {
         )
     )
 
-    gpr.write_io.waddr := commit_inst.bits.sbe.rd_num
-    gpr.write_io.wen   := commit_inst.valid && commit_inst_sbe.decoded_inst.regwen
+    val dest_reg = Mux(commit_inst_sbe.decoded_inst.dest_rj, commit_inst_sbe.rj_num, commit_inst_sbe.rd_num)
+
+    gpr.write_io.waddr := dest_reg
+    gpr.write_io.wen   := commit_inst.valid && commit_inst_sbe.decoded_inst.regwen && !is_commit_excp
     gpr.write_io.wdata := commit_inst.bits.sbe.result
 
     if (DIFFTEST_MODE) {
         io.diff.get.commit_inst.bits  := commit_inst.bits
-        io.diff.get.commit_inst.valid := commit_inst.valid & commit_inst.ready
+        io.diff.get.commit_inst.valid := commit_inst.valid & commit_inst.ready & !is_commit_excp
         io.diff.get.gpr               := gpr.diff_gpr.get
+        io.diff.get.is_commit_excp    := is_commit_excp & commit_inst.valid & commit_inst.ready
         io.diff.get.is_CNTinst        := commit_inst.valid &&
             (commit_inst_sbe.decoded_inst.futype === FuType.misc) &&
             ((commit_inst_sbe.decoded_inst.fuoptype === MiscOpType.rdcntid) ||

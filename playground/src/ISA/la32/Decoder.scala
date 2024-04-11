@@ -12,15 +12,15 @@ object SelImm {
     def num         = 8
     def IMM_MAX_LEN = 26
 
-    def IMM_U8        = "b000".U(log2Ceil(num).W)
-    def IMM_S12       = "b001".U(log2Ceil(num).W)
-    def IMM_U12       = "b010".U(log2Ceil(num).W)
-    def IMM_S14       = "b011".U(log2Ceil(num).W)
-    def IMM_S16       = "b100".U(log2Ceil(num).W)
-    def IMM_S20       = "b101".U(log2Ceil(num).W)
+    def IMM_U8  = "b000".U(log2Ceil(num).W)
+    def IMM_S12 = "b001".U(log2Ceil(num).W)
+    def IMM_U12 = "b010".U(log2Ceil(num).W)
+    def IMM_S14 = "b011".U(log2Ceil(num).W)
+    def IMM_S16 = "b100".U(log2Ceil(num).W)
+    def IMM_S20 = "b101".U(log2Ceil(num).W)
     // def IMM_U14       = "b100".U(log2Ceil(num).W)    //这玩意我没找到在哪
-    def IMM_S26       = "b110".U(log2Ceil(num).W)
-    def INVALID_INSTR = "b111".U(log2Ceil(num).W)
+    def IMM_S26 = "b110".U(log2Ceil(num).W)
+    // def INVALID_INSTR = "b111".U(log2Ceil(num).W)
     // def IMM_B6 = "b1000".U
 
     def X = BitPat("b???")
@@ -35,11 +35,11 @@ abstract trait DecodeConstants {
 
     def decodeDefault: List[BitPat] = /*
            regWen   src0      src1       src2     FuncUnit
-             |       |         |          |          |         operation
-             |       |         |          |          |             |         flush
-             |       |         |          |          |             |           |          SelImm
-             |       |         |          |          |             |           |            |             */
-        List(N, SrcType.X, SrcType.X, SrcType.X, FuType.misc, MiscOpType.none, N, SelImm.INVALID_INSTR)
+             |       |         |          |          |            operation
+             |       |         |          |          |                |        dest_rj
+             |       |         |          |          |                |           |       SelImm
+             |       |         |          |          |                |           |         |             */
+        List(N, SrcType.X, SrcType.X, SrcType.X, FuType.misc, MiscOpType.unknown, N, SelImm.X)
 }
 
 class DecodedInst extends MkBundle with DecodeConstants {
@@ -47,7 +47,7 @@ class DecodedInst extends MkBundle with DecodeConstants {
     val src      = Vec(3, SrcType())
     val futype   = FuType()
     val fuoptype = FuOpType()
-    val flush    = Bool()
+    val dest_rj  = Bool()
     val selImm   = SelImm()
 
     // src(2), src(1), src(0) seperately represent rk, rj, rd if there value is reg
@@ -143,9 +143,9 @@ object LA2RI16Decoder extends DecodeConstants {
     val decodeTable = Array[(BitPat, List[BitPat])](
         // BCECQZ -> List(N, SrcType.reg, SrcType.reg, SrcType.X, FuOpType.X,      Y, SelImm.X     ), floating branch inst not supported yet
         // BCENEZ -> List(N, SrcType.reg, SrcType.reg, SrcType.X, FuOpType.X,      Y, SelImm.X     ),
-        JIRL   -> List(Y, SrcType.imm, SrcType.reg , SrcType.none,   FuType.bru, JumpOpType.jirl, Y, SelImm.IMM_S16),
-        B      -> List(N, SrcType.imm, SrcType.none, SrcType.none,   FuType.bru, JumpOpType.b   , Y, SelImm.IMM_S26),
-        BL     -> List(Y, SrcType.imm, SrcType.none, SrcType.none,   FuType.bru, JumpOpType.bl  , Y, SelImm.IMM_S26),
+        JIRL   -> List(Y, SrcType.imm, SrcType.reg , SrcType.none,   FuType.bru, JumpOpType.jirl, N, SelImm.IMM_S16),
+        B      -> List(N, SrcType.imm, SrcType.none, SrcType.none,   FuType.bru, JumpOpType.b   , N, SelImm.IMM_S26),
+        BL     -> List(Y, SrcType.imm, SrcType.none, SrcType.none,   FuType.bru, JumpOpType.bl  , N, SelImm.IMM_S26),
         BEQ    -> List(N, SrcType.imm, SrcType.reg , SrcType.reg ,   FuType.bru, JumpOpType.beq , N, SelImm.IMM_S16),
         BNE    -> List(N, SrcType.imm, SrcType.reg , SrcType.reg ,   FuType.bru, JumpOpType.bne , N, SelImm.IMM_S16),
         BLT    -> List(N, SrcType.imm, SrcType.reg , SrcType.reg ,   FuType.bru, JumpOpType.blt , N, SelImm.IMM_S16),
@@ -167,14 +167,15 @@ object LAMiscDecoder extends DecodeConstants {
     import scala.language.implicitConversions
     implicit def bitPatToUInt(x: BitPat) : UInt = x.value.U
     val decodeTable = Array[(BitPat, List[UInt])](
-        RDCNTIDW -> List(Y, SrcType.none, SrcType.none, SrcType.none, FuType.misc, MiscOpType.rdcntid, N, SelImm.X),
+        RDCNTIDW -> List(Y, SrcType.none, SrcType.none, SrcType.none, FuType.misc, MiscOpType.rdcntid, Y, SelImm.X),
         RDCNTVLW -> List(Y, SrcType.none, SrcType.none, SrcType.none, FuType.misc, MiscOpType.rdcntvl, N, SelImm.X),
         RDCNTVHW -> List(Y, SrcType.none, SrcType.none, SrcType.none, FuType.misc, MiscOpType.rdcntvh, N, SelImm.X),
         CSRRD   ->  List(Y, SrcType.imm , SrcType.none, SrcType.reg , FuType.csr , CSROpType.csrrd   , N, SelImm.IMM_S14),
         CSRWR   ->  List(Y, SrcType.imm , SrcType.none, SrcType.reg , FuType.csr , CSROpType.csrwr   , N, SelImm.IMM_S14),
         CSRXCHG ->  List(Y, SrcType.imm , SrcType.reg , SrcType.reg , FuType.csr , CSROpType.csrxchg , N, SelImm.IMM_S14),
-        SYSCALL ->  List(Y, SrcType.imm , SrcType.none, SrcType.none, FuType.misc, MiscOpType.syscall, N, SelImm.X)
-        
+        SYSCALL ->  List(Y, SrcType.imm , SrcType.none, SrcType.none, FuType.misc, MiscOpType.syscall, N, SelImm.X),
+        BREAK   ->  List(Y, SrcType.imm , SrcType.none, SrcType.none, FuType.misc, MiscOpType.break  , N, SelImm.X),
+        ERTN    ->  List(N, SrcType.none, SrcType.none, SrcType.none, FuType.misc, MiscOpType.ertn   , N, SelImm.X)
     )
 }
 // format: on

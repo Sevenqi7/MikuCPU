@@ -3,20 +3,20 @@ package miku.utils
 import chisel3._
 import chisel3.util._
 import scala.language.implicitConversions
+import dataclass.data
 
 object util {
     implicit def uintToBitPat(x: UInt): BitPat = BitPat(x)
 }
 
-class PCInstBundle(pc_width: Int, inst_width: Int) extends Bundle {
-    val pc   = UInt(pc_width.W)
-    val inst = UInt(inst_width.W)
-}
-
 class ReadyValidBundle extends Bundle {
     val valid = Output(Bool())
     val ready = Input(Bool())
+}
 
+class PCInstBundle(pc_width: Int, inst_width: Int) extends Bundle {
+    val pc   = UInt(pc_width.W)
+    val inst = UInt(inst_width.W)
 }
 
 object SEXT {
@@ -60,8 +60,8 @@ object HoldUnless {
     }
 }
 
-// class ZeroUInt(width: Int) extends UInt(width) {
-//     override def :=(that: Data): Unit = {
-//         this.:=(0.U)
-//     }
-// }
+// // class ZeroUInt(width: Int) extends UInt(width) {
+// //     override def :=(that: Data): Unit = {
+// //         this.:=(0.U)
+// //     }
+// // }

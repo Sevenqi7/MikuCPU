@@ -10,8 +10,9 @@ import miku.frontend._
 class BaseFuInput extends MkBundle {
     val id        = UInt(TRANS_ID_BITS.W)
     val pc        = UInt(VADDR_WIDTH.W)
-    val flush     = Bool()
+    // val flush     = Bool()
     val optype    = FuOpType()
+    val exception = LA32ExceptionType()
     val operand_a = UInt(WORD_WIDTH.W) // rj or pc
     val operand_b = UInt(WORD_WIDTH.W) // rk or imms
     val operand_c = UInt(WORD_WIDTH.W) // rd for branch and store insts or src3 for some insts
@@ -20,7 +21,7 @@ class BaseFuInput extends MkBundle {
 class BaseFuOutput extends MkBundle {
     val id        = UInt(TRANS_ID_BITS.W)
     val result    = UInt(WORD_WIDTH.W)
-    val exception = Bool()
+    val exception = LA32ExceptionType()
     val mispred   = Bool()
 }
 
@@ -28,8 +29,9 @@ class WriteBackResult extends BaseFuOutput {}
 
 abstract class BaseFunctionUnit extends MkModule {
     lazy val io = IO(new Bundle {
-        val in  = Flipped(Decoupled(new BaseFuInput))
-        val out = Decoupled(new BaseFuOutput)
+        val in    = Flipped(Decoupled(new BaseFuInput))
+        val out   = Decoupled(new BaseFuOutput)
+        val flush = Flipped(new FlushReason)
     })
 }
 
@@ -40,6 +42,7 @@ class EXUIO extends MkBundle {
         val lsu_out = Decoupled(new BaseFuOutput)
     }
     val futype     = Input(FuType())
+    val flush      = Flipped(new FlushReason)
     val pred_check = new BranchUnitIO
     val lsu_io     = new LSUIO
     val csr_io     = new CSRBufferIO
@@ -68,9 +71,9 @@ class EXU extends MkModule {
     val fixed_latency_units = Seq(
         FuType.bru  -> bru,
         FuType.alu  -> alu,
-        FuType.mul  -> mul,
+        FuType.misc -> misc,
         FuType.csr  -> csr,
-        FuType.misc -> misc
+        FuType.mul  -> mul
     )
 
     val fu_base_in = RegInit(0.U.asTypeOf(ValidIO(new BaseFuInput)))
@@ -86,6 +89,7 @@ class EXU extends MkModule {
     function_units.foreach(_._2.io.in.valid := false.B)
     function_units.foreach(_._2.io.in.bits  := fu_base_in.bits)
     for (fu <- function_units) {
+        fu._2.io.flush := io.flush
         when(futype_r === fu._1) {
             fu._2.io.in.valid := fu_base_in.valid
             io.in.ready       := fu._2.io.in.ready

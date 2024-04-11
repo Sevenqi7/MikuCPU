@@ -18,7 +18,7 @@ class ScoreboardEntry extends MkBundle {
     val rj_num       = UInt(REG_ADDR_WD.W)
     val rk_num       = UInt(REG_ADDR_WD.W)
     val rd_num       = UInt(REG_ADDR_WD.W)
-    val exception    = Bool()
+    val exception    = LA32ExceptionType()
     val result       = UInt(WORD_WIDTH.W)
     val br_info      = ValidIO(new BranchInstInfo)
     val executed     = Bool()
@@ -42,16 +42,19 @@ class ScoreboardIO extends MkBundle {
     val from_decoder = Flipped(Decoupled(new IssueEntry)) // decoded inst from IDU
     val issue_inst   = Decoupled(new IssuedInst)          // issued inst to EXU
     val commit_inst  = Decoupled(new IssuedInst)          // instruction to be committed
-    val flush        = Input(Bool())
     val operands_rdy = Input(Bool())
     val wb_data      = Flipped(Vec(NR_WB_PORTS, Decoupled(new WriteBackResult)))
     val forward_msg  = new ScoreboardFowardInfo
+    val excp_info    = ValidIO(new LA32ExceptionInfo)
+    val int_flag     = Input(Bool())
 }
 
 class Scoreboard extends MkModule {
     val io = IO(new ScoreboardIO)
 
-    val sb_mem = RegInit(VecInit.fill(NR_ENTRIES)(0.U.asTypeOf(ValidIO(new ScoreboardEntry))))
+    val init_sbe = 0.U.asTypeOf(ValidIO(new ScoreboardEntry))
+    init_sbe.bits.exception := LA32ExceptionType.NONE.enum_no
+    val sb_mem = RegInit(VecInit.fill(NR_ENTRIES)(init_sbe))
 
     val commit_ptr = RegInit(0.U(log2Ceil(NR_ENTRIES).W))
     val issue_ptr  = RegInit(0.U(log2Ceil(NR_ENTRIES).W))
@@ -94,8 +97,7 @@ class Scoreboard extends MkModule {
     }
 
     // default - initialise all fieled with zero
-    val init_sbe = 0.U.asTypeOf(new ScoreboardEntry)
-    io.issue_inst.bits.sbe := init_sbe
+    io.issue_inst.bits.sbe := init_sbe.bits
 
     io.issue_inst.bits.id := issue_ptr
     // issue an instruction when operands are ready and there
@@ -125,28 +127,70 @@ class Scoreboard extends MkModule {
         ((decoded_inst.futype =/= FuType.bru) || ((decoded_inst.futype === FuType.bru) && !unresolved_branch))
 
     // commit inst
+    val ex_valid   = Wire(Bool())
+    val ertn_valid = Wire(Bool())
+    ex_valid   := false.B
+    ertn_valid := false.B
+
+    // interrupt
+    val int_flag_r = RegInit(0.B)
+    val int_flag   = io.int_flag | int_flag_r
+    int_flag_r := MuxCase(
+        int_flag_r,
+        Seq(
+            (io.int_flag && !commit_ack) -> true.B,
+            (commit_ack && int_flag_r)   -> false.B
+        )
+    )
+
     when(commit_ack) {
         commit_ptr                       := commit_ptr + 1.U
         sb_mem(commit_ptr).valid         := false.B
         sb_mem(commit_ptr).bits.executed := false.B
+
+        // exception check
+        ex_valid   := sb_mem(commit_ptr).bits.exception =/= LA32ExceptionType.NONE.enum_no | int_flag
+        ertn_valid := (sb_mem(commit_ptr).bits.decoded_inst.fuoptype === MiscOpType.ertn) &&
+            (sb_mem(commit_ptr).bits.decoded_inst.futype === FuType.misc)
+
+        when(ex_valid || ertn_valid) {
+            issue_ptr := commit_ptr + 1.U
+            for (i <- 0 until NR_ENTRIES) {
+                for (i <- 0 until NR_ENTRIES) {
+                    // when((commit_ptr + i.U)(TRANS_ID_BITS - 1, 0) < issue_ptr) {
+                    //     sb_mem(i) := 0.U.asTypeOf(ValidIO(new ScoreboardEntry))
+                    // }
+                    sb_mem(i) := init_sbe
+                }
+            }
+        }
     }
+    io.excp_info.valid       := ex_valid
+    io.excp_info.bits.extype := Mux(!int_flag, sb_mem(commit_ptr).bits.exception, LA32ExceptionType.INT.enum_no)
+    io.excp_info.bits.pc     := sb_mem(commit_ptr).bits.br_info.bits.pc
+    io.excp_info.bits.badv   := MuxLookup(sb_mem(commit_ptr).bits.exception, sb_mem(commit_ptr).bits.result)(
+        Seq(
+            LA32ExceptionType.ADEF.enum_no -> sb_mem(commit_ptr).bits.br_info.bits.pc
+        )
+    )
 
     // write-back from exu
     for (wb <- io.wb_data) {
         val wb_id  = wb.bits.id
-        val wb_sbe = sb_mem(wb_id).bits
-        when(wb.valid) {
-            wb_sbe.br_info.bits.mispred := wb.bits.mispred
-            wb_sbe.result               := wb.bits.result
-            wb_sbe.exception            := wb.bits.exception
-            wb_sbe.executed             := true.B
+        val wb_sbe = sb_mem(wb_id)
+        when(wb.valid & wb_sbe.valid & !ex_valid & !ertn_valid) {
+            wb_sbe.bits.br_info.bits.mispred := wb.bits.mispred
+            wb_sbe.bits.result               := wb.bits.result
+            wb_sbe.bits.exception            := wb.bits.exception
+            wb_sbe.bits.executed             := true.B
             // misprediction flush
-            when(wb_sbe.br_info.valid & wb_sbe.br_info.bits.mispred) {
+            when(wb_sbe.bits.br_info.valid & wb_sbe.bits.br_info.bits.mispred) {
                 issue_ptr := commit_ptr + 1.U
                 for (i <- 0 until NR_ENTRIES) {
-                    when((commit_ptr + i.U)(TRANS_ID_BITS - 1, 0) < issue_ptr) {
-                        sb_mem(i) := 0.U.asTypeOf(ValidIO(new ScoreboardEntry))
-                    }
+                    // when((commit_ptr + i.U)(TRANS_ID_BITS - 1, 0) < issue_ptr) {
+                    //     sb_mem(i) := 0.U.asTypeOf(ValidIO(new ScoreboardEntry))
+                    // }
+                    sb_mem(i) := init_sbe
                 }
             }
         }
@@ -154,15 +198,15 @@ class Scoreboard extends MkModule {
     }
 
     // flush
-    when(io.flush) {
-        commit_ptr := 0.U
-        issue_ptr  := 0.U
-        issued_cnt := 0.U
-        for (i <- 0 until NR_ENTRIES) {
-            sb_mem(i).valid         := false.B
-            sb_mem(i).bits.executed := false.B
-        }
-    }
+    // when(io.flush) {
+    //     commit_ptr := 0.U
+    //     issue_ptr  := 0.U
+    //     issued_cnt := 0.U
+    //     for (i <- 0 until NR_ENTRIES) {
+    //         sb_mem(i).valid         := false.B
+    //         sb_mem(i).bits.executed := false.B
+    //     }
+    // }
 
     io.commit_inst.bits.id  := commit_ptr
     io.commit_inst.bits.sbe := sb_mem(commit_ptr).bits

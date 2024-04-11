@@ -62,7 +62,7 @@ class CSRBuffer extends BaseFunctionUnit {
 
     io.out.bits.id        := io.in.bits.id
     io.out.bits.mispred   := false.B
-    io.out.bits.exception := false.B
+    io.out.bits.exception := io.in.bits.exception
     io.out.bits.result    := csr_rdata
     io.out.valid          := io.in.valid
 

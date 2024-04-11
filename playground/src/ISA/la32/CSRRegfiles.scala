@@ -3,11 +3,13 @@ package miku
 import chisel3._
 import chisel3.util._
 import chisel3.internal.firrtl.Width
-import miku.utils.UEXT
 
+import miku.utils.UEXT
 import miku.issue.RegfileReadIO
 import miku.issue.RegfileWriteIO
 import LA32CSRRegisters._
+import LA32ExceptionType._
+import miku.utils.ReadyValidBundle
 
 class LA32CSRReadIO extends RegfileReadIO(14, 32) {}
 class LA32CSRWriteIO extends RegfileWriteIO(14, 32) {}
@@ -20,22 +22,26 @@ class LA32CSR_RawData extends MkBundle {
         var index = csr_defns.indexOf(target_info)
         if (index == -1) {
             println("Error: target CSR doesn't exist in csr_defns")
-            throw new IllegalStateException
+            throw new IllegalArgumentException
         }
         csr_vec(index).asTypeOf(target_info._2())
     }
 }
 
 class LA32CSRRegfiles extends MkModule {
-    val io        = IO(new Bundle {
-        val read_io   = new LA32CSRReadIO
-        val write_io  = new LA32CSRWriteIO
-        val raw_datas = new LA32CSR_RawData
-        // val csr_rdatas = Vec(csr_defns.length, UInt(32.W))
-        val timer64_o = UInt(64.W)
+    val io = IO(new Bundle {
+        val read_io     = new LA32CSRReadIO
+        val write_io    = new LA32CSRWriteIO
+        val raw_datas   = new LA32CSR_RawData
+        val timer64_o   = UInt(64.W)
+        val excp_info   = Flipped(ValidIO(new LA32ExceptionInfo))
+        val ertn_commit = Input(Bool())
+        val interrupt   = Input(UInt(8.W))
+        val int_flag    = Bool()
     })
+
     val la32_csrs = csr_defns.map { case (addr, csr_type) => (addr, RegInit(csr_type().initData.asTypeOf(csr_type()))) }
-    def csr_table[T <: LA32CSRBundle](csr_info: (UInt, () => T)): T = {
+    def csr_table[T <: LA32CSRBundle](csr_info: (UInt, () => T)):    T    = {
         var retval = csr_info._2()
         var found  = false
         for ((addr, csr) <- la32_csrs) {
@@ -44,8 +50,14 @@ class LA32CSRRegfiles extends MkModule {
                 found  = true
             }
         }
-        if (!found) throw new IllegalArgumentException
+        if (!found) {
+            println("Error: target CSR doesn't exist in csr_defns")
+            throw new IllegalArgumentException
+        }
         retval
+    }
+    def isWritingCSR[T <: LA32CSRBundle](csr_info: (UInt, () => T)): Bool = {
+        io.write_io.wen && (io.write_io.waddr === csr_info._1)
     }
 
     io.raw_datas.csr_vec.zip(la32_csrs.map(_._2)).foreach(i => i._1 := i._2.asUInt)
@@ -61,6 +73,87 @@ class LA32CSRRegfiles extends MkModule {
         }
     }
 
+    // TIMER
+    val tcfg  = csr_table(TCFG)
+    val tval  = csr_table(TVAL)
+    val ticlr = csr_table(TICLR)
+
+    val timer_en   = RegInit(0.B)
+    val timer_int  = Wire(Bool())
+    val tcfg_wdata = tcfg.getRealWdata(io.write_io.wdata).asTypeOf(tcfg)
+    timer_int := (tval.TimeVal === 0.U) && tcfg.En
+    timer_en  := MuxCase(
+        timer_en,
+        Seq(
+            isWritingCSR(TCFG) -> tcfg_wdata.En,
+            timer_int          -> tcfg.Periodic
+        )
+    )
+
+    tval.TimeVal := MuxCase(
+        tval.TimeVal,
+        Seq(
+            isWritingCSR(TCFG)                                     -> (tcfg_wdata.InitVal << 2),
+            (timer_en && (tval.TimeVal > 0.U))                     -> (tval.TimeVal - 1.U),
+            (timer_en && (tval.TimeVal === 0.U) && tcfg.Periodic)  -> (tcfg.InitVal << 2.U),
+            (timer_en && (tval.TimeVal === 0.U) && !tcfg.Periodic) -> 0xffffffffL.U
+        )
+    )
+
+    // Exception & Interrupt handle
+    val badv_update_v = io.excp_info.valid &
+        Seq(TLBR, ADEF, ALE, PIL, PIS, PIF, PME, PPI)
+            .map(_.enum_no === io.excp_info.bits.extype)
+            .reduce(_ || _)
+
+    val era  = csr_table(ERA)
+    val badv = csr_table(BADV)
+    val crmd = csr_table(CRMD)
+    val prmd = csr_table(PRMD)
+    when(io.excp_info.valid) {
+        era.PC    := io.excp_info.bits.pc
+        when(io.excp_info.bits.extype === TLBR.enum_no) {
+            crmd.DA := 1.B
+            crmd.PG := 0.B
+        }
+        crmd.IE   := 0.B
+        crmd.PLV  := 0.U
+        prmd.PPLV := crmd.PLV
+        prmd.PIE  := crmd.IE
+        // update badv
+        when(badv_update_v) {
+            badv.write(io.excp_info.bits.badv)
+        }
+    }
+
+    val estat = csr_table(ESTAT)
+    val ecfg  = csr_table(ECFG)
+
+    estat.IS.HWI := VecInit(io.interrupt.asBools)
+    estat.IS.TI  := MuxCase(
+        estat.IS.TI,
+        Seq(
+            (isWritingCSR(TICLR) && io.write_io.wdata(0)) -> false.B,
+            timer_int                                     -> true.B
+        )
+    )
+    when(isWritingCSR(TICLR) && io.write_io.wdata(0)) {
+        estat.IS.TI := 0.B
+    }
+    io.int_flag  := ((ecfg.LIE & estat.IS.asUInt) =/= 0.U) && crmd.IE
+
+    when(io.excp_info.valid) {
+        estat.Ecode    := getEcodeByExcpNo(io.excp_info.bits.extype)
+        estat.EsubCode := getEsubCodeByExcpNo(io.excp_info.bits.extype)
+    }
+
+    // ERTN handle
+    // val llbctl = csr_table(LLBCTL)
+    when(io.ertn_commit) {
+        crmd.PLV := prmd.PPLV
+        crmd.IE  := prmd.PIE
+    }
+
     // PGD read/write
     val badv_msb = csr_table(BADV).asUInt(VADDR_WIDTH - 1)
     val pgdl     = csr_table(PGDL)
@@ -68,7 +161,7 @@ class LA32CSRRegfiles extends MkModule {
     when(io.read_io.raddr === PGD._1) {
         io.read_io.rdata := Mux(badv_msb, pgdh.rdata, pgdl.rdata)
     }
-    when(io.write_io.wen && (io.write_io.waddr === PGD._1)) {
+    when(isWritingCSR(PGD)) {
         when(badv_msb) {
             pgdh.write(io.write_io.wdata)
         }.otherwise {
@@ -77,7 +170,6 @@ class LA32CSRRegfiles extends MkModule {
     }
 
     val stable_cnt = RegInit(0.U(64.W))
-    // stable_cnt.asUInt :=  stable_cnt + 1.U
     stable_cnt   := stable_cnt + 1.U
     io.timer64_o := stable_cnt
 }
