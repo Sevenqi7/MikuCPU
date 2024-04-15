@@ -10,7 +10,6 @@ import miku.frontend._
 class BaseFuInput extends MkBundle {
     val id        = UInt(TRANS_ID_BITS.W)
     val pc        = UInt(VADDR_WIDTH.W)
-    // val flush     = Bool()
     val optype    = FuOpType()
     val exception = LA32ExceptionType()
     val operand_a = UInt(WORD_WIDTH.W) // rj or pc
@@ -78,6 +77,7 @@ class EXU extends MkModule {
 
     val fu_base_in = RegInit(0.U.asTypeOf(ValidIO(new BaseFuInput)))
     val futype_r   = RegInit(0.U.asTypeOf(FuType()))
+    val inst_excp  = (fu_base_in.bits.exception =/= LA32ExceptionType.NONE.enum_no)
 
     when(io.in.ready) {
         fu_base_in.bits  := io.in.bits
@@ -91,7 +91,7 @@ class EXU extends MkModule {
     for (fu <- function_units) {
         fu._2.io.flush := io.flush
         when(futype_r === fu._1) {
-            fu._2.io.in.valid := fu_base_in.valid
+            fu._2.io.in.valid := fu_base_in.valid & !inst_excp
             io.in.ready       := fu._2.io.in.ready
         }
     }
@@ -104,11 +104,23 @@ class EXU extends MkModule {
     for ((arb_i, fu_o) <- result_arb.io.in.zip(fixed_latency_units.map(_._2.io.out))) {
         arb_i <> fu_o
     }
-    io.pred_check <> bru.bru_io
-    io.out.flu_out <> result_arb.io.out
-    io.out.lsu_out <> lsu.io.out
 
-    io.lsu_io  <> lsu.lsu_io
-    io.csr_io  <> csr.csr_io
-    io.misc_io <> misc.misc_io
+    val fu_excp_out = Wire(new BaseFuOutput)
+    fu_excp_out           := DontCare
+    fu_excp_out.id        := fu_base_in.bits.id
+    fu_excp_out.exception := fu_base_in.bits.exception
+
+    io.out.lsu_out <> lsu.io.out
+    when(fu_base_in.valid & inst_excp) {
+        io.out.flu_out.valid    := true.B
+        io.out.flu_out.bits     := fu_excp_out
+        result_arb.io.out.ready := false.B
+    }.otherwise {
+        io.out.flu_out <> result_arb.io.out
+    }
+
+    io.pred_check <> bru.bru_io
+    io.lsu_io     <> lsu.lsu_io
+    io.csr_io     <> csr.csr_io
+    io.misc_io    <> misc.misc_io
 }

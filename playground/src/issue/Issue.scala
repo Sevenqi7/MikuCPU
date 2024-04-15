@@ -97,7 +97,10 @@ class IssueStage extends MkModule {
             (decoded_inst.needImm, imm)
         )
     )
-    val need_imm5 = (decoded_inst.futype === FuType.misc && decoded_inst.fuoptype === MiscOpType.cacop)
+
+    // TODO: advance decoding of imm5 to IDU
+    val need_imm5 = (decoded_inst.futype === FuType.misc && decoded_inst.fuoptype === MiscOpType.cacop) ||
+        (decoded_inst.futype === FuType.csr && decoded_inst.fuoptype === CSROpType.invtlb)
     io.trans.bits.fuinput.operand_c := Mux(need_imm5, issued_inst.bits.sbe.rd_num, rd_data)
     io.trans.bits.fuinput.exception := io.from_decoder.bits.exception
     io.trans.bits.fuinput.optype    := decoded_inst.fuoptype
@@ -113,17 +116,17 @@ class IssueStage extends MkModule {
     val commit_inst_sbe = commit_inst.bits.sbe
 
     // check whether we are committing a store inst
+    val inst_excp       = io.int_flag | (commit_inst_sbe.exception =/= LA32ExceptionType.NONE.enum_no)
     val is_commit_store =
         (commit_inst_sbe.decoded_inst.futype === FuType.lsu) &&
             LSUOpType.isStoreType(commit_inst_sbe.decoded_inst.fuoptype)
     val is_commit_csr   = (commit_inst_sbe.decoded_inst.futype === FuType.csr)
-    val is_commit_excp  = (scoreboard.io.excp_info.valid)
     val is_commit_ertn  =
         (commit_inst_sbe.decoded_inst.futype === FuType.misc) && (commit_inst_sbe.decoded_inst.fuoptype === MiscOpType.ertn)
-    io.csr_commit.valid   := is_commit_csr & commit_inst.valid
-    io.store_commit.valid := is_commit_store & commit_inst.valid & !is_commit_excp
-    io.excp_commit        := is_commit_excp & commit_inst.valid
-    io.ertn_commit        := is_commit_ertn & commit_inst.valid
+    io.csr_commit.valid   := is_commit_csr & commit_inst.valid & !inst_excp
+    io.store_commit.valid := is_commit_store & commit_inst.valid & !inst_excp
+    io.ertn_commit        := is_commit_ertn & commit_inst.valid & !inst_excp
+    io.excp_commit        := scoreboard.io.excp_info.valid
     commit_inst.ready     := MuxCase(
         true.B,
         Seq(
@@ -135,14 +138,14 @@ class IssueStage extends MkModule {
     val dest_reg = Mux(commit_inst_sbe.decoded_inst.dest_rj, commit_inst_sbe.rj_num, commit_inst_sbe.rd_num)
 
     gpr.write_io.waddr := dest_reg
-    gpr.write_io.wen   := commit_inst.valid && commit_inst_sbe.decoded_inst.regwen && !is_commit_excp
+    gpr.write_io.wen   := commit_inst.valid && commit_inst_sbe.decoded_inst.regwen && !io.excp_commit
     gpr.write_io.wdata := commit_inst.bits.sbe.result
 
     if (DIFFTEST_MODE) {
         io.diff.get.commit_inst.bits  := commit_inst.bits
-        io.diff.get.commit_inst.valid := commit_inst.valid & commit_inst.ready & !is_commit_excp
+        io.diff.get.commit_inst.valid := commit_inst.valid & commit_inst.ready & !io.excp_commit
         io.diff.get.gpr               := gpr.diff_gpr.get
-        io.diff.get.is_commit_excp    := is_commit_excp & commit_inst.valid & commit_inst.ready
+        io.diff.get.is_commit_excp    := io.excp_commit
         io.diff.get.is_CNTinst        := commit_inst.valid &&
             (commit_inst_sbe.decoded_inst.futype === FuType.misc) &&
             ((commit_inst_sbe.decoded_inst.fuoptype === MiscOpType.rdcntid) ||

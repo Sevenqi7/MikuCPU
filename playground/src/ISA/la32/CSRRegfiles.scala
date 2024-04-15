@@ -10,6 +10,7 @@ import miku.issue.RegfileWriteIO
 import LA32CSRRegisters._
 import LA32ExceptionType._
 import miku.utils.ReadyValidBundle
+import chisel3.util.random.LFSR
 
 class LA32CSRReadIO extends RegfileReadIO(14, 32) {}
 class LA32CSRWriteIO extends RegfileWriteIO(14, 32) {}
@@ -30,14 +31,19 @@ class LA32CSR_RawData extends MkBundle {
 
 class LA32CSRRegfiles extends MkModule {
     val io = IO(new Bundle {
-        val read_io     = new LA32CSRReadIO
-        val write_io    = new LA32CSRWriteIO
-        val raw_datas   = new LA32CSR_RawData
-        val timer64_o   = UInt(64.W)
-        val excp_info   = Flipped(ValidIO(new LA32ExceptionInfo))
-        val ertn_commit = Input(Bool())
-        val interrupt   = Input(UInt(8.W))
-        val int_flag    = Bool()
+        val read_io        = new LA32CSRReadIO
+        val write_io       = new LA32CSRWriteIO
+        val raw_datas      = new LA32CSR_RawData
+        val timer64_o      = UInt(64.W)
+        val excp_info      = Flipped(ValidIO(new LA32ExceptionInfo))
+        val ertn_commit    = Input(Bool())
+        val tlbrd_commit   = Input(Bool())
+        val tlbwr_commit   = Input(Bool())
+        val tlbfill_commit = Input(Bool())
+        val tlbwr_wdata    = new TLBWritePort(TLB_NUM)
+        val tlbrd_result   = Input(new TLBEntry)
+        val interrupt      = Input(UInt(8.W))
+        val int_flag       = Bool()
     })
 
     val la32_csrs = csr_defns.map { case (addr, csr_type) => (addr, RegInit(csr_type().initData.asTypeOf(csr_type()))) }
@@ -72,6 +78,10 @@ class LA32CSRRegfiles extends MkModule {
             csr.write(io.write_io.wdata)
         }
     }
+
+    val stable_cnt = RegInit(0.U(64.W))
+    stable_cnt   := stable_cnt + 1.U
+    io.timer64_o := stable_cnt
 
     // TIMER
     val tcfg  = csr_table(TCFG)
@@ -152,6 +162,10 @@ class LA32CSRRegfiles extends MkModule {
     when(io.ertn_commit) {
         crmd.PLV := prmd.PPLV
         crmd.IE  := prmd.PIE
+        when(estat.Ecode === 0x3f.U) {
+            crmd.PG := 1.B
+            crmd.DA := 0.B
+        }
     }
 
     // PGD read/write
@@ -169,7 +183,61 @@ class LA32CSRRegfiles extends MkModule {
         }
     }
 
-    val stable_cnt = RegInit(0.U(64.W))
-    stable_cnt   := stable_cnt + 1.U
-    io.timer64_o := stable_cnt
+    // TLB-related CSR
+    val tlbehi = csr_table(TLBEHI)
+    val tlblo0 = csr_table(TLBELO0)
+    val tlblo1 = csr_table(TLBELO1)
+    val tlbidx = csr_table(TLBIDX)
+    val asid   = csr_table(ASID)
+
+    val excp_tlb = io.excp_info.valid && MuxLookup(io.excp_info.bits.extype, false.B)(
+        Seq(
+            LA32ExceptionType.TLBR.enum_no -> true.B,
+            LA32ExceptionType.PIL.enum_no  -> true.B,
+            LA32ExceptionType.PIS.enum_no  -> true.B,
+            LA32ExceptionType.PPI.enum_no  -> true.B,
+            LA32ExceptionType.PME.enum_no  -> true.B,
+            LA32ExceptionType.PIF.enum_no  -> true.B
+        )
+    )
+
+    // TLB-related exception
+    when(excp_tlb) {
+        tlbehi.write(io.excp_info.bits.badv)
+    }
+
+    // tlbrd
+    when(io.tlbrd_commit) {
+        val tlb_v = io.tlbrd_result.e
+        tlbidx.NE   := !tlb_v
+        tlbidx.PS   := Mux(tlb_v, io.tlbrd_result.ps, 0.U)
+        tlbehi.VPPN := Mux(tlb_v, io.tlbrd_result.vppn, 0.U)
+        tlblo0.writeFromTlb(Mux(tlb_v, io.tlbrd_result, 0.U.asTypeOf(new TLBEntry)), odd_page = 0)
+        tlblo1.writeFromTlb(Mux(tlb_v, io.tlbrd_result, 0.U.asTypeOf(new TLBEntry)), odd_page = 1)
+        asid.ASID := Mux(tlb_v, io.tlbrd_result.asid, 0.U)
+    }
+
+    // tlbwr
+    io.tlbwr_wdata := 0.U.asTypeOf(io.tlbwr_wdata)
+    when(io.tlbwr_commit | io.tlbfill_commit) {
+        val wr_entry = Wire(new TLBEntry)
+        wr_entry.asid := asid.ASID
+        wr_entry.e    := Mux(estat.Ecode === 0x3f.U, true.B, !tlbidx.NE)
+        wr_entry.g    := tlblo0.G && tlblo1.G
+        wr_entry.ps   := tlbidx.PS
+        wr_entry.vppn := tlbehi.VPPN
+        for ((page, tlblo) <- wr_entry.page_table.zip(Seq(tlblo0, tlblo1))) {
+            page.d   := tlblo.D
+            page.mat := tlblo.MAT
+            page.plv := tlblo.PLV
+            page.ppn := tlblo.PPN
+            page.v   := tlblo.V
+        }
+
+        val random_index = stable_cnt(log2Ceil(TLB_NUM) - 1, 0)
+        io.tlbwr_wdata.index := Mux(io.tlbwr_commit, tlbidx.Index, random_index)
+        io.tlbwr_wdata.wdata := wr_entry
+        io.tlbwr_wdata.wen   := true.B
+    }
+
 }

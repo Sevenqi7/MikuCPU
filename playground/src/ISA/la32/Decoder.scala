@@ -34,7 +34,7 @@ abstract trait DecodeConstants {
     def Y = BitPat("b1")
 
     def decodeDefault: List[BitPat] = /*
-           regWen   src0      src1       src2     FuncUnit
+           regWen   src2      src1       src0     FuncUnit
              |       |         |          |          |            operation
              |       |         |          |          |                |        dest_rj
              |       |         |          |          |                |           |       SelImm
@@ -76,14 +76,14 @@ class LA32DecoderUnit extends MkModule with DecodeConstants {
 
     // Since CSRXCHG has the same instruction code with CSRRD & CSRWR except its rd field not equal to 0 or 1,
     // and the decoder api in chisel3.experimental we use requires all input BitPat are orthogonal to each other,
-    // we have to use ListLookup to independently handle CSR instruction here.
-    val decoded_inst     = decoder(io.raw_inst, la32_decode_map).asTypeOf(new DecodedInst)
-    val decoded_csr_inst =
+    // we have to use ListLookup to independently handle some instructions here.
+    val decoded_inst      = decoder(io.raw_inst, la32_decode_map).asTypeOf(new DecodedInst)
+    val decoded_misc_inst =
         ListLookup(io.raw_inst, List.fill(decodeDefault.length)(0.U), LAMiscDecoder.decodeTable)
             .reduce(_ ## _).asTypeOf(new DecodedInst)
-    val csr_inst_flag    = decoded_csr_inst.asUInt =/= 0.U
+    val csr_inst_flag     = decoded_misc_inst.asUInt =/= 0.U
 
-    io.decoded_inst := Mux(csr_inst_flag, decoded_csr_inst, decoded_inst)
+    io.decoded_inst := Mux(csr_inst_flag, decoded_misc_inst, decoded_inst)
 }
 
 //format: off
@@ -175,7 +175,12 @@ object LAMiscDecoder extends DecodeConstants {
         CSRXCHG ->  List(Y, SrcType.imm , SrcType.reg , SrcType.reg , FuType.csr , CSROpType.csrxchg , N, SelImm.IMM_S14),
         SYSCALL ->  List(Y, SrcType.imm , SrcType.none, SrcType.none, FuType.misc, MiscOpType.syscall, N, SelImm.X),
         BREAK   ->  List(Y, SrcType.imm , SrcType.none, SrcType.none, FuType.misc, MiscOpType.break  , N, SelImm.X),
-        ERTN    ->  List(N, SrcType.none, SrcType.none, SrcType.none, FuType.misc, MiscOpType.ertn   , N, SelImm.X)
+        ERTN    ->  List(N, SrcType.none, SrcType.none, SrcType.none, FuType.misc, MiscOpType.ertn   , N, SelImm.X),
+        TLBSRCH ->  List(N, SrcType.none, SrcType.none, SrcType.none, FuType.csr , CSROpType.tlbsrch , N, SelImm.X),
+        TLBRD   ->  List(N, SrcType.none, SrcType.none, SrcType.none, FuType.csr , CSROpType.tlbrd   , N, SelImm.X),
+        TLBWR   ->  List(N, SrcType.none, SrcType.none, SrcType.none, FuType.csr , CSROpType.tlbwr   , N, SelImm.X),
+        TLBFILL ->  List(N, SrcType.none, SrcType.none, SrcType.none, FuType.csr , CSROpType.tlbfill , N, SelImm.X),
+        INVTLB  ->  List(N, SrcType.reg , SrcType.reg , SrcType.none, FuType.csr , CSROpType.invtlb  , N, SelImm.X),
     )
 }
 // format: on

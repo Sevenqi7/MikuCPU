@@ -189,6 +189,7 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
     val cacop_store_tag = (req_cacop_func === "b00".U) & req_cacop_en
     val cacop_idx_inv   = (req_cacop_func === "b01".U) & req_cacop_en
     val cacop_hit_inv   = (req_cacop_func === "b10".U) & req_cacop_en
+    val cacop_inv_way   = req_addr(log2Ceil(wayNum) - 1, 0)
 
     // val replace_way  = RegEnable(LFSR(8)(log2Ceil(wayNum) - 1, 0), state === sReplace)
     // SRAM output
@@ -212,7 +213,7 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
     val tagv_out    = VecInit((0 until wayNum).map(tagv => tagv_ram(tagv).dout.asTypeOf(new TagvBundle(tagWidth))))
     // val real_tag    = req_tag
     val cache_miss  = RegInit(false.B)
-    val real_tag    = Mux(req_cacop_en | cache_miss, req_tag, ptag)
+    val real_tag    = Mux((req_cacop_en | cache_miss) && !req_uncached, req_tag, ptag)
     val total_hits  = VecInit((0 until wayNum).map(i => tagv_out(i).valid && (tagv_out(i).tag === real_tag)))
     val hit         = total_hits.reduce(_ || _) && (state === sLookup) && !req_cacop_en
     val hit_way     = OHToUInt(total_hits)
@@ -228,7 +229,7 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
     val total_way_valids = VecInit(tagv_out.map(_.valid))
     val idle_way_exist   = !total_way_valids.reduce(_ & _)
     val idle_way         = PriorityEncoder(total_way_valids)
-    when((state === sMiss) && !req_uncached) {
+    when((state === sLookup) && !req_uncached) {
         replace_way := Mux(idle_way_exist, idle_way, LFSR(4)(log2Ceil(wayNum) - 1, 0))
     }
 
@@ -236,7 +237,7 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
 
     val wreq_way = RegInit(0.U(log2Ceil(wayNum).W))
 
-    cache_ready := (state === sIdle) || ((state === sLookup) && hit && !war_stall)
+    cache_ready := (state === sIdle) || ((state === sLookup) && hit && !war_stall && !req_uncached)
 
     switch(state) {
         // sIdle:
@@ -264,13 +265,14 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
                        3. receive another valid cached request, keep looking up in cache
                        4. cache miss
                      */
+
                     (req_uncached | req_cacop_en, sMiss),
                     (hit & war_stall, sLookup),
                     (hit & io.req.valid, sLookup),
                     (!hit, sMiss)
                 )
             )
-            when(!hit & !req_cacop_en) {
+            when((!hit & !req_cacop_en)) {
                 cache_miss := !hit
                 req_tag    := real_tag
             }
@@ -338,9 +340,13 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
             }.otherwise {
                 state        := sIdle
                 when(cacop_store_tag || cacop_idx_inv) {
-                    val way = req_addr(log2Ceil(wayNum) - 1, 0)
-                    tagv_ram(way).din := 0.U
-                    tagv_ram(way).wen := true.B
+                    tagv_ram(cacop_inv_way).din := 0.U
+                    tagv_ram(cacop_inv_way).wen := true.B
+                    // if (!readOnly) {
+                    //     when(cacop_store_tag) {
+                    //         dirty_bits(way)(req_idx) := 0.B
+                    //     }
+                    // }
                 }
                 when(cacop_hit_inv) {
                     tagv_ram(hit_way_r).din := 0.U
@@ -411,12 +417,21 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
         val dreq_uncached = RegInit(false.B)
         val send_cnt      = RegInit(0.U(log2Ceil(lineWidth).W))
 
+        val dirty_way   = MuxCase(
+            replace_way,
+            Seq(
+                cacop_hit_inv -> hit_way_r,
+                cacop_idx_inv -> cacop_inv_way
+            )
+        )
+        val dirty_way_v = tagv_ram(dirty_way).dout.asTypeOf(new TagvBundle(tagWidth)).valid
+
         dstate_idle := (dstate === dsIdle)
-        when((state === sMiss) && dirty_bits(replace_way)(req_idx)) {
+        when((state === sMiss) && dirty_bits(dirty_way)(req_idx) && dirty_way_v && !req_uncached) {
             for (i <- 0 until WORDS_PER_LINE) {
-                dreq_data(i) := data_ram(replace_way)(i).dout
+                dreq_data(i) := data_ram(dirty_way)(i).dout
             }
-            dreq_addr     := Cat(Seq(tagv_ram(replace_way).dout, req_idx, 0.U(4.W)))
+            dreq_addr     := Cat(Seq(tagv_ram(dirty_way).dout, req_idx, 0.U(4.W)))
             dreq_wtype    := "b10".U
             dreq_uncached := false.B
         }.elsewhen((state === sMiss) && req_uncached && req_wr && dstate_idle) {
@@ -428,10 +443,15 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
 
         switch(dstate) {
             is(dsIdle) {
-                when((state === sMiss) && req_uncached && req_wr) {
+                when((state === sMiss) && ((req_uncached && req_wr) || cacop_hit_inv || cacop_idx_inv)) {
+                    // uncached write
                     dstate := dsReq
+                    when(req_cacop_en) {
+                        dirty_bits(dirty_way)(req_idx) := false.B
+                    }
                 }
                 when((state === sReplace) && dirty_bits(replace_way)(req_idx)) {
+                    // cache line write-back
                     dstate                           := dsReq
                     dirty_bits(replace_way)(req_idx) := false.B
                 }

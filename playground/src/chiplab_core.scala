@@ -10,13 +10,15 @@ import miku.backend._
 import miku.frontend._
 
 class DifftestIO extends MkBundle {
-    val gpr            = Vec(32, UInt(WORD_WIDTH.W))
+    val gpr               = Vec(32, UInt(WORD_WIDTH.W))
     // val csr         = Vec(LA32CSRRegisters.csr_defns.length, UInt(32.W))
-    val csr            = new LA32CSR_RawData
-    val timer_64       = UInt(64.W)
-    val is_CNTinst     = Bool()
-    val commit_inst    = ValidIO(new IssuedInst)
-    val is_commit_excp = Bool()
+    val csr               = new LA32CSR_RawData
+    val timer_64          = UInt(64.W)
+    val is_CNTinst        = Bool()
+    val commit_inst       = ValidIO(new IssuedInst)
+    val is_commit_excp    = Bool()
+    val is_commit_tlbfill = Bool()
+    val tlbfill_index     = UInt(log2Ceil(TLB_NUM).W)
 }
 
 class core_top extends RawModule with HasMkParams {
@@ -154,8 +156,8 @@ class core_top extends RawModule with HasMkParams {
             DifftestInstrCommit.io.valid         := DelayN(diff_info.commit_inst.valid, delay_cycles)
             DifftestInstrCommit.io.pc            := DelayN(diff_info.commit_inst.bits.sbe.br_info.bits.pc, delay_cycles)
             DifftestInstrCommit.io.instr         := DelayN(diff_info.commit_inst.bits.sbe.raw_inst.get, delay_cycles)
-            DifftestInstrCommit.io.is_TLBFILL    := DelayN(false.B, delay_cycles)
-            DifftestInstrCommit.io.TLBFILL_index := DelayN(0.U, delay_cycles)
+            DifftestInstrCommit.io.is_TLBFILL    := DelayN(diff_info.is_commit_tlbfill, delay_cycles)
+            DifftestInstrCommit.io.TLBFILL_index := DelayN(diff_info.tlbfill_index, delay_cycles)
             DifftestInstrCommit.io.is_CNTinst    := DelayN(diff_info.is_CNTinst, delay_cycles)
             DifftestInstrCommit.io.timer_64_value := DelayN(diff_info.commit_inst.bits.sbe.result, delay_cycles)
             DifftestInstrCommit.io.wen       := DelayN(diff_info.commit_inst.bits.sbe.decoded_inst.regwen, delay_cycles)

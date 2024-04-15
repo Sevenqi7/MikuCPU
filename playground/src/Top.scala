@@ -40,6 +40,8 @@ class MkTop extends MkModule {
     val cacop_inter = excute.io.misc_io.cacop_inter
     val icacop_en   = cacop_inter.req.valid && (cacop_inter.dest === 0.U)
     val dcacop_en   = cacop_inter.req.valid && (cacop_inter.dest === 1.U)
+    // val invalid_dest = cacop_inter.req.valid && !icacop_en && !dcacop_en
+    // assert(invalid_dest)
     val cacop_req   = cacop_inter.req
     cacop_req.ready := false.B
 
@@ -88,23 +90,50 @@ class MkTop extends MkModule {
     excute.io.lsu_io.from_csr.dwm(0) := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.DMW0)
     excute.io.lsu_io.from_csr.dwm(1) := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.DMW1)
     excute.io.csr_io.csr_commit      <> issue.io.csr_commit
+    excute.io.csr_io.from_csr.asid   := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.ASID)
+    excute.io.csr_io.from_csr.tlbehi := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.TLBEHI)
+    excute.io.csr_io.from_csr.tlbidx := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.TLBIDX)
+    excute.io.csr_io.tlbsrch         <> DontCare
     excute.io.misc_io.timer64        := csr.io.timer64_o
     excute.io.misc_io.tid            := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.TID)
+    excute.io.misc_io.crmd           := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.CRMD)
     excute.io.flush                  := flush
 
     mmu.io.inst_trans      <> frontend.io.inst_trans
+    mmu.io.data_trans      <> excute.io.csr_io.tlbsrch
     mmu.io.data_trans      <> excute.io.lsu_io.data_trans
-    // mmu.io.inst_trans      <> DontCare
+    mmu.io.data_trans      <> excute.io.misc_io.cacop_trans
+    when(excute.io.csr_io.tlbsrch.valid) {
+        mmu.io.data_trans.valid      := true.B
+        mmu.io.data_trans.vaddr      := excute.io.csr_io.tlbsrch.vaddr
+        mmu.io.data_trans.tlbsrch_en := excute.io.csr_io.tlbsrch.tlbsrch_en
+    }.elsewhen(excute.io.lsu_io.data_trans.valid) {
+        mmu.io.data_trans.valid      := true.B
+        mmu.io.data_trans.vaddr      := excute.io.lsu_io.data_trans.vaddr
+        mmu.io.data_trans.tlbsrch_en := excute.io.lsu_io.data_trans.tlbsrch_en
+    }.elsewhen(excute.io.misc_io.cacop_trans.valid) {
+            mmu.io.data_trans.valid      := true.B
+            mmu.io.data_trans.vaddr      := excute.io.misc_io.cacop_trans.vaddr
+            mmu.io.data_trans.tlbsrch_en := excute.io.misc_io.cacop_trans.tlbsrch_en
+        }
+    assert(!(excute.io.csr_io.tlbsrch.valid & excute.io.lsu_io.data_trans.valid & excute.io.misc_io.cacop_trans.valid))
+    mmu.io.invtlb_port     := excute.io.csr_io.invtlb_inter
+    mmu.io.tlbrd_port      <> excute.io.csr_io.tlbrd
+    mmu.io.tlbwr_port      := csr.io.tlbwr_wdata
     mmu.io.from_csr.asid   := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.ASID)
     mmu.io.from_csr.crmd   := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.CRMD)
     mmu.io.from_csr.dmw(0) := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.DMW0)
     mmu.io.from_csr.dmw(1) := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.DMW1)
 
-    csr.io.read_io     <> excute.io.csr_io.read_io
-    csr.io.write_io    <> excute.io.csr_io.write_io
-    csr.io.excp_info   := issue.io.excp_info
-    csr.io.ertn_commit := issue.io.ertn_commit
-    csr.io.interrupt   := 0.U // TODO: connect with external interrupt
+    csr.io.read_io        <> excute.io.csr_io.read_io
+    csr.io.write_io       <> excute.io.csr_io.write_io
+    csr.io.excp_info      := issue.io.excp_info
+    csr.io.ertn_commit    := issue.io.ertn_commit
+    csr.io.tlbrd_commit   := excute.io.csr_io.tlbrd_commit
+    csr.io.tlbrd_result   := excute.io.csr_io.tlbrd_result
+    csr.io.tlbwr_commit   := excute.io.csr_io.tlbwr_commit
+    csr.io.tlbfill_commit := excute.io.csr_io.tlbfill_commit
+    csr.io.interrupt      := 0.U // TODO: connect with external interrupt
 
     when(dcacop_en && dcache.io.req.ready) {
         excute.io.lsu_io.cache_req.ready := false.B
@@ -121,11 +150,13 @@ class MkTop extends MkModule {
     io.axi           <> axi_arb.io.out
 
     if (DIFFTEST_MODE) {
-        io.diff.get.commit_inst    := issue.io.diff.get.commit_inst
-        io.diff.get.gpr            := issue.io.diff.get.gpr
-        io.diff.get.is_CNTinst     := issue.io.diff.get.is_CNTinst
-        io.diff.get.is_commit_excp := issue.io.diff.get.is_commit_excp
-        io.diff.get.timer_64       := csr.io.timer64_o
+        io.diff.get.commit_inst       := issue.io.diff.get.commit_inst
+        io.diff.get.gpr               := issue.io.diff.get.gpr
+        io.diff.get.is_CNTinst        := issue.io.diff.get.is_CNTinst
+        io.diff.get.is_commit_excp    := issue.io.diff.get.is_commit_excp
+        io.diff.get.is_commit_tlbfill := excute.io.csr_io.tlbfill_commit
+        io.diff.get.tlbfill_index     := mmu.io.tlbwr_port.index
+        io.diff.get.timer_64          := csr.io.timer64_o
 
         val csr_types = LA32CSRRegisters.csr_defns.map(_._2)
         io.diff.get.csr := csr.io.raw_datas

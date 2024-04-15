@@ -66,8 +66,9 @@ class MkFrontend extends MkModule {
     val dmw_hit        = dmw_total_hits.reduce(_ || _)
     val dmw_hit_idx    = OHToUInt(dmw_total_hits)
     val tlb_resp       = io.inst_trans.tlb_resp
-    io.inst_trans.vaddr := ifu.io.stage_info.s0.bits.pc
-    io.inst_trans.valid := ifu.io.stage_info.s0.valid
+    io.inst_trans.vaddr      := ifu.io.stage_info.s0.bits.pc
+    io.inst_trans.valid      := ifu.io.stage_info.s0.valid
+    io.inst_trans.tlbsrch_en := false.B
 
     to_icache.bits.wr         := 0.B
     to_icache.bits.vaddr      := ifu.io.stage_info.s0.bits.pc
@@ -95,4 +96,6 @@ class MkFrontend extends MkModule {
     bpu.io.update             := io.update
     ifu.io.npc_sel_info       := npc_set
     ifu.io.inst_queue_full    := io.inst_queue_full
+    ifu.io.tlb_resp           := io.inst_trans.tlb_resp
+    ifu.io.tlb_excp_v         := pg_mode & !dmw_hit
 }

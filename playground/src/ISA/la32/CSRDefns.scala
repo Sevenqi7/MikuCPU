@@ -160,6 +160,14 @@ class LA32CSR_Tlbelo extends LA32CSRBundle {
 
     def rdata                     = Cat(UEXT(PPN, 24), 0.B, G, MAT, PLV, D, V)
     def getRealWdata(wdata: UInt) = Cat(wdata(VADDR_WIDTH - 5, 8), wdata(6, 0))
+    def writeFromTlb(entry: TLBEntry, odd_page: Int): Unit = {
+        this.G   := entry.g
+        this.PPN := entry.page_table(odd_page).ppn
+        this.MAT := entry.page_table(odd_page).mat
+        this.PLV := entry.page_table(odd_page).plv
+        this.D   := entry.page_table(odd_page).d
+        this.V   := entry.page_table(odd_page).v
+    }
 }
 
 // 0x18: ASID

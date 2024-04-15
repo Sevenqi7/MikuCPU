@@ -25,7 +25,11 @@ class IDUIO extends MkBundle {
 class InstQueueEntry extends MkBundle {
     val pc        = UInt(VADDR_WIDTH.W)
     val inst      = UInt(INST_BITS.W)
-    val excp_adef = Bool()
+    val excp_flag = new Bundle {
+        val adef = Bool()
+        // val tlbr = Bool()
+        val pif  = Bool()
+    }
 }
 
 class IDU extends MkModule {
@@ -46,14 +50,15 @@ class IDU extends MkModule {
     when(flush_valid) {
         issue_entry_r := 0.U.asTypeOf(ValidIO(new IssueEntry))
     }.elsewhen(io.to_issue.ready) {
-        import LA32ExceptionType._
+        val excp_flag = inst_queue.io.out.front_data.excp_flag
         issue_entry_r.bits.decoded_inst := decoder.io.decoded_inst
         issue_entry_r.bits.inst         := inst_queue.io.out.front_data.inst
         issue_entry_r.bits.pc           := inst_queue.io.out.front_data.pc
         issue_entry_r.bits.exception    := MuxCase(
-            NONE.enum_no,
+            LA32ExceptionType.NONE.enum_no,
             Seq(
-                inst_queue.io.out.front_data.excp_adef -> ADEF.enum_no
+                excp_flag.adef -> LA32ExceptionType.ADEF.enum_no,
+                excp_flag.pif  -> LA32ExceptionType.PIF.enum_no
             )
         )
         issue_entry_r.valid             := !inst_queue.io.out.empty

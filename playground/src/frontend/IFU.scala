@@ -33,6 +33,8 @@ class IFUIO extends MkBundle {
     val stage_info      = new IFUStageInfo()
     val npc_sel_info    = Flipped(new NpcSelInfo)
     val inst_queue_full = Input(Bool())
+    val tlb_resp        = Flipped(new TLBSearchResp(TLB_NUM))
+    val tlb_excp_v      = Input(Bool())
 }
 
 class IFU extends MkModule {
@@ -58,30 +60,36 @@ class IFU extends MkModule {
         (npc_src.exception.valid   -> npc_src.exception.bits.entry),
         (npc_src.ertn_target.valid -> npc_src.ertn_target.bits.era),
         (mispred                   -> npc_src.pred_check.bits.target),
-        (npc_src.pred_result.taken -> npc_src.pred_result.target)
+        (npc_src.pred_result.taken -> npc_src.pred_result.target),
+        (io.inst_queue_full        -> s1_pc)
     )
     flush_slot.io.in.clear := false.B
     flush_slot.io.in.enq_data  := MuxCase(DontCare, npc_flush)
     flush_slot.io.in.enq_valid := npc_flush.map(_._1).reduce(_ || _) && !s0_valid
     flush_slot.io.in.deq_valid := !flush_slot.io.out.empty & s0_valid
 
-    val npc_gen      = npc_flush :+ (!flush_slot.io.out.empty -> flush_slot.io.out.front_data)
-    val next_pc      = MuxCase(s1_pc + 4.U, npc_gen)
-    val s0_excp_adef = s0_pc(0) | s0_pc(1)
-    val s1_excp_adef = s1_pc(0) | s1_pc(1)
+    val npc_gen = npc_flush :+ (!flush_slot.io.out.empty -> flush_slot.io.out.front_data)
+    val next_pc = MuxCase(s1_pc + 4.U, npc_gen)
+    val s0_excp = DontCare
+    val s1_excp = WireInit(0.U.asTypeOf(io.stage_info.s1.bits.excp_flag))
+    s1_excp.adef := s1_pc(0) | s1_pc(1)
+    s1_excp.pif  := io.tlb_excp_v && io.tlb_resp.found && !io.tlb_resp.result.v
+
     s0_pc    := next_pc
-    s0_valid := io.icache_msg.addr_ok
+    s0_valid := io.icache_msg.addr_ok & !io.inst_queue_full
     when(s0_valid) {
         s1_pc := s0_pc
     }
-    s1_valid := (io.icache_msg.data_ok || s1_excp_adef) & !npc_flush.map(_._1).reduce(_ || _) & flush_slot.io.out.empty
+
+    s1_valid := (io.icache_msg.data_ok || (s1_excp.asUInt > 0.U)) & !npc_flush
+        .map(_._1).reduce(_ || _) & flush_slot.io.out.empty & !io.inst_queue_full
 
     io.stage_info.s0.bits.pc        := s0_pc
     io.stage_info.s0.bits.inst      := DEBUG_MAGICNUM.U
-    io.stage_info.s0.bits.excp_adef := s0_excp_adef
+    io.stage_info.s0.bits.excp_flag := s0_excp
     io.stage_info.s0.valid          := s0_valid
     io.stage_info.s1.bits.pc        := s1_pc
     io.stage_info.s1.bits.inst      := s1_inst
-    io.stage_info.s1.bits.excp_adef := s1_excp_adef
+    io.stage_info.s1.bits.excp_flag := s1_excp
     io.stage_info.s1.valid          := s1_valid
 }

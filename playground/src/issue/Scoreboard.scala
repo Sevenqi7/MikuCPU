@@ -149,7 +149,7 @@ class Scoreboard extends MkModule {
         sb_mem(commit_ptr).bits.executed := false.B
 
         // exception check
-        ex_valid   := sb_mem(commit_ptr).bits.exception =/= LA32ExceptionType.NONE.enum_no | int_flag
+        ex_valid   := (sb_mem(commit_ptr).bits.exception =/= LA32ExceptionType.NONE.enum_no) | int_flag
         ertn_valid := (sb_mem(commit_ptr).bits.decoded_inst.fuoptype === MiscOpType.ertn) &&
             (sb_mem(commit_ptr).bits.decoded_inst.futype === FuType.misc)
 
@@ -165,14 +165,12 @@ class Scoreboard extends MkModule {
             }
         }
     }
+    val badv_from_pc = Seq(LA32ExceptionType.ADEF, LA32ExceptionType.PIF)
+        .map(_.enum_no === sb_mem(commit_ptr).bits.exception).reduce(_ || _)
     io.excp_info.valid       := ex_valid
     io.excp_info.bits.extype := Mux(!int_flag, sb_mem(commit_ptr).bits.exception, LA32ExceptionType.INT.enum_no)
     io.excp_info.bits.pc     := sb_mem(commit_ptr).bits.br_info.bits.pc
-    io.excp_info.bits.badv   := MuxLookup(sb_mem(commit_ptr).bits.exception, sb_mem(commit_ptr).bits.result)(
-        Seq(
-            LA32ExceptionType.ADEF.enum_no -> sb_mem(commit_ptr).bits.br_info.bits.pc
-        )
-    )
+    io.excp_info.bits.badv := Mux(badv_from_pc, sb_mem(commit_ptr).bits.br_info.bits.pc, sb_mem(commit_ptr).bits.result)
 
     // write-back from exu
     for (wb <- io.wb_data) {

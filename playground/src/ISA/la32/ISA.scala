@@ -120,12 +120,16 @@ object LSUOpType {
 }
 
 object CSROpType {
-    def num = 3
+    def num = 7
 
-    def csrrd   = "b00".U(log2Ceil(MaxOpNum).W)
-    def csrwr   = "b01".U(log2Ceil(MaxOpNum).W)
-    def csrxchg = "b10".U(log2Ceil(MaxOpNum).W)
-
+    def csrrd   = "b000".U(log2Ceil(MaxOpNum).W)
+    def csrwr   = "b001".U(log2Ceil(MaxOpNum).W)
+    def csrxchg = "b010".U(log2Ceil(MaxOpNum).W)
+    def tlbsrch = "b011".U(log2Ceil(MaxOpNum).W)
+    def tlbrd   = "b100".U(log2Ceil(MaxOpNum).W)
+    def tlbwr   = "b101".U(log2Ceil(MaxOpNum).W)
+    def tlbfill = "b110".U(log2Ceil(MaxOpNum).W)
+    def invtlb  = "b111".U(log2Ceil(MaxOpNum).W)
     def apply() = UInt(log2Ceil(num).W)
 }
 
@@ -201,11 +205,17 @@ object LA32Instructions {
     def PCADDU12I = BitPat("b00011 10??? ????? ?? ????? ????? ?????")
     def PCADDU18I = BitPat("b00011 11??? ????? ?? ????? ????? ?????")
 
-    // ! CSR is not supported yet
+    // CSR
     def CSRRD   = BitPat("b00000 100?? ????? ?? ????? 00000 ?????")
     def CSRWR   = BitPat("b00000 100?? ????? ?? ????? 00001 ?????")
     def CSRXCHG = BitPat("b00000 100?? ????? ?? ????? ????? ?????")
-    // ! TLB is not supported yet
+
+    // TLB
+    def TLBSRCH = BitPat("b00000 11001 00100 00 01010 00000 00000")
+    def TLBRD   = BitPat("b00000 11001 00100 00 01011 00000 00000")
+    def TLBWR   = BitPat("b00000 11001 00100 00 01100 00000 00000")
+    def TLBFILL = BitPat("b00000 11001 00100 00 01101 00000 00000")
+    def INVTLB  = BitPat("b00000 11001 00100 11 ????? ????? ?????")
 
     def RDCNTIDW = BitPat("b00000 00000 00000 00 11000 ????? 00000")
     def RDCNTVLW = BitPat("b00000 00000 00000 00 11000 00000 ?????")
