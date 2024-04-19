@@ -131,20 +131,33 @@ class CSRBuffer extends BaseFunctionUnit {
         tlbsrch_wdata.NE := 1.B
     }
 
-    csr_wdata_r  := MuxLookup(io.in.bits.optype, DEBUG_MAGICNUM.U)(
-        Seq(
-            csrwr   -> rd_data,
-            csrxchg -> xchg_wdata
+    when(io.in.valid & io.in.ready) {
+        csr_wdata_r  := MuxLookup(io.in.bits.optype, DEBUG_MAGICNUM.U)(
+            Seq(
+                csrwr   -> rd_data,
+                csrxchg -> xchg_wdata
+            )
         )
-    )
-    csr_wvalid_r := io.in.valid && io.in.ready && !inst_excp && MuxLookup(io.in.bits.optype, false.B)(
-        Seq(
-            csrrd   -> false.B,
-            csrwr   -> true.B,
-            csrxchg -> true.B,
-            tlbsrch -> true.B
+        csr_wvalid_r := !inst_excp && MuxLookup(io.in.bits.optype, false.B)(
+            Seq(
+                csrrd   -> false.B,
+                csrwr   -> true.B,
+                csrxchg -> true.B,
+                tlbsrch -> true.B
+            )
         )
-    )
+    }.elsewhen(commit_ack) {
+        csr_wvalid_r := false.B
+    }
+
+    // csr_wvalid_r := io.in.valid && io.in.ready && !inst_excp && MuxLookup(io.in.bits.optype, false.B)(
+    //     Seq(
+    //         csrrd   -> false.B,
+    //         csrwr   -> true.B,
+    //         csrxchg -> true.B,
+    //         tlbsrch -> true.B
+    //     )
+    // )
 
     csr_io.write_io.waddr := csr_addr_r
     csr_io.write_io.wen   := csr_wvalid_r & commit_ack
