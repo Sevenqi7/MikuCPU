@@ -100,21 +100,23 @@ object JumpOpType {
 }
 
 object LSUOpType {
-    def num = 8
+    def num = 10
 
-    def isLoadType(optype: UInt)  = optype(2, 0) >= ldb
-    def isStoreType(optype: UInt) = optype(2, 0) <= stw
+    def isLoadType(optype: UInt)  = optype(3, 0) >= ldb
+    def isStoreType(optype: UInt) = optype(3, 0) <= scw
 
-    def ldb  = "b011".U(log2Ceil(MaxOpNum).W)
-    def ldh  = "b100".U(log2Ceil(MaxOpNum).W)
-    def ldw  = "b101".U(log2Ceil(MaxOpNum).W)
-    def ldbu = "b110".U(log2Ceil(MaxOpNum).W)
-    def ldhu = "b111".U(log2Ceil(MaxOpNum).W)
-    def stb  = "b000".U(log2Ceil(MaxOpNum).W)
-    def sth  = "b001".U(log2Ceil(MaxOpNum).W)
-    def stw  = "b010".U(log2Ceil(MaxOpNum).W)
+    def ldb  = "b1000".U(log2Ceil(MaxOpNum).W)
+    def ldh  = "b1001".U(log2Ceil(MaxOpNum).W)
+    def ldw  = "b1010".U(log2Ceil(MaxOpNum).W)
+    def ldbu = "b1011".U(log2Ceil(MaxOpNum).W)
+    def ldhu = "b1100".U(log2Ceil(MaxOpNum).W)
+    def llw  = "b1101".U(log2Ceil(MaxOpNum).W)
+    def stb  = "b0000".U(log2Ceil(MaxOpNum).W)
+    def sth  = "b0001".U(log2Ceil(MaxOpNum).W)
+    def stw  = "b0010".U(log2Ceil(MaxOpNum).W)
+    def scw  = "b0011".U(log2Ceil(MaxOpNum).W)
 
-    def X = BitPat("b???")
+    def X = BitPat("b????")
 
     def apply() = UInt(log2Ceil(num).W)
 }
@@ -134,7 +136,7 @@ object CSROpType {
 }
 
 object MiscOpType {
-    def num = 9
+    def num = 10
 
     def none    = "b0000".U(log2Ceil(MaxOpNum).W)
     def rdcntid = "b0001".U(log2Ceil(MaxOpNum).W)
@@ -144,6 +146,7 @@ object MiscOpType {
     def syscall = "b0101".U(log2Ceil(MaxOpNum).W)
     def break   = "b0110".U(log2Ceil(MaxOpNum).W)
     def ertn    = "b0111".U(log2Ceil(MaxOpNum).W)
+    def idle    = "b1000".U(log2Ceil(MaxOpNum).W)
     def unknown = "b1111".U(log2Ceil(MaxOpNum).W)
 
     def apply() = UInt(log2Ceil(num).W)
@@ -173,6 +176,9 @@ object LA32Instructions {
     def BREAK   = BitPat("b00000 00000 10101 00 ????? ????? ?????")
     def SYSCALL = BitPat("b00000 00000 10101 10 ????? ????? ?????")
     def ERTN    = BitPat("b00000 11001 00100 00 01110 00000 00000")
+    def IDLE    = BitPat("b00000 11001 00100 01 ????? ????? ?????")
+    def DBAR    = BitPat("b00111 00001 11001 00 ????? ????? ?????")
+    def IBAR    = BitPat("b00111 00001 11001 01 ????? ????? ?????")
 
     def SLLIW = BitPat("b00000 00001 00000 01 ????? ????? ?????")
     def SRLIW = BitPat("b00000 00001 00010 01 ????? ????? ?????")
@@ -195,6 +201,8 @@ object LA32Instructions {
     def STW   = BitPat("b00101 00110 ????? ?? ????? ????? ?????")
     def LDBU  = BitPat("b00101 01000 ????? ?? ????? ????? ?????")
     def LDHU  = BitPat("b00101 01001 ????? ?? ????? ????? ?????")
+    def SCW   = BitPat("b00100 001?? ????? ?? ????? ????? ?????")
+    def LLW   = BitPat("b00100 000?? ????? ?? ????? ????? ?????")
     def CACOP = BitPat("b00000 11000 ????? ?? ????? ????? ?????")
 
     // I20-Type

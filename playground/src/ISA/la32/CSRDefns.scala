@@ -130,7 +130,7 @@ class LA32CSR_Tlbidx(index_wd: Int) extends LA32CSRBundle {
     // RESERVED BITS (30, 30)
     val PS    = UInt(6.W)
     // RESERVED BITS (23, 16)
-    // RESERVED BITS (15, index_wd - 1)
+    // RESERVED BITS (15, index_wd)
     val Index = UInt(index_wd.W)
 
     def rdata                     = Cat(NE, 0.B, PS, 0.U(8.W), UEXT(Index, 16))
@@ -231,7 +231,7 @@ class LA32CSR_Tcfg(timer_wd: Int) extends LA32CSRBundle {
     val Periodic = Bool()
     val En       = Bool()
 
-    def rdata                     = Cat(0.U(timer_wd.W), this.asUInt)
+    def rdata                     = Cat(0.U((32 - timer_wd).W), this.asUInt)
     def getRealWdata(wdata: UInt) = wdata(timer_wd - 1, 0)
 }
 
@@ -262,8 +262,8 @@ class LA32CSR_Llbctl extends LA32CSRBundle {
     val ROLLB = Bool() // read-only
 
     override def wmask            = Cat(1.B, 0.U(2.W))
-    def rdata                     = Cat(Seq(KLO, 0.B, KLO))
-    def getRealWdata(wdata: UInt) = Cat(Seq(KLO, 0.B, ROLLB))
+    def rdata                     = Cat(Seq(KLO, 0.B, ROLLB))
+    def getRealWdata(wdata: UInt) = wdata(2, 0)
 }
 
 // 0x88: TLBRENTRY

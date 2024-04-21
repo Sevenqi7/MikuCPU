@@ -8,6 +8,7 @@ import miku.utils._
 import miku.issue._
 import miku.backend._
 import miku.frontend._
+import org.apache.commons.lang3.builder.Diff
 
 class DifftestIO extends MkBundle {
     val gpr               = Vec(32, UInt(WORD_WIDTH.W))
@@ -141,30 +142,91 @@ class core_top extends RawModule with HasMkParams {
         debug0_wb_rf_wen   := diff_info.commit_inst.bits.sbe.decoded_inst.regwen
         debug0_wb_rf_wnum  := diff_info.commit_inst.bits.sbe.rd_num
 
-        val dest_reg            = Mux(
+        val dest_reg = Mux(
             diff_info.commit_inst.bits.sbe.decoded_inst.dest_rj,
             diff_info.commit_inst.bits.sbe.rj_num,
             diff_info.commit_inst.bits.sbe.rd_num
         )
+
+        val cmt_valid = diff_info.commit_inst.valid
+        val cmt_pc    = diff_info.commit_inst.bits.sbe.br_info.bits.pc
+        val cmt_instr = diff_info.commit_inst.bits.sbe.raw_inst.get
+
         val DifftestInstrCommit = Module(new DifftestInstrCommit)
         withClockAndReset(aclk, !aresetn) {
             val delay_cycles = 1
-            DifftestInstrCommit.io.clock         := aclk
-            DifftestInstrCommit.io.coreid        := 0.U
-            DifftestInstrCommit.io.index         := 0.U
-            DifftestInstrCommit.io.skip          := false.B
-            DifftestInstrCommit.io.valid         := DelayN(diff_info.commit_inst.valid, delay_cycles)
-            DifftestInstrCommit.io.pc            := DelayN(diff_info.commit_inst.bits.sbe.br_info.bits.pc, delay_cycles)
-            DifftestInstrCommit.io.instr         := DelayN(diff_info.commit_inst.bits.sbe.raw_inst.get, delay_cycles)
-            DifftestInstrCommit.io.is_TLBFILL    := DelayN(diff_info.is_commit_tlbfill, delay_cycles)
-            DifftestInstrCommit.io.TLBFILL_index := DelayN(diff_info.tlbfill_index, delay_cycles)
-            DifftestInstrCommit.io.is_CNTinst    := DelayN(diff_info.is_CNTinst, delay_cycles)
+            DifftestInstrCommit.io.clock          := aclk
+            DifftestInstrCommit.io.coreid         := 0.U
+            DifftestInstrCommit.io.index          := 0.U
+            DifftestInstrCommit.io.skip           := false.B
+            DifftestInstrCommit.io.valid          := DelayN(cmt_valid, delay_cycles)
+            DifftestInstrCommit.io.pc             := DelayN(cmt_pc, delay_cycles)
+            DifftestInstrCommit.io.instr          := DelayN(cmt_instr, delay_cycles)
+            DifftestInstrCommit.io.is_TLBFILL     := DelayN(diff_info.is_commit_tlbfill, delay_cycles)
+            DifftestInstrCommit.io.TLBFILL_index  := DelayN(diff_info.tlbfill_index, delay_cycles)
+            DifftestInstrCommit.io.is_CNTinst     := DelayN(diff_info.is_CNTinst, delay_cycles)
             DifftestInstrCommit.io.timer_64_value := DelayN(diff_info.commit_inst.bits.sbe.result, delay_cycles)
             DifftestInstrCommit.io.wen       := DelayN(diff_info.commit_inst.bits.sbe.decoded_inst.regwen, delay_cycles)
             DifftestInstrCommit.io.wdest     := DelayN(dest_reg, delay_cycles)
             DifftestInstrCommit.io.wdata     := DelayN(diff_info.commit_inst.bits.sbe.result, delay_cycles)
             DifftestInstrCommit.io.csr_rstat := DelayN(false.B, delay_cycles)
             DifftestInstrCommit.io.csr_data  := DelayN(0.U, delay_cycles)
+        }
+
+        val optype    = diff_info.commit_inst.bits.sbe.decoded_inst.fuoptype
+        val cmt_ld    =
+            cmt_valid && (diff_info.commit_inst.bits.sbe.decoded_inst.futype === FuType.lsu) &&
+                (LSUOpType.isLoadType(optype))
+        val cmt_st    =
+            cmt_valid && (diff_info.commit_inst.bits.sbe.decoded_inst.futype === FuType.lsu) &&
+                (LSUOpType.isStoreType(optype))
+        val llbit     = diff_info.csr.getTargetCSR(LA32CSRRegisters.LLBCTL).ROLLB
+        val cmt_ld_en = Cat(
+            Seq(
+                0.U(2.W),
+                cmt_ld && (optype === LSUOpType.llw),
+                cmt_ld && (optype === LSUOpType.ldw),
+                cmt_ld && (optype === LSUOpType.ldhu),
+                cmt_ld && (optype === LSUOpType.ldh),
+                cmt_ld && (optype === LSUOpType.ldbu),
+                cmt_ld && (optype === LSUOpType.ldb)
+            )
+        )
+        val cmt_st_en = Cat(
+            Seq(
+                0.U(4.W),
+                cmt_st && (optype === LSUOpType.scw) && llbit,
+                cmt_st && (optype === LSUOpType.stw),
+                cmt_st && (optype === LSUOpType.sth),
+                cmt_st && (optype === LSUOpType.stb)
+            )
+        )
+
+        val vaddr = diff_info.commit_inst.bits.sbe.lsu_diff.get.vaddr
+        val paddr = diff_info.commit_inst.bits.sbe.lsu_diff.get.paddr
+        val wdata = diff_info.commit_inst.bits.sbe.lsu_diff.get.wdata
+
+        val DifftestLoadEvent = Module(new DifftestLoadEvent)
+        withClockAndReset(aclk, !aresetn) {
+            val delay_cycles = 1
+            DifftestLoadEvent.io.clock  := aclk
+            DifftestLoadEvent.io.coreid := 0.U
+            DifftestLoadEvent.io.index  := 0.U
+            DifftestLoadEvent.io.valid  := DelayN(cmt_ld_en, delay_cycles)
+            DifftestLoadEvent.io.vaddr  := DelayN(vaddr, delay_cycles)
+            DifftestLoadEvent.io.paddr  := DelayN(paddr, delay_cycles)
+        }
+
+        val DifftestStoreEvent = Module(new DifftestStoreEvent)
+        withClockAndReset(aclk, !aresetn) {
+            val delay_cycles = 1
+            DifftestStoreEvent.io.clock      := aclk
+            DifftestStoreEvent.io.coreid     := 0.U
+            DifftestStoreEvent.io.index      := 0.U
+            DifftestStoreEvent.io.valid      := DelayN(cmt_st_en, delay_cycles)
+            DifftestStoreEvent.io.storePAddr := DelayN(paddr, delay_cycles)
+            DifftestStoreEvent.io.storeVAddr := DelayN(vaddr, delay_cycles)
+            DifftestStoreEvent.io.storeData  := DelayN(wdata, delay_cycles)
         }
 
         val DifftestTrapEvent = Module(new DifftestTrapEvent)
@@ -409,5 +471,28 @@ class DifftestTrapEvent extends BlackBox {
         val pc       = Input(UInt(63.W))
         val cycleCnt = Input(UInt(63.W))
         val instrCnt = Input(UInt(63.W))
+    })
+}
+
+class DifftestStoreEvent extends BlackBox {
+    val io = IO(new Bundle {
+        val clock      = Input(Clock())
+        val coreid     = Input(UInt(8.W))
+        val index      = Input(UInt(8.W))
+        val valid      = Input(UInt(8.W))
+        val storePAddr = Input(UInt(64.W))
+        val storeVAddr = Input(UInt(64.W))
+        val storeData  = Input(UInt(64.W))
+    })
+}
+
+class DifftestLoadEvent extends BlackBox {
+    val io = IO(new Bundle {
+        val clock  = Input(Clock())
+        val coreid = Input(UInt(8.W))
+        val index  = Input(UInt(8.W))
+        val valid  = Input(UInt(8.W))
+        val paddr  = Input(UInt(64.W))
+        val vaddr  = Input(UInt(64.W))
     })
 }

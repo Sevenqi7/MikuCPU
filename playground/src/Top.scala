@@ -78,6 +78,7 @@ class MkTop extends MkModule {
     issue.io.trans.ready := excute.io.in.ready
     issue.io.wb_data(0)  <> excute.io.out.flu_out
     issue.io.wb_data(1)  <> excute.io.out.lsu_out
+    issue.io.llbit       := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.LLBCTL).ROLLB
     issue.io.int_flag    := csr.io.int_flag
 
     excute.io.in.bits                := issue.io.trans.bits.fuinput
@@ -89,6 +90,8 @@ class MkTop extends MkModule {
     excute.io.lsu_io.from_csr.crmd   := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.CRMD)
     excute.io.lsu_io.from_csr.dwm(0) := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.DMW0)
     excute.io.lsu_io.from_csr.dwm(1) := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.DMW1)
+    excute.io.lsu_io.from_csr.llbctl := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.LLBCTL)
+
     excute.io.csr_io.csr_commit      <> issue.io.csr_commit
     excute.io.csr_io.from_csr.asid   := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.ASID)
     excute.io.csr_io.from_csr.tlbehi := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.TLBEHI)
@@ -103,6 +106,7 @@ class MkTop extends MkModule {
     mmu.io.data_trans      <> excute.io.csr_io.tlbsrch
     mmu.io.data_trans      <> excute.io.lsu_io.data_trans
     mmu.io.data_trans      <> excute.io.misc_io.cacop_trans
+    // TODO: 整理、封装tlbsrch端口选择的代码
     when(excute.io.csr_io.tlbsrch.valid) {
         mmu.io.data_trans.valid      := true.B
         mmu.io.data_trans.vaddr      := excute.io.csr_io.tlbsrch.vaddr
@@ -133,6 +137,8 @@ class MkTop extends MkModule {
     csr.io.tlbrd_result   := excute.io.csr_io.tlbrd_result
     csr.io.tlbwr_commit   := excute.io.csr_io.tlbwr_commit
     csr.io.tlbfill_commit := excute.io.csr_io.tlbfill_commit
+    csr.io.ll_commit      := issue.io.ll_commit
+    csr.io.sc_commit      := issue.io.sc_commit
     csr.io.interrupt      := 0.U // TODO: connect with external interrupt
 
     when(dcacop_en && dcache.io.req.ready) {
@@ -145,8 +151,8 @@ class MkTop extends MkModule {
     dcache.io.resp           <> excute.io.lsu_io.cache_resp
 
     val axi_arb = Module(new PriorityAXIArbiter(2, 32, 32, 5))
-    axi_arb.io.in(0) <> icache.io.axi
-    axi_arb.io.in(1) <> dcache.io.axi
+    axi_arb.io.in(1) <> icache.io.axi
+    axi_arb.io.in(0) <> dcache.io.axi
     io.axi           <> axi_arb.io.out
 
     if (DIFFTEST_MODE) {
@@ -157,6 +163,7 @@ class MkTop extends MkModule {
         io.diff.get.is_commit_tlbfill := excute.io.csr_io.tlbfill_commit
         io.diff.get.tlbfill_index     := mmu.io.tlbwr_port.index
         io.diff.get.timer_64          := csr.io.timer64_o
+        issue.io.lsu_diff.get         := excute.io.lsu_io.lsu_diff.get
 
         val csr_types = LA32CSRRegisters.csr_defns.map(_._2)
         io.diff.get.csr := csr.io.raw_datas

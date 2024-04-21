@@ -15,6 +15,13 @@ import java.util.concurrent.Future
 class ScoreboardEntry extends MkBundle {
     val decoded_inst = new DecodedInst
     val raw_inst     = if (DIFFTEST_MODE) Some(UInt(WORD_WIDTH.W)) else None
+    val lsu_diff     =
+        if (DIFFTEST_MODE) Some(new Bundle {
+            val paddr = UInt(PADDR_WIDTH.W)
+            val vaddr = UInt(VADDR_WIDTH.W)
+            val wdata = UInt(WORD_WIDTH.W)
+        })
+        else None
     val rj_num       = UInt(REG_ADDR_WD.W)
     val rk_num       = UInt(REG_ADDR_WD.W)
     val rd_num       = UInt(REG_ADDR_WD.W)
@@ -47,6 +54,13 @@ class ScoreboardIO extends MkBundle {
     val forward_msg  = new ScoreboardFowardInfo
     val excp_info    = ValidIO(new LA32ExceptionInfo)
     val int_flag     = Input(Bool())
+    val lsu_diff     =
+        if (DIFFTEST_MODE) Some(Flipped(new Bundle {
+            val paddr = UInt(PADDR_WIDTH.W)
+            val vaddr = UInt(VADDR_WIDTH.W)
+            val wdata = UInt(WORD_WIDTH.W)
+        }))
+        else None
 }
 
 class Scoreboard extends MkModule {
@@ -157,13 +171,17 @@ class Scoreboard extends MkModule {
             issue_ptr := commit_ptr + 1.U
             for (i <- 0 until NR_ENTRIES) {
                 for (i <- 0 until NR_ENTRIES) {
-                    // when((commit_ptr + i.U)(TRANS_ID_BITS - 1, 0) < issue_ptr) {
-                    //     sb_mem(i) := 0.U.asTypeOf(ValidIO(new ScoreboardEntry))
-                    // }
                     sb_mem(i) := init_sbe
                 }
             }
         }
+
+        when(sb_mem(commit_ptr).bits.raw_inst.get === LA32Instructions.IBAR) {
+            printf("warning: IBAR excuted\n")
+        }
+        // when(sb_mem(commit_ptr).bits.raw_inst.get === LA32Instructions.DBAR) {
+        //     printf("warning: DBAR excuted\n")
+        // }
     }
     val badv_from_pc = Seq(LA32ExceptionType.ADEF, LA32ExceptionType.PIF)
         .map(_.enum_no === sb_mem(commit_ptr).bits.exception).reduce(_ || _)
@@ -181,30 +199,19 @@ class Scoreboard extends MkModule {
             wb_sbe.bits.result               := wb.bits.result
             wb_sbe.bits.exception            := wb.bits.exception
             wb_sbe.bits.executed             := true.B
+            if (DIFFTEST_MODE) {
+                wb_sbe.bits.lsu_diff.get := io.lsu_diff.get
+            }
             // misprediction flush
             when(wb_sbe.bits.br_info.valid & wb_sbe.bits.br_info.bits.mispred) {
                 issue_ptr := commit_ptr + 1.U
                 for (i <- 0 until NR_ENTRIES) {
-                    // when((commit_ptr + i.U)(TRANS_ID_BITS - 1, 0) < issue_ptr) {
-                    //     sb_mem(i) := 0.U.asTypeOf(ValidIO(new ScoreboardEntry))
-                    // }
                     sb_mem(i) := init_sbe
                 }
             }
         }
         wb.ready := true.B
     }
-
-    // flush
-    // when(io.flush) {
-    //     commit_ptr := 0.U
-    //     issue_ptr  := 0.U
-    //     issued_cnt := 0.U
-    //     for (i <- 0 until NR_ENTRIES) {
-    //         sb_mem(i).valid         := false.B
-    //         sb_mem(i).bits.executed := false.B
-    //     }
-    // }
 
     io.commit_inst.bits.id  := commit_ptr
     io.commit_inst.bits.sbe := sb_mem(commit_ptr).bits

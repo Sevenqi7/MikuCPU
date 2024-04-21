@@ -31,9 +31,11 @@ class PriorityAXIArbiter(num: Int, addrWidth: Int, dataWidth: Int, idBits: Int) 
     val wreq_ongoing_w = Wire(Bool())
     val wreq_ongoing = RegNext(MuxCase(wreq_ongoing_w, Seq(
         (io.out.writeAddr.valid & io.out.writeAddr.ready, 1.B),
-        (io.out.writeResp.valid & io.out.writeResp.ready, 0.B)
+        (io.out.writeData.valid & io.out.writeData.ready & io.out.writeData.bits.last, 0.B)
     )))
     wreq_ongoing_w := wreq_ongoing
+
+    val wreq_addr = RegEnable(io.out.writeAddr.bits.addr, io.out.writeAddr.valid)
     // format: on 
 
     // src1 is the latest filtering result. src2 is the bus that has a ongoiung transaction.
@@ -42,11 +44,14 @@ class PriorityAXIArbiter(num: Int, addrWidth: Int, dataWidth: Int, idBits: Int) 
     val selected_rreq_idx = Mux(rreq_ongoing, rreq_idx_src2, rreq_idx_src1)
 
     val wreq_idx_src1     = PriorityEncoder(wreq_set)
-    val wreq_idx_src2     = RegEnable(wreq_idx_src1, io.out.readAddr.valid & io.out.readAddr.ready & !wreq_ongoing)
+    val wreq_idx_src2     = RegEnable(wreq_idx_src1, io.out.writeAddr.valid & io.out.writeAddr.ready & !wreq_ongoing)
     val selected_wreq_idx = Mux(wreq_ongoing, wreq_idx_src2, wreq_idx_src1)
 
     // read-after-write advernture
-    val raw_adventure = selected_wreq_idx === selected_rreq_idx
+    // By default we assume there is a hazard when the addr to read and the addr to write fall in the same word
+    val raw_hazard = io.in(selected_rreq_idx).readAddr.valid &&
+        (wreq_ongoing || RegNext(io.out.writeAddr.valid)) &&
+        (wreq_addr(addrWidth - 1, 2) === io.in(selected_rreq_idx).readAddr.bits.addr(addrWidth - 1, 2))
 
     for (i <- 0 until num) {
         io.in(i).readAddr.ready      := 0.B
@@ -67,4 +72,9 @@ class PriorityAXIArbiter(num: Int, addrWidth: Int, dataWidth: Int, idBits: Int) 
     io.out.writeAddr <> io.in(selected_wreq_idx).writeAddr
     io.out.writeData <> io.in(selected_wreq_idx).writeData
     io.out.writeResp <> io.in(selected_wreq_idx).writeResp
+
+    when(raw_hazard) {
+        io.in(selected_rreq_idx).readAddr.ready := 0.B
+        io.out.readAddr.valid                   := 0.B
+    }
 }

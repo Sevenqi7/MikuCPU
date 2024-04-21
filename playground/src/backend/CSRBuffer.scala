@@ -109,7 +109,8 @@ class CSRBuffer extends BaseFunctionUnit {
     val wmask      = rj_data
 
     // csr read logic
-    val csr_rdata = csr_io.read_io.rdata
+    val csr_wr_bypass = csr_io.write_io.wen && (csr_io.write_io.waddr === csr_io.read_io.raddr)
+    val csr_rdata = Mux(!csr_wr_bypass, csr_io.read_io.rdata, csr_io.write_io.wdata)
     csr_io.read_io.raddr := csr_addr
 
     // csr write logic

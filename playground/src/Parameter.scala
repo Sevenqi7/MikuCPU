@@ -35,7 +35,7 @@ class MkParams {
     val NR_ENTRIES  = 8
     val NR_WB_PORTS = 2
 
-    val TIMER_WD = 20
+    val TIMER_WD = 32
 
     val DIFFTEST_MODE  = true // used to generate port for difftest
     val RESET_VECTOR   = 0x1bfffffc

@@ -40,6 +40,8 @@ class LA32CSRRegfiles extends MkModule {
         val tlbrd_commit   = Input(Bool())
         val tlbwr_commit   = Input(Bool())
         val tlbfill_commit = Input(Bool())
+        val ll_commit      = Input(Bool())
+        val sc_commit      = Input(Bool())
         val tlbwr_wdata    = new TLBWritePort(TLB_NUM)
         val tlbrd_result   = Input(new TLBEntry)
         val interrupt      = Input(UInt(8.W))
@@ -74,7 +76,7 @@ class LA32CSRRegfiles extends MkModule {
         when(io.read_io.raddr === addr) {
             io.read_io.rdata := csr.rdata
         }
-        when(io.write_io.wen && io.write_io.waddr === addr) {
+        when(io.write_io.wen && (io.write_io.waddr === addr)) {
             csr.write(io.write_io.wdata)
         }
     }
@@ -157,8 +159,8 @@ class LA32CSRRegfiles extends MkModule {
         estat.EsubCode := getEsubCodeByExcpNo(io.excp_info.bits.extype)
     }
 
-    // ERTN handle
-    // val llbctl = csr_table(LLBCTL)
+    // ERTN & LLBIT handle
+    val llbctl = csr_table(LLBCTL)
     when(io.ertn_commit) {
         crmd.PLV := prmd.PPLV
         crmd.IE  := prmd.PIE
@@ -166,6 +168,22 @@ class LA32CSRRegfiles extends MkModule {
             crmd.PG := 1.B
             crmd.DA := 0.B
         }
+
+        llbctl.KLO := 0.B
+        when(!llbctl.KLO) {
+            llbctl.ROLLB := 0.B
+        }
+    }
+
+    when(io.ll_commit) {
+        llbctl.ROLLB := 1.B
+    }.elsewhen(io.sc_commit) {
+        llbctl.ROLLB := 0.B
+    }
+
+    val llbctl_wdata = llbctl.getRealWdata(io.write_io.wdata).asTypeOf(llbctl)
+    when(isWritingCSR(LLBCTL) && llbctl_wdata.WCLLB) {
+        llbctl.ROLLB := 0.B
     }
 
     // PGD read/write

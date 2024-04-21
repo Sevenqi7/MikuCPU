@@ -8,7 +8,6 @@ import miku.utils._
 import miku.backend._
 import miku.frontend._
 import miku.LSUOpType._
-import dataclass.data
 
 class LSUIO extends MkBundle {
     val cache_req    = Decoupled(new CacheReqIO(VADDR_WIDTH, WORD_WIDTH))
@@ -16,9 +15,18 @@ class LSUIO extends MkBundle {
     val store_commit = Flipped(new ReadyValidBundle)
     val data_trans   = Flipped(new AddrTransChannel)
     val from_csr     = Flipped(new Bundle {
-        val crmd = new LA32CSR_Crmd
-        val dwm  = Vec(2, new LA32CSR_Dmw)
+        val crmd   = new LA32CSR_Crmd
+        val dwm    = Vec(2, new LA32CSR_Dmw)
+        val llbctl = new LA32CSR_Llbctl
     })
+
+    val lsu_diff =
+        if (DIFFTEST_MODE) Some(new Bundle {
+            val paddr = UInt(PADDR_WIDTH.W)
+            val vaddr = UInt(VADDR_WIDTH.W)
+            val wdata = UInt(WORD_WIDTH.W)
+        })
+        else None
 }
 
 class StoreQueueEntry extends MkBundle {
@@ -35,13 +43,12 @@ class LSU extends BaseFunctionUnit {
     def getWstrbFromWtype(wtype: UInt, offset: UInt): UInt = {
         ~0.U(4.W) >> (4.U - (1.U << wtype)) << offset(log2Ceil(wordBytes) - 1, 0)
     }
-
+    val is_sc_ll = io.in.bits.optype === scw || io.in.bits.optype === llw
     val rj       = io.in.bits.operand_a
     val rd       = io.in.bits.operand_c
-    val imm_s12  = io.in.bits.operand_b
-    val vaddr    = rj + imm_s12
+    val imm      = io.in.bits.operand_b
+    val vaddr    = Mux(!is_sc_ll, rj + imm, rj + (imm << 2))
     val wdata    = rd
-    // val wtype   = LSUOpType.toWriteMask(io.in.bits.optype)
     val wtype    = io.in.bits.optype(1, 0)
     val uncached = Wire(Bool())
 
@@ -68,6 +75,7 @@ class LSU extends BaseFunctionUnit {
     val load_req   = Wire(Decoupled(new CacheReqIO(VADDR_WIDTH, WORD_WIDTH)))
     val load_resp  = lsu_io.cache_resp
     val load_ready = Wire(Bool())
+    val load_vaddr = RegEnable(vaddr, lstate === lIdle)
     val load_wb    = Wire(Decoupled(new BaseFuOutput))
 
     // TODO: need parameterise
@@ -106,8 +114,9 @@ class LSU extends BaseFunctionUnit {
     val stq_items      = store_queue.io.out.element_vec.get
     val stq_total_hits =
         stq_items.map(st => st.valid && st.bits.addr(VADDR_WIDTH - 1, 2) === load_buf.addr(VADDR_WIDTH - 1, 2))
-    val stq_hit        = stq_total_hits.reduce(_ || _)
-    val stq_hit_item   = stq_items(OHToUInt(stq_total_hits))
+    val stq_hit_en     = (lstate === lReq) && (RegNext(lstate) =/= lReq)
+    val stq_hit        = RegEnable(stq_total_hits.reduce(_ || _), stq_hit_en)
+    val stq_hit_item   = RegEnable(stq_items(OHToUInt(stq_total_hits)), stq_hit_en)
     real_rdata := Mux(
         !stq_hit,
         load_resp.bits.rdata, {
@@ -138,30 +147,32 @@ class LSU extends BaseFunctionUnit {
             }
         }
         is(lReq) {
-            val paddr_v = (RegNext(lstate) =/= lReq) && !load_excp
+            val paddr_v = (RegNext(lstate) =/= lReq)
             load_req.valid         := !load_unalign
             load_req.bits.vaddr    := load_buf.addr
             load_req.bits.wr       := false.B
             load_req.bits.wtype    := 0.U
             load_req.bits.wdata    := 0.U
             load_req.bits.uncached := Mux(paddr_v, uncached, load_buf.uncached)
+            when(load_req.ready) {
+                lstate := lWait
+            }
             when(paddr_v) {
                 load_buf.addr     := lsu_io.data_trans.paddr
                 load_buf.uncached := uncached
-            }
-            when(load_excp) {
-                lstate             := lWriteback
-                load_buf.exception := MuxCase(
-                    LA32ExceptionType.INT.enum_no, // error
-                    Seq(
-                        load_unalign  -> LA32ExceptionType.ALE.enum_no,
-                        load_unmatch  -> LA32ExceptionType.TLBR.enum_no,
-                        load_page_inv -> LA32ExceptionType.PIL.enum_no,
-                        load_page_pi  -> LA32ExceptionType.PPI.enum_no
+                when(load_excp) {
+                    load_buf.addr      := load_buf.addr
+                    lstate             := lWriteback
+                    load_buf.exception := MuxCase(
+                        LA32ExceptionType.INT.enum_no, // error
+                        Seq(
+                            load_unalign  -> LA32ExceptionType.ALE.enum_no,
+                            load_unmatch  -> LA32ExceptionType.TLBR.enum_no,
+                            load_page_inv -> LA32ExceptionType.PIL.enum_no,
+                            load_page_pi  -> LA32ExceptionType.PPI.enum_no
+                        )
                     )
-                )
-            }.elsewhen(load_req.ready) {
-                lstate := lWait
+                }
             }
         }
         is(lWait) {
@@ -173,7 +184,8 @@ class LSU extends BaseFunctionUnit {
                         ldbu -> UEXT(ldbu_result, WORD_WIDTH),
                         ldh  -> SEXT(ldhu_result, WORD_WIDTH),
                         ldhu -> UEXT(ldhu_result, WORD_WIDTH),
-                        ldw  -> ldw_result
+                        ldw  -> ldw_result,
+                        llw  -> ldw_result
                     )
                 )
                 lstate         := lWriteback
@@ -240,16 +252,17 @@ class LSU extends BaseFunctionUnit {
     val sIdle :: sReq :: Nil = Enum(2)
     val sstate               = RegInit(sIdle)
 
-    store_req.valid := false.B
+    val is_commit_sc = front_store_inst.wtype === scw
+    store_req.valid           := false.B
     when(lsu_io.store_commit.valid) {
+        val llbit = lsu_io.from_csr.llbctl.ROLLB
         assert(!store_queue.io.out.empty)
-        store_req.valid := true.B
+        store_req.valid := Mux(!is_commit_sc, true.B, llbit)
     }
-
     store_req.bits.vaddr      := front_store_inst.addr
     store_req.bits.paddr      := DelayN(front_store_inst.addr, 1)
     store_req.bits.wdata      := front_store_inst.wdata
-    store_req.bits.wtype      := front_store_inst.wtype
+    store_req.bits.wtype      := Mux(!is_commit_sc, front_store_inst.wtype, stw)
     store_req.bits.uncached   := front_store_inst.uncached
     store_req.bits.cacop_en   := false.B
     store_req.bits.cacop_func := 0.U
@@ -292,6 +305,20 @@ class LSU extends BaseFunctionUnit {
     val wb_arb = Module(new Arbiter(new BaseFuOutput, 2))
     wb_arb.io.in(0) <> store_wb
     wb_arb.io.in(1) <> load_wb
+    if (DIFFTEST_MODE) {
+        val store_vaddr = store_wb.bits.result
+        lsu_io.lsu_diff.get.paddr := Mux(store_wb.valid, lsu_io.data_trans.paddr, load_buf.addr)
+        lsu_io.lsu_diff.get.vaddr := Mux(store_wb.valid, store_vaddr, load_vaddr)
+        lsu_io.lsu_diff.get.wdata := MuxLookup(new_store_inst.wtype, DEBUG_MAGICNUM.U)(
+            Seq(
+                scw -> new_store_inst.wdata,
+                stw -> new_store_inst.wdata,
+                sth -> (Mux(store_vaddr(1), new_store_inst.wdata, new_store_inst.wdata(15, 0))),
+                stb -> (new_store_inst.wdata & (0xffffffffL.U >> ((3.U - store_vaddr(1, 0)) << 3.U)))
+            )
+        )
+
+    }
 
     io.out <> wb_arb.io.out
 

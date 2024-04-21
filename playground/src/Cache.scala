@@ -318,18 +318,29 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
                 state := sRefill
             }.otherwise {
                 val (rvalid, rlast, rdata) = io.readFromMem()
-                state := Mux(rlast & rvalid, sRefill, sReplace)
+                // state := Mux(rlast & rvalid, sRefill, sReplace)
                 when(rvalid) {
                     recv_data(recv_cnt) := rdata
                     recv_cnt            := recv_cnt + 1.U
                 }
+                val cacheline_wr_flag      = if (readOnly) 0.B else dirty_bits(replace_way)(req_idx)
                 when(req_uncached & !req_wr) {
                     io.resp.bits.rdata := rdata
                     io.resp.bits.done  := rlast & rvalid
                     io.resp.valid      := rlast & rvalid
                     state              := Mux(rlast & rvalid, sIdle, sReplace)
+                }.otherwise {
+                    val rdata_all_recv = (rvalid & rlast) || (recv_cnt === WORDS_PER_LINE.U)
+                    state := MuxCase(
+                        sReplace,
+                        Seq(
+                            (cacheline_wr_flag & dstate_idle & rdata_all_recv) -> sRefill,
+                            (!cacheline_wr_flag & rdata_all_recv)              -> sRefill
+                        )
+                    )
                 }
             }
+            // TODO: check whether dstate is dsIdle when a dirty cache line need written back
         }
 
         // sRefill:
@@ -384,14 +395,6 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
             ))
         val war_case_2 = (wstate === wsWrite) && (hit_way === wreq_way) && (data_ram_sel === wdata_ram_sel)
         war_stall := (war_case_1 | war_case_2) & !req_wr & req_valid & !req_uncached
-        // when(war_stall) {
-        //     when(war_case_1) {
-        //         printf("war stall occurs, case %d\n", 1.U)
-        //     }
-        //     when(war_case_2) {
-        //         printf("war stall occurs, case %d\n", 2.U)
-        //     }
-        // }
 
         switch(wstate) {
             is(wsIdle) {
@@ -435,14 +438,16 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
         val uncached_wr_en  = ((state === sMiss) && req_uncached && req_wr && dstate_idle)
 
         dstate_idle := (dstate === dsIdle)
-        when(cacheline_wr_en) {
+        when(cacheline_wr_en && dstate_idle) {
             for (i <- 0 until WORDS_PER_LINE) {
                 dreq_data(i) := data_ram(dirty_way)(i).dout
             }
-            dreq_addr                      := Cat(Seq(tagv_ram(dirty_way).dout, req_idx, 0.U(4.W)))
-            dreq_wtype                     := "b10".U
-            dreq_uncached                  := false.B
-            dirty_bits(dirty_way)(req_idx) := 0.B
+            dreq_addr     := Cat(Seq(tagv_ram(dirty_way).dout, req_idx, 0.U(4.W)))
+            dreq_wtype    := "b10".U
+            dreq_uncached := false.B
+            when(dstate_idle) {
+                dirty_bits(dirty_way)(req_idx) := 0.B
+            }
         }.elsewhen(uncached_wr_en) {
             dreq_data(0)  := req_wdata
             dreq_addr     := req_addr

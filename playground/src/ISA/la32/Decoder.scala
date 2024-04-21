@@ -64,7 +64,7 @@ class LA32DecoderUnit extends MkModule with DecodeConstants {
     })
 
     val la32_decode_table =
-        LA3RDecoder.decodeTable ++ LA2RI12Decoder.decodeTable ++ LA2RI8Decoder.decodeTable ++ LA2RI16Decoder.decodeTable ++ LAI20Decoder.decodeTable
+        LA3RDecoder.decodeTable ++ LA2RDecoder.decodeTable
 
     // ((instructions, decodeBits), defaultBits)
     val la32_decode_map = TruthTable(
@@ -111,15 +111,9 @@ object LA3RDecoder extends DecodeConstants {
     )
 }
 
-object LA2RI8Decoder extends DecodeConstants {
-    val decodeTable = Array[(BitPat, List[BitPat])](
-        SLLIW -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.alu, ALUOpType.sllw, N, SelImm.IMM_U8),
-        SRLIW -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.alu, ALUOpType.srlw, N, SelImm.IMM_U8),
-        SRAIW -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.alu, ALUOpType.sraw, N, SelImm.IMM_U8)
-    )
-}
 
-object LA2RI12Decoder extends DecodeConstants {
+
+object LA2RDecoder extends DecodeConstants {
     val decodeTable = Array[(BitPat, List[BitPat])](
         SLTI  -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.alu , ALUOpType.slt   , N, SelImm.IMM_S12),
         SLTUI -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.alu , ALUOpType.sltu  , N, SelImm.IMM_S12),
@@ -135,12 +129,18 @@ object LA2RI12Decoder extends DecodeConstants {
         STW   -> List(N, SrcType.imm, SrcType.reg, SrcType.reg , FuType.lsu , LSUOpType.stw   , N, SelImm.IMM_S12),
         LDBU  -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.lsu , LSUOpType.ldbu  , N, SelImm.IMM_S12),
         LDHU  -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.lsu , LSUOpType.ldhu  , N, SelImm.IMM_S12),
-        CACOP -> List(N, SrcType.imm, SrcType.reg, SrcType.none, FuType.misc, MiscOpType.cacop, N, SelImm.IMM_S12)
-    )
-}
+        CACOP -> List(N, SrcType.imm, SrcType.reg, SrcType.none, FuType.misc, MiscOpType.cacop, N, SelImm.IMM_S12),
 
-object LA2RI16Decoder extends DecodeConstants {
-    val decodeTable = Array[(BitPat, List[BitPat])](
+        // I8
+        SLLIW -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.alu, ALUOpType.sllw, N, SelImm.IMM_U8),
+        SRLIW -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.alu, ALUOpType.srlw, N, SelImm.IMM_U8),
+        SRAIW -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.alu, ALUOpType.sraw, N, SelImm.IMM_U8),
+
+        // I14
+        LLW   -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.lsu, LSUOpType.llw, N, SelImm.IMM_S14),
+        SCW   -> List(Y, SrcType.imm, SrcType.reg, SrcType.none, FuType.lsu, LSUOpType.scw, N, SelImm.IMM_S14),
+
+        // I16
         // BCECQZ -> List(N, SrcType.reg, SrcType.reg, SrcType.X, FuOpType.X,      Y, SelImm.X     ), floating branch inst not supported yet
         // BCENEZ -> List(N, SrcType.reg, SrcType.reg, SrcType.X, FuOpType.X,      Y, SelImm.X     ),
         JIRL   -> List(Y, SrcType.imm, SrcType.reg , SrcType.none,   FuType.bru, JumpOpType.jirl, N, SelImm.IMM_S16),
@@ -151,12 +151,9 @@ object LA2RI16Decoder extends DecodeConstants {
         BLT    -> List(N, SrcType.imm, SrcType.reg , SrcType.reg ,   FuType.bru, JumpOpType.blt , N, SelImm.IMM_S16),
         BGE    -> List(N, SrcType.imm, SrcType.reg , SrcType.reg ,   FuType.bru, JumpOpType.bge , N, SelImm.IMM_S16),
         BLTU   -> List(N, SrcType.imm, SrcType.reg , SrcType.reg ,   FuType.bru, JumpOpType.bltu, N, SelImm.IMM_S16),
-        BGEU   -> List(N, SrcType.imm, SrcType.reg , SrcType.reg ,   FuType.bru, JumpOpType.bgeu, N, SelImm.IMM_S16)
-    )
-}
+        BGEU   -> List(N, SrcType.imm, SrcType.reg , SrcType.reg ,   FuType.bru, JumpOpType.bgeu, N, SelImm.IMM_S16),
 
-object LAI20Decoder extends DecodeConstants {
-    val decodeTable = Array[(BitPat, List[BitPat])](
+        // I20
         LU12IW     -> List(Y, SrcType.none, SrcType.imm, SrcType.none, FuType.alu, ALUOpType.lu12iw     , N, SelImm.IMM_S20),
         PCADDU12I  -> List(Y, SrcType.pc  , SrcType.imm, SrcType.none, FuType.alu, ALUOpType.pcaddu12i  , N, SelImm.IMM_S20)
     )
@@ -181,6 +178,9 @@ object LAMiscDecoder extends DecodeConstants {
         TLBWR   ->  List(N, SrcType.none, SrcType.none, SrcType.none, FuType.csr , CSROpType.tlbwr   , N, SelImm.X),
         TLBFILL ->  List(N, SrcType.none, SrcType.none, SrcType.none, FuType.csr , CSROpType.tlbfill , N, SelImm.X),
         INVTLB  ->  List(N, SrcType.reg , SrcType.reg , SrcType.none, FuType.csr , CSROpType.invtlb  , N, SelImm.X),
+        IDLE    ->  List(N, SrcType.none, SrcType.none, SrcType.none, FuType.misc, MiscOpType.idle   , N, SelImm.X),
+        DBAR    ->  List(N, SrcType.none ,SrcType.none, SrcType.none ,FuType.misc, MiscOpType.none   , N, SelImm.X),
+        IBAR    ->  List(N, SrcType.none ,SrcType.none, SrcType.none ,FuType.misc, MiscOpType.none   , N, SelImm.X)
     )
 }
 // format: on

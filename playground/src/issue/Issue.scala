@@ -29,9 +29,14 @@ class IssueStageIO extends MkBundle {
     val csr_commit   = new ReadyValidBundle
     val excp_commit  = Bool()
     val ertn_commit  = Bool()
+    val ll_commit    = Bool()
+    val sc_commit    = Bool()
     val excp_info    = ValidIO(new LA32ExceptionInfo)
     val int_flag     = Input(Bool())
-    val diff         =
+    val llbit        = Input(Bool())
+
+    // DIFFTEST
+    val diff     =
         if (DIFFTEST_MODE) Some(new Bundle {
             val gpr            = Vec(32, UInt(WORD_WIDTH.W))
             val commit_inst    = ValidIO(new IssuedInst)
@@ -39,7 +44,13 @@ class IssueStageIO extends MkBundle {
             val is_commit_excp = Bool()
         })
         else None
-    // transcation that will be excuted in function unit
+    val lsu_diff =
+        if (DIFFTEST_MODE) Some(Flipped(new Bundle {
+            val paddr = UInt(PADDR_WIDTH.W)
+            val vaddr = UInt(VADDR_WIDTH.W)
+            val wdata = UInt(WORD_WIDTH.W)
+        }))
+        else None
 }
 
 class IssueStage extends MkModule {
@@ -116,20 +127,31 @@ class IssueStage extends MkModule {
     val commit_inst_sbe = commit_inst.bits.sbe
 
     // check whether we are committing a store inst
-    val inst_excp       = io.int_flag | (commit_inst_sbe.exception =/= LA32ExceptionType.NONE.enum_no)
+    val inst_excp = io.int_flag | (commit_inst_sbe.exception =/= LA32ExceptionType.NONE.enum_no)
+
     val is_commit_store =
         (commit_inst_sbe.decoded_inst.futype === FuType.lsu) &&
             LSUOpType.isStoreType(commit_inst_sbe.decoded_inst.fuoptype)
     val is_commit_csr   = (commit_inst_sbe.decoded_inst.futype === FuType.csr)
     val is_commit_ertn  =
         (commit_inst_sbe.decoded_inst.futype === FuType.misc) && (commit_inst_sbe.decoded_inst.fuoptype === MiscOpType.ertn)
+    val is_commit_idle  =
+        (commit_inst_sbe.decoded_inst.futype === FuType.misc) && (commit_inst_sbe.decoded_inst.fuoptype === MiscOpType.idle)
+    val is_commit_ll    =
+        (commit_inst_sbe.decoded_inst.futype === FuType.lsu) && (commit_inst_sbe.decoded_inst.fuoptype === LSUOpType.llw)
+    val is_commit_sc    =
+        (commit_inst_sbe.decoded_inst.futype === FuType.lsu) && (commit_inst_sbe.decoded_inst.fuoptype === LSUOpType.scw)
     io.csr_commit.valid   := is_commit_csr & commit_inst.valid & !inst_excp
     io.store_commit.valid := is_commit_store & commit_inst.valid & !inst_excp
     io.ertn_commit        := is_commit_ertn & commit_inst.valid & !inst_excp
+    io.ll_commit          := is_commit_ll & commit_inst.valid & !inst_excp
     io.excp_commit        := scoreboard.io.excp_info.valid
-    commit_inst.ready     := MuxCase(
+    io.sc_commit          := is_commit_sc & commit_inst.valid & commit_inst.ready & !inst_excp
+
+    commit_inst.ready := MuxCase(
         true.B,
         Seq(
+            (is_commit_idle, io.int_flag),
             (is_commit_store, io.store_commit.ready),
             (is_commit_csr, io.csr_commit.ready)
         )
@@ -139,9 +161,10 @@ class IssueStage extends MkModule {
 
     gpr.write_io.waddr := dest_reg
     gpr.write_io.wen   := commit_inst.valid && commit_inst_sbe.decoded_inst.regwen && !io.excp_commit
-    gpr.write_io.wdata := commit_inst.bits.sbe.result
+    gpr.write_io.wdata := Mux(!is_commit_sc, commit_inst.bits.sbe.result, io.llbit)
 
     if (DIFFTEST_MODE) {
+        scoreboard.io.lsu_diff.get    := io.lsu_diff.get
         io.diff.get.commit_inst.bits  := commit_inst.bits
         io.diff.get.commit_inst.valid := commit_inst.valid & commit_inst.ready & !io.excp_commit
         io.diff.get.gpr               := gpr.diff_gpr.get
