@@ -180,7 +180,8 @@ object LAMiscDecoder extends DecodeConstants {
         INVTLB  ->  List(N, SrcType.reg , SrcType.reg , SrcType.none, FuType.csr , CSROpType.invtlb  , N, SelImm.X),
         IDLE    ->  List(N, SrcType.none, SrcType.none, SrcType.none, FuType.misc, MiscOpType.idle   , N, SelImm.X),
         DBAR    ->  List(N, SrcType.none ,SrcType.none, SrcType.none ,FuType.misc, MiscOpType.none   , N, SelImm.X),
-        IBAR    ->  List(N, SrcType.none ,SrcType.none, SrcType.none ,FuType.misc, MiscOpType.none   , N, SelImm.X)
+        IBAR    ->  List(N, SrcType.none ,SrcType.none, SrcType.none ,FuType.misc, MiscOpType.none   , N, SelImm.X),
+        PRELD   ->  List(N, SrcType.none ,SrcType.none, SrcType.none ,FuType.misc, MiscOpType.none   , N, SelImm.X),
     )
 }
 // format: on

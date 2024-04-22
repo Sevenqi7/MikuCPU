@@ -93,6 +93,7 @@ class MkTop extends MkModule {
     excute.io.lsu_io.from_csr.llbctl := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.LLBCTL)
 
     excute.io.csr_io.csr_commit      <> issue.io.csr_commit
+    excute.io.csr_io.from_csr.crmd   := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.CRMD)
     excute.io.csr_io.from_csr.asid   := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.ASID)
     excute.io.csr_io.from_csr.tlbehi := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.TLBEHI)
     excute.io.csr_io.from_csr.tlbidx := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.TLBIDX)

@@ -32,7 +32,7 @@ class BranchPredictorIO extends MkBundle {
 
 abstract class BranchPredictor extends MkModule {
     val io              = IO(new BranchPredictorIO)
-    val target_from_btb = false
+    // val target_from_btb = false
 }
 
 class EmptyPredictor extends BranchPredictor {

@@ -67,7 +67,7 @@ class MkFrontend extends MkModule {
     val dmw_hit_idx    = OHToUInt(dmw_total_hits)
     val tlb_resp       = io.inst_trans.tlb_resp
     io.inst_trans.vaddr      := ifu.io.stage_info.s0.bits.pc
-    io.inst_trans.valid      := ifu.io.stage_info.s0.valid
+    io.inst_trans.valid      := true.B // keep translating s0_pc to ensure we can catch all tlb-related exceptions
     io.inst_trans.tlbsrch_en := false.B
 
     to_icache.bits.wr         := 0.B

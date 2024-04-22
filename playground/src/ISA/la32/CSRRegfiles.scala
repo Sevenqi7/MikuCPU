@@ -187,19 +187,20 @@ class LA32CSRRegfiles extends MkModule {
     }
 
     // PGD read/write
-    val badv_msb = csr_table(BADV).asUInt(VADDR_WIDTH - 1)
+    // TODO: replace currently critical badv_msb signal
+    val badv_msb = Mux(!isWritingCSR(BADV), csr_table(BADV).rdata(VADDR_WIDTH - 1), io.write_io.wdata(VADDR_WIDTH - 1)) 
     val pgdl     = csr_table(PGDL)
     val pgdh     = csr_table(PGDH)
     when(io.read_io.raddr === PGD._1) {
         io.read_io.rdata := Mux(badv_msb, pgdh.rdata, pgdl.rdata)
     }
-    when(isWritingCSR(PGD)) {
-        when(badv_msb) {
-            pgdh.write(io.write_io.wdata)
-        }.otherwise {
-            pgdl.write(io.write_io.wdata)
-        }
-    }
+    // when(isWritingCSR(PGD)) {
+    //     when(badv_msb) {
+    //         pgdh.write(io.write_io.wdata)
+    //     }.otherwise {
+    //         pgdl.write(io.write_io.wdata)
+    //     }
+    // }
 
     // TLB-related CSR
     val tlbehi = csr_table(TLBEHI)

@@ -127,7 +127,8 @@ class IssueStage extends MkModule {
     val commit_inst_sbe = commit_inst.bits.sbe
 
     // check whether we are committing a store inst
-    val inst_excp = io.int_flag | (commit_inst_sbe.exception =/= LA32ExceptionType.NONE.enum_no)
+
+    val inst_excp = (commit_inst_sbe.exception =/= LA32ExceptionType.NONE.enum_no)
 
     val is_commit_store =
         (commit_inst_sbe.decoded_inst.futype === FuType.lsu) &&
@@ -141,17 +142,17 @@ class IssueStage extends MkModule {
         (commit_inst_sbe.decoded_inst.futype === FuType.lsu) && (commit_inst_sbe.decoded_inst.fuoptype === LSUOpType.llw)
     val is_commit_sc    =
         (commit_inst_sbe.decoded_inst.futype === FuType.lsu) && (commit_inst_sbe.decoded_inst.fuoptype === LSUOpType.scw)
-    io.csr_commit.valid   := is_commit_csr & commit_inst.valid & !inst_excp
-    io.store_commit.valid := is_commit_store & commit_inst.valid & !inst_excp
-    io.ertn_commit        := is_commit_ertn & commit_inst.valid & !inst_excp
-    io.ll_commit          := is_commit_ll & commit_inst.valid & !inst_excp
+    io.csr_commit.valid   := is_commit_csr & commit_inst.valid & !inst_excp & !io.int_flag
+    io.store_commit.valid := is_commit_store & commit_inst.valid & !inst_excp & !io.int_flag
+    io.ertn_commit        := is_commit_ertn & commit_inst.valid & !inst_excp & !io.int_flag
+    io.ll_commit          := is_commit_ll & commit_inst.valid & !inst_excp & !io.int_flag
     io.excp_commit        := scoreboard.io.excp_info.valid
-    io.sc_commit          := is_commit_sc & commit_inst.valid & commit_inst.ready & !inst_excp
+    io.sc_commit          := is_commit_sc & commit_inst.valid & commit_inst.ready & !inst_excp & !io.int_flag
 
     commit_inst.ready := MuxCase(
         true.B,
         Seq(
-            (is_commit_idle, io.int_flag),
+            (is_commit_idle & !inst_excp, io.int_flag),
             (is_commit_store, io.store_commit.ready),
             (is_commit_csr, io.csr_commit.ready)
         )

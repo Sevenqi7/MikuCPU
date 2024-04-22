@@ -29,9 +29,9 @@ abstract class LA32CSRBundle extends MkBundle {
 
 // 0x0: CRMD
 class LA32CSR_Crmd extends LA32CSRBundle {
-    // RESERVED BITS (31, 19)
+    // RESERVED BITS (31, 9)
 
-    val WE   = Bool()
+    // val WE   = Bool()
     val DATM = UInt(2.W)
     val DATF = UInt(2.W)
     val PG   = Bool()
@@ -45,18 +45,18 @@ class LA32CSR_Crmd extends LA32CSRBundle {
         init.asUInt
     }
     def rdata = Cat(0.U(22.W), this.asUInt)
-    def getRealWdata(wdata: UInt) = wdata(9, 0)
+    def getRealWdata(wdata: UInt) = wdata(8, 0)
 }
 
 // 0x1: PRMD
 class LA32CSR_Prmd extends LA32CSRBundle {
     // RESERVED BITS (31, 4)
-    val PWE  = Bool()
+    // val PWE  = Bool()
     val PIE  = Bool()
     val PPLV = UInt(2.W)
 
     def rdata                     = Cat(0.U(28.W), this.asUInt)
-    def getRealWdata(wdata: UInt) = wdata(3, 0)
+    def getRealWdata(wdata: UInt) = wdata(2, 0)
 }
 
 // 0x2: EUEN
@@ -177,9 +177,10 @@ class LA32CSR_Asid extends LA32CSRBundle {
     // RESERVED BITS (15, 10)
     val ASID     = UInt(10.W)
 
-    override def initData         = Cat(0.U(8.W), 10.U(10.W))
+    override def initData         = Cat(10.U(8.W), 10.U(10.W))
+    override def wmask            = UEXT(~0.U(10.W), WORD_WIDTH)
     def rdata                     = Cat(UEXT(ASIDBITS, 16), UEXT(ASID, 16))
-    def getRealWdata(wdata: UInt) = Cat(wdata(23, 16), wdata(9, 0))
+    def getRealWdata(wdata: UInt) = Cat(UEXT(wdata(9, 0), this.getWidth))
 }
 
 // 0x18: PGDL, 0x19: PGDH
@@ -348,6 +349,7 @@ object LA32CSRRegisters extends MkParams {
         ASID     ,
         PGDL     ,
         PGDH     ,
+        // PGD   ,
         SAVE0    ,
         SAVE1    ,
         SAVE2    ,

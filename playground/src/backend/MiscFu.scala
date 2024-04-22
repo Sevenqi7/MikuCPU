@@ -73,18 +73,21 @@ class MiscFunctionUnit extends BaseFunctionUnit {
     )
 
     // syscall, break, unknown
-    val syscall_valid = io.in.valid &&
-        (io.in.bits.optype === MiscOpType.syscall) && (LA32ExceptionType.SYS.enum_no < io.in.bits.exception)
-    val unknown_inst  = io.in.valid &&
-        (io.in.bits.optype === MiscOpType.unknown) && (LA32ExceptionType.INE.enum_no < io.in.bits.exception)
-    val break_valid   = io.in.valid &&
-        (io.in.bits.optype === MiscOpType.break) && (LA32ExceptionType.BRK.enum_no < io.in.bits.exception)
+    val syscall_valid = io.in.valid && (io.in.bits.optype === syscall)
+    val unknown_inst  = io.in.valid && (io.in.bits.optype === unknown)
+    val break_valid   = io.in.valid && (io.in.bits.optype === break)
+    val idle_valid    = io.in.valid && (io.in.bits.optype === idle)
+    val ertn_valid    = io.in.valid && (io.in.bits.optype === ertn)
+
+    val ipe_excp =
+        (misc_io.crmd.PLV === 3.U) && (idle_valid || ertn_valid || (cacop_valid && code =/= 2.U))
 
     io.out.bits.id := io.in.bits.id
 
     io.out.bits.exception := MuxCase(
         io.in.bits.exception,
         Seq(
+            (ipe_excp, LA32ExceptionType.IPE.enum_no),
             (cacop_unmatch, LA32ExceptionType.TLBR.enum_no),
             (cacop_page_inv, LA32ExceptionType.PIL.enum_no),
             (syscall_valid, LA32ExceptionType.SYS.enum_no),
