@@ -27,7 +27,8 @@ class InstQueueEntry extends MkBundle {
     val inst      = UInt(INST_BITS.W)
     val excp_flag = new Bundle {
         val adef = Bool()
-        // val tlbr = Bool()
+        val tlbr = Bool()
+        val ppi  = Bool()
         val pif  = Bool()
     }
 }
@@ -58,7 +59,9 @@ class IDU extends MkModule {
             LA32ExceptionType.NONE.enum_no,
             Seq(
                 excp_flag.adef -> LA32ExceptionType.ADEF.enum_no,
-                excp_flag.pif  -> LA32ExceptionType.PIF.enum_no
+                excp_flag.tlbr -> LA32ExceptionType.TLBR.enum_no,
+                excp_flag.pif  -> LA32ExceptionType.PIF.enum_no,
+                excp_flag.ppi  -> LA32ExceptionType.PPI.enum_no
             )
         )
         issue_entry_r.valid             := !inst_queue.io.out.empty

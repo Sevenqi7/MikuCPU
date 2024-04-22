@@ -97,5 +97,6 @@ class MkFrontend extends MkModule {
     ifu.io.npc_sel_info       := npc_set
     ifu.io.inst_queue_full    := io.inst_queue_full
     ifu.io.tlb_resp           := io.inst_trans.tlb_resp
-    ifu.io.tlb_excp_v         := pg_mode & !dmw_hit
+    ifu.io.tlb_resp_v         := pg_mode & !dmw_hit
+    ifu.io.crmd_plv           := io.from_csr.crmd.PLV
 }

@@ -34,7 +34,8 @@ class IFUIO extends MkBundle {
     val npc_sel_info    = Flipped(new NpcSelInfo)
     val inst_queue_full = Input(Bool())
     val tlb_resp        = Flipped(new TLBSearchResp(TLB_NUM))
-    val tlb_excp_v      = Input(Bool())
+    val tlb_resp_v      = Input(Bool())
+    val crmd_plv        = Input(UInt(3.W))
 }
 
 class IFU extends MkModule {
@@ -73,7 +74,9 @@ class IFU extends MkModule {
     val s0_excp = DontCare
     val s1_excp = WireInit(0.U.asTypeOf(io.stage_info.s1.bits.excp_flag))
     s1_excp.adef := s1_pc(0) | s1_pc(1)
-    s1_excp.pif  := io.tlb_excp_v && io.tlb_resp.found && !io.tlb_resp.result.v
+    s1_excp.tlbr := io.tlb_resp_v && !io.tlb_resp.found
+    s1_excp.pif  := io.tlb_resp_v && io.tlb_resp.found && !io.tlb_resp.result.v
+    s1_excp.ppi  := io.tlb_resp_v && io.tlb_resp.found && io.tlb_resp.result.v && (io.crmd_plv > io.tlb_resp.result.plv)
 
     s0_pc    := next_pc
     s0_valid := io.icache_msg.addr_ok & !io.inst_queue_full
