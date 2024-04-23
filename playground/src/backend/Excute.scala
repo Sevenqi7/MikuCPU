@@ -109,6 +109,7 @@ class EXU extends MkModule {
     fu_excp_out           := DontCare
     fu_excp_out.id        := fu_base_in.bits.id
     fu_excp_out.exception := fu_base_in.bits.exception
+    fu_excp_out.result    := fu_base_in.bits.pc
 
     io.out.lsu_out <> lsu.io.out
     when(fu_base_in.valid & inst_excp) {
