@@ -107,9 +107,9 @@ class MkTLB(tlb_num: Int, page_offset: Int) extends MkModule {
         )
         val hit        = total_hits.reduce(_ || _)
         val hit_index  = OHToUInt(total_hits)
-        val odd_page   =
-            VecInit((0 until tlb_num).map(i => (Mux(tlb(i).ps === 12.U, req.odd_page, req.vppn(8))))).reduce(_ || _)
-        resp.index := OHToUInt(total_hits)
+        // val odd_page   = VecInit((0 until tlb_num).map(i => (Mux(tlb(i).ps === 12.U, req.odd_page, req.vppn(8)))))
+        val odd_page   = Mux(tlb(hit_index).ps === 12.U, req.odd_page, req.vppn(8))
+        resp.index  := OHToUInt(total_hits)
         resp.found  := req.valid & hit
         resp.ps     := tlb(hit_index).ps
         resp.result := tlb(hit_index).page_table(odd_page)
