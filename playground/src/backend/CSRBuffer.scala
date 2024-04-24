@@ -181,6 +181,9 @@ class CSRBuffer extends BaseFunctionUnit {
     val csr_busy_seq = Seq(csr_wvalid_r, tlbrd_ongoing, tlbwr_ongoing, tlbfill_ongoing, invtlb_ongoing)
     val csr_busy     = csr_busy_seq.reduce(_ || _)
     assert(!csr_busy_seq.reduce(_ & _)) // there must be only one operation that will wirte csr or tlb in a time
+    when(io.flush.ertn | io.flush.exception) {
+        csr_busy_seq.foreach(v => v := false.B)
+    }
 
     csr_io.csr_commit.ready := true.B
     io.in.ready             := !csr_busy || (csr_busy && csr_io.csr_commit.valid && csr_io.csr_commit.ready)
