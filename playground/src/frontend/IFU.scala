@@ -23,9 +23,20 @@ class NpcSelInfo extends MkBundle {
     })
 }
 
+class FetchResult extends MkBundle {
+    val pc        = UInt(VADDR_WIDTH.W)
+    val inst      = UInt(INST_BITS.W)
+    val excp_flag = new Bundle {
+        val adef = Bool()
+        val tlbr = Bool()
+        val ppi  = Bool()
+        val pif  = Bool()
+    }
+}
+
 class IFUStageInfo extends MkBundle {
-    val s0 = ValidIO(new InstQueueEntry)
-    val s1 = ValidIO(new InstQueueEntry)
+    val s0 = ValidIO(new FetchResult)
+    val s1 = ValidIO(new FetchResult)
 }
 
 class IFUIO extends MkBundle {
@@ -54,7 +65,7 @@ class IFU extends MkModule {
     //                  cond   npc
     // npc-gen           |      |
     val npc_src  = io.npc_sel_info
-    val mispred  = npc_src.pred_check.valid & npc_src.pred_check.bits.redirect
+    val mispred  = npc_src.pred_check.valid
 
     val flush_slot = Module(new CircularQueue(UInt(VADDR_WIDTH.W), 1))
     val npc_flush: Seq[(Bool, UInt)] = Seq(
@@ -84,8 +95,8 @@ class IFU extends MkModule {
         s1_pc := s0_pc
     }
 
-    s1_valid := (io.icache_msg.data_ok || (s1_excp.asUInt > 0.U)) & !npc_flush
-        .map(_._1).reduce(_ || _) & flush_slot.io.out.empty & !io.inst_queue_full
+    s1_valid := (io.icache_msg.data_ok || (s1_excp.asUInt > 0.U)) &&
+        !(io.inst_queue_full | npc_src.exception.valid & npc_src.ertn_target.valid & mispred) & flush_slot.io.out.empty
 
     io.stage_info.s0.bits.pc        := s0_pc
     io.stage_info.s0.bits.inst      := DEBUG_MAGICNUM.U

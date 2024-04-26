@@ -35,17 +35,18 @@ abstract class BaseFunctionUnit extends MkModule {
 }
 
 class EXUIO extends MkBundle {
-    val in         = Flipped(Decoupled(new BaseFuInput))
-    val out        = new Bundle {
+    val in        = Flipped(Decoupled(new BaseFuInput))
+    val out       = new Bundle {
         val flu_out = Decoupled(new BaseFuOutput)
         val lsu_out = Decoupled(new BaseFuOutput)
     }
-    val futype     = Input(FuType())
-    val flush      = Flipped(new FlushReason)
-    val pred_check = new BranchUnitIO
-    val lsu_io     = new LSUIO
-    val csr_io     = new CSRBufferIO
-    val misc_io    = new MiscFuIO
+    val futype    = Input(FuType())
+    val br_pred   = Flipped(new BranchPredictorResult)
+    val flush     = Flipped(new FlushReason)
+    val lsu_io    = new LSUIO
+    val csr_io    = new CSRBufferIO
+    val misc_io   = new MiscFuIO
+    val br_update = ValidIO(new BranchPredictorUpdate)
 }
 
 class EXU extends MkModule {
@@ -77,12 +78,14 @@ class EXU extends MkModule {
 
     val fu_base_in = RegInit(0.U.asTypeOf(ValidIO(new BaseFuInput)))
     val futype_r   = RegInit(0.U.asTypeOf(FuType()))
+    val br_pred_r  = RegInit(0.U.asTypeOf(new BranchPredictorResult))
     val inst_excp  = (fu_base_in.bits.exception =/= LA32ExceptionType.NONE.enum_no)
 
     when(io.in.ready) {
         fu_base_in.bits  := io.in.bits
         fu_base_in.valid := io.in.valid
         futype_r         := io.futype
+        br_pred_r        := io.br_pred
     }
 
     io.in.ready                             := false.B // default
@@ -120,8 +123,12 @@ class EXU extends MkModule {
         io.out.flu_out <> result_arb.io.out
     }
 
-    io.pred_check <> bru.bru_io
-    io.lsu_io     <> lsu.lsu_io
-    io.csr_io     <> csr.csr_io
-    io.misc_io    <> misc.misc_io
+    lsu.io_tlb_busy_stall := csr.io_tlb_busy_stall
+
+    io.br_update       := bru.bru_io.update
+    bru.bru_io.br_pred := br_pred_r
+    
+    io.lsu_io          <> lsu.lsu_io
+    io.csr_io          <> csr.csr_io
+    io.misc_io         <> misc.misc_io
 }

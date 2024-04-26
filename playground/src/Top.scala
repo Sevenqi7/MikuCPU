@@ -54,16 +54,19 @@ class MkTop extends MkModule {
     icache.io.req.bits.paddr := frontend.io.icache_inter.req.bits.paddr //
     icache.io.resp           <> frontend.io.icache_inter.resp
 
-    val flush = 0.U.asTypeOf(new FlushReason)
-    flush.ertn      := issue.io.ertn_commit
-    flush.exception := issue.io.excp_info.valid
-    flush.mispred   := excute.io.pred_check.update.valid & excute.io.pred_check.update.bits.redirect
+    val frontend_flush = 0.U.asTypeOf(new FlushReason)
+    frontend_flush.ertn      := issue.io.ertn_commit
+    frontend_flush.exception := issue.io.excp_info.valid
+    frontend_flush.mispred   := excute.io.br_update.valid
+
+    val backend_flush = WireInit(frontend_flush)
 
     decode.io.ifu_s1           := frontend.io.s1
-    decode.io.inst_queue_flush := flush
+    decode.io.br_pred          := frontend.io.br_pred
+    decode.io.inst_queue_flush := frontend_flush
     decode.io.to_issue         <> issue.io.from_decoder
 
-    frontend.io.update             := excute.io.pred_check.update
+    frontend.io.update             := excute.io.br_update
     frontend.io.inst_queue_full    := decode.io.inst_queue_full
     frontend.io.excp_info          := issue.io.excp_info
     frontend.io.from_csr.eentry    := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.EENTRY)
@@ -85,7 +88,7 @@ class MkTop extends MkModule {
     excute.io.in.valid               := issue.io.trans.valid
     excute.io.futype                 := issue.io.trans.bits.futype
     // ! turn off branch prediction during correctness test
-    excute.io.pred_check.br_pred     := 0.U.asTypeOf(new BranchPredictorResult)
+    excute.io.br_pred                := issue.io.trans.bits.br_pred
     excute.io.lsu_io.store_commit    <> issue.io.store_commit
     excute.io.lsu_io.from_csr.crmd   := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.CRMD)
     excute.io.lsu_io.from_csr.dwm(0) := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.DMW0)
@@ -101,7 +104,7 @@ class MkTop extends MkModule {
     excute.io.misc_io.timer64        := csr.io.timer64_o
     excute.io.misc_io.tid            := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.TID)
     excute.io.misc_io.crmd           := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.CRMD)
-    excute.io.flush                  := flush
+    excute.io.flush                  := backend_flush
 
     mmu.io.inst_trans      <> frontend.io.inst_trans
     mmu.io.data_trans      <> excute.io.csr_io.tlbsrch

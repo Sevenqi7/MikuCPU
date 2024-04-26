@@ -15,7 +15,7 @@ class BranchInstInfo extends MkBundle {
 }
 
 class FrontendIO extends MkBundle {
-    val s1              = ValidIO(new InstQueueEntry)
+    val s1              = ValidIO(new FetchResult)
     val update          = Flipped(ValidIO(new BranchPredictorUpdate))
     val br_pred         = new BranchPredictorResult
     val icache_inter    = new Bundle {
@@ -92,7 +92,7 @@ class MkFrontend extends MkModule {
     ifu.io.icache_msg.data_ok := data_ok
     ifu.io.icache_msg.rdata   := from_icache.bits.rdata
     io.br_pred                := bpu.io.resp
-    bpu.io.s0                 := ifu.io.stage_info.s0
+    bpu.io.s1                 := ifu.io.stage_info.s1
     bpu.io.update             := io.update
     ifu.io.npc_sel_info       := npc_set
     ifu.io.inst_queue_full    := io.inst_queue_full

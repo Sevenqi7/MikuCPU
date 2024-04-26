@@ -14,7 +14,7 @@ class MkParams {
     val REG_ADDR_NUM = 32
     val REG_RD_PORTS = 3
 
-    val INST_QUEUE_SIZE = 256
+    val INST_QUEUE_SIZE = 32
 
     // BPU
     val RAS_SIZE = 8

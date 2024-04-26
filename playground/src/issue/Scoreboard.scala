@@ -177,7 +177,7 @@ class Scoreboard extends MkModule {
         }
 
         // when(sb_mem(commit_ptr).bits.raw_inst.get === LA32Instructions.IBAR) {
-            // printf("warning: IBAR excuted\n")
+        // printf("warning: IBAR excuted\n")
         // }
         // when(sb_mem(commit_ptr).bits.raw_inst.get === LA32Instructions.DBAR) {
         //     printf("warning: DBAR excuted\n")

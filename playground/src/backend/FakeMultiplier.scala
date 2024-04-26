@@ -34,7 +34,10 @@ class FakeMultiplier extends BaseFunctionUnit {
     val result_buf   = RegInit(0.U.asTypeOf(new BaseFuOutput))
     val result_valid = RegInit(false.B)
     io.in.ready := ready_r
-    when(io.in.valid & io.in.ready & (!result_valid)) {
+    when(io.flush.ertn | io.flush.exception) {
+        ready_r      := true.B
+        result_valid := false.B
+    }.elsewhen(io.in.valid & io.in.ready & (!result_valid)) {
         ready_r              := false.B
         result_buf.id        := io.in.bits.id
         result_buf.result    := result

@@ -33,6 +33,9 @@ class CSRBufferIO extends MkBundle {
 class CSRBuffer extends BaseFunctionUnit {
     val csr_io = IO(new CSRBufferIO)
 
+    // inform LSU that TLB is currently being accessed and modified by CSRBuffer(tlbwr, tlbfill or invtlb)
+    val io_tlb_busy_stall = IO(Output(Bool()))
+
     val inst_excp = (io.in.bits.exception =/= LA32ExceptionType.NONE.enum_no)
     val ipe_excp  = (csr_io.from_csr.crmd.PLV =/= 0.U)
 
@@ -185,6 +188,7 @@ class CSRBuffer extends BaseFunctionUnit {
         csr_busy_seq.foreach(v => v := false.B)
     }
 
+    io_tlb_busy_stall := (tlbwr_ongoing | tlbfill_ongoing | invtlb_ongoing) && (csr_io.from_csr.crmd.PG & !csr_io.from_csr.crmd.DA)
     csr_io.csr_commit.ready := true.B
     io.in.ready             := !csr_busy || (csr_busy && csr_io.csr_commit.valid && csr_io.csr_commit.ready)
 }

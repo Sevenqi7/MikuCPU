@@ -26,8 +26,9 @@ class BranchUnit extends BaseFunctionUnit {
     val rd    = io.in.bits.operand_c
 
     // generate target address of branch
-    val pred_taken = bru_io.br_pred.taken
-    val taken      = MuxLookup(io.in.bits.optype, false.B)(
+    val pred_taken  = bru_io.br_pred.taken
+    val pred_target = bru_io.br_pred.target
+    val taken       = MuxLookup(io.in.bits.optype, false.B)(
         Seq(
             beq  -> (rj === rd),
             bne  -> (rj =/= rd),
@@ -46,21 +47,23 @@ class BranchUnit extends BaseFunctionUnit {
     val br_target = MuxCase(
         pc + 4.U,
         Seq(
-            (isBr(io.in.bits.optype), pc + SEXT(imm16 << 2, VADDR_WIDTH)),
-            (isBorBl(io.in.bits.optype), pc + SEXT(imm26 << 2, VADDR_WIDTH)),
-            (isJirl(io.in.bits.optype), rj + SEXT(imm16 << 2, VADDR_WIDTH))
+            (taken & isBr(io.in.bits.optype), pc + SEXT(imm16 << 2, VADDR_WIDTH)),
+            (taken & isBorBl(io.in.bits.optype), pc + SEXT(imm26 << 2, VADDR_WIDTH)),
+            (taken & isJirl(io.in.bits.optype), rj + SEXT(imm16 << 2, VADDR_WIDTH))
         )
     )
 
-    // check if there is a mis-prediction
+    val mispred     = (taken ^ pred_taken) || (taken & pred_taken & (br_target =/= pred_target))
+    val update_flag = io.in.valid & taken & !pred_taken
+
+    // check if there is a misprediction
     bru_io.update.bits.pc       := pc
-    bru_io.update.bits.redirect := taken ^ pred_taken
+    bru_io.update.bits.is_taken := taken
     bru_io.update.bits.target   := br_target
-    bru_io.update.valid         := io.in.valid
+    bru_io.update.valid         := io.in.valid & mispred
     io.out.bits.exception       := io.in.bits.exception
-    io.out.bits.mispred         := taken ^ pred_taken
+    io.out.bits.mispred         := mispred
     io.out.bits.result          := Mux(link_flag, pc + 4.U, 0.U)
     io.out.bits.id              := io.in.bits.id
     io.out.valid                := io.in.valid
-
 }

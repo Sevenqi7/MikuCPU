@@ -38,7 +38,8 @@ class StoreQueueEntry extends MkBundle {
 }
 
 class LSU extends BaseFunctionUnit {
-    val lsu_io = IO(new LSUIO)
+    val lsu_io            = IO(new LSUIO)
+    val io_tlb_busy_stall = IO(Input(Bool())) // from CSRBuffer
 
     def getWstrbFromWtype(wtype: UInt, offset: UInt): UInt = {
         ~0.U(4.W) >> (4.U - (1.U << wtype)) << offset(log2Ceil(wordBytes) - 1, 0)
@@ -136,8 +137,8 @@ class LSU extends BaseFunctionUnit {
 
     switch(lstate) {
         is(lIdle) {
-            load_ready := true.B
-            when(io.in.valid & LSUOpType.isLoadType(io.in.bits.optype)) {
+            load_ready := !io_tlb_busy_stall
+            when(io.in.valid & io.in.ready & LSUOpType.isLoadType(io.in.bits.optype)) {
                 load_buf.id        := io.in.bits.id
                 load_buf.addr      := vaddr
                 load_buf.ldtype    := io.in.bits.optype
@@ -220,14 +221,14 @@ class LSU extends BaseFunctionUnit {
 
     val front_store_inst = store_queue.io.out.front_data
     val new_store_inst   = Wire(new StoreQueueEntry)
-    val store_ready      = !store_queue.io.out.full
+    val store_ready      = !store_queue.io.out.full & !io_tlb_busy_stall
     new_store_inst.id       := DelayN(io.in.bits.id, 1)
     new_store_inst.addr     := lsu_io.data_trans.paddr
     new_store_inst.uncached := uncached
     new_store_inst.wtype    := DelayN(wtype, 1)
     new_store_inst.wdata    := DelayN(wdata << (vaddr(1, 0) << 3.U), 1)
 
-    store_wb.bits.exception     := MuxCase(
+    store_wb.bits.exception := MuxCase(
         LA32ExceptionType.NONE.enum_no,
         Seq(
             DelayN(store_unalign, 1) -> LA32ExceptionType.ALE.enum_no,
@@ -237,13 +238,16 @@ class LSU extends BaseFunctionUnit {
             store_page_modfy         -> LA32ExceptionType.PME.enum_no
         )
     )
+    val store_en =
+        LSUOpType.isStoreType(io.in.bits.optype) & io.in.valid & io.in.ready & !(io.flush.ertn | io.flush.exception)
+
     store_wb.bits.mispred       := false.B
     store_wb.bits.result        := DelayN(vaddr, 1)
     store_wb.bits.id            := DelayN(io.in.bits.id, 1)
-    store_wb.valid              := DelayN(LSUOpType.isStoreType(io.in.bits.optype) & io.in.valid, 1)
+    store_wb.valid              := DelayN(store_en, 1)
     store_queue.io.in.clear     := io.flush.ertn | io.flush.exception
     store_queue.io.in.enq_data  := new_store_inst
-    store_queue.io.in.enq_valid := DelayN(LSUOpType.isStoreType(io.in.bits.optype) & io.in.valid & !store_unalign, 1)
+    store_queue.io.in.enq_valid := DelayN(store_en, 1)
     store_queue.io.in.deq_valid := lsu_io.store_commit.valid & lsu_io.store_commit.ready
 
     lsu_io.store_commit.ready := store_req.ready

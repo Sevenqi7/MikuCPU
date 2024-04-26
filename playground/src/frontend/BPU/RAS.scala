@@ -30,11 +30,11 @@ class MkRAS extends BranchPredictor with RASUtils {
     ras.io.in.clear   := false.B
     ras.io.in.valid   := false.B
 
-    when(io.s0.valid) {
-        when(isCall(io.s0.bits.inst)) {
+    when(io.s1.valid) {
+        when(isCall(io.s1.bits.inst)) {
             ras.io.in.valid := true.B
-            ras.pushData(io.s0.bits.pc + instBytes.U)
-        }.elsewhen(isRet(io.s0.bits.inst)) {
+            ras.pushData(io.s1.bits.pc + instBytes.U)
+        }.elsewhen(isRet(io.s1.bits.inst)) {
             io.resp.taken  := true.B
             io.resp.target := ras.popData
         }

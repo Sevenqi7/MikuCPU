@@ -16,21 +16,15 @@ class FlushReason extends MkBundle {
 }
 
 class IDUIO extends MkBundle {
-    val ifu_s1           = Flipped(ValidIO(new InstQueueEntry))
+    val ifu_s1           = Flipped(ValidIO(new FetchResult))
+    val br_pred          = Flipped(new BranchPredictorResult)
     val inst_queue_full  = Output(Bool())
     val inst_queue_flush = Flipped(new FlushReason)
     val to_issue         = Decoupled(new IssueEntry) // TODO: need a better name
 }
 
-class InstQueueEntry extends MkBundle {
-    val pc        = UInt(VADDR_WIDTH.W)
-    val inst      = UInt(INST_BITS.W)
-    val excp_flag = new Bundle {
-        val adef = Bool()
-        val tlbr = Bool()
-        val ppi  = Bool()
-        val pif  = Bool()
-    }
+class InstQueueEntry extends FetchResult {
+    val br_pred = Flipped(new BranchPredictorResult)
 }
 
 class IDU extends MkModule {
@@ -38,8 +32,14 @@ class IDU extends MkModule {
 
     val inst_queue  = Module(new CircularQueue(new InstQueueEntry, INST_QUEUE_SIZE))
     val flush_valid = io.inst_queue_flush.asUInt.asBools.reduce(_ || _)
+    val new_inst    = WireInit(0.U.asTypeOf(new InstQueueEntry))
+    new_inst.pc        := io.ifu_s1.bits.pc
+    new_inst.inst      := io.ifu_s1.bits.inst
+    new_inst.excp_flag := io.ifu_s1.bits.excp_flag
+    new_inst.br_pred   := io.br_pred
+
     inst_queue.io.in.clear := flush_valid
-    inst_queue.enqData(io.ifu_s1.bits, io.ifu_s1.valid)
+    inst_queue.enqData(new_inst, io.ifu_s1.valid)
     inst_queue.deqData(
         io.to_issue.ready & !inst_queue.io.out.empty
     ) // TODO: replace this with a ready signal from issue stage
@@ -55,6 +55,7 @@ class IDU extends MkModule {
         issue_entry_r.bits.decoded_inst := decoder.io.decoded_inst
         issue_entry_r.bits.inst         := inst_queue.io.out.front_data.inst
         issue_entry_r.bits.pc           := inst_queue.io.out.front_data.pc
+        issue_entry_r.bits.br_pred      := inst_queue.io.out.front_data.br_pred
         issue_entry_r.bits.exception    := MuxCase(
             LA32ExceptionType.NONE.enum_no,
             Seq(
