@@ -35,7 +35,7 @@ class LA32CSRRegfiles extends MkModule {
         val write_io       = new LA32CSRWriteIO
         val raw_datas      = new LA32CSR_RawData
         val timer64_o      = UInt(64.W)
-        val excp_info      = Flipped(ValidIO(new LA32ExceptionInfo))
+        val excp_commit    = Flipped(ValidIO(new LA32ExceptionInfo))
         val ertn_commit    = Input(Bool())
         val tlbrd_commit   = Input(Bool())
         val tlbwr_commit   = Input(Bool())
@@ -113,18 +113,18 @@ class LA32CSRRegfiles extends MkModule {
     )
 
     // Exception & Interrupt handle
-    val badv_update_v = io.excp_info.valid &
+    val badv_update_v = io.excp_commit.valid &
         Seq(TLBR, ADEF, ALE, PIL, PIS, PIF, PME, PPI)
-            .map(_.enum_no === io.excp_info.bits.extype)
+            .map(_.enum_no === io.excp_commit.bits.extype)
             .reduce(_ || _)
 
     val era  = csr_table(ERA)
     val badv = csr_table(BADV)
     val crmd = csr_table(CRMD)
     val prmd = csr_table(PRMD)
-    when(io.excp_info.valid) {
-        era.PC    := io.excp_info.bits.pc
-        when(io.excp_info.bits.extype === TLBR.enum_no) {
+    when(io.excp_commit.valid) {
+        era.PC    := io.excp_commit.bits.pc
+        when(io.excp_commit.bits.extype === TLBR.enum_no) {
             crmd.DA := 1.B
             crmd.PG := 0.B
         }
@@ -134,7 +134,7 @@ class LA32CSRRegfiles extends MkModule {
         prmd.PIE  := crmd.IE
         // update badv
         when(badv_update_v) {
-            badv.write(io.excp_info.bits.badv)
+            badv.write(io.excp_commit.bits.badv)
         }
     }
 
@@ -154,9 +154,9 @@ class LA32CSRRegfiles extends MkModule {
     }
     io.int_flag  := ((ecfg.LIE & estat.IS.asUInt) =/= 0.U) && crmd.IE
 
-    when(io.excp_info.valid) {
-        estat.Ecode    := getEcodeByExcpNo(io.excp_info.bits.extype)
-        estat.EsubCode := getEsubCodeByExcpNo(io.excp_info.bits.extype)
+    when(io.excp_commit.valid) {
+        estat.Ecode    := getEcodeByExcpNo(io.excp_commit.bits.extype)
+        estat.EsubCode := getEsubCodeByExcpNo(io.excp_commit.bits.extype)
     }
 
     // ERTN & LLBIT handle
@@ -188,7 +188,7 @@ class LA32CSRRegfiles extends MkModule {
 
     // PGD read/write
     // TODO: replace currently critical badv_msb signal
-    val badv_msb = Mux(!isWritingCSR(BADV), csr_table(BADV).rdata(VADDR_WIDTH - 1), io.write_io.wdata(VADDR_WIDTH - 1)) 
+    val badv_msb = Mux(!isWritingCSR(BADV), csr_table(BADV).rdata(VADDR_WIDTH - 1), io.write_io.wdata(VADDR_WIDTH - 1))
     val pgdl     = csr_table(PGDL)
     val pgdh     = csr_table(PGDH)
     when(io.read_io.raddr === PGD._1) {
@@ -209,7 +209,7 @@ class LA32CSRRegfiles extends MkModule {
     val tlbidx = csr_table(TLBIDX)
     val asid   = csr_table(ASID)
 
-    val excp_tlb = io.excp_info.valid && MuxLookup(io.excp_info.bits.extype, false.B)(
+    val excp_tlb = io.excp_commit.valid && MuxLookup(io.excp_commit.bits.extype, false.B)(
         Seq(
             LA32ExceptionType.TLBR.enum_no -> true.B,
             LA32ExceptionType.PIL.enum_no  -> true.B,
@@ -222,7 +222,7 @@ class LA32CSRRegfiles extends MkModule {
 
     // TLB-related exception
     when(excp_tlb) {
-        tlbehi.write(io.excp_info.bits.badv)
+        tlbehi.write(io.excp_commit.bits.badv)
     }
 
     // tlbrd

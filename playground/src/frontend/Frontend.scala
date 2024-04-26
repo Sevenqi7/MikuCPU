@@ -24,8 +24,7 @@ class FrontendIO extends MkBundle {
     }
     val inst_queue_full = Input(Bool())
     val inst_trans      = Flipped(new AddrTransChannel)
-    val excp_info       = Flipped(ValidIO(new LA32ExceptionInfo))
-    val excp_commit     = Input(Bool())
+    val excp_commit     = Flipped(ValidIO(new LA32ExceptionInfo))
     val ertn_commit     = Input(Bool())
 
     // CSR
@@ -50,11 +49,11 @@ class MkFrontend extends MkModule {
     val data_ok     = from_icache.valid & from_icache.bits.done
 
     val npc_set   = 0.U.asTypeOf(new NpcSelInfo())
-    val excp_tlbr = io.excp_info.valid & (io.excp_info.bits.extype === LA32ExceptionType.TLBR.enum_no)
+    val excp_tlbr = io.excp_commit.valid & (io.excp_commit.bits.extype === LA32ExceptionType.TLBR.enum_no)
     npc_set.pred_result          := bpu.io.resp
     npc_set.pred_check.bits      := io.update.bits
     npc_set.pred_check.valid     := io.update.valid
-    npc_set.exception.valid      := io.excp_info.valid
+    npc_set.exception.valid      := io.excp_commit.valid
     npc_set.exception.bits.entry := Mux(excp_tlbr, io.from_csr.tlbrentry.rdata, io.from_csr.eentry.rdata)
     npc_set.ertn_target.valid    := io.ertn_commit
     npc_set.ertn_target.bits.era := io.from_csr.era.rdata

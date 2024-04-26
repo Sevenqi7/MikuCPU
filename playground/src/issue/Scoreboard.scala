@@ -13,22 +13,23 @@ import miku.frontend.BranchPredictorUpdate
 import java.util.concurrent.Future
 
 class ScoreboardEntry extends MkBundle {
-    val decoded_inst = new DecodedInst
-    val raw_inst     = if (DIFFTEST_MODE) Some(UInt(WORD_WIDTH.W)) else None
-    val lsu_diff     =
+    val decoded_inst  = new DecodedInst
+    val raw_inst      = if (DIFFTEST_MODE) Some(UInt(WORD_WIDTH.W)) else None
+    val lsu_diff      =
         if (DIFFTEST_MODE) Some(new Bundle {
             val paddr = UInt(PADDR_WIDTH.W)
             val vaddr = UInt(VADDR_WIDTH.W)
             val wdata = UInt(WORD_WIDTH.W)
         })
         else None
-    val rj_num       = UInt(REG_ADDR_WD.W)
-    val rk_num       = UInt(REG_ADDR_WD.W)
-    val rd_num       = UInt(REG_ADDR_WD.W)
-    val exception    = LA32ExceptionType()
-    val result       = UInt(WORD_WIDTH.W)
-    val br_info      = ValidIO(new BranchInstInfo)
-    val executed     = Bool()
+    val rj_num        = UInt(REG_ADDR_WD.W)
+    val rk_num        = UInt(REG_ADDR_WD.W)
+    val rd_num        = UInt(REG_ADDR_WD.W)
+    val frontend_excp = Bool()
+    val exception     = LA32ExceptionType()
+    val result        = UInt(WORD_WIDTH.W)
+    val br_info       = ValidIO(new BranchInstInfo)
+    val executed      = Bool()
 }
 
 class ScoreboardFowardInfo extends MkBundle {
@@ -100,6 +101,10 @@ class Scoreboard extends MkModule {
         // BL has a fixed destination register R1
         sb_mem(issue_ptr).bits.rd_num       := Mux(is_bl, 1.U, io.from_decoder.bits.inst(4, 0))
         sb_mem(issue_ptr).bits.decoded_inst := decoded_inst
+
+        // Record exception that occured in frontend
+        sb_mem(issue_ptr).bits.exception     := io.from_decoder.bits.exception
+        sb_mem(issue_ptr).bits.frontend_excp := (io.from_decoder.bits.exception === LA32ExceptionType.NONE.enum_no)
         if (DIFFTEST_MODE) {
             sb_mem(issue_ptr).bits.raw_inst.get := io.from_decoder.bits.inst
         }
@@ -197,8 +202,9 @@ class Scoreboard extends MkModule {
         when(wb.valid & wb_sbe.valid & !ex_valid & !ertn_valid) {
             wb_sbe.bits.br_info.bits.mispred := wb.bits.mispred
             wb_sbe.bits.result               := wb.bits.result
-            wb_sbe.bits.exception            := wb.bits.exception
             wb_sbe.bits.executed             := true.B
+            wb_sbe.bits.exception            := wb.bits.exception
+
             if (DIFFTEST_MODE) {
                 wb_sbe.bits.lsu_diff.get := io.lsu_diff.get
             }

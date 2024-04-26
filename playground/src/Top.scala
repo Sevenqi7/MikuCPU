@@ -56,7 +56,7 @@ class MkTop extends MkModule {
 
     val frontend_flush = 0.U.asTypeOf(new FlushReason)
     frontend_flush.ertn      := issue.io.ertn_commit
-    frontend_flush.exception := issue.io.excp_info.valid
+    frontend_flush.exception := issue.io.excp_commit.valid
     frontend_flush.mispred   := excute.io.br_update.valid
 
     val backend_flush = WireInit(frontend_flush)
@@ -68,7 +68,7 @@ class MkTop extends MkModule {
 
     frontend.io.update             := excute.io.br_update
     frontend.io.inst_queue_full    := decode.io.inst_queue_full
-    frontend.io.excp_info          := issue.io.excp_info
+    frontend.io.excp_commit        := issue.io.excp_commit
     frontend.io.from_csr.eentry    := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.EENTRY)
     frontend.io.from_csr.tlbrentry := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.TLBRENTRY)
     frontend.io.from_csr.era       := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.ERA)
@@ -135,7 +135,7 @@ class MkTop extends MkModule {
 
     csr.io.read_io        <> excute.io.csr_io.read_io
     csr.io.write_io       <> excute.io.csr_io.write_io
-    csr.io.excp_info      := issue.io.excp_info
+    csr.io.excp_commit    := issue.io.excp_commit
     csr.io.ertn_commit    := issue.io.ertn_commit
     csr.io.tlbrd_commit   := excute.io.csr_io.tlbrd_commit
     csr.io.tlbrd_result   := excute.io.csr_io.tlbrd_result
