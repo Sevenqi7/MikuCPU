@@ -55,6 +55,7 @@ class ScoreboardIO extends MkBundle {
     val forward_msg  = new ScoreboardFowardInfo
     val excp_info    = ValidIO(new LA32ExceptionInfo)
     val int_flag     = Input(Bool())
+    val llbit        = Input(Bool())
     val lsu_diff     =
         if (DIFFTEST_MODE) Some(Flipped(new Bundle {
             val paddr = UInt(PADDR_WIDTH.W)
@@ -104,7 +105,7 @@ class Scoreboard extends MkModule {
 
         // Record exception that occured in frontend
         sb_mem(issue_ptr).bits.exception     := io.from_decoder.bits.exception
-        sb_mem(issue_ptr).bits.frontend_excp := (io.from_decoder.bits.exception === LA32ExceptionType.NONE.enum_no)
+        sb_mem(issue_ptr).bits.frontend_excp := (io.from_decoder.bits.exception =/= LA32ExceptionType.NONE.enum_no)
         if (DIFFTEST_MODE) {
             sb_mem(issue_ptr).bits.raw_inst.get := io.from_decoder.bits.inst
         }
@@ -168,7 +169,15 @@ class Scoreboard extends MkModule {
         sb_mem(commit_ptr).bits.executed := false.B
 
         // exception check
-        ex_valid   := (sb_mem(commit_ptr).bits.exception =/= LA32ExceptionType.NONE.enum_no) | int_flag
+        val inst_excp        = (sb_mem(commit_ptr).bits.exception =/= LA32ExceptionType.NONE.enum_no)
+        val is_frontend_excp = inst_excp & sb_mem(commit_ptr).bits.frontend_excp
+        val is_commit_sc     = (sb_mem(commit_ptr).bits.decoded_inst.futype === FuType.lsu) &&
+            (sb_mem(commit_ptr).bits.decoded_inst.fuoptype === LSUOpType.scw)
+
+        // SC.W instruction only cause tlb-exception and only when llbit is set
+        // Since fetch stage also may casue tlb-exception, we use a bit "frontend_excp" in scoreboard
+        // to record whether current committed exception is occured in frontend or backend.
+        ex_valid   := Mux(!is_commit_sc, inst_excp, inst_excp & !is_frontend_excp & io.llbit) | int_flag
         ertn_valid := (sb_mem(commit_ptr).bits.decoded_inst.fuoptype === MiscOpType.ertn) &&
             (sb_mem(commit_ptr).bits.decoded_inst.futype === FuType.misc)
 
@@ -203,7 +212,11 @@ class Scoreboard extends MkModule {
             wb_sbe.bits.br_info.bits.mispred := wb.bits.mispred
             wb_sbe.bits.result               := wb.bits.result
             wb_sbe.bits.executed             := true.B
-            wb_sbe.bits.exception            := wb.bits.exception
+
+            // Record backend exception if no other exception occured in frontend
+            when(!wb_sbe.bits.frontend_excp) {
+                wb_sbe.bits.exception := wb.bits.exception
+            }
 
             if (DIFFTEST_MODE) {
                 wb_sbe.bits.lsu_diff.get := io.lsu_diff.get

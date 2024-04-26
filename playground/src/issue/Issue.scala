@@ -65,6 +65,7 @@ class IssueStage extends MkModule {
     scoreboard.io.from_decoder     <> io.from_decoder
     scoreboard.io.issue_inst.ready := io.trans.ready
     scoreboard.io.int_flag         := io.int_flag
+    scoreboard.io.llbit            := io.llbit
     io.excp_commit                 := scoreboard.io.excp_info
 
     // read operands of the issued instruction from scoreboard
@@ -124,14 +125,14 @@ class IssueStage extends MkModule {
     val opr_c_valid = !decoded_inst.needRd || (decoded_inst.needRd & !scoreboard.io.forward_msg.rd_raw_hazard)
     scoreboard.io.operands_rdy := opr_a_valid & opr_b_valid & opr_c_valid
 
-    // commit logic
+    /*                  COMMIT LOGIC                    */
+
     val commit_inst     = scoreboard.io.commit_inst
     val commit_inst_sbe = commit_inst.bits.sbe
 
     // check whether we are committing a store inst
 
-    val inst_excp          = (commit_inst_sbe.exception =/= LA32ExceptionType.NONE.enum_no)
-    val inst_excp_frontend = commit_inst_sbe.frontend_excp
+    val inst_excp = (commit_inst_sbe.exception =/= LA32ExceptionType.NONE.enum_no)
 
     // val is_commit_mispred = (commit_inst_sbe.br_info.valid && commit_inst_sbe.br_info.bits.mispred)
     val is_commit_store =
