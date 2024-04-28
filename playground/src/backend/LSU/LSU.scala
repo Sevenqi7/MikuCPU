@@ -114,17 +114,22 @@ class LSU extends BaseFunctionUnit {
     // search in store queue
     val stq_items      = store_queue.io.out.element_vec.get
     val stq_total_hits =
-        stq_items.map(st => st.valid && st.bits.addr(VADDR_WIDTH - 1, 2) === load_buf.addr(VADDR_WIDTH - 1, 2))
+        stq_items.map(st =>
+            st.valid && st.bits.addr(VADDR_WIDTH - 1, 2) === lsu_io.data_trans.paddr(VADDR_WIDTH - 1, 2)
+        )
     val stq_hit_en     = (lstate === lReq) && (RegNext(lstate) =/= lReq)
     val stq_hit        = RegEnable(stq_total_hits.reduce(_ || _), stq_hit_en)
     val stq_hit_item   = RegEnable(stq_items(OHToUInt(stq_total_hits)), stq_hit_en)
     real_rdata := Mux(
         !stq_hit,
         load_resp.bits.rdata, {
-            val wstrb = getWstrbFromWtype(stq_hit_item.bits.wtype, wordBytes.U)
-            val wmask = Cat((0 until wordBytes).map(i => Cat(Seq.fill(8)(wstrb(i)))))
+            val wstrb = getWstrbFromWtype(stq_hit_item.bits.wtype, stq_hit_item.bits.addr(1, 0))
+            val wmask = Cat((0 until wordBytes).map(i => Cat(Seq.fill(8)(wstrb(i)))).reverse)
             val wdata = stq_hit_item.bits.wdata
             val bools = VecInit(load_resp.bits.rdata.asBools)
+            // when(stq_hit) {
+            //     printf("wstrb:0x%x wmask:0x%x\n", wstrb, wmask)
+            // }
             for (i <- 0 until bools.length) {
                 assert(wmask.getWidth == bools.getWidth)
                 when(wmask(i)) {

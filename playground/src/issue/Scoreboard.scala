@@ -129,7 +129,7 @@ class Scoreboard extends MkModule {
         .map { case (sbe, id) =>
             sbe.valid && sbe.bits.decoded_inst.regwen &&
             (sbe.bits.rd_num === io.issue_inst.bits.sbe.rd_num) &&
-            (id.U =/= commit_ptr)
+            ((id.U =/= commit_ptr) || ((id.U === commit_ptr) && !commit_ack))
         }.reduce(_ || _)
 
     // only issue an branch instruction when no other unresolved branch inst in scoreboard
