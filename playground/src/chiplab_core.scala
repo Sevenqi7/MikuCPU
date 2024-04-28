@@ -148,9 +148,10 @@ class core_top extends RawModule with HasMkParams {
             diff_info.commit_inst.bits.sbe.rd_num
         )
 
-        val cmt_valid = diff_info.commit_inst.valid
-        val cmt_pc    = diff_info.commit_inst.bits.sbe.br_info.bits.pc
-        val cmt_instr = diff_info.commit_inst.bits.sbe.raw_inst.get
+        val cmt_inst     = diff_info.commit_inst
+        val cmt_valid    = cmt_inst.valid
+        val cmt_pc       = cmt_inst.bits.sbe.br_info.bits.pc
+        val cmt_raw_inst = cmt_inst.bits.sbe.raw_inst.get
 
         val DifftestInstrCommit = Module(new DifftestInstrCommit)
         withClockAndReset(aclk, !aresetn) {
@@ -161,11 +162,11 @@ class core_top extends RawModule with HasMkParams {
             DifftestInstrCommit.io.skip           := false.B
             DifftestInstrCommit.io.valid          := DelayN(cmt_valid, delay_cycles)
             DifftestInstrCommit.io.pc             := DelayN(cmt_pc, delay_cycles)
-            DifftestInstrCommit.io.instr          := DelayN(cmt_instr, delay_cycles)
+            DifftestInstrCommit.io.instr          := DelayN(cmt_raw_inst, delay_cycles)
             DifftestInstrCommit.io.is_TLBFILL     := DelayN(diff_info.is_commit_tlbfill, delay_cycles)
             DifftestInstrCommit.io.TLBFILL_index  := DelayN(diff_info.tlbfill_index, delay_cycles)
             DifftestInstrCommit.io.is_CNTinst     := DelayN(diff_info.is_CNTinst, delay_cycles)
-            DifftestInstrCommit.io.timer_64_value := DelayN(diff_info.commit_inst.bits.sbe.result, delay_cycles)
+            DifftestInstrCommit.io.timer_64_value := DelayN(cmt_inst.bits.sbe.timer64_val.get, delay_cycles)
             DifftestInstrCommit.io.wen       := DelayN(diff_info.commit_inst.bits.sbe.decoded_inst.regwen, delay_cycles)
             DifftestInstrCommit.io.wdest     := DelayN(dest_reg, delay_cycles)
             DifftestInstrCommit.io.wdata     := DelayN(diff_info.commit_inst.bits.sbe.result, delay_cycles)

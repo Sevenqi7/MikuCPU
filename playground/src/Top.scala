@@ -83,6 +83,7 @@ class MkTop extends MkModule {
     issue.io.wb_data(1)  <> excute.io.out.lsu_out
     issue.io.llbit       := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.LLBCTL).ROLLB
     issue.io.int_flag    := csr.io.int_flag
+    issue.io.timer64     := csr.io.timer64_o
 
     excute.io.in.bits                := issue.io.trans.bits.fuinput
     excute.io.in.valid               := issue.io.trans.valid

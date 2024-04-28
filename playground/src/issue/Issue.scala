@@ -35,6 +35,7 @@ class IssueStageIO extends MkBundle {
     // val excp_info    = ValidIO(new LA32ExceptionInfo)
     val int_flag     = Input(Bool())
     val llbit        = Input(Bool())
+    val timer64      = Input(UInt(64.W))
 
     // DIFFTEST
     val diff     =
@@ -66,6 +67,7 @@ class IssueStage extends MkModule {
     scoreboard.io.issue_inst.ready := io.trans.ready
     scoreboard.io.int_flag         := io.int_flag
     scoreboard.io.llbit            := io.llbit
+    scoreboard.io.timer64_val      := io.timer64
     io.excp_commit                 := scoreboard.io.excp_info
 
     // read operands of the issued instruction from scoreboard

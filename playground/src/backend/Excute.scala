@@ -127,8 +127,8 @@ class EXU extends MkModule {
 
     io.br_update       := bru.bru_io.update
     bru.bru_io.br_pred := br_pred_r
-    
-    io.lsu_io          <> lsu.lsu_io
-    io.csr_io          <> csr.csr_io
-    io.misc_io         <> misc.misc_io
+
+    io.lsu_io  <> lsu.lsu_io
+    io.csr_io  <> csr.csr_io
+    io.misc_io <> misc.misc_io
 }

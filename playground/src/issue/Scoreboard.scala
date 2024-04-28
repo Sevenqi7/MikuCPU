@@ -14,6 +14,7 @@ import java.util.concurrent.Future
 
 class ScoreboardEntry extends MkBundle {
     val decoded_inst  = new DecodedInst
+    val timer64_val   = if (DIFFTEST_MODE) Some(UInt(64.W)) else None
     val raw_inst      = if (DIFFTEST_MODE) Some(UInt(WORD_WIDTH.W)) else None
     val lsu_diff      =
         if (DIFFTEST_MODE) Some(new Bundle {
@@ -56,7 +57,9 @@ class ScoreboardIO extends MkBundle {
     val excp_info    = ValidIO(new LA32ExceptionInfo)
     val int_flag     = Input(Bool())
     val llbit        = Input(Bool())
-    val lsu_diff     =
+    val timer64_val  = Input(UInt(64.W))
+
+    val lsu_diff =
         if (DIFFTEST_MODE) Some(Flipped(new Bundle {
             val paddr = UInt(PADDR_WIDTH.W)
             val vaddr = UInt(VADDR_WIDTH.W)
@@ -219,7 +222,8 @@ class Scoreboard extends MkModule {
             }
 
             if (DIFFTEST_MODE) {
-                wb_sbe.bits.lsu_diff.get := io.lsu_diff.get
+                wb_sbe.bits.timer64_val.get := io.timer64_val
+                wb_sbe.bits.lsu_diff.get    := io.lsu_diff.get
             }
             // misprediction flush
             when(wb_sbe.bits.br_info.valid & wb_sbe.bits.br_info.bits.mispred) {
