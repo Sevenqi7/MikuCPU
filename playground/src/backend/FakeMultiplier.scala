@@ -6,7 +6,7 @@ import chisel3.util._
 import miku._
 import miku.utils._
 import miku.backend._
-import miku.MulDivOpType._
+import miku.isa.MulDivOpType._
 
 //This is a fake multiplier that use '*' operator to generate result
 //and delay the output for 5 cycles
@@ -17,13 +17,13 @@ class FakeMultiplier extends BaseFunctionUnit {
     val rk = io.in.bits.operand_b
 
     val result_sel_table = Seq(
-        mulw   -> (rj * rk),
-        mulhw  -> (rj.asSInt * rk.asSInt).asUInt(63, 32),
-        mulhwu -> (rj * rk)(63, 32),
-        divw   -> (rj.asSInt / rk.asSInt).asUInt(31, 0),
-        divwu  -> (rj / rk)(31, 0),
-        modw   -> (rj.asSInt - (rj.asSInt / rk.asSInt) * rk.asSInt).asUInt(31, 0),
-        modwu  -> (rj - (rj / rk) * rk)(31, 0)
+        mul   -> (rj * rk),
+        mulh  -> (rj.asSInt * rk.asSInt).asUInt(63, 32),
+        mulhu -> (rj * rk)(63, 32),
+        div   -> (rj.asSInt / rk.asSInt).asUInt(31, 0),
+        divu  -> (rj / rk)(31, 0),
+        mod   -> (rj.asSInt - (rj.asSInt / rk.asSInt) * rk.asSInt).asUInt(31, 0),
+        modu  -> (rj - (rj / rk) * rk)(31, 0)
         // modw   -> (rj.asSInt % rk.asSInt).asUInt(31, 0),
         // modwu  -> (rj % rk)(31, 0)
     )

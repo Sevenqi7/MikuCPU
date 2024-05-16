@@ -4,6 +4,7 @@ import chisel3._
 import chisel3.util._
 
 import miku._
+import miku.isa._
 import miku.utils._
 import miku.frontend._
 
@@ -11,7 +12,7 @@ class BaseFuInput extends MkBundle {
     val id        = UInt(TRANS_ID_BITS.W)
     val pc        = UInt(VADDR_WIDTH.W)
     val optype    = FuOpType()
-    val exception = LA32ExceptionType()
+    val exception = ArchExceptionType()
     val operand_a = UInt(WORD_WIDTH.W) // rj or pc
     val operand_b = UInt(WORD_WIDTH.W) // rk or imms
     val operand_c = UInt(WORD_WIDTH.W) // rd for branch and store insts or src3 for some insts
@@ -20,7 +21,7 @@ class BaseFuInput extends MkBundle {
 class BaseFuOutput extends MkBundle {
     val id        = UInt(TRANS_ID_BITS.W)
     val result    = UInt(WORD_WIDTH.W)
-    val exception = LA32ExceptionType()
+    val exception = ArchExceptionType()
     val mispred   = Bool()
 }
 
@@ -28,9 +29,10 @@ class WriteBackResult extends BaseFuOutput {}
 
 abstract class BaseFunctionUnit extends MkModule {
     lazy val io = IO(new Bundle {
-        val in    = Flipped(Decoupled(new BaseFuInput))
-        val out   = Decoupled(new BaseFuOutput)
-        val flush = Flipped(new FlushReason)
+        val in      = Flipped(Decoupled(new BaseFuInput))
+        val out     = Decoupled(new BaseFuOutput)
+        val flush   = Flipped(new FlushReason)
+        val csr_vec = Flipped(new CSRVecBundle)
     })
 }
 
@@ -43,21 +45,23 @@ class EXUIO extends MkBundle {
     val futype    = Input(FuType())
     val br_pred   = Flipped(new BranchPredictorResult)
     val flush     = Flipped(new FlushReason)
-    val lsu_io    = new LSUIO
-    val csr_io    = new CSRBufferIO
-    val misc_io   = new MiscFuIO
     val br_update = ValidIO(new BranchPredictorUpdate)
+    val csr_vec   = Flipped(new CSRVecBundle)
 }
 
 class EXU extends MkModule {
     val io = IO(new EXUIO)
 
-    val alu  = Module(new MkALU)
-    val lsu  = Module(new LSU)
+    val alu  = Module(new MkALUWrapper)
+    val lsu  = Module(ArchLSU())
     val mul  = Module(new FakeMultiplier)
-    val bru  = Module(new BranchUnit)
-    val csr  = Module(new CSRBuffer)
-    val misc = Module(new MiscFunctionUnit)
+    val bru  = Module(ArchBRU())
+    val csr  = Module(ArchCSRBuffer())
+    val misc = Module(ArchMiscFu())
+
+    val lsu_io  = IO(lsu.lsu_io.cloneType)
+    val csr_io  = IO(csr.csr_io.cloneType)
+    val misc_io = IO(misc.misc_io.cloneType)
 
     val function_units = Seq(
         FuType.bru  -> bru,
@@ -79,7 +83,7 @@ class EXU extends MkModule {
     val fu_base_in = RegInit(0.U.asTypeOf(ValidIO(new BaseFuInput)))
     val futype_r   = RegInit(0.U.asTypeOf(FuType()))
     val br_pred_r  = RegInit(0.U.asTypeOf(new BranchPredictorResult))
-    val inst_excp  = (fu_base_in.bits.exception =/= LA32ExceptionType.NONE.enum_no)
+    val inst_excp  = (fu_base_in.bits.exception =/= ArchExceptionType.NONE.enum_no)
 
     when(io.in.ready) {
         fu_base_in.bits  := io.in.bits
@@ -92,7 +96,8 @@ class EXU extends MkModule {
     function_units.foreach(_._2.io.in.valid := false.B)
     function_units.foreach(_._2.io.in.bits  := fu_base_in.bits)
     for (fu <- function_units) {
-        fu._2.io.flush := io.flush
+        fu._2.io.flush   := io.flush
+        fu._2.io.csr_vec := io.csr_vec
         when(futype_r === fu._1) {
             fu._2.io.in.valid := fu_base_in.valid & !inst_excp
             io.in.ready       := fu._2.io.in.ready
@@ -128,7 +133,7 @@ class EXU extends MkModule {
     io.br_update       := bru.bru_io.update
     bru.bru_io.br_pred := br_pred_r
 
-    io.lsu_io  <> lsu.lsu_io
-    io.csr_io  <> csr.csr_io
-    io.misc_io <> misc.misc_io
+    lsu_io  <> lsu.lsu_io
+    csr_io  <> csr.csr_io
+    misc_io <> misc.misc_io
 }

@@ -5,23 +5,31 @@ import chisel3.util._
 
 import miku._
 import miku.utils._
+import miku.isa.la32._
 
 // address transform channel
+class AddrTransReq extends MkBundle {
+    val valid = Bool()
+    val vaddr = UInt(PADDR_WIDTH.W)
+}
+
+class AddrTransResp extends MkBundle {
+    val paddr    = UInt(PADDR_WIDTH.W)
+    val dmw_hits = Vec(2, Bool())
+    val tlb_resp = new TLBSearchResp(TLB_NUM)
+}
+
 class AddrTransChannel extends MkBundle {
-    val valid      = Input(Bool())
-    val vaddr      = Input(UInt(PADDR_WIDTH.W))
-    val paddr      = Output(UInt(PADDR_WIDTH.W))
-    val dmw_hits   = Output(Vec(2, Bool()))
-    val tlb_resp   = Output(new TLBSearchResp(TLB_NUM))
-    val tlbsrch_en = Input(Bool())
+    val req  = Flipped(new AddrTransReq)
+    val resp = new AddrTransResp
 
     def genTLBSearchReq(asid: UInt, tlb_en: Bool): TLBSearchReq = {
-        val req = Wire(new TLBSearchReq)
-        req.asid     := asid
-        req.vppn     := vaddr(VADDR_WIDTH - 1, 13)
-        req.odd_page := vaddr(12)
-        req.valid    := valid & tlb_en
-        req
+        val sreq = Wire(new TLBSearchReq)
+        sreq.asid     := asid
+        sreq.vppn     := req.vaddr(VADDR_WIDTH - 1, 13)
+        sreq.odd_page := req.vaddr(12)
+        sreq.valid    := req.valid & tlb_en
+        sreq
     }
 }
 
@@ -59,17 +67,17 @@ class LA32AddrTransUnit extends MkModule {
         )
         la32_tlb.io.search_port(idx).req := ch.genTLBSearchReq(
             io.from_csr.asid.ASID,
-            ch.valid
+            ch.req.valid
         )
 
         val tlb_resp = la32_tlb.io.search_port(idx).resp
-        vaddr_r(idx) := ch.vaddr
-        ch.paddr     := DEBUG_MAGICNUM.U
-        ch.tlb_resp  := tlb_resp
-        ch.dmw_hits  := dmw_hits
+        vaddr_r(idx)     := ch.req.vaddr
+        ch.resp.paddr    := DEBUG_MAGICNUM.U
+        ch.resp.tlb_resp := tlb_resp
+        ch.resp.dmw_hits := dmw_hits
 
         when(da_mode) {
-            ch.paddr := vaddr_r(idx)
+            ch.resp.paddr := vaddr_r(idx)
         }.elsewhen(pg_mode) {
             val dmw_hit_idx    = OHToUInt(dmw_hits)
             val dmw_paddr      = Cat(io.from_csr.dmw(dmw_hit_idx).PSEG, vaddr_r(idx)(28, 0))
@@ -77,7 +85,7 @@ class LA32AddrTransUnit extends MkModule {
             val page_4kb_paddr = Cat(tlb_resp.result.ppn, vaddr_r(idx)(11, 0))
             // ps == 21
             val page_4mb_paddr = Cat(tlb_resp.result.ppn(PADDR_WIDTH - 13, 10), vaddr_r(idx)(20, 0))
-            ch.paddr    := MuxCase(
+            ch.resp.paddr    := MuxCase(
                 DEBUG_MAGICNUM.U,
                 Seq(
                     (dmw_hits.reduce(_ || _), dmw_paddr),
@@ -85,8 +93,8 @@ class LA32AddrTransUnit extends MkModule {
                     (tlb_resp.ps === 21.U, page_4mb_paddr)
                 )
             )
-            ch.dmw_hits := dmw_hits
-            ch.tlb_resp := tlb_resp
+            ch.resp.dmw_hits := dmw_hits
+            ch.resp.tlb_resp := tlb_resp
         }
     }
 }

@@ -35,36 +35,26 @@ class IDU extends MkModule {
     val new_inst    = WireInit(0.U.asTypeOf(new InstQueueEntry))
     new_inst.pc        := io.ifu_s1.bits.pc
     new_inst.inst      := io.ifu_s1.bits.inst
-    new_inst.excp_flag := io.ifu_s1.bits.excp_flag
+    new_inst.exception := io.ifu_s1.bits.exception
     new_inst.br_pred   := io.br_pred
 
     inst_queue.io.in.clear := flush_valid
     inst_queue.enqData(new_inst, io.ifu_s1.valid)
-    inst_queue.deqData(
-        io.to_issue.ready & !inst_queue.io.out.empty
-    ) // TODO: replace this with a ready signal from issue stage
+    inst_queue.deqData(io.to_issue.ready & !inst_queue.io.out.empty)
 
-    val decoder = Module(new LA32DecoderUnit)
+    val decoder = Module(ArchDecodedUnit())
     decoder.io.raw_inst := inst_queue.io.out.front_data.inst
 
     val issue_entry_r = RegInit(0.U.asTypeOf(ValidIO(new IssueEntry))) // TODO: need a better name
     when(flush_valid) {
         issue_entry_r := 0.U.asTypeOf(ValidIO(new IssueEntry))
     }.elsewhen(io.to_issue.ready) {
-        val excp_flag = inst_queue.io.out.front_data.excp_flag
+        val excp_flag = inst_queue.io.out.front_data.exception
         issue_entry_r.bits.decoded_inst := decoder.io.decoded_inst
         issue_entry_r.bits.inst         := inst_queue.io.out.front_data.inst
         issue_entry_r.bits.pc           := inst_queue.io.out.front_data.pc
         issue_entry_r.bits.br_pred      := inst_queue.io.out.front_data.br_pred
-        issue_entry_r.bits.exception    := MuxCase(
-            LA32ExceptionType.NONE.enum_no,
-            Seq(
-                excp_flag.adef -> LA32ExceptionType.ADEF.enum_no,
-                excp_flag.tlbr -> LA32ExceptionType.TLBR.enum_no,
-                excp_flag.pif  -> LA32ExceptionType.PIF.enum_no,
-                excp_flag.ppi  -> LA32ExceptionType.PPI.enum_no
-            )
-        )
+        issue_entry_r.bits.exception    := inst_queue.io.out.front_data.exception
         issue_entry_r.valid             := !inst_queue.io.out.empty
     }
 

@@ -5,6 +5,7 @@ import chisel3.util._
 
 import miku._
 import miku.utils._
+import miku.isa.la32._
 
 trait RASUtils {
     def isCall(inst: UInt): Bool = {

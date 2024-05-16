@@ -5,7 +5,9 @@ import chisel3.util._
 
 import miku._
 import miku.utils._
+import miku.isa.la32._
 import chisel3.internal.firrtl.MemPortDirection
+import miku.isa.CSRVecBundle
 
 class BranchInstInfo extends MkBundle {
     val pc      = UInt(WORD_WIDTH.W)
@@ -24,23 +26,17 @@ class FrontendIO extends MkBundle {
     }
     val inst_queue_full = Input(Bool())
     val inst_trans      = Flipped(new AddrTransChannel)
-    val excp_commit     = Flipped(ValidIO(new LA32ExceptionInfo))
+    val excp_commit     = Flipped(ValidIO(ArchExceptionInfo()))
     val ertn_commit     = Input(Bool())
 
     // CSR
-    val from_csr = Flipped(new Bundle {
-        val crmd      = new LA32CSR_Crmd
-        val eentry    = new LA32CSR_Eentry
-        val tlbrentry = new LA32CSR_Tlbrentry
-        val era       = new LA32CSR_Era
-        val dwm       = Vec(2, new LA32CSR_Dmw)
-    })
+    val csr_vec = Flipped(new CSRVecBundle)
 }
 
 class MkFrontend extends MkModule {
     val io = IO(new FrontendIO())
 
-    val ifu = Module(new IFU())
+    val ifu = Module(ArchFetchUnit())
     val bpu = Module(new BranchPredictorWrapper())
 
     val from_icache = io.icache_inter.resp
@@ -49,39 +45,23 @@ class MkFrontend extends MkModule {
     val data_ok     = from_icache.valid & from_icache.bits.done
 
     val npc_set   = 0.U.asTypeOf(new NpcSelInfo())
-    val excp_tlbr = io.excp_commit.valid & (io.excp_commit.bits.extype === LA32ExceptionType.TLBR.enum_no)
+    val excp_tlbr = io.excp_commit.valid & (io.excp_commit.bits.extype === LA32ExceptionDefns.TLBR.enum_no)
     npc_set.pred_result          := bpu.io.resp
     npc_set.pred_check.bits      := io.update.bits
     npc_set.pred_check.valid     := io.update.valid
     npc_set.exception.valid      := io.excp_commit.valid
-    npc_set.exception.bits.entry := Mux(excp_tlbr, io.from_csr.tlbrentry.rdata, io.from_csr.eentry.rdata)
+    npc_set.exception.bits.entry := io.csr_vec.getExcpEntry(io.excp_commit.bits.extype)
     npc_set.ertn_target.valid    := io.ertn_commit
-    npc_set.ertn_target.bits.era := io.from_csr.era.rdata
-
-    // fetch unit doesn't write cache
-    val pg_mode        = !io.from_csr.crmd.DA & io.from_csr.crmd.PG
-    val da_mode        = io.from_csr.crmd.DA & !io.from_csr.crmd.PG
-    val dmw_total_hits = io.inst_trans.dmw_hits
-    val dmw_hit        = dmw_total_hits.reduce(_ || _)
-    val dmw_hit_idx    = OHToUInt(dmw_total_hits)
-    val tlb_resp       = io.inst_trans.tlb_resp
-    io.inst_trans.vaddr      := ifu.io.stage_info.s0.bits.pc
-    io.inst_trans.valid      := true.B // keep translating s0_pc to ensure we can catch all tlb-related exceptions
-    io.inst_trans.tlbsrch_en := false.B
+    npc_set.ertn_target.bits.era := io.csr_vec.getExcpRetAddr()
+    io.inst_trans.req.vaddr      := ifu.io.stage_info.s0.bits.pc
+    io.inst_trans.req.valid      := true.B // keep translating s0_pc to ensure we can catch all tlb-related exceptions
 
     to_icache.bits.wr         := 0.B
     to_icache.bits.vaddr      := ifu.io.stage_info.s0.bits.pc
-    to_icache.bits.paddr      := io.inst_trans.paddr
+    to_icache.bits.paddr      := io.inst_trans.resp.paddr
     to_icache.bits.wdata      := 0.U
     to_icache.bits.wtype      := 0.U
-    // to_icache.bits.uncached   := 0.B
-    to_icache.bits.uncached   := Mux1H(
-        Seq(
-            (da_mode              -> (io.from_csr.crmd.DATF === 0.U)),
-            ((pg_mode & dmw_hit)  -> (io.from_csr.dwm(dmw_hit_idx).MAT === 0.U)),
-            ((pg_mode & !dmw_hit) -> (tlb_resp.result.mat === 0.U))
-        )
-    )
+    to_icache.bits.uncached   := ifu.io.s0_uncached
     to_icache.bits.cacop_en   := false.B
     to_icache.bits.cacop_func := 0.U
     to_icache.valid           := (ifu.io.stage_info.s0.bits.pc(1, 0) === 0.U)
@@ -95,7 +75,6 @@ class MkFrontend extends MkModule {
     bpu.io.update             := io.update
     ifu.io.npc_sel_info       := npc_set
     ifu.io.inst_queue_full    := io.inst_queue_full
-    ifu.io.tlb_resp           := io.inst_trans.tlb_resp
-    ifu.io.tlb_resp_v         := pg_mode & !dmw_hit
-    ifu.io.crmd_plv           := io.from_csr.crmd.PLV
+    ifu.io.inst_trans_resp    := io.inst_trans.resp
+    ifu.io.csr_vec            := io.csr_vec
 }

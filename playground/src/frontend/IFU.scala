@@ -5,6 +5,7 @@ import chisel3.util._
 
 import miku._
 import miku.utils._
+import miku.isa.CSRVecBundle
 
 class IFUICacheIO extends MkBundle {
     val addr_ok = Bool()
@@ -26,12 +27,7 @@ class NpcSelInfo extends MkBundle {
 class FetchResult extends MkBundle {
     val pc        = UInt(VADDR_WIDTH.W)
     val inst      = UInt(INST_BITS.W)
-    val excp_flag = new Bundle {
-        val adef = Bool()
-        val tlbr = Bool()
-        val ppi  = Bool()
-        val pif  = Bool()
-    }
+    val exception = ArchExceptionType()
 }
 
 class IFUStageInfo extends MkBundle {
@@ -41,15 +37,15 @@ class IFUStageInfo extends MkBundle {
 
 class IFUIO extends MkBundle {
     val icache_msg      = Flipped(new IFUICacheIO())
+    val s0_uncached     = Output(Bool())
     val stage_info      = new IFUStageInfo()
     val npc_sel_info    = Flipped(new NpcSelInfo)
     val inst_queue_full = Input(Bool())
-    val tlb_resp        = Flipped(new TLBSearchResp(TLB_NUM))
-    val tlb_resp_v      = Input(Bool())
-    val crmd_plv        = Input(UInt(3.W))
+    val inst_trans_resp = Flipped(new AddrTransResp)
+    val csr_vec         = Flipped(new CSRVecBundle)
 }
 
-class IFU extends MkModule {
+abstract class MkIFU extends MkModule {
     val io = IO(new IFUIO)
 
     // IFU-ICache
@@ -80,14 +76,11 @@ class IFU extends MkModule {
     flush_slot.io.in.enq_valid := npc_flush.map(_._1).reduce(_ || _) && !s0_valid
     flush_slot.io.in.deq_valid := !flush_slot.io.out.empty & s0_valid
 
-    val npc_gen = npc_flush :+ (!flush_slot.io.out.empty -> flush_slot.io.out.front_data)
-    val next_pc = MuxCase(s1_pc + 4.U, npc_gen)
-    val s0_excp = DontCare
-    val s1_excp = WireInit(0.U.asTypeOf(io.stage_info.s1.bits.excp_flag))
-    s1_excp.adef := s1_pc(0) | s1_pc(1)
-    s1_excp.tlbr := io.tlb_resp_v && !io.tlb_resp.found
-    s1_excp.pif  := io.tlb_resp_v && io.tlb_resp.found && !io.tlb_resp.result.v
-    s1_excp.ppi  := io.tlb_resp_v && io.tlb_resp.found && io.tlb_resp.result.v && (io.crmd_plv > io.tlb_resp.result.plv)
+    val npc_gen     = npc_flush :+ (!flush_slot.io.out.empty -> flush_slot.io.out.front_data)
+    val next_pc     = MuxCase(s1_pc + 4.U, npc_gen)
+    val s0_uncached = Wire(Bool())
+    val s0_excp     = Wire(ArchExceptionType())
+    val s1_excp     = Wire(ArchExceptionType())
 
     s0_pc    := next_pc
     s0_valid := io.icache_msg.addr_ok & !io.inst_queue_full
@@ -95,15 +88,16 @@ class IFU extends MkModule {
         s1_pc := s0_pc
     }
 
-    s1_valid := (io.icache_msg.data_ok || (s1_excp.asUInt > 0.U)) &&
+    s1_valid := (io.icache_msg.data_ok || (s1_excp =/= ArchExceptionType.NONE.enum_no)) &&
         !(io.inst_queue_full | npc_src.exception.valid & npc_src.ertn_target.valid & mispred) & flush_slot.io.out.empty
 
+    io.s0_uncached                  := s0_uncached
     io.stage_info.s0.bits.pc        := s0_pc
     io.stage_info.s0.bits.inst      := DEBUG_MAGICNUM.U
-    io.stage_info.s0.bits.excp_flag := s0_excp
+    io.stage_info.s0.bits.exception := s0_excp
     io.stage_info.s0.valid          := s0_valid
     io.stage_info.s1.bits.pc        := s1_pc
     io.stage_info.s1.bits.inst      := s1_inst
-    io.stage_info.s1.bits.excp_flag := s1_excp
+    io.stage_info.s1.bits.exception := s1_excp
     io.stage_info.s1.valid          := s1_valid
 }

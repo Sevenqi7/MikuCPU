@@ -6,6 +6,8 @@ import chisel3.util._
 import miku._
 import miku.utils._
 import miku.issue._
+import miku.isa._
+import miku.isa.la32._
 import miku.backend._
 import miku.frontend._
 import org.apache.commons.lang3.builder.Diff
@@ -13,7 +15,7 @@ import org.apache.commons.lang3.builder.Diff
 class DifftestIO extends MkBundle {
     val gpr               = Vec(32, UInt(WORD_WIDTH.W))
     // val csr         = Vec(LA32CSRRegisters.csr_defns.length, UInt(32.W))
-    val csr               = new LA32CSR_RawData
+    val csr               = new CSRVecBundle
     val timer_64          = UInt(64.W)
     val is_CNTinst        = Bool()
     val commit_inst       = ValidIO(new IssuedInst)
@@ -83,7 +85,7 @@ class core_top extends RawModule with HasMkParams {
 
     val mkcpu =
         withClockAndReset(aclk, !aresetn.asBool) {
-            Module(new MkTop)
+            Module(new MkLA32Top)
         }
 
     // ar
@@ -132,20 +134,22 @@ class core_top extends RawModule with HasMkParams {
     mkcpu.io.axi.writeResp.valid     := bvalid
     bready                           := mkcpu.io.axi.writeResp.ready
 
+    mkcpu.io.ext_int := intrpt
+
     if (DIFFTEST_MODE) {
-        val diff_info = mkcpu.io.diff.get
+        val diff_info = mkcpu.diff.get
         rf_rdata           := DEBUG_MAGICNUM.U
         ws_valid           := diff_info.commit_inst.valid
         debug0_wb_ins      := diff_info.commit_inst.bits.sbe.raw_inst.get
         debug0_wb_pc       := diff_info.commit_inst.bits.sbe.br_info.bits.pc
         debug0_wb_rf_wdata := diff_info.commit_inst.bits.sbe.result
         debug0_wb_rf_wen   := diff_info.commit_inst.bits.sbe.decoded_inst.regwen
-        debug0_wb_rf_wnum  := diff_info.commit_inst.bits.sbe.rd_num
+        debug0_wb_rf_wnum  := diff_info.commit_inst.bits.sbe.rd
 
         val dest_reg = Mux(
-            diff_info.commit_inst.bits.sbe.decoded_inst.dest_rj,
-            diff_info.commit_inst.bits.sbe.rj_num,
-            diff_info.commit_inst.bits.sbe.rd_num
+            diff_info.commit_inst.bits.sbe.decoded_inst.dest_rs1,
+            diff_info.commit_inst.bits.sbe.rs1,
+            diff_info.commit_inst.bits.sbe.rd
         )
 
         val cmt_inst     = diff_info.commit_inst

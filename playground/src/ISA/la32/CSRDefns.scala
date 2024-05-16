@@ -1,34 +1,15 @@
-package miku
+package miku.isa.la32
 
 import chisel3._
 import chisel3.util._
-import chisel3.internal.firrtl.Width
 
+import miku.isa._
 import miku.utils._
-
-abstract class LA32CSRBundle extends MkBundle {
-    def initData: UInt = 0.U(32.W)
-    def rdata: UInt
-    def getRealWdata(wdata: UInt): UInt
-    def wmask = ~0.U(this.getWidth.W)
-    def write(wdata: UInt): Unit = {
-        val real_wdata = getRealWdata(wdata)
-        val bools      = VecInit(this.asUInt.asBools)
-        require(real_wdata.getWidth == this.getWidth)
-        // println(this.className)
-        for (i <- 0 until this.getWidth) {
-            when(wmask(i)) {
-                bools(i) := real_wdata(i)
-            }
-        }
-        this := bools.asTypeOf(this)
-    }
-}
 
 // all reserved bits are directly assigned to 0.U and not stated in the Bundle
 
 // 0x0: CRMD
-class LA32CSR_Crmd extends LA32CSRBundle {
+class LA32CSR_Crmd extends MkCSRBundle {
     // RESERVED BITS (31, 9)
 
     // val WE   = Bool()
@@ -49,7 +30,7 @@ class LA32CSR_Crmd extends LA32CSRBundle {
 }
 
 // 0x1: PRMD
-class LA32CSR_Prmd extends LA32CSRBundle {
+class LA32CSR_Prmd extends MkCSRBundle {
     // RESERVED BITS (31, 4)
     // val PWE  = Bool()
     val PIE  = Bool()
@@ -60,7 +41,7 @@ class LA32CSR_Prmd extends LA32CSRBundle {
 }
 
 // 0x2: EUEN
-class LA32CSR_Euen extends LA32CSRBundle {
+class LA32CSR_Euen extends MkCSRBundle {
     // RESERVED BITS (31m 1)
     val FPE = Bool()
 
@@ -69,7 +50,7 @@ class LA32CSR_Euen extends LA32CSRBundle {
 }
 
 // 0x4: ECFG
-class LA32CSR_Ecfg extends LA32CSRBundle {
+class LA32CSR_Ecfg extends MkCSRBundle {
     // RESERVED BITS (31, 19)
     // val VS  = UInt(3.W) -- unimplemented field
     // RESERVED BITS (15, 13)
@@ -80,7 +61,7 @@ class LA32CSR_Ecfg extends LA32CSRBundle {
 }
 
 // 0x5: ESTAT
-class LA32CSR_Estat extends LA32CSRBundle {
+class LA32CSR_Estat extends MkCSRBundle {
     // RESERVED BITS (31)
     val EsubCode = UInt(9.W) // read-only
     val Ecode    = UInt(6.W) // read-only
@@ -101,21 +82,21 @@ class LA32CSR_Estat extends LA32CSRBundle {
 }
 
 // 0x6: ERA
-class LA32CSR_Era extends LA32CSRBundle {
+class LA32CSR_Era extends MkCSRBundle {
     val PC                        = UInt(VADDR_WIDTH.W)
     def rdata                     = PC
     def getRealWdata(wdata: UInt) = wdata
 }
 
 // 0x7: BADV
-class LA32CSR_Badv extends LA32CSRBundle {
+class LA32CSR_Badv extends MkCSRBundle {
     val VAddr                     = UInt(VADDR_WIDTH.W)
     def rdata                     = VAddr
     def getRealWdata(wdata: UInt) = wdata
 }
 
 // 0xc: EENTRY
-class LA32CSR_Eentry extends LA32CSRBundle {
+class LA32CSR_Eentry extends MkCSRBundle {
     val VA                        = UInt((VADDR_WIDTH - 6).W)
     // RESERVED BITS (11, 0)
     def rdata                     = VA << 6.U
@@ -123,7 +104,7 @@ class LA32CSR_Eentry extends LA32CSRBundle {
 }
 
 // 0x10: TLBIDX
-class LA32CSR_Tlbidx(index_wd: Int) extends LA32CSRBundle {
+class LA32CSR_Tlbidx(index_wd: Int) extends MkCSRBundle {
     require(index_wd <= 16)
 
     val NE    = Bool()
@@ -138,7 +119,7 @@ class LA32CSR_Tlbidx(index_wd: Int) extends LA32CSRBundle {
 }
 
 // 0x11: TLBEHI
-class LA32CSR_Tlbehi extends LA32CSRBundle {
+class LA32CSR_Tlbehi extends MkCSRBundle {
     val VPPN = UInt(19.W)
     // RESERVED BITS (12, 0)
 
@@ -148,7 +129,7 @@ class LA32CSR_Tlbehi extends LA32CSRBundle {
 
 // 0x12: TLBELO0
 // 0x13: TLBELO1
-class LA32CSR_Tlbelo extends LA32CSRBundle {
+class LA32CSR_Tlbelo extends MkCSRBundle {
     // RESERVED BITS (31, VADDR_WIDTH - 4)
     val PPN = UInt((VADDR_WIDTH - 12).W)
     // RESERVED BITS (7, 7)
@@ -171,7 +152,7 @@ class LA32CSR_Tlbelo extends LA32CSRBundle {
 }
 
 // 0x18: ASID
-class LA32CSR_Asid extends LA32CSRBundle {
+class LA32CSR_Asid extends MkCSRBundle {
     // RESERVED BITS (31, 24)
     val ASIDBITS = UInt(8.W)
     // RESERVED BITS (15, 10)
@@ -184,14 +165,14 @@ class LA32CSR_Asid extends LA32CSRBundle {
 }
 
 // 0x18: PGDL, 0x19: PGDH
-class LA32CSR_Pgdlh extends LA32CSRBundle {
+class LA32CSR_Pgdlh extends MkCSRBundle {
     val Base                      = UInt(20.W)
     // RESERVED BITS (11, 0)
     def rdata                     = Base << 12.U
     def getRealWdata(wdata: UInt) = wdata(31, 12)
 }
 
-class LA32CSR_Pgd extends LA32CSRBundle {
+class LA32CSR_Pgd extends MkCSRBundle {
     val Base = UInt(20.W) // read-only
 
     override def wmask = 0.U
@@ -200,7 +181,7 @@ class LA32CSR_Pgd extends LA32CSRBundle {
 }
 
 // 0x20: CPUID
-class LA32CSR_Cpuid extends LA32CSRBundle {
+class LA32CSR_Cpuid extends MkCSRBundle {
     // RESERVED BITS (31, 9)
     val CoreID = UInt(9.W) // read-only
 
@@ -210,7 +191,7 @@ class LA32CSR_Cpuid extends LA32CSRBundle {
 }
 
 // 0x30: SAVE0, 0x31: SAVE1, 0x32: SAVE2, 0x33: SAVE3
-class LA32CSR_Save extends LA32CSRBundle {
+class LA32CSR_Save extends MkCSRBundle {
     val Data = UInt(32.W)
 
     def rdata                     = Data
@@ -218,7 +199,7 @@ class LA32CSR_Save extends LA32CSRBundle {
 }
 
 // 0x40: TID
-class LA32CSR_Tid extends LA32CSRBundle {
+class LA32CSR_Tid extends MkCSRBundle {
     val TID = UInt(32.W)
 
     def rdata                     = TID
@@ -226,7 +207,7 @@ class LA32CSR_Tid extends LA32CSRBundle {
 }
 
 // 0x41: TCFG
-class LA32CSR_Tcfg(timer_wd: Int) extends LA32CSRBundle {
+class LA32CSR_Tcfg(timer_wd: Int) extends MkCSRBundle {
     // RESERVED BITS (31, timer_wd)
     val InitVal  = UInt((timer_wd - 2).W)
     val Periodic = Bool()
@@ -237,7 +218,7 @@ class LA32CSR_Tcfg(timer_wd: Int) extends LA32CSRBundle {
 }
 
 // 0x42: TVAL
-class LA32CSR_Tval(timer_wd: Int) extends LA32CSRBundle {
+class LA32CSR_Tval(timer_wd: Int) extends MkCSRBundle {
     // RESERVED BITS (31, timer_wd)
     val TimeVal = UInt(timer_wd.W) // read-only
 
@@ -247,7 +228,7 @@ class LA32CSR_Tval(timer_wd: Int) extends LA32CSRBundle {
 }
 
 // 0x44: TICLR
-class LA32CSR_Ticlr extends LA32CSRBundle {
+class LA32CSR_Ticlr extends MkCSRBundle {
     // RESERVED BITS (31, 1)
     val CLR = Bool() // always return zero
 
@@ -256,7 +237,7 @@ class LA32CSR_Ticlr extends LA32CSRBundle {
 }
 
 // 0X60: LLBCTL
-class LA32CSR_Llbctl extends LA32CSRBundle {
+class LA32CSR_Llbctl extends MkCSRBundle {
     // RESERVED BITS (31, 3)
     val KLO   = Bool()
     val WCLLB = Bool() // always return zero
@@ -268,7 +249,7 @@ class LA32CSR_Llbctl extends LA32CSRBundle {
 }
 
 // 0x88: TLBRENTRY
-class LA32CSR_Tlbrentry extends LA32CSRBundle {
+class LA32CSR_Tlbrentry extends MkCSRBundle {
     val PA = UInt(26.W)
     // RESERVED BITS (5, 0)
 
@@ -277,7 +258,7 @@ class LA32CSR_Tlbrentry extends LA32CSRBundle {
 }
 
 // 0x180: DMW0
-class LA32CSR_Dmw extends LA32CSRBundle {
+class LA32CSR_Dmw extends MkCSRBundle {
     val VSEG = UInt(3.W)
     // RESERVED BITS (28, 28)
     val PSEG = UInt(3.W)
@@ -292,14 +273,14 @@ class LA32CSR_Dmw extends LA32CSRBundle {
 }
 
 // CSR type used for debug
-class FakeLA32CSR extends LA32CSRBundle {
+class FakeLA32CSR extends MkCSRBundle {
     val fakedata = UInt(WORD_WIDTH.W)
     def rdata:                     UInt = DEBUG_MAGICNUM.U
     def getRealWdata(wdata: UInt): UInt = DEBUG_MAGICNUM.U
 }
 
 // list of implemented (or to be implemented) csr registers
-object LA32CSRRegisters extends MkParams {
+object LA32CSRRegisters extends CSRRegistersDefns {
     //               addr       () => new <csr_type>
     //                |                 |
     val CRMD      = (0x0.U, () => new LA32CSR_Crmd)
@@ -363,5 +344,16 @@ object LA32CSRRegisters extends MkParams {
         DMW0     ,
         DMW1     ,
     )
+
+    def getExcpEntry(csr: CSRVecBundle, excp_enum: UInt) : UInt = {
+        val tlbrentry = csr.getTargetCSR(TLBRENTRY)
+        val eentry = csr.getTargetCSR(EENTRY)
+        val is_tlbr = excp_enum === LA32ExceptionDefns.TLBR.enum_no
+        Mux(is_tlbr, tlbrentry.rdata, eentry.rdata)
+    }
+
+    def getExcpRetAddr(csr: CSRVecBundle) : UInt = {
+        csr.getTargetCSR(ERA).rdata
+    }
     //format: on
 }

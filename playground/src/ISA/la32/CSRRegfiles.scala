@@ -1,89 +1,28 @@
-package miku
+package miku.isa.la32
 
 import chisel3._
 import chisel3.util._
-import chisel3.internal.firrtl.Width
 
+import miku._
+import miku.isa._
+import miku.backend._
 import miku.utils.UEXT
-import miku.issue.RegfileReadIO
-import miku.issue.RegfileWriteIO
 import LA32CSRRegisters._
-import LA32ExceptionType._
-import miku.utils.ReadyValidBundle
+import LA32ExceptionDefns._
 import chisel3.util.random.LFSR
 
-class LA32CSRReadIO extends RegfileReadIO(14, 32) {}
-class LA32CSRWriteIO extends RegfileWriteIO(14, 32) {}
-
-class LA32CSR_RawData extends MkBundle {
-
-    val csr_vec = MixedVec(csr_defns.map(csr => UInt(csr._2().getWidth.W)))
-
-    def getTargetCSR[T <: LA32CSRBundle](target_info: (UInt, () => T)): T = {
-        var index = csr_defns.indexOf(target_info)
-        if (index == -1) {
-            println("Error: target CSR doesn't exist in csr_defns")
-            throw new IllegalArgumentException
-        }
-        csr_vec(index).asTypeOf(target_info._2())
-    }
+class LA32CSRRegfilesIO extends CSRRegfilesIO {
+    val tlbrd_commit   = Input(Bool())
+    val tlbwr_commit   = Input(Bool())
+    val tlbfill_commit = Input(Bool())
+    val ll_commit      = Input(Bool())
+    val sc_commit      = Input(Bool())
+    val tlbwr_wdata    = new TLBWritePort(TLB_NUM)
+    val tlbrd_result   = Input(new TLBEntry)
 }
 
-class LA32CSRRegfiles extends MkModule {
-    val io = IO(new Bundle {
-        val read_io        = new LA32CSRReadIO
-        val write_io       = new LA32CSRWriteIO
-        val raw_datas      = new LA32CSR_RawData
-        val timer64_o      = UInt(64.W)
-        val excp_commit    = Flipped(ValidIO(new LA32ExceptionInfo))
-        val ertn_commit    = Input(Bool())
-        val tlbrd_commit   = Input(Bool())
-        val tlbwr_commit   = Input(Bool())
-        val tlbfill_commit = Input(Bool())
-        val ll_commit      = Input(Bool())
-        val sc_commit      = Input(Bool())
-        val tlbwr_wdata    = new TLBWritePort(TLB_NUM)
-        val tlbrd_result   = Input(new TLBEntry)
-        val interrupt      = Input(UInt(8.W))
-        val int_flag       = Bool()
-    })
-
-    val la32_csrs = csr_defns.map { case (addr, csr_type) => (addr, RegInit(csr_type().initData.asTypeOf(csr_type()))) }
-    def csr_table[T <: LA32CSRBundle](csr_info: (UInt, () => T)):    T    = {
-        var retval = csr_info._2()
-        var found  = false
-        for ((addr, csr) <- la32_csrs) {
-            if (addr == csr_info._1) {
-                retval = csr.asInstanceOf[T]
-                found  = true
-            }
-        }
-        if (!found) {
-            println("Error: target CSR doesn't exist in csr_defns")
-            throw new IllegalArgumentException
-        }
-        retval
-    }
-    def isWritingCSR[T <: LA32CSRBundle](csr_info: (UInt, () => T)): Bool = {
-        io.write_io.wen && (io.write_io.waddr === csr_info._1)
-    }
-
-    io.raw_datas.csr_vec.zip(la32_csrs.map(_._2)).foreach(i => i._1 := i._2.asUInt)
-
-    io.read_io.rdata := 0.U
-
-    for ((addr, csr) <- la32_csrs) {
-        when(io.read_io.raddr === addr) {
-            io.read_io.rdata := csr.rdata
-        }
-        when(io.write_io.wen && (io.write_io.waddr === addr)) {
-            csr.write(io.write_io.wdata)
-        }
-    }
-
-    val stable_cnt = RegInit(0.U(64.W))
-    stable_cnt   := stable_cnt + 1.U
-    io.timer64_o := stable_cnt
+class LA32CSRRegfiles extends CSRRegfiles {
+    override lazy val io = IO(new LA32CSRRegfilesIO)
 
     // TIMER
     val tcfg  = csr_table(TCFG)
@@ -123,6 +62,9 @@ class LA32CSRRegfiles extends MkModule {
     val crmd = csr_table(CRMD)
     val prmd = csr_table(PRMD)
     when(io.excp_commit.valid) {
+        val badv_from_pc = Seq(LA32ExceptionDefns.ADEF, LA32ExceptionDefns.PIF)
+            .map(_.enum_no === io.excp_commit.bits.extype).reduce(_ || _)
+
         era.PC    := io.excp_commit.bits.pc
         when(io.excp_commit.bits.extype === TLBR.enum_no) {
             crmd.DA := 1.B
@@ -134,7 +76,8 @@ class LA32CSRRegfiles extends MkModule {
         prmd.PIE  := crmd.IE
         // update badv
         when(badv_update_v) {
-            badv.write(io.excp_commit.bits.badv)
+            val vaddr = Mux(badv_from_pc, io.excp_commit.bits.pc, io.excp_commit.bits.mem_addr)
+            badv.write(vaddr)
         }
     }
 
@@ -194,13 +137,6 @@ class LA32CSRRegfiles extends MkModule {
     when(io.read_io.raddr === PGD._1) {
         io.read_io.rdata := Mux(badv_msb, pgdh.rdata, pgdl.rdata)
     }
-    // when(isWritingCSR(PGD)) {
-    //     when(badv_msb) {
-    //         pgdh.write(io.write_io.wdata)
-    //     }.otherwise {
-    //         pgdl.write(io.write_io.wdata)
-    //     }
-    // }
 
     // TLB-related CSR
     val tlbehi = csr_table(TLBEHI)
@@ -211,18 +147,18 @@ class LA32CSRRegfiles extends MkModule {
 
     val excp_tlb = io.excp_commit.valid && MuxLookup(io.excp_commit.bits.extype, false.B)(
         Seq(
-            LA32ExceptionType.TLBR.enum_no -> true.B,
-            LA32ExceptionType.PIL.enum_no  -> true.B,
-            LA32ExceptionType.PIS.enum_no  -> true.B,
-            LA32ExceptionType.PPI.enum_no  -> true.B,
-            LA32ExceptionType.PME.enum_no  -> true.B,
-            LA32ExceptionType.PIF.enum_no  -> true.B
+            LA32ExceptionDefns.TLBR.enum_no -> true.B,
+            LA32ExceptionDefns.PIL.enum_no  -> true.B,
+            LA32ExceptionDefns.PIS.enum_no  -> true.B,
+            LA32ExceptionDefns.PPI.enum_no  -> true.B,
+            LA32ExceptionDefns.PME.enum_no  -> true.B,
+            LA32ExceptionDefns.PIF.enum_no  -> true.B
         )
     )
 
     // TLB-related exception
     when(excp_tlb) {
-        tlbehi.write(io.excp_commit.bits.badv)
+        tlbehi.write(io.excp_commit.bits.mem_addr)
     }
 
     // tlbrd

@@ -3,10 +3,13 @@ package miku
 import chisel3._
 import chisel3.util._
 
+import isa._
+
 class MkParams {
     val FETCH_WIDTH  = 1
     val DECODE_WIDTH = 1
     val RETIRE_WIDTH = 1
+
     val INST_BITS    = 32
     val VADDR_WIDTH  = 32
     val PADDR_WIDTH  = 32
@@ -38,12 +41,13 @@ class MkParams {
     val TIMER_WD = 32
 
     val DIFFTEST_MODE  = true // used to generate port for difftest
-    val RESET_VECTOR   = 0x1bfffffc
     val DEBUG_MAGICNUM = 0x77777777
 }
 
 trait HasMkParams {
-    val mkParams = new MkParams()
+    val mkParams   = new MkParams()
+    val isaFactory = la32.MkLA32Factory
+    // val isaFactory = riscv32.MkRV32Factory
 
     val FETCH_WIDTH  = mkParams.FETCH_WIDTH
     val DECODE_WIDTH = mkParams.DECODE_WIDTH
@@ -72,9 +76,22 @@ trait HasMkParams {
     val DCACHE_PARAMS = mkParams.DCACHE_PARAMS
 
     val DIFFTEST_MODE  = mkParams.DIFFTEST_MODE
-    val RESET_VECTOR   = mkParams.RESET_VECTOR
     val DEBUG_MAGICNUM = mkParams.DEBUG_MAGICNUM
     val NR_WB_PORTS    = mkParams.NR_WB_PORTS
+
+    val RESET_VECTOR        = isaFactory.RESET_VECTOR
+    val CSR_ADDR_WD         = isaFactory.CSR_ADDR_WD
+    def ArchExceptionType   = isaFactory.getExcepDefns()
+    def ArchExceptionInfo() = isaFactory.getExcepInfo()
+    def ArchFetchUnit()     = isaFactory.getFetchUnit()
+    def ArchDecodedUnit()   = isaFactory.getDecoder()
+    def ArchDecodedInst()   = isaFactory.getDecodedInst()
+    def ArchLSU()           = isaFactory.getLoadStoreUnit()
+    def ArchBRU()           = isaFactory.getBranchUnit()
+    def ArchMiscFu()        = isaFactory.getMiscFu()
+    def ArchCSRDefns        = isaFactory.getCSRDefns()
+    def ArchCSRBuffer()     = isaFactory.getCSRBuffer()
+    def ArchCSRRegfiles()   = isaFactory.getCSRRegfiles()
 
     def instBytes = INST_BITS / 8
     def wordBytes = WORD_WIDTH / 8

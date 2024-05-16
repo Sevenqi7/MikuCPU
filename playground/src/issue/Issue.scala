@@ -7,15 +7,38 @@ import miku._
 import miku.utils._
 import miku.frontend._
 import miku.backend._
-import miku.FuType._
-import java.util.concurrent.Future
+import miku.isa._
+import miku.isa.la32._
 
 class IssueEntry extends MkBundle {
     val pc           = UInt(VADDR_WIDTH.W)
     val inst         = UInt(INST_BITS.W)
-    val decoded_inst = new DecodedInst()
+    val decoded_inst = ArchDecodedInst()
     val br_pred      = new BranchPredictorResult
-    val exception    = LA32ExceptionType()
+    val exception    = ArchExceptionType()
+}
+
+abstract class OperandGenerator extends MkModule {
+    val io = IO(new Bundle {
+        val pc           = Input(UInt(VADDR_WIDTH.W))
+        val raw_inst     = Input(UInt(INST_BITS.W))
+        val decoded_inst = Input(ArchDecodedInst())
+        val gpr_rdatas   = Input(Vec(3, UInt(WORD_WIDTH.W)))
+        val sb_forward   = Flipped(new ScoreboardFowardInfo)
+        val operand_a    = Output(UInt(WORD_WIDTH.W))
+        val operand_b    = Output(UInt(WORD_WIDTH.W))
+        val operand_c    = Output(UInt(WORD_WIDTH.W))
+        val operand_rdy  = Output(Bool())
+    })
+}
+
+class CommitInfo extends MkBundle {
+    val csr_cmt   = new ReadyValidBundle
+    val store_cmt = new ReadyValidBundle
+    val excp_cmt  = ArchExceptionInfo()
+    val ertn_cmt  = Bool()
+    val ll_cmt    = Bool()
+    val sc_cmt    = Bool()
 }
 
 class IssueStageIO extends MkBundle {
@@ -26,13 +49,13 @@ class IssueStageIO extends MkBundle {
         val futype  = FuType()
         val br_pred = new BranchPredictorResult
     })
+    // val cmt_info     = new CommitInfo
     val store_commit = new ReadyValidBundle
     val csr_commit   = new ReadyValidBundle
-    val excp_commit  = ValidIO(new LA32ExceptionInfo)
+    val excp_commit  = ValidIO(ArchExceptionInfo())
     val ertn_commit  = Bool()
     val ll_commit    = Bool()
     val sc_commit    = Bool()
-    // val excp_info    = ValidIO(new LA32ExceptionInfo)
     val int_flag     = Input(Bool())
     val llbit        = Input(Bool())
     val timer64      = Input(UInt(64.W))
@@ -72,60 +95,29 @@ class IssueStage extends MkModule {
 
     // read operands of the issued instruction from scoreboard
     val gpr = Module(new MkRegfiles)
-    gpr.read_io(0).raddr := issued_inst.bits.sbe.rk_num
-    gpr.read_io(1).raddr := issued_inst.bits.sbe.rj_num
-    gpr.read_io(2).raddr := issued_inst.bits.sbe.rd_num
+    gpr.read_io(0).raddr := issued_inst.bits.sbe.rs2
+    gpr.read_io(1).raddr := issued_inst.bits.sbe.rs1
+    gpr.read_io(2).raddr := issued_inst.bits.sbe.rd
 
-    val rk_gpr_data = gpr.read_io(0).rdata
-    val rk_fwd_data = scoreboard.io.forward_msg.rk_fwd_data
-    val rj_gpr_data = gpr.read_io(1).rdata
-    val rj_fwd_data = scoreboard.io.forward_msg.rj_fwd_data
-    val rd_gpr_data = gpr.read_io(2).rdata
-    val rd_fwd_data = scoreboard.io.forward_msg.rd_fwd_data
-
-    val rk_data = Mux(rk_fwd_data.valid && (issued_inst.bits.sbe.rk_num > 0.U), rk_fwd_data.bits, rk_gpr_data)
-    val rj_data = Mux(rj_fwd_data.valid && (issued_inst.bits.sbe.rj_num > 0.U), rj_fwd_data.bits, rj_gpr_data)
-    val rd_data = Mux(rd_fwd_data.valid && (issued_inst.bits.sbe.rd_num > 0.U), rd_fwd_data.bits, rd_gpr_data)
-
-    // immdiate number selection
-    val imm_sel   = decoded_inst.selImm
-    val raw_inst  = io.from_decoder.bits.inst
-    val imm_table = Seq[(UInt, UInt)](
-        SelImm.IMM_U8  -> UEXT(raw_inst(17, 10), WORD_WIDTH),
-        SelImm.IMM_S12 -> SEXT(raw_inst(21, 10), WORD_WIDTH),
-        SelImm.IMM_U12 -> UEXT(raw_inst(21, 10), WORD_WIDTH),
-        SelImm.IMM_S14 -> SEXT(raw_inst(23, 10), WORD_WIDTH),
-        SelImm.IMM_S16 -> SEXT(raw_inst(25, 10), WORD_WIDTH),
-        SelImm.IMM_S20 -> SEXT(raw_inst(24, 5), WORD_WIDTH),
-        SelImm.IMM_S26 -> SEXT(Cat(raw_inst(9, 0), raw_inst(25, 10)), WORD_WIDTH)
-    )
-    val imm       = MuxLookup(imm_sel, DEBUG_MAGICNUM.U)(imm_table)
+    val opr_gen = Module(isaFactory.getOperandGen())
+    opr_gen.io.decoded_inst := io.from_decoder.bits.decoded_inst
+    opr_gen.io.gpr_rdatas   := gpr.read_io.map(_.rdata)
+    opr_gen.io.sb_forward   := scoreboard.io.forward_msg
+    opr_gen.io.raw_inst     := io.from_decoder.bits.inst
+    opr_gen.io.pc           := io.from_decoder.bits.pc
 
     io.trans.valid                  := issued_inst.valid
     io.trans.bits.fuinput.id        := issued_inst.bits.id
     io.trans.bits.fuinput.pc        := io.from_decoder.bits.pc
     io.trans.bits.br_pred           := io.from_decoder.bits.br_pred
-    io.trans.bits.fuinput.operand_a := Mux(decoded_inst.needRj, rj_data, io.from_decoder.bits.pc)
-    io.trans.bits.fuinput.operand_b := MuxCase(
-        DEBUG_MAGICNUM.U,
-        Seq(
-            (decoded_inst.needRk, rk_data),
-            (decoded_inst.needImm, imm)
-        )
-    )
-
-    // TODO: advance decoding of imm5 to IDU
-    val need_imm5 = (decoded_inst.futype === FuType.misc && decoded_inst.fuoptype === MiscOpType.cacop) ||
-        (decoded_inst.futype === FuType.csr && decoded_inst.fuoptype === CSROpType.invtlb)
-    io.trans.bits.fuinput.operand_c := Mux(need_imm5, issued_inst.bits.sbe.rd_num, rd_data)
+    io.trans.bits.fuinput.operand_a := opr_gen.io.operand_a
+    io.trans.bits.fuinput.operand_b := opr_gen.io.operand_b
+    io.trans.bits.fuinput.operand_c := opr_gen.io.operand_c
     io.trans.bits.fuinput.exception := io.from_decoder.bits.exception
     io.trans.bits.fuinput.optype    := decoded_inst.fuoptype
     io.trans.bits.futype            := decoded_inst.futype
 
-    val opr_a_valid = !decoded_inst.needRj || (decoded_inst.needRj & !scoreboard.io.forward_msg.rj_raw_hazard)
-    val opr_b_valid = !decoded_inst.needRk || (decoded_inst.needRk & !scoreboard.io.forward_msg.rk_raw_hazard)
-    val opr_c_valid = !decoded_inst.needRd || (decoded_inst.needRd & !scoreboard.io.forward_msg.rd_raw_hazard)
-    scoreboard.io.operands_rdy := opr_a_valid & opr_b_valid & opr_c_valid
+    scoreboard.io.operands_rdy := opr_gen.io.operand_rdy
 
     /*                  COMMIT LOGIC                    */
 
@@ -134,9 +126,8 @@ class IssueStage extends MkModule {
 
     // check whether we are committing a store inst
 
-    val inst_excp = (commit_inst_sbe.exception =/= LA32ExceptionType.NONE.enum_no)
+    val inst_excp = (commit_inst_sbe.exception =/= ArchExceptionType.NONE.enum_no)
 
-    // val is_commit_mispred = (commit_inst_sbe.br_info.valid && commit_inst_sbe.br_info.bits.mispred)
     val is_commit_store =
         (commit_inst_sbe.decoded_inst.futype === FuType.lsu) &&
             LSUOpType.isStoreType(commit_inst_sbe.decoded_inst.fuoptype)
@@ -164,7 +155,7 @@ class IssueStage extends MkModule {
         )
     )
 
-    val dest_reg = Mux(commit_inst_sbe.decoded_inst.dest_rj, commit_inst_sbe.rj_num, commit_inst_sbe.rd_num)
+    val dest_reg = Mux(commit_inst_sbe.decoded_inst.dest_rs1, commit_inst_sbe.rs1, commit_inst_sbe.rd)
 
     gpr.write_io.waddr := dest_reg
     gpr.write_io.wen   := commit_inst.valid && commit_inst_sbe.decoded_inst.regwen && !io.excp_commit.valid

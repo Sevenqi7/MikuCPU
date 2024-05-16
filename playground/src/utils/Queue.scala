@@ -5,7 +5,6 @@ import chisel3.util._
 
 import miku._
 import miku.frontend._
-import miku.LA32Instructions._
 import miku.utils.util.uintToBitPat
 class CircularQueueInput[T <: Data](datatype: T) extends Bundle {
     val clear     = Bool()

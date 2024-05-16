@@ -4,16 +4,16 @@ import chisel3._
 import chisel3.util._
 
 import miku._
+import miku.isa._
+import miku.isa.la32._
 import miku.utils._
 import miku.backend._
-import miku.frontend.DecodedInst
 import miku.frontend.BranchPredictorResult
 import miku.frontend.BranchInstInfo
 import miku.frontend.BranchPredictorUpdate
-import java.util.concurrent.Future
 
 class ScoreboardEntry extends MkBundle {
-    val decoded_inst  = new DecodedInst
+    val decoded_inst  = isaFactory.getDecodedInst()
     val timer64_val   = if (DIFFTEST_MODE) Some(UInt(64.W)) else None
     val raw_inst      = if (DIFFTEST_MODE) Some(UInt(WORD_WIDTH.W)) else None
     val lsu_diff      =
@@ -23,23 +23,23 @@ class ScoreboardEntry extends MkBundle {
             val wdata = UInt(WORD_WIDTH.W)
         })
         else None
-    val rj_num        = UInt(REG_ADDR_WD.W)
-    val rk_num        = UInt(REG_ADDR_WD.W)
-    val rd_num        = UInt(REG_ADDR_WD.W)
+    val rs2           = UInt(REG_ADDR_WD.W)
+    val rs1           = UInt(REG_ADDR_WD.W)
+    val rd            = UInt(REG_ADDR_WD.W)
     val frontend_excp = Bool()
-    val exception     = LA32ExceptionType()
+    val exception     = ArchExceptionType()
     val result        = UInt(WORD_WIDTH.W)
     val br_info       = ValidIO(new BranchInstInfo)
     val executed      = Bool()
 }
 
 class ScoreboardFowardInfo extends MkBundle {
-    val rj_fwd_data   = ValidIO(UInt(WORD_WIDTH.W))
-    val rj_raw_hazard = Bool()
-    val rk_fwd_data   = ValidIO(UInt(WORD_WIDTH.W))
-    val rk_raw_hazard = Bool()
-    val rd_fwd_data   = ValidIO(UInt(WORD_WIDTH.W))
-    val rd_raw_hazard = Bool()
+    val rs1_fwd_data   = ValidIO(UInt(WORD_WIDTH.W))
+    val rs1_raw_hazard = Bool()
+    val rs2_fwd_data   = ValidIO(UInt(WORD_WIDTH.W))
+    val rs2_raw_hazard = Bool()
+    val rd_fwd_data    = ValidIO(UInt(WORD_WIDTH.W))
+    val rd_raw_hazard  = Bool()
 }
 
 class IssuedInst extends MkBundle {
@@ -54,7 +54,7 @@ class ScoreboardIO extends MkBundle {
     val operands_rdy = Input(Bool())
     val wb_data      = Flipped(Vec(NR_WB_PORTS, Decoupled(new WriteBackResult)))
     val forward_msg  = new ScoreboardFowardInfo
-    val excp_info    = ValidIO(new LA32ExceptionInfo)
+    val excp_info    = ValidIO(ArchExceptionInfo())
     val int_flag     = Input(Bool())
     val llbit        = Input(Bool())
     val timer64_val  = Input(UInt(64.W))
@@ -72,7 +72,7 @@ class Scoreboard extends MkModule {
     val io = IO(new ScoreboardIO)
 
     val init_sbe = 0.U.asTypeOf(ValidIO(new ScoreboardEntry))
-    init_sbe.bits.exception := LA32ExceptionType.NONE.enum_no
+    init_sbe.bits.exception := ArchExceptionType.NONE.enum_no
     val sb_mem = RegInit(VecInit.fill(NR_ENTRIES)(init_sbe))
 
     val commit_ptr = RegInit(0.U(log2Ceil(NR_ENTRIES).W))
@@ -100,15 +100,15 @@ class Scoreboard extends MkModule {
     when(issue_ack) {
         issue_ptr                           := issue_ptr + 1.U
         sb_mem(issue_ptr).valid             := true.B // set valid bit as true when successfully issue this instruction
-        sb_mem(issue_ptr).bits.rk_num       := io.from_decoder.bits.inst(14, 10)
-        sb_mem(issue_ptr).bits.rj_num       := io.from_decoder.bits.inst(9, 5)
+        sb_mem(issue_ptr).bits.rs2          := io.from_decoder.bits.inst(14, 10)
+        sb_mem(issue_ptr).bits.rs1          := io.from_decoder.bits.inst(9, 5)
         // BL has a fixed destination register R1
-        sb_mem(issue_ptr).bits.rd_num       := Mux(is_bl, 1.U, io.from_decoder.bits.inst(4, 0))
+        sb_mem(issue_ptr).bits.rd           := Mux(is_bl, 1.U, io.from_decoder.bits.inst(4, 0))
         sb_mem(issue_ptr).bits.decoded_inst := decoded_inst
 
         // Record exception that occured in frontend
         sb_mem(issue_ptr).bits.exception     := io.from_decoder.bits.exception
-        sb_mem(issue_ptr).bits.frontend_excp := (io.from_decoder.bits.exception =/= LA32ExceptionType.NONE.enum_no)
+        sb_mem(issue_ptr).bits.frontend_excp := (io.from_decoder.bits.exception =/= ArchExceptionType.NONE.enum_no)
         if (DIFFTEST_MODE) {
             sb_mem(issue_ptr).bits.raw_inst.get := io.from_decoder.bits.inst
         }
@@ -128,7 +128,7 @@ class Scoreboard extends MkModule {
     val waw_hazard = decoded_inst.regwen && sb_mem.zipWithIndex
         .map { case (sbe, id) =>
             sbe.valid && sbe.bits.decoded_inst.regwen &&
-            (sbe.bits.rd_num === io.issue_inst.bits.sbe.rd_num) &&
+            (sbe.bits.rd === io.issue_inst.bits.sbe.rd) &&
             ((id.U =/= commit_ptr) || ((id.U === commit_ptr) && !commit_ack))
         }.reduce(_ || _)
 
@@ -143,10 +143,10 @@ class Scoreboard extends MkModule {
     io.issue_inst.valid := io.from_decoder.valid && io.operands_rdy && !waw_hazard && !sb_full &&
         ((decoded_inst.futype =/= FuType.bru) || ((decoded_inst.futype === FuType.bru) && !unresolved_branch))
 
-    io.issue_inst.bits.sbe.rk_num := io.from_decoder.bits.inst(14, 10)
-    io.issue_inst.bits.sbe.rj_num := io.from_decoder.bits.inst(9, 5)
-    io.issue_inst.bits.sbe.rd_num := io.from_decoder.bits.inst(4, 0)
-    io.from_decoder.ready         := (io.operands_rdy && io.issue_inst.ready && !sb_full & !waw_hazard) &&
+    io.issue_inst.bits.sbe.rs2 := io.from_decoder.bits.inst(14, 10)
+    io.issue_inst.bits.sbe.rs1 := io.from_decoder.bits.inst(9, 5)
+    io.issue_inst.bits.sbe.rd  := io.from_decoder.bits.inst(4, 0)
+    io.from_decoder.ready      := (io.operands_rdy && io.issue_inst.ready && !sb_full & !waw_hazard) &&
         ((decoded_inst.futype =/= FuType.bru) || ((decoded_inst.futype === FuType.bru) && !unresolved_branch))
 
     // commit inst
@@ -172,7 +172,7 @@ class Scoreboard extends MkModule {
         sb_mem(commit_ptr).bits.executed := false.B
 
         // exception check
-        val inst_excp        = (sb_mem(commit_ptr).bits.exception =/= LA32ExceptionType.NONE.enum_no)
+        val inst_excp        = (sb_mem(commit_ptr).bits.exception =/= ArchExceptionType.NONE.enum_no)
         val is_frontend_excp = inst_excp & sb_mem(commit_ptr).bits.frontend_excp
         val is_commit_sc     = (sb_mem(commit_ptr).bits.decoded_inst.futype === FuType.lsu) &&
             (sb_mem(commit_ptr).bits.decoded_inst.fuoptype === LSUOpType.scw)
@@ -192,20 +192,12 @@ class Scoreboard extends MkModule {
                 }
             }
         }
-
-        // when(sb_mem(commit_ptr).bits.raw_inst.get === LA32Instructions.IBAR) {
-        // printf("warning: IBAR excuted\n")
-        // }
-        // when(sb_mem(commit_ptr).bits.raw_inst.get === LA32Instructions.DBAR) {
-        //     printf("warning: DBAR excuted\n")
-        // }
     }
-    val badv_from_pc = Seq(LA32ExceptionType.ADEF, LA32ExceptionType.PIF)
-        .map(_.enum_no === sb_mem(commit_ptr).bits.exception).reduce(_ || _)
-    io.excp_info.valid       := ex_valid
-    io.excp_info.bits.extype := Mux(!int_flag, sb_mem(commit_ptr).bits.exception, LA32ExceptionType.INT.enum_no)
-    io.excp_info.bits.pc     := sb_mem(commit_ptr).bits.br_info.bits.pc
-    io.excp_info.bits.badv := Mux(badv_from_pc, sb_mem(commit_ptr).bits.br_info.bits.pc, sb_mem(commit_ptr).bits.result)
+
+    io.excp_info.valid         := ex_valid
+    io.excp_info.bits.extype   := Mux(!int_flag, sb_mem(commit_ptr).bits.exception, ArchExceptionType.INT.enum_no)
+    io.excp_info.bits.pc       := sb_mem(commit_ptr).bits.br_info.bits.pc
+    io.excp_info.bits.mem_addr := sb_mem(commit_ptr).bits.result
 
     // write-back from exu
     for (wb <- io.wb_data) {
@@ -246,44 +238,44 @@ class Scoreboard extends MkModule {
     // Further selection such as selecting immediate result from EXU will be processed
     // during GPR's accessing
 
-    // rj arbibter
-    val rj_arb = Module(new Arbiter(UInt(WORD_WIDTH.W), NR_ENTRIES + NR_WB_PORTS))
+    // rs1 arbibter
+    val rs1_arb = Module(new Arbiter(UInt(WORD_WIDTH.W), NR_ENTRIES + NR_WB_PORTS))
     for (i <- 0 until NR_WB_PORTS) {
         val wb_id = io.wb_data(i).bits.id
-        rj_arb.io.in(i).valid := io.wb_data(i).valid &&
-            (io.issue_inst.bits.sbe.rj_num === sb_mem(wb_id).bits.rd_num) &&
+        rs1_arb.io.in(i).valid := io.wb_data(i).valid &&
+            (io.issue_inst.bits.sbe.rs1 === sb_mem(wb_id).bits.rd) &&
             sb_mem(wb_id).bits.decoded_inst.regwen
-        rj_arb.io.in(i).bits  := io.wb_data(i).bits.result
+        rs1_arb.io.in(i).bits  := io.wb_data(i).bits.result
     }
-    rj_arb.io.out.ready := true.B
+    rs1_arb.io.out.ready := true.B
 
     for (i <- 0 until NR_ENTRIES) {
         val result_valid = sb_mem(i).valid &&
-            (io.issue_inst.bits.sbe.rj_num === sb_mem(i).bits.rd_num) &&
+            (io.issue_inst.bits.sbe.rs1 === sb_mem(i).bits.rd) &&
             sb_mem(i).bits.executed &&
             sb_mem(i).bits.decoded_inst.regwen
-        rj_arb.io.in(i + NR_WB_PORTS).valid := result_valid
-        rj_arb.io.in(i + NR_WB_PORTS).bits  := sb_mem(i).bits.result
+        rs1_arb.io.in(i + NR_WB_PORTS).valid := result_valid
+        rs1_arb.io.in(i + NR_WB_PORTS).bits  := sb_mem(i).bits.result
     }
 
-    // rk arbiter
-    val rk_arb = Module(new Arbiter(UInt(WORD_WIDTH.W), NR_ENTRIES + NR_WB_PORTS))
+    // rs2 arbiter
+    val rs2_arb = Module(new Arbiter(UInt(WORD_WIDTH.W), NR_ENTRIES + NR_WB_PORTS))
     for (i <- 0 until NR_WB_PORTS) {
         val wb_id = io.wb_data(i).bits.id
-        rk_arb.io.in(i).valid := io.wb_data(i).valid &&
-            (io.issue_inst.bits.sbe.rk_num === sb_mem(wb_id).bits.rd_num) &&
+        rs2_arb.io.in(i).valid := io.wb_data(i).valid &&
+            (io.issue_inst.bits.sbe.rs2 === sb_mem(wb_id).bits.rd) &&
             sb_mem(wb_id).bits.decoded_inst.regwen
-        rk_arb.io.in(i).bits  := io.wb_data(i).bits.result
-        rk_arb.io.out.ready   := true.B
+        rs2_arb.io.in(i).bits  := io.wb_data(i).bits.result
+        rs2_arb.io.out.ready   := true.B
     }
 
     for (i <- 0 until NR_ENTRIES) {
         val result_valid = sb_mem(i).valid &&
-            (io.issue_inst.bits.sbe.rk_num === sb_mem(i).bits.rd_num) &&
+            (io.issue_inst.bits.sbe.rs2 === sb_mem(i).bits.rd) &&
             sb_mem(i).bits.executed &&
             sb_mem(i).bits.decoded_inst.regwen
-        rk_arb.io.in(i + NR_WB_PORTS).valid := result_valid
-        rk_arb.io.in(i + NR_WB_PORTS).bits  := sb_mem(i).bits.result
+        rs2_arb.io.in(i + NR_WB_PORTS).valid := result_valid
+        rs2_arb.io.in(i + NR_WB_PORTS).bits  := sb_mem(i).bits.result
     }
 
     // rd arbiter
@@ -291,7 +283,7 @@ class Scoreboard extends MkModule {
     for (i <- 0 until NR_WB_PORTS) {
         val wb_id = io.wb_data(i).bits.id
         rd_arb.io.in(i).valid := io.wb_data(i).valid &&
-            (io.issue_inst.bits.sbe.rd_num === sb_mem(wb_id).bits.rd_num) &&
+            (io.issue_inst.bits.sbe.rd === sb_mem(wb_id).bits.rd) &&
             sb_mem(wb_id).bits.decoded_inst.regwen
         rd_arb.io.in(i).bits  := io.wb_data(i).bits.result
         rd_arb.io.out.ready   := true.B
@@ -299,38 +291,38 @@ class Scoreboard extends MkModule {
 
     for (i <- 0 until NR_ENTRIES) {
         val result_valid = sb_mem(i).valid &&
-            (io.issue_inst.bits.sbe.rd_num === sb_mem(i).bits.rd_num) &&
+            (io.issue_inst.bits.sbe.rd === sb_mem(i).bits.rd) &&
             sb_mem(i).bits.executed &&
             sb_mem(i).bits.decoded_inst.regwen
         rd_arb.io.in(i + NR_WB_PORTS).valid := result_valid
         rd_arb.io.in(i + NR_WB_PORTS).bits  := sb_mem(i).bits.result
     }
 
-    io.forward_msg.rj_fwd_data := rj_arb.io.out
-    io.forward_msg.rk_fwd_data := rk_arb.io.out
-    io.forward_msg.rd_fwd_data := rd_arb.io.out
+    io.forward_msg.rs1_fwd_data := rs1_arb.io.out
+    io.forward_msg.rs2_fwd_data := rs2_arb.io.out
+    io.forward_msg.rd_fwd_data  := rd_arb.io.out
 
-    io.forward_msg.rj_raw_hazard := sb_mem
+    io.forward_msg.rs1_raw_hazard := sb_mem
         .map(sbe =>
             sbe.valid && !sbe.bits.executed
                 && sbe.bits.decoded_inst.regwen
-                && (sbe.bits.rd_num === io.issue_inst.bits.sbe.rj_num)
-                && !Range(0, NR_WB_PORTS).map(i => rj_arb.io.in(i).valid).reduce(_ || _)
+                && (sbe.bits.rd === io.issue_inst.bits.sbe.rs1)
+                && !Range(0, NR_WB_PORTS).map(i => rs1_arb.io.in(i).valid).reduce(_ || _)
         )
         .reduce(_ || _)
-    io.forward_msg.rk_raw_hazard := sb_mem
+    io.forward_msg.rs2_raw_hazard := sb_mem
         .map(sbe =>
             sbe.valid && !sbe.bits.executed
                 && sbe.bits.decoded_inst.regwen
-                && (sbe.bits.rd_num === io.issue_inst.bits.sbe.rk_num)
-                && !Range(0, NR_WB_PORTS).map(i => rk_arb.io.in(i).valid).reduce(_ || _)
+                && (sbe.bits.rd === io.issue_inst.bits.sbe.rs2)
+                && !Range(0, NR_WB_PORTS).map(i => rs2_arb.io.in(i).valid).reduce(_ || _)
         )
         .reduce(_ || _)
-    io.forward_msg.rd_raw_hazard := sb_mem
+    io.forward_msg.rd_raw_hazard  := sb_mem
         .map(sbe =>
             sbe.valid && !sbe.bits.executed
                 && sbe.bits.decoded_inst.regwen
-                && (sbe.bits.rd_num === io.issue_inst.bits.sbe.rd_num)
+                && (sbe.bits.rd === io.issue_inst.bits.sbe.rd)
                 && !Range(0, NR_WB_PORTS).map(i => rd_arb.io.in(i).valid).reduce(_ || _)
         )
         .reduce(_ || _)

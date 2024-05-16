@@ -1,155 +1,43 @@
-package miku
-//
+package miku.isa.la32
+
 import chisel3._
 import chisel3.util._
 
 import miku._
-import FuOpType.MaxOpNum
+import miku.isa._
+import miku.frontend._
+import miku.backend._
+import miku.issue.OperandGenerator
 
-object SrcType {
-    def num = 4
+object MkLA32Factory extends ISAFactory {
+    type ExcepDefns = LA32ExceptionDefns.type
+    type CSRDefns   = LA32CSRRegisters.type
 
-    def reg  = "b00".U(log2Ceil(num).W)
-    def pc   = "b01".U(log2Ceil(num).W)
-    def imm  = "b10".U(log2Ceil(num).W)
-    def none = "b11".U(log2Ceil(num).W)
+    def isaName:            String                  = "LoongArch 32 bits"
+    def getFetchUnit():     MkIFU                   = new LA32IFU
+    def getDecoder():       LA32DecoderUnit         = new LA32DecoderUnit
+    def getOperandGen():    OperandGenerator        = new LA32OperandGen
+    def getExcepDefns():    LA32ExceptionDefns.type = LA32ExceptionDefns
+    def getExcepInfo():     ExceptionInfo           = new LA32ExceptionInfo
+    def getDecodedInst():   DecodedInst             = new LA32DecodedInst
+    def getLoadStoreUnit(): MkLSU                   = new LA32LSU
+    def getBranchUnit():    MkBRU                   = new LA32BranchUnit
+    def getMiscFu():        MiscFunctionUnit        = new LA32MiscFu
+    def getCSRDefns():      CSRDefns                = LA32CSRRegisters
+    def getCSRBuffer():     CSRBuffer               = new LA32CSRBuffer
+    def getCSRRegfiles():   CSRRegfiles             = new LA32CSRRegfiles
 
-    def X = BitPat("b??")
-
-    def apply() = UInt(log2Ceil(num).W)
+    val RESET_VECTOR = 0x1c000000 - 4
+    val CSR_ADDR_WD  = 14
 }
 
-// Function Unit Type
-// IT MUST BE ONE-HOT since we use OHtoUInt when indexing function unit
-object FuType {
-    def num = 5
-
-    def alu  = "b00001".U(num.W)
-    def lsu  = "b00010".U(num.W)
-    def mul  = "b00100".U(num.W)
-    def bru  = "b01000".U(num.W)
-    def csr  = "b10000".U(num.W)
-    def misc = "b00000".U(num.W)
-
-    def X = BitPat("b?????")
-
-    def apply() = UInt(num.W)
-}
-
-object FuOpType {
-    def MaxOpNum =
-        List(ALUOpType.num, MulDivOpType.num, JumpOpType.num, LSUOpType.num, CSROpType.num, MiscOpType.num).max
-
-    def X = BitPat("b????")
-
-    def apply() = UInt(log2Ceil(MaxOpNum).W)
-}
-
-object ALUOpType {
-    def num = 12
-
-    def addw      = "b0001".U(log2Ceil(MaxOpNum).W) // R(rd) = R(rj) + R(rk)
-    def subw      = "b0010".U(log2Ceil(MaxOpNum).W) // R(rd) = R(ri) - R(rk)
-    def lu12iw    = "b0011".U(log2Ceil(MaxOpNum).W) // R(rd) = {imm20, 12'b0}
-    def slt       = "b0100".U(log2Ceil(MaxOpNum).W) // R(rd) = (signed(R(rj)) < signed(R(rk)))
-    def sltu      = "b0101".U(log2Ceil(MaxOpNum).W) // R(rd) = (R(rj) < R(rk))
-    def and       = "b0110".U(log2Ceil(MaxOpNum).W) // R(rd) = R(rj) & R(rk)
-    def or        = "b0111".U(log2Ceil(MaxOpNum).W) // R(rd) = R(rj) | R(rk)
-    def nor       = "b1000".U(log2Ceil(MaxOpNum).W) // R(rd) = ~(R(rj) | R(rk))
-    def xor       = "b1001".U(log2Ceil(MaxOpNum).W) // R(rd) = R(rj) ^ R(rk)
-    def sllw      = "b1010".U(log2Ceil(MaxOpNum).W) // R(rd) = sll(R(rj), R(rk)[4:0])[31:0]
-    def srlw      = "b1011".U(log2Ceil(MaxOpNum).W) // R(rd) = srl(R(rj), R(rk)[4:0])[31:0]
-    def sraw      = "b1100".U(log2Ceil(MaxOpNum).W) // R(rd) = sra(R(rj), R(rk)[4:0])[31:0]
-    def pcaddu12i = "b1101".U(log2Ceil(MaxOpNum).W) // R(rd) = PC + SEXT({imm20, 12'b0})
-
-    def apply() = UInt(log2Ceil(MaxOpNum).W)
-}
-
-object MulDivOpType {
-    def num = 7
-
-    def mulw   = "b000".U(log2Ceil(MaxOpNum).W) // R(rd) = (signed(R(rj)) * signed(R(rk)))[31:0]
-    def mulhw  = "b001".U(log2Ceil(MaxOpNum).W) // R(rd) = (signed(R(rj)) * signed(R(rk)))[63:32]
-    def mulhwu = "b010".U(log2Ceil(MaxOpNum).W) // R(rd) = (R(rj) * R(rk))[63:32]
-    def divw   = "b011".U(log2Ceil(MaxOpNum).W) // R(rd) = (signed(R(rj)) / signed(R(rk)))[31:0]
-    def divwu  = "b100".U(log2Ceil(MaxOpNum).W) // R(rd) = (R(rj) / R(rk))[31:0]
-    def modw   = "b101".U(log2Ceil(MaxOpNum).W) // R(rd) = (signed(R(rj)) % signed(R(rk)))[31:0]
-    def modwu  = "b110".U(log2Ceil(MaxOpNum).W) // R(rd) = (R(rj) % R(rk))[31:0]
-
-    def apply() = UInt(log2Ceil(MaxOpNum).W)
-}
-
-object JumpOpType {
-    def num = 9
-
-    def isBr(optype: UInt)    = ((optype <= bgeu))
-    def isBorBl(optype: UInt) = ((optype === b) || (optype === bl))
-    def isJirl(optype: UInt)  = (optype === jirl)
-
-    def beq  = "b0000".U(log2Ceil(MaxOpNum).W)
-    def bne  = "b0001".U(log2Ceil(MaxOpNum).W)
-    def blt  = "b0010".U(log2Ceil(MaxOpNum).W)
-    def bge  = "b0011".U(log2Ceil(MaxOpNum).W)
-    def bltu = "b0100".U(log2Ceil(MaxOpNum).W)
-    def bgeu = "b0101".U(log2Ceil(MaxOpNum).W)
-    def b    = "b0110".U(log2Ceil(MaxOpNum).W)
-    def bl   = "b0111".U(log2Ceil(MaxOpNum).W)
-    def jirl = "b1000".U(log2Ceil(MaxOpNum).W)
-
-    def apply() = UInt(log2Ceil(num).W)
-}
-
-object LSUOpType {
-    def num = 10
-
-    def isLoadType(optype: UInt)  = optype(3, 0) >= ldb
-    def isStoreType(optype: UInt) = optype(3, 0) <= scw
-
-    def ldb  = "b1000".U(log2Ceil(MaxOpNum).W)
-    def ldh  = "b1001".U(log2Ceil(MaxOpNum).W)
-    def ldw  = "b1010".U(log2Ceil(MaxOpNum).W)
-    def ldbu = "b1011".U(log2Ceil(MaxOpNum).W)
-    def ldhu = "b1100".U(log2Ceil(MaxOpNum).W)
-    def llw  = "b1101".U(log2Ceil(MaxOpNum).W)
-    def stb  = "b0000".U(log2Ceil(MaxOpNum).W)
-    def sth  = "b0001".U(log2Ceil(MaxOpNum).W)
-    def stw  = "b0010".U(log2Ceil(MaxOpNum).W)
-    def scw  = "b0011".U(log2Ceil(MaxOpNum).W)
-
-    def X = BitPat("b????")
-
-    def apply() = UInt(log2Ceil(num).W)
-}
-
-object CSROpType {
-    def num = 7
-
-    def csrrd   = "b000".U(log2Ceil(MaxOpNum).W)
-    def csrwr   = "b001".U(log2Ceil(MaxOpNum).W)
-    def csrxchg = "b010".U(log2Ceil(MaxOpNum).W)
-    def tlbsrch = "b011".U(log2Ceil(MaxOpNum).W)
-    def tlbrd   = "b100".U(log2Ceil(MaxOpNum).W)
-    def tlbwr   = "b101".U(log2Ceil(MaxOpNum).W)
-    def tlbfill = "b110".U(log2Ceil(MaxOpNum).W)
-    def invtlb  = "b111".U(log2Ceil(MaxOpNum).W)
-    def apply() = UInt(log2Ceil(num).W)
-}
-
-object MiscOpType {
-    def num = 10
-
-    def none    = "b0000".U(log2Ceil(MaxOpNum).W)
-    def rdcntid = "b0001".U(log2Ceil(MaxOpNum).W)
-    def rdcntvl = "b0010".U(log2Ceil(MaxOpNum).W)
-    def rdcntvh = "b0011".U(log2Ceil(MaxOpNum).W)
-    def cacop   = "b0100".U(log2Ceil(MaxOpNum).W)
-    def syscall = "b0101".U(log2Ceil(MaxOpNum).W)
-    def break   = "b0110".U(log2Ceil(MaxOpNum).W)
-    def ertn    = "b0111".U(log2Ceil(MaxOpNum).W)
-    def idle    = "b1000".U(log2Ceil(MaxOpNum).W)
-    def unknown = "b1111".U(log2Ceil(MaxOpNum).W)
-
-    def apply() = UInt(log2Ceil(num).W)
+class LA32DecodedInst extends DecodedInst {
+    def getRs2(raw_inst: UInt): UInt = raw_inst(14, 10)
+    def getRs1(raw_inst: UInt): UInt = raw_inst(9, 5)
+    def getRd(raw_inst: UInt):  UInt = {
+        val is_bl = (fuoptype === JumpOpType.bl) && (futype === FuType.bru)
+        Mux(is_bl, 1.U, Mux(dest_rs1, getRs1(raw_inst), raw_inst(4, 0)))
+    }
 }
 
 object LA32Instructions {

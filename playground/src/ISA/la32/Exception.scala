@@ -1,38 +1,39 @@
-package miku
+package miku.isa.la32
 
 import chisel3._
 import chisel3.util._
 
-class LA32ExceptionType {
-    var enum_no:  UInt = 0xf.U
+import miku._
+import miku.isa._
+
+class LA32ExceptionType extends ExceptionType {
     var ecode:    UInt = 0xf.U
     var esubCode: UInt = 0xf.U
-
     def this(ecode: UInt, esubCode: UInt) = {
         this()
-        this.enum_no  = LA32ExceptionType.extype_map.size.U // hint priority
+        this.enum_no  = LA32ExceptionDefns.num.U // hint priority
         this.ecode    = ecode
         this.esubCode = esubCode
-        LA32ExceptionType.addExtype(this)
+        LA32ExceptionDefns.addExtype(this)
     }
 }
 
-object LA32ExceptionType {
+object LA32ExceptionDefns extends ExceptionDefns {
     private var extype_map = Seq[(UInt, LA32ExceptionType)]()
-    private def addExtype(extype: LA32ExceptionType): Unit = {
+    def addExtype(extype: LA32ExceptionType): Unit = {
         if (extype_map.contains(extype.enum_no)) {
             println("Error: Duplicate exception type defined.")
             throw new IllegalArgumentException
         }
         extype_map = extype_map :+ (extype.enum_no -> extype)
     }
-    def getEcodeByExcpNo(enum_no: UInt):              UInt = {
+    def getEcodeByExcpNo(enum_no: UInt):      UInt = {
         val ecode_map = extype_map.map { case (enum_no, extype) =>
             (enum_no -> extype.ecode)
         }
         MuxLookup(enum_no, 0.U)(ecode_map)
     }
-    def getEsubCodeByExcpNo(enum_no: UInt):           UInt = {
+    def getEsubCodeByExcpNo(enum_no: UInt):   UInt = {
         val subcode_map = extype_map.map { case (enum_no, extype) =>
             (enum_no -> extype.esubCode)
         }
@@ -59,13 +60,8 @@ object LA32ExceptionType {
     val TLBR = new LA32ExceptionType(0x3f.U, 0.B)
     val NONE = new LA32ExceptionType(0xfffff.U, 0.B)
 
-    def num = extype_map.size
-
+    def num     = extype_map.size
     def apply() = UInt(log2Ceil(num).W)
 }
 
-class LA32ExceptionInfo extends MkBundle {
-    val extype = LA32ExceptionType()
-    val pc     = UInt(VADDR_WIDTH.W)
-    val badv   = UInt(VADDR_WIDTH.W)
-}
+class LA32ExceptionInfo extends ExceptionInfo {}
