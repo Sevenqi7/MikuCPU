@@ -24,7 +24,7 @@ class RV32BranchUnit extends MkBRU {
         pc + 4.U,
         Seq(
             (taken & is_jalr) -> (rs1 + imm),
-            taken             -> (pc + (SEXT(imm(19, 0), WORD_WIDTH) << 2))
+            taken             -> (pc + (SEXT(imm(19, 0), WORD_WIDTH) << 1))
         )
     )
 }

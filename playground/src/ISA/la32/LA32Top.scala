@@ -9,7 +9,7 @@ import miku.frontend._
 import miku.backend._
 
 class MkLA32Top extends MkTop {
-    val diff = if (DIFFTEST_MODE) Some(IO(new DifftestIO)) else None
+    val diff = if (DIFFTEST_MODE) Some(IO(new LA32DifftestIO)) else None
 
     // mmu
     val mmu = Module(new LA32AddrTransUnit)

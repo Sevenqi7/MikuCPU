@@ -37,6 +37,13 @@ ifneq ($(CHIPLAB_HOME),)
 	@echo "Done."
 endif
 
+RISCV_TOP = $(BUILD_DIR)/npc_core.v
+$(RISCV_TOP): $(BUILD_FILE)
+riscv: $(RISCV_TOP)
+	@echo "The Verilog file is generated successfully."
+	@cp $(RISCV_TOP) ./simulators/npc/vsrc
+
+
 sim: verilog
 	@echo "Using chiplab to simulate..."
 ifeq ($(CHIPLAB_HOME), )

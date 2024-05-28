@@ -92,6 +92,7 @@ class Scoreboard extends MkModule {
     )
 
     val decoded_inst = io.from_decoder.bits.decoded_inst
+    val raw_inst     = io.from_decoder.bits.inst
     val sb_full      = issued_cnt === (NR_ENTRIES - 1).U
     val sb_empty     = issued_cnt === 0.U
     val is_bl        = (decoded_inst.futype === FuType.bru) && (decoded_inst.fuoptype === JumpOpType.bl)
@@ -100,17 +101,16 @@ class Scoreboard extends MkModule {
     when(issue_ack) {
         issue_ptr                           := issue_ptr + 1.U
         sb_mem(issue_ptr).valid             := true.B // set valid bit as true when successfully issue this instruction
-        sb_mem(issue_ptr).bits.rs2          := io.from_decoder.bits.inst(14, 10)
-        sb_mem(issue_ptr).bits.rs1          := io.from_decoder.bits.inst(9, 5)
-        // BL has a fixed destination register R1
-        sb_mem(issue_ptr).bits.rd           := Mux(is_bl, 1.U, io.from_decoder.bits.inst(4, 0))
+        sb_mem(issue_ptr).bits.rs2          := decoded_inst.getRs2(raw_inst)
+        sb_mem(issue_ptr).bits.rs1          := decoded_inst.getRs1(raw_inst)
+        sb_mem(issue_ptr).bits.rd           := decoded_inst.getRd(raw_inst)
         sb_mem(issue_ptr).bits.decoded_inst := decoded_inst
 
         // Record exception that occured in frontend
         sb_mem(issue_ptr).bits.exception     := io.from_decoder.bits.exception
         sb_mem(issue_ptr).bits.frontend_excp := (io.from_decoder.bits.exception =/= ArchExceptionType.NONE.enum_no)
         if (DIFFTEST_MODE) {
-            sb_mem(issue_ptr).bits.raw_inst.get := io.from_decoder.bits.inst
+            sb_mem(issue_ptr).bits.raw_inst.get := raw_inst
         }
 
         sb_mem(issue_ptr).bits.br_info.bits.pc      := io.from_decoder.bits.pc
@@ -143,9 +143,9 @@ class Scoreboard extends MkModule {
     io.issue_inst.valid := io.from_decoder.valid && io.operands_rdy && !waw_hazard && !sb_full &&
         ((decoded_inst.futype =/= FuType.bru) || ((decoded_inst.futype === FuType.bru) && !unresolved_branch))
 
-    io.issue_inst.bits.sbe.rs2 := io.from_decoder.bits.inst(14, 10)
-    io.issue_inst.bits.sbe.rs1 := io.from_decoder.bits.inst(9, 5)
-    io.issue_inst.bits.sbe.rd  := io.from_decoder.bits.inst(4, 0)
+    io.issue_inst.bits.sbe.rs2 := decoded_inst.getRs2(raw_inst)
+    io.issue_inst.bits.sbe.rs1 := decoded_inst.getRs1(raw_inst)
+    io.issue_inst.bits.sbe.rd  := decoded_inst.getRd(raw_inst)
     io.from_decoder.ready      := (io.operands_rdy && io.issue_inst.ready && !sb_full & !waw_hazard) &&
         ((decoded_inst.futype =/= FuType.bru) || ((decoded_inst.futype === FuType.bru) && !unresolved_branch))
 

@@ -34,7 +34,10 @@ class RV32OperandGen extends OperandGenerator {
     val imm_S     = SEXT(Cat(io.raw_inst(31, 25), io.raw_inst(11, 7)), WORD_WIDTH)
     val imm_B     = SEXT(Cat(io.raw_inst(31), io.raw_inst(7), io.raw_inst(30, 25), io.raw_inst(11, 8)), WORD_WIDTH)
     val imm_U     = SEXT(io.raw_inst(31, 12), WORD_WIDTH)
-    val imm_J     = SEXT(io.raw_inst(31, 12), WORD_WIDTH)
+    val imm_J     = SEXT(
+        (io.raw_inst(30, 21) | (io.raw_inst(20) << 10) | (io.raw_inst(19, 12) << 11) | (io.raw_inst(31) << 19)),
+        WORD_WIDTH
+    )
     val imm_table = Seq[(UInt, UInt)](
         SelImm.IMM_I -> imm_I,
         SelImm.IMM_B -> imm_B,

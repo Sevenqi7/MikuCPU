@@ -25,14 +25,14 @@ class PriorityAXIArbiter(num: Int, addrWidth: Int, dataWidth: Int, idBits: Int) 
     val rreq_ongoing = RegNext(MuxCase(rreq_ongoing_w, Seq(
         (io.out.readAddr.valid & io.out.readAddr.ready, 1.B),
         (io.out.readData.valid & io.out.readData.ready & io.out.readData.bits.last, 0.B)
-    )))
+    )), false.B)
     rreq_ongoing_w := rreq_ongoing
-
+    
     val wreq_ongoing_w = Wire(Bool())
     val wreq_ongoing = RegNext(MuxCase(wreq_ongoing_w, Seq(
         (io.out.writeAddr.valid & io.out.writeAddr.ready, 1.B),
         (io.out.writeData.valid & io.out.writeData.ready & io.out.writeData.bits.last, 0.B)
-    )))
+    )), false.B)
     wreq_ongoing_w := wreq_ongoing
 
     val wreq_addr = RegEnable(io.out.writeAddr.bits.addr, io.out.writeAddr.valid)

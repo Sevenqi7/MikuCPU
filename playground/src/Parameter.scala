@@ -46,8 +46,8 @@ class MkParams {
 
 trait HasMkParams {
     val mkParams   = new MkParams()
-    val isaFactory = la32.MkLA32Factory
-    // val isaFactory = riscv32.MkRV32Factory
+    // val isaFactory = la32.MkLA32Factory
+    val isaFactory = riscv32.MkRV32Factory
 
     val FETCH_WIDTH  = mkParams.FETCH_WIDTH
     val DECODE_WIDTH = mkParams.DECODE_WIDTH

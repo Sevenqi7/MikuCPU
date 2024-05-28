@@ -25,13 +25,13 @@ class RV32DecoderUnit extends DecoderUnit {
 }
 
 // format: off
-
+// rs2 rs1 rd
 object RV32IDecoder extends DecodeConstants {
     val decodeTable = Array[(BitPat, List[BitPat])](
-        LUI    -> List(Y, SrcType.imm, SrcType.none, SrcType.none, FuType.alu, ALUOpType.add  , N, SelImm.IMM_U),
+        LUI    -> List(Y, SrcType.imm, SrcType.none, SrcType.none, FuType.alu, ALUOpType.lui  , N, SelImm.IMM_U),
         AUIPC  -> List(Y, SrcType.imm, SrcType.none, SrcType.none, FuType.alu, ALUOpType.auipc, N, SelImm.IMM_U),
-        JAL    -> List(Y, SrcType.imm, SrcType.none, SrcType.none, FuType.bru, ALUOpType.add  , N, SelImm.IMM_J),
-        JALR   -> List(Y, SrcType.imm, SrcType.reg , SrcType.none, FuType.bru, ALUOpType.add  , N, SelImm.IMM_J),
+        JAL    -> List(Y, SrcType.imm, SrcType.none, SrcType.none, FuType.bru, JumpOpType.jal , N, SelImm.IMM_J),
+        JALR   -> List(Y, SrcType.imm, SrcType.reg , SrcType.none, FuType.bru, JumpOpType.jalr, N, SelImm.IMM_J),
         BEQ    -> List(N, SrcType.reg, SrcType.reg , SrcType.none, FuType.bru, JumpOpType.beq , N, SelImm.IMM_B),
         BNE    -> List(N, SrcType.reg, SrcType.reg , SrcType.none, FuType.bru, JumpOpType.bne , N, SelImm.IMM_B),
         BLT    -> List(N, SrcType.reg, SrcType.reg , SrcType.none, FuType.bru, JumpOpType.blt , N, SelImm.IMM_B),
