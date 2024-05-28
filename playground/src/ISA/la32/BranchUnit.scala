@@ -16,8 +16,11 @@ class LA32BranchUnit extends MkBRU {
     def isBorBl(optype: UInt) = ((optype === b) || (optype === bl))
     def isJirl(optype: UInt)  = (optype === jirl)
 
-    val rj = lval
-    val rd = rval
+    val rj = io.in.bits.operand_a
+    val rd = io.in.bits.operand_c
+
+    lval := rj
+    rval := rd
 
     val imm16 = io.in.bits.operand_b(15, 0)
     val imm26 = io.in.bits.operand_b(25, 0)

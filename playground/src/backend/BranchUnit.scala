@@ -18,9 +18,10 @@ abstract class MkBRU extends BaseFunctionUnit {
     val bru_io = IO(new BranchUnitIO)
     io.in.ready := true.B // mis-prediction check could complete within 1 cycle
 
-    val pc   = io.in.bits.pc
-    val lval = io.in.bits.operand_a
-    val rval = io.in.bits.operand_c
+    val pc = io.in.bits.pc
+
+    val lval = Wire(UInt(WORD_WIDTH.W))
+    val rval = Wire(UInt(WORD_WIDTH.W))
 
     // generate target address of branch
     val pred_taken  = bru_io.br_pred.taken

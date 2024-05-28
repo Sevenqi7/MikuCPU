@@ -24,7 +24,7 @@ INTERFACE_INSTR_COMMIT {
     auto packet   = &dut.commit;
     packet->valid = valid;
     if (packet->valid) {
-        packet->pc = pc;
+        packet->pc    = pc;
         packet->inst  = instr;
         packet->skip  = skip;
         packet->wen   = wen;
@@ -68,4 +68,25 @@ INTERFACE_GREG_STATE {
     packet->gpr[29] = gpr_29;
     packet->gpr[30] = gpr_30;
     packet->gpr[31] = gpr_31;
+}
+
+INTERFACE_STORE_EVENT {
+    RETURN_NO_NULL
+    auto packet   = &dut.store;
+    packet->valid = valid;
+    if (packet->valid) {
+        packet->paddr = storePAddr;
+        packet->vaddr = storeVAddr;
+        packet->data  = storeData;
+    }
+}
+
+INTERFACE_LOAD_EVENT {
+    RETURN_NO_NULL
+    auto packet   = &dut.load;
+    packet->valid = valid;
+    if (packet->valid) {
+        packet->paddr = paddr;
+        packet->vaddr = vaddr;
+    }
 }

@@ -1,6 +1,7 @@
 #include <verilator.h>
 #include <npc.h>
 #include "difftest.h"
+#include "macro.h"
 
 #include <stdint.h>
 #include <memory.h>
@@ -20,6 +21,7 @@ static uint32_t g_itrace_num = 0;
 #endif
 
 void device_update();
+void ebreak(long long int halt_ret);
 void difftest_regcpy(void *dut, bool direction);
 
 static void trace_and_difftest(char *logbuf) {
@@ -72,21 +74,21 @@ void exec_once() {
     }
     // printf("cmt_valid:0x%x\n", cmt_inst->valid);
     // printf("cmt_inst:0x%x\n", cmt_inst->inst);
+    // printf("cmt_pc:0x%x\n", cmt_inst->pc);
     cmt_inst->valid = false;
     npc_state.inst  = cmt_inst->inst;
     npc_state.pc    = cmt_inst->pc;
     nr_total_inst++;
+    if (cmt_inst->inst == EBREAK) {
+        ebreak(dut_regs_ptr[10]);
+        return;
+    }
 trace:
     static char logbuf[128];
 #ifdef CONFIG_ITRACE
-    char *p  = logbuf;
-    p       += snprintf(
-        p,
-        sizeof(logbuf),
-        "0x%016lx"
-              ":",
-        npc_state.pc);
-    uint8_t *inst = (uint8_t *)&npc_state.inst;
+    char *p        = logbuf;
+    p             += snprintf(p, sizeof(logbuf), VADDR_FMT ":", npc_state.pc);
+    uint8_t *inst  = (uint8_t *)&npc_state.inst;
     for (int i = 3; i >= 0; i--) p += snprintf(p, 4, "%02x", inst[i]);
     // Log("logbuf:%s", logbuf);
     *p++ = ' ';
@@ -124,7 +126,7 @@ void execute(uint64_t n) {
     }
 
     if (npc_state.state == NPC_ABORT) {
-        printf("\n\033[0m\033[1;31mNPC ABORT \033[0mat pc = %016lx\n", npc_state.pc);
+        printf("\n\033[0m\033[1;31mNPC ABORT \033[0mat pc = " VADDR_FMT "\n", npc_state.pc);
 #ifdef CONFIG_ITRACE
         display_itrace();
 #endif

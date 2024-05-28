@@ -1,7 +1,9 @@
-#include <verilator.h>
-#include <npc.h>
-#include <memory.h>
-#include <device.h>
+#include "npc.h"
+#include "verilator.h"
+#include "memory.h"
+#include "device.h"
+#include "difftest.h"
+
 #include <sys/time.h>
 
 extern uint32_t *vgactl_port_base;
@@ -13,12 +15,29 @@ void     vga_update_screen();
 uint64_t get_time_internal();
 uint64_t get_time();
 
-uint64_t device_io_pc = -1;
+vaddr_t     device_io_pc = -1;
+extern bool is_skip_ref;
+
+bool check_mmio_access() {
+    // is store or load inst
+    bool store_inst = dut.store.valid;
+    bool load_inst  = dut.load.valid;
+    if (store_inst | load_inst) {
+        // is addr in MMIO
+        vaddr_t addr = store_inst ? dut.store.vaddr : dut.load.vaddr;
+        if (addr >= MMIO_BASE && addr < MMIO_END) {
+            device_io_pc = npc_state.pc;
+            is_skip_ref  = true;
+            // Log("pc: 0x%x, addr: 0x%x", npc_state.pc, addr);
+            return true;
+        }
+    }
+    return false;
+}
 
 word_t device_read(vaddr_t addr) {
     assert(addr > MMIO_BASE && addr < MMIO_END);
-    device_io_pc = npc_state.pc;
-    // Log("device_io_read addr:%lx", addr);
+    // Log("device_io_read addr:" VADDR_FMT, addr);
     if (addr == RTC_ADDR)
         return get_time();
     else if (addr == SYNC_ADDR)
@@ -28,16 +47,16 @@ word_t device_read(vaddr_t addr) {
     else if (addr >= FB_ADDR && addr < FB_ADDR + 480000)
         return ((uint32_t *)vmem)[(addr - FB_ADDR) / 4];
     else {
-        Log("addr:0x%08lx", addr);
-        Log("pc:%016lx", device_io_pc);
-        assert(0);
+        Log("addr: " VADDR_FMT, addr);
+        Log("pc:%016lx", npc_state.pc);
+        // assert(0);
+        return -1;
     }
 }
 
 void device_write(vaddr_t addr, word_t data, int len) {
     assert(addr > MMIO_BASE && addr < MMIO_END);
-    device_io_pc = npc_state.pc;
-    // Log("device_io_write at pc:%lx", top->io_MEM_pc);
+    // Log("device_io_write at pc: " VADDR_FMT, npc_state.pc);
     if (addr == SERIAL_PORT)
         putchar((char)data);
     else if (addr == SYNC_ADDR) {
@@ -69,7 +88,7 @@ void device_write(vaddr_t addr, word_t data, int len) {
         assert(len == 4);
         // ((uint32_t *)vmem)[(int)((addr - FB_ADDR) / 4 + offset)] = data;
     } else {
-        Log("addr:0x%08lx", addr);
+        Log("addr: " VADDR_FMT, addr);
         assert(0);
     }
 }

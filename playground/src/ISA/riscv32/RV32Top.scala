@@ -16,9 +16,9 @@ class MkRV32Top extends MkTop {
     excute.lsu_io.data_trans.resp.paddr := RegNext(excute.lsu_io.data_trans.req.vaddr)
 
     if (DIFFTEST_MODE) {
-        diff.get.commit_inst := issue.io.diff.get.commit_inst
-        diff.get.gpr         := issue.io.diff.get.gpr
-        // issue.io.lsu_diff.get := excute.lsu_io.lsu_diff.get
+        diff.get.commit_inst  := issue.io.diff.get.commit_inst
+        diff.get.gpr          := issue.io.diff.get.gpr
+        issue.io.lsu_diff.get := excute.lsu_io.lsu_diff.get
 
         // val csr_types = LA32CSRRegisters.csr_defns.map(_._2)
         // diff.get.csr := csr_rf_io.raw_datass

@@ -11,8 +11,7 @@
  */
 #define DIFFTEST_DPIC_FUNC_NAME(name) v_difftest_##name
 
-#define DIFFTEST_DPIC_FUNC_DECL(name) \
-    extern "C" void DIFFTEST_DPIC_FUNC_NAME(name)
+#define DIFFTEST_DPIC_FUNC_DECL(name) extern "C" void DIFFTEST_DPIC_FUNC_NAME(name)
 
 #define DPIC_ARG_BIT  uint8_t
 #define DPIC_ARG_BYTE char
@@ -65,5 +64,19 @@
      DPIC_ARG_LONG gpr_29,             \
      DPIC_ARG_LONG gpr_30,             \
      DPIC_ARG_LONG gpr_31)
+
+// v_difftest_StoreEvent
+#define INTERFACE_STORE_EVENT           \
+    DIFFTEST_DPIC_FUNC_DECL(StoreEvent) \
+    (DPIC_ARG_BYTE index,               \
+     DPIC_ARG_BYTE valid,               \
+     DPIC_ARG_LONG storePAddr,          \
+     DPIC_ARG_LONG storeVAddr,          \
+     DPIC_ARG_LONG storeData)
+
+// v_difftest_LoadEvent
+#define INTERFACE_LOAD_EVENT           \
+    DIFFTEST_DPIC_FUNC_DECL(LoadEvent) \
+    (DPIC_ARG_BYTE index, DPIC_ARG_BYTE valid, DPIC_ARG_LONG paddr, DPIC_ARG_LONG vaddr)
 
 #endif

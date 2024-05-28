@@ -1819,8 +1819,8 @@ module RV32DecoderUnit(	// <stdin>:980:3
 );
 
   wire [29:0] decoded_inst_invInputs = ~(io_raw_inst[31:2]);	// playground/src/ISA/ISAFactory.scala:221:16, src/main/scala/chisel3/util/pla.scala:78:21
-  wire [1:0]  _decoded_inst_T_1 = {decoded_inst_invInputs[2], decoded_inst_invInputs[4]};	// src/main/scala/chisel3/util/pla.scala:78:21, :91:29, :98:53
-  wire [7:0]  _decoded_inst_T_3 =
+  wire [1:0]  _decoded_inst_T = {decoded_inst_invInputs[0], decoded_inst_invInputs[3]};	// src/main/scala/chisel3/util/pla.scala:78:21, :91:29, :98:53
+  wire [7:0]  _decoded_inst_T_2 =
     {io_raw_inst[0],
      io_raw_inst[1],
      decoded_inst_invInputs[0],
@@ -1829,7 +1829,7 @@ module RV32DecoderUnit(	// <stdin>:980:3
      decoded_inst_invInputs[3],
      decoded_inst_invInputs[4],
      decoded_inst_invInputs[11]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
-  wire [7:0]  _decoded_inst_T_7 =
+  wire [7:0]  _decoded_inst_T_6 =
     {io_raw_inst[0],
      io_raw_inst[1],
      decoded_inst_invInputs[0],
@@ -1838,7 +1838,7 @@ module RV32DecoderUnit(	// <stdin>:980:3
      decoded_inst_invInputs[4],
      decoded_inst_invInputs[10],
      decoded_inst_invInputs[12]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
-  wire [7:0]  _decoded_inst_T_11 =
+  wire [7:0]  _decoded_inst_T_10 =
     {io_raw_inst[0],
      io_raw_inst[1],
      decoded_inst_invInputs[0],
@@ -1847,9 +1847,9 @@ module RV32DecoderUnit(	// <stdin>:980:3
      decoded_inst_invInputs[4],
      decoded_inst_invInputs[11],
      decoded_inst_invInputs[12]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
-  wire [1:0]  _decoded_inst_T_13 = {io_raw_inst[2], decoded_inst_invInputs[2]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
-  wire [1:0]  _decoded_inst_T_16 = {decoded_inst_invInputs[0], io_raw_inst[4]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
-  wire [6:0]  _decoded_inst_T_18 =
+  wire [2:0]  _decoded_inst_T_12 =
+    {io_raw_inst[2], decoded_inst_invInputs[1], decoded_inst_invInputs[2]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
+  wire [6:0]  _decoded_inst_T_16 =
     {io_raw_inst[0],
      io_raw_inst[1],
      decoded_inst_invInputs[1],
@@ -1857,7 +1857,7 @@ module RV32DecoderUnit(	// <stdin>:980:3
      decoded_inst_invInputs[3],
      decoded_inst_invInputs[4],
      decoded_inst_invInputs[10]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
-  wire [13:0] _decoded_inst_T_24 =
+  wire [13:0] _decoded_inst_T_22 =
     {io_raw_inst[0],
      io_raw_inst[1],
      decoded_inst_invInputs[1],
@@ -1872,7 +1872,7 @@ module RV32DecoderUnit(	// <stdin>:980:3
      decoded_inst_invInputs[26],
      decoded_inst_invInputs[27],
      decoded_inst_invInputs[29]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
-  wire [11:0] _decoded_inst_T_28 =
+  wire [11:0] _decoded_inst_T_24 =
     {io_raw_inst[0],
      io_raw_inst[1],
      decoded_inst_invInputs[1],
@@ -1885,7 +1885,7 @@ module RV32DecoderUnit(	// <stdin>:980:3
      decoded_inst_invInputs[27],
      decoded_inst_invInputs[28],
      decoded_inst_invInputs[29]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
-  wire [11:0] _decoded_inst_T_32 =
+  wire [11:0] _decoded_inst_T_30 =
     {io_raw_inst[0],
      io_raw_inst[1],
      decoded_inst_invInputs[1],
@@ -1898,14 +1898,16 @@ module RV32DecoderUnit(	// <stdin>:980:3
      decoded_inst_invInputs[27],
      decoded_inst_invInputs[28],
      decoded_inst_invInputs[29]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
-  wire [1:0]  _decoded_inst_T_38 = {io_raw_inst[2], io_raw_inst[4]};	// src/main/scala/chisel3/util/pla.scala:90:45, :98:53
-  wire [5:0]  _decoded_inst_T_40 =
+  wire [1:0]  _decoded_inst_T_36 = {io_raw_inst[2], io_raw_inst[4]};	// src/main/scala/chisel3/util/pla.scala:90:45, :98:53
+  wire [5:0]  _decoded_inst_T_38 =
     {io_raw_inst[0],
      io_raw_inst[1],
      io_raw_inst[2],
      decoded_inst_invInputs[1],
      io_raw_inst[4],
      decoded_inst_invInputs[4]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
+  wire [2:0]  _decoded_inst_T_42 =
+    {decoded_inst_invInputs[0], io_raw_inst[5], decoded_inst_invInputs[4]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
   wire [7:0]  _decoded_inst_T_46 =
     {io_raw_inst[0],
      io_raw_inst[1],
@@ -1923,7 +1925,8 @@ module RV32DecoderUnit(	// <stdin>:980:3
      io_raw_inst[4],
      io_raw_inst[5],
      decoded_inst_invInputs[4]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
-  wire [7:0]  _decoded_inst_T_53 =
+  wire [1:0]  _decoded_inst_T_52 = {decoded_inst_invInputs[0], io_raw_inst[6]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
+  wire [7:0]  _decoded_inst_T_54 =
     {io_raw_inst[0],
      io_raw_inst[1],
      decoded_inst_invInputs[0],
@@ -1932,7 +1935,7 @@ module RV32DecoderUnit(	// <stdin>:980:3
      io_raw_inst[5],
      io_raw_inst[6],
      decoded_inst_invInputs[11]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
-  wire [8:0]  _decoded_inst_T_55 =
+  wire [8:0]  _decoded_inst_T_56 =
     {io_raw_inst[0],
      io_raw_inst[1],
      io_raw_inst[2],
@@ -1942,7 +1945,7 @@ module RV32DecoderUnit(	// <stdin>:980:3
      decoded_inst_invInputs[10],
      decoded_inst_invInputs[11],
      decoded_inst_invInputs[12]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
-  wire [6:0]  _decoded_inst_T_57 =
+  wire [6:0]  _decoded_inst_T_58 =
     {io_raw_inst[0],
      io_raw_inst[1],
      io_raw_inst[2],
@@ -1950,7 +1953,7 @@ module RV32DecoderUnit(	// <stdin>:980:3
      decoded_inst_invInputs[2],
      io_raw_inst[5],
      io_raw_inst[6]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
-  wire [6:0]  _decoded_inst_T_67 =
+  wire [6:0]  _decoded_inst_T_68 =
     {io_raw_inst[0],
      io_raw_inst[1],
      decoded_inst_invInputs[1],
@@ -1958,7 +1961,23 @@ module RV32DecoderUnit(	// <stdin>:980:3
      decoded_inst_invInputs[3],
      decoded_inst_invInputs[4],
      io_raw_inst[13]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
-  wire [11:0] _decoded_inst_T_77 =
+  wire [14:0] _decoded_inst_T_74 =
+    {io_raw_inst[0],
+     io_raw_inst[1],
+     decoded_inst_invInputs[0],
+     decoded_inst_invInputs[1],
+     io_raw_inst[4],
+     decoded_inst_invInputs[4],
+     io_raw_inst[13],
+     decoded_inst_invInputs[12],
+     decoded_inst_invInputs[23],
+     decoded_inst_invInputs[24],
+     decoded_inst_invInputs[25],
+     decoded_inst_invInputs[26],
+     decoded_inst_invInputs[27],
+     decoded_inst_invInputs[28],
+     decoded_inst_invInputs[29]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
+  wire [11:0] _decoded_inst_T_76 =
     {io_raw_inst[0],
      io_raw_inst[1],
      decoded_inst_invInputs[1],
@@ -1971,7 +1990,7 @@ module RV32DecoderUnit(	// <stdin>:980:3
      decoded_inst_invInputs[26],
      decoded_inst_invInputs[27],
      decoded_inst_invInputs[29]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
-  wire [9:0]  _decoded_inst_T_83 =
+  wire [9:0]  _decoded_inst_T_82 =
     {io_raw_inst[0],
      io_raw_inst[1],
      decoded_inst_invInputs[0],
@@ -1982,7 +2001,7 @@ module RV32DecoderUnit(	// <stdin>:980:3
      io_raw_inst[12],
      decoded_inst_invInputs[11],
      io_raw_inst[14]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
-  wire [13:0] _decoded_inst_T_85 =
+  wire [13:0] _decoded_inst_T_84 =
     {io_raw_inst[0],
      io_raw_inst[1],
      decoded_inst_invInputs[1],
@@ -1997,7 +2016,7 @@ module RV32DecoderUnit(	// <stdin>:980:3
      decoded_inst_invInputs[26],
      decoded_inst_invInputs[27],
      decoded_inst_invInputs[29]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
-  wire [8:0]  _decoded_inst_T_87 =
+  wire [8:0]  _decoded_inst_T_88 =
     {io_raw_inst[0],
      io_raw_inst[1],
      decoded_inst_invInputs[0],
@@ -2007,7 +2026,123 @@ module RV32DecoderUnit(	// <stdin>:980:3
      io_raw_inst[6],
      io_raw_inst[13],
      io_raw_inst[14]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
-  wire [15:0] _decoded_inst_T_93 =
+  wire [14:0] _decoded_inst_T_94 =
+    {io_raw_inst[0],
+     io_raw_inst[1],
+     decoded_inst_invInputs[0],
+     decoded_inst_invInputs[1],
+     io_raw_inst[5],
+     decoded_inst_invInputs[4],
+     decoded_inst_invInputs[11],
+     decoded_inst_invInputs[12],
+     io_raw_inst[25],
+     decoded_inst_invInputs[24],
+     decoded_inst_invInputs[25],
+     decoded_inst_invInputs[26],
+     decoded_inst_invInputs[27],
+     decoded_inst_invInputs[28],
+     decoded_inst_invInputs[29]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
+  wire [14:0] _decoded_inst_T_98 =
+    {io_raw_inst[0],
+     io_raw_inst[1],
+     decoded_inst_invInputs[0],
+     decoded_inst_invInputs[1],
+     io_raw_inst[4],
+     io_raw_inst[5],
+     decoded_inst_invInputs[4],
+     decoded_inst_invInputs[11],
+     io_raw_inst[25],
+     decoded_inst_invInputs[24],
+     decoded_inst_invInputs[25],
+     decoded_inst_invInputs[26],
+     decoded_inst_invInputs[27],
+     decoded_inst_invInputs[28],
+     decoded_inst_invInputs[29]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
+  wire [14:0] _decoded_inst_T_100 =
+    {io_raw_inst[0],
+     io_raw_inst[1],
+     decoded_inst_invInputs[1],
+     io_raw_inst[4],
+     io_raw_inst[5],
+     decoded_inst_invInputs[4],
+     decoded_inst_invInputs[10],
+     decoded_inst_invInputs[11],
+     io_raw_inst[25],
+     decoded_inst_invInputs[24],
+     decoded_inst_invInputs[25],
+     decoded_inst_invInputs[26],
+     decoded_inst_invInputs[27],
+     decoded_inst_invInputs[28],
+     decoded_inst_invInputs[29]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
+  wire [14:0] _decoded_inst_T_102 =
+    {io_raw_inst[0],
+     io_raw_inst[1],
+     decoded_inst_invInputs[0],
+     decoded_inst_invInputs[1],
+     io_raw_inst[4],
+     io_raw_inst[5],
+     decoded_inst_invInputs[4],
+     io_raw_inst[12],
+     io_raw_inst[25],
+     decoded_inst_invInputs[24],
+     decoded_inst_invInputs[25],
+     decoded_inst_invInputs[26],
+     decoded_inst_invInputs[27],
+     decoded_inst_invInputs[28],
+     decoded_inst_invInputs[29]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
+  wire [16:0] _decoded_inst_T_104 =
+    {io_raw_inst[0],
+     io_raw_inst[1],
+     decoded_inst_invInputs[0],
+     decoded_inst_invInputs[1],
+     io_raw_inst[4],
+     io_raw_inst[5],
+     decoded_inst_invInputs[4],
+     io_raw_inst[12],
+     io_raw_inst[13],
+     decoded_inst_invInputs[12],
+     io_raw_inst[25],
+     decoded_inst_invInputs[24],
+     decoded_inst_invInputs[25],
+     decoded_inst_invInputs[26],
+     decoded_inst_invInputs[27],
+     decoded_inst_invInputs[28],
+     decoded_inst_invInputs[29]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
+  wire [14:0] _decoded_inst_T_106 =
+    {io_raw_inst[0],
+     io_raw_inst[1],
+     decoded_inst_invInputs[0],
+     decoded_inst_invInputs[1],
+     io_raw_inst[4],
+     io_raw_inst[5],
+     decoded_inst_invInputs[4],
+     io_raw_inst[14],
+     io_raw_inst[25],
+     decoded_inst_invInputs[24],
+     decoded_inst_invInputs[25],
+     decoded_inst_invInputs[26],
+     decoded_inst_invInputs[27],
+     decoded_inst_invInputs[28],
+     decoded_inst_invInputs[29]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
+  wire [16:0] _decoded_inst_T_108 =
+    {io_raw_inst[0],
+     io_raw_inst[1],
+     decoded_inst_invInputs[0],
+     decoded_inst_invInputs[1],
+     io_raw_inst[4],
+     io_raw_inst[5],
+     decoded_inst_invInputs[4],
+     io_raw_inst[12],
+     decoded_inst_invInputs[11],
+     io_raw_inst[14],
+     io_raw_inst[25],
+     decoded_inst_invInputs[24],
+     decoded_inst_invInputs[25],
+     decoded_inst_invInputs[26],
+     decoded_inst_invInputs[27],
+     decoded_inst_invInputs[28],
+     decoded_inst_invInputs[29]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
+  wire [15:0] _decoded_inst_T_112 =
     {io_raw_inst[0],
      io_raw_inst[1],
      decoded_inst_invInputs[0],
@@ -2024,7 +2159,7 @@ module RV32DecoderUnit(	// <stdin>:980:3
      decoded_inst_invInputs[27],
      io_raw_inst[30],
      decoded_inst_invInputs[29]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
-  wire [14:0] _decoded_inst_T_95 =
+  wire [14:0] _decoded_inst_T_114 =
     {io_raw_inst[0],
      io_raw_inst[1],
      decoded_inst_invInputs[0],
@@ -2040,7 +2175,7 @@ module RV32DecoderUnit(	// <stdin>:980:3
      decoded_inst_invInputs[27],
      io_raw_inst[30],
      decoded_inst_invInputs[29]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
-  wire [15:0] _decoded_inst_T_97 =
+  wire [15:0] _decoded_inst_T_116 =
     {io_raw_inst[0],
      io_raw_inst[1],
      decoded_inst_invInputs[0],
@@ -2057,9 +2192,9 @@ module RV32DecoderUnit(	// <stdin>:980:3
      decoded_inst_invInputs[27],
      io_raw_inst[30],
      decoded_inst_invInputs[29]};	// src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:53
-  wire [1:0]  _decoded_inst_orMatrixOutputs_T_22 = {io_raw_inst[3], &_decoded_inst_T_38};	// src/main/scala/chisel3/util/pla.scala:90:45, :98:{53,70}, :114:19
+  wire [1:0]  decoded_inst_orMatrixOutputs_lo_8 = {io_raw_inst[3], &_decoded_inst_T_36};	// src/main/scala/chisel3/util/pla.scala:90:45, :98:{53,70}, :114:19
   assign io_decoded_inst_regwen =
-    |{&_decoded_inst_T_3,
+    |{&_decoded_inst_T_2,
       &{io_raw_inst[0],
         io_raw_inst[1],
         decoded_inst_invInputs[0],
@@ -2068,31 +2203,36 @@ module RV32DecoderUnit(	// <stdin>:980:3
         decoded_inst_invInputs[4],
         decoded_inst_invInputs[10],
         decoded_inst_invInputs[12]},
-      &_decoded_inst_T_18,
+      &_decoded_inst_T_16,
+      &_decoded_inst_T_22,
       &_decoded_inst_T_24,
-      &_decoded_inst_T_28,
-      &_decoded_inst_T_32,
-      &_decoded_inst_T_40,
-      &_decoded_inst_T_55,
-      &_decoded_inst_T_57,
-      &_decoded_inst_T_67,
-      &_decoded_inst_T_77,
-      &_decoded_inst_T_85};	// <stdin>:980:3, src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:{53,70}, :114:{19,36}
+      &_decoded_inst_T_30,
+      &_decoded_inst_T_38,
+      &_decoded_inst_T_56,
+      &_decoded_inst_T_58,
+      &_decoded_inst_T_68,
+      &_decoded_inst_T_76,
+      &_decoded_inst_T_84,
+      &_decoded_inst_T_98,
+      &_decoded_inst_T_102,
+      &_decoded_inst_T_106};	// <stdin>:980:3, src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:{53,70}, :114:{19,36}
   assign io_decoded_inst_src_0 =
-    {|{&_decoded_inst_T_1, &_decoded_inst_T_16, &_decoded_inst_T_38, io_raw_inst[6]},
-     |{decoded_inst_invInputs[3],
-       &_decoded_inst_T_16,
-       &_decoded_inst_T_38,
-       io_raw_inst[6]}};	// <stdin>:980:3, playground/src/ISA/riscv32/Decoder.scala:23:70, src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:{53,70}, :114:{19,36}
+    {|{&_decoded_inst_T,
+       &_decoded_inst_T_12,
+       io_raw_inst[3],
+       &_decoded_inst_T_36,
+       &_decoded_inst_T_42,
+       &_decoded_inst_T_52},
+     |{&_decoded_inst_T, &_decoded_inst_T_12, io_raw_inst[3], io_raw_inst[4]}};	// <stdin>:980:3, playground/src/ISA/riscv32/Decoder.scala:23:70, src/main/scala/chisel3/util/pla.scala:90:45, :98:{53,70}, :114:{19,36}
   assign io_decoded_inst_src_1 =
-    {|_decoded_inst_orMatrixOutputs_T_22, |_decoded_inst_orMatrixOutputs_T_22};	// <stdin>:980:3, playground/src/ISA/riscv32/Decoder.scala:23:70, src/main/scala/chisel3/util/pla.scala:114:{19,36}
+    {|decoded_inst_orMatrixOutputs_lo_8, |decoded_inst_orMatrixOutputs_lo_8};	// <stdin>:980:3, playground/src/ISA/riscv32/Decoder.scala:23:70, src/main/scala/chisel3/util/pla.scala:114:{19,36}
   assign io_decoded_inst_src_2 =
-    {|{decoded_inst_invInputs[3], &_decoded_inst_T_13, &_decoded_inst_T_38}, 1'h0};	// <stdin>:980:3, playground/src/ISA/riscv32/Decoder.scala:23:70, src/main/scala/chisel3/util/pla.scala:78:21, :91:29, :98:{53,70}, :102:36, :114:{19,36}
+    {|{&_decoded_inst_T, &_decoded_inst_T_12, io_raw_inst[3], &_decoded_inst_T_36}, 1'h0};	// <stdin>:980:3, playground/src/ISA/riscv32/Decoder.scala:23:70, src/main/scala/chisel3/util/pla.scala:90:45, :98:{53,70}, :102:36, :114:{19,36}
   assign io_decoded_inst_futype =
     {1'h0,
-     |{&_decoded_inst_T_53,
-       &_decoded_inst_T_55,
-       &_decoded_inst_T_57,
+     |{&_decoded_inst_T_54,
+       &_decoded_inst_T_56,
+       &_decoded_inst_T_58,
        &{io_raw_inst[0],
          io_raw_inst[1],
          decoded_inst_invInputs[0],
@@ -2101,18 +2241,16 @@ module RV32DecoderUnit(	// <stdin>:980:3
          io_raw_inst[5],
          io_raw_inst[6],
          io_raw_inst[14]}},
-     2'h0,
-     |{&_decoded_inst_T_3,
-       &_decoded_inst_T_7,
-       &_decoded_inst_T_11,
-       &_decoded_inst_T_18,
+     |{&_decoded_inst_T_98, &_decoded_inst_T_102, &_decoded_inst_T_106},
+     |{&_decoded_inst_T_2, &_decoded_inst_T_6, &_decoded_inst_T_10},
+     |{&_decoded_inst_T_16,
+       &_decoded_inst_T_22,
        &_decoded_inst_T_24,
-       &_decoded_inst_T_28,
-       &_decoded_inst_T_32,
-       &_decoded_inst_T_40,
-       &_decoded_inst_T_67,
-       &_decoded_inst_T_77,
-       &_decoded_inst_T_85}};	// <stdin>:980:3, playground/src/ISA/riscv32/Decoder.scala:23:70, src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:{53,70}, :102:36, :114:{19,36}
+       &_decoded_inst_T_30,
+       &_decoded_inst_T_38,
+       &_decoded_inst_T_68,
+       &_decoded_inst_T_76,
+       &_decoded_inst_T_84}};	// <stdin>:980:3, playground/src/ISA/riscv32/Decoder.scala:23:70, src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:{53,70}, :102:36, :114:{19,36}
   assign io_decoded_inst_fuoptype =
     {{&{io_raw_inst[0],
         io_raw_inst[1],
@@ -2132,11 +2270,11 @@ module RV32DecoderUnit(	// <stdin>:980:3
         decoded_inst_invInputs[10],
         decoded_inst_invInputs[11],
         decoded_inst_invInputs[12],
-        decoded_inst_invInputs[23],
         decoded_inst_invInputs[24],
         decoded_inst_invInputs[25],
         decoded_inst_invInputs[26],
         decoded_inst_invInputs[27],
+        decoded_inst_invInputs[28],
         decoded_inst_invInputs[29]},
       &{io_raw_inst[0],
         io_raw_inst[1],
@@ -2149,9 +2287,9 @@ module RV32DecoderUnit(	// <stdin>:980:3
         decoded_inst_invInputs[12]},
       &_decoded_inst_T_46,
       &_decoded_inst_T_50,
-      &_decoded_inst_T_53,
-      &_decoded_inst_T_55,
-      &_decoded_inst_T_57,
+      &_decoded_inst_T_54,
+      &_decoded_inst_T_56,
+      &_decoded_inst_T_58,
       &{io_raw_inst[0],
         io_raw_inst[1],
         decoded_inst_invInputs[0],
@@ -2160,6 +2298,7 @@ module RV32DecoderUnit(	// <stdin>:980:3
         decoded_inst_invInputs[3],
         decoded_inst_invInputs[4],
         io_raw_inst[13]},
+      &_decoded_inst_T_74,
       &{io_raw_inst[0],
         io_raw_inst[1],
         decoded_inst_invInputs[0],
@@ -2167,14 +2306,19 @@ module RV32DecoderUnit(	// <stdin>:980:3
         io_raw_inst[4],
         decoded_inst_invInputs[4],
         io_raw_inst[13],
-        decoded_inst_invInputs[23],
+        io_raw_inst[14],
         decoded_inst_invInputs[24],
         decoded_inst_invInputs[25],
         decoded_inst_invInputs[26],
         decoded_inst_invInputs[27],
         decoded_inst_invInputs[28],
         decoded_inst_invInputs[29]},
-      &_decoded_inst_T_87} == 11'h0,
+      &_decoded_inst_T_88,
+      &_decoded_inst_T_94,
+      &_decoded_inst_T_100,
+      &_decoded_inst_T_104,
+      &_decoded_inst_T_108,
+      &_decoded_inst_T_112} == 17'h0,
      {&{io_raw_inst[0],
         io_raw_inst[1],
         decoded_inst_invInputs[0],
@@ -2183,8 +2327,8 @@ module RV32DecoderUnit(	// <stdin>:980:3
         decoded_inst_invInputs[4],
         decoded_inst_invInputs[10],
         decoded_inst_invInputs[11]},
-      &_decoded_inst_T_7,
-      &_decoded_inst_T_11,
+      &_decoded_inst_T_6,
+      &_decoded_inst_T_10,
       &{io_raw_inst[0],
         io_raw_inst[1],
         decoded_inst_invInputs[0],
@@ -2214,9 +2358,12 @@ module RV32DecoderUnit(	// <stdin>:980:3
         decoded_inst_invInputs[28],
         decoded_inst_invInputs[29]},
       &_decoded_inst_T_50,
-      &_decoded_inst_T_53,
-      &_decoded_inst_T_93} == 8'h0,
-     {&_decoded_inst_T_11,
+      &_decoded_inst_T_54,
+      &_decoded_inst_T_94,
+      &_decoded_inst_T_100,
+      &_decoded_inst_T_104,
+      &_decoded_inst_T_112} == 11'h0,
+     {&_decoded_inst_T_10,
       &{io_raw_inst[0],
         io_raw_inst[1],
         decoded_inst_invInputs[1],
@@ -2256,26 +2403,31 @@ module RV32DecoderUnit(	// <stdin>:980:3
         decoded_inst_invInputs[4],
         io_raw_inst[13],
         decoded_inst_invInputs[12]},
+      &_decoded_inst_T_74,
+      &_decoded_inst_T_82,
+      &_decoded_inst_T_88,
+      &_decoded_inst_T_94,
+      &_decoded_inst_T_108,
       &{io_raw_inst[0],
         io_raw_inst[1],
         decoded_inst_invInputs[0],
         decoded_inst_invInputs[1],
         io_raw_inst[4],
+        io_raw_inst[5],
         decoded_inst_invInputs[4],
+        decoded_inst_invInputs[10],
         io_raw_inst[13],
-        decoded_inst_invInputs[12],
-        decoded_inst_invInputs[23],
+        io_raw_inst[14],
+        io_raw_inst[25],
         decoded_inst_invInputs[24],
         decoded_inst_invInputs[25],
         decoded_inst_invInputs[26],
         decoded_inst_invInputs[27],
         decoded_inst_invInputs[28],
         decoded_inst_invInputs[29]},
-      &_decoded_inst_T_83,
-      &_decoded_inst_T_87,
-      &_decoded_inst_T_95,
-      &_decoded_inst_T_97} == 11'h0,
-     {&_decoded_inst_T_7,
+      &_decoded_inst_T_114,
+      &_decoded_inst_T_116} == 14'h0,
+     {&_decoded_inst_T_6,
       &{io_raw_inst[0],
         io_raw_inst[1],
         decoded_inst_invInputs[0],
@@ -2285,7 +2437,7 @@ module RV32DecoderUnit(	// <stdin>:980:3
         decoded_inst_invInputs[10],
         decoded_inst_invInputs[11],
         decoded_inst_invInputs[12]},
-      &_decoded_inst_T_57,
+      &_decoded_inst_T_58,
       &{io_raw_inst[0],
         io_raw_inst[1],
         decoded_inst_invInputs[0],
@@ -2351,7 +2503,7 @@ module RV32DecoderUnit(	// <stdin>:980:3
         io_raw_inst[6],
         decoded_inst_invInputs[10],
         io_raw_inst[14]},
-      &_decoded_inst_T_83,
+      &_decoded_inst_T_82,
       &{io_raw_inst[0],
         io_raw_inst[1],
         decoded_inst_invInputs[0],
@@ -2371,24 +2523,43 @@ module RV32DecoderUnit(	// <stdin>:980:3
         io_raw_inst[12],
         io_raw_inst[13],
         io_raw_inst[14],
-        decoded_inst_invInputs[23],
         decoded_inst_invInputs[24],
         decoded_inst_invInputs[25],
         decoded_inst_invInputs[26],
         decoded_inst_invInputs[27],
         decoded_inst_invInputs[28],
         decoded_inst_invInputs[29]},
-      &_decoded_inst_T_93,
-      &_decoded_inst_T_95,
-      &_decoded_inst_T_97} == 14'h0};	// <stdin>:980:3, playground/src/ISA/riscv32/Decoder.scala:23:70, src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:{53,70}, :114:{19,36}
+      &{io_raw_inst[0],
+        io_raw_inst[1],
+        decoded_inst_invInputs[0],
+        decoded_inst_invInputs[1],
+        io_raw_inst[5],
+        decoded_inst_invInputs[4],
+        decoded_inst_invInputs[10],
+        decoded_inst_invInputs[11],
+        decoded_inst_invInputs[12],
+        io_raw_inst[25],
+        decoded_inst_invInputs[24],
+        decoded_inst_invInputs[25],
+        decoded_inst_invInputs[26],
+        decoded_inst_invInputs[27],
+        decoded_inst_invInputs[28],
+        decoded_inst_invInputs[29]},
+      &_decoded_inst_T_104,
+      &_decoded_inst_T_108,
+      &_decoded_inst_T_112,
+      &_decoded_inst_T_114,
+      &_decoded_inst_T_116} == 17'h0};	// <stdin>:980:3, playground/src/ISA/riscv32/Decoder.scala:23:70, src/main/scala/chisel3/util/pla.scala:78:21, :90:45, :91:29, :98:{53,70}, :114:{19,36}
   assign io_decoded_inst_dest_rs1 = 1'h0;	// <stdin>:980:3, src/main/scala/chisel3/util/pla.scala:102:36
   assign io_decoded_inst_selImm =
-    {&_decoded_inst_T_16, io_raw_inst[6], |{&_decoded_inst_T_1, &_decoded_inst_T_13}};	// <stdin>:980:3, playground/src/ISA/riscv32/Decoder.scala:23:70, src/main/scala/chisel3/util/pla.scala:90:45, :98:{53,70}, :114:{19,36}
+    {|{&_decoded_inst_T, &_decoded_inst_T_12},
+     |{io_raw_inst[3], &_decoded_inst_T_52},
+     |{io_raw_inst[3], &_decoded_inst_T_42}};	// <stdin>:980:3, playground/src/ISA/riscv32/Decoder.scala:23:70, src/main/scala/chisel3/util/pla.scala:90:45, :98:{53,70}, :114:{19,36}
 endmodule
 
-module IDU(	// <stdin>:2131:3
-  input         clock,	// <stdin>:2132:11
-                reset,	// <stdin>:2133:11
+module IDU(	// <stdin>:2445:3
+  input         clock,	// <stdin>:2446:11
+                reset,	// <stdin>:2447:11
                 io_ifu_s1_valid,	// playground/src/frontend/IDU.scala:31:16
   input  [31:0] io_ifu_s1_bits_pc,	// playground/src/frontend/IDU.scala:31:16
                 io_ifu_s1_bits_inst,	// playground/src/frontend/IDU.scala:31:16
@@ -2446,36 +2617,36 @@ module IDU(	// <stdin>:2131:3
   reg         issue_entry_r_bits_br_pred_taken;	// playground/src/frontend/IDU.scala:48:32
   reg  [31:0] issue_entry_r_bits_br_pred_target;	// playground/src/frontend/IDU.scala:48:32
   reg         issue_entry_r_bits_exception;	// playground/src/frontend/IDU.scala:48:32
-  always @(posedge clock) begin	// <stdin>:2132:11
-    if (reset) begin	// <stdin>:2132:11
+  always @(posedge clock) begin	// <stdin>:2446:11
+    if (reset) begin	// <stdin>:2446:11
       issue_entry_r_valid <= 1'h0;	// playground/src/frontend/IDU.scala:31:16, :33:29, :48:32
       issue_entry_r_bits_pc <= 32'h0;	// playground/src/frontend/IDU.scala:35:44, :48:32
       issue_entry_r_bits_inst <= 32'h0;	// playground/src/frontend/IDU.scala:35:44, :48:32
       issue_entry_r_bits_decoded_inst_regwen <= 1'h0;	// playground/src/frontend/IDU.scala:31:16, :33:29, :48:32
-      issue_entry_r_bits_decoded_inst_src_0 <= 2'h0;	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-      issue_entry_r_bits_decoded_inst_src_1 <= 2'h0;	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-      issue_entry_r_bits_decoded_inst_src_2 <= 2'h0;	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
+      issue_entry_r_bits_decoded_inst_src_0 <= 2'h0;	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+      issue_entry_r_bits_decoded_inst_src_1 <= 2'h0;	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+      issue_entry_r_bits_decoded_inst_src_2 <= 2'h0;	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
       issue_entry_r_bits_decoded_inst_futype <= 5'h0;	// playground/src/frontend/IDU.scala:48:{32,45}
       issue_entry_r_bits_decoded_inst_fuoptype <= 4'h0;	// playground/src/frontend/IDU.scala:48:{32,45}
       issue_entry_r_bits_decoded_inst_dest_rs1 <= 1'h0;	// playground/src/frontend/IDU.scala:31:16, :33:29, :48:32
-      issue_entry_r_bits_decoded_inst_selImm <= 3'h0;	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
+      issue_entry_r_bits_decoded_inst_selImm <= 3'h0;	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
       issue_entry_r_bits_br_pred_taken <= 1'h0;	// playground/src/frontend/IDU.scala:31:16, :33:29, :48:32
       issue_entry_r_bits_br_pred_target <= 32'h0;	// playground/src/frontend/IDU.scala:35:44, :48:32
       issue_entry_r_bits_exception <= 1'h0;	// playground/src/frontend/IDU.scala:31:16, :33:29, :48:32
     end
-    else begin	// <stdin>:2132:11
+    else begin	// <stdin>:2446:11
       issue_entry_r_valid <=
         ~flush_valid
         & (io_to_issue_ready ? ~_inst_queue_io_out_empty : issue_entry_r_valid);	// playground/src/frontend/IDU.scala:33:29, :34:67, :43:44, :48:32, :49:23, :50:23, :51:35, :58:41
       if (flush_valid) begin	// playground/src/frontend/IDU.scala:34:67
         issue_entry_r_bits_pc <= 32'h0;	// playground/src/frontend/IDU.scala:35:44, :48:32
         issue_entry_r_bits_inst <= 32'h0;	// playground/src/frontend/IDU.scala:35:44, :48:32
-        issue_entry_r_bits_decoded_inst_src_0 <= 2'h0;	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-        issue_entry_r_bits_decoded_inst_src_1 <= 2'h0;	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-        issue_entry_r_bits_decoded_inst_src_2 <= 2'h0;	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
+        issue_entry_r_bits_decoded_inst_src_0 <= 2'h0;	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+        issue_entry_r_bits_decoded_inst_src_1 <= 2'h0;	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+        issue_entry_r_bits_decoded_inst_src_2 <= 2'h0;	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
         issue_entry_r_bits_decoded_inst_futype <= 5'h0;	// playground/src/frontend/IDU.scala:48:{32,45}
         issue_entry_r_bits_decoded_inst_fuoptype <= 4'h0;	// playground/src/frontend/IDU.scala:48:{32,45}
-        issue_entry_r_bits_decoded_inst_selImm <= 3'h0;	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
+        issue_entry_r_bits_decoded_inst_selImm <= 3'h0;	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
         issue_entry_r_bits_br_pred_target <= 32'h0;	// playground/src/frontend/IDU.scala:35:44, :48:32
       end
       else if (io_to_issue_ready) begin	// playground/src/frontend/IDU.scala:31:16
@@ -2511,37 +2682,37 @@ module IDU(	// <stdin>:2131:3
              : issue_entry_r_bits_exception);	// playground/src/frontend/IDU.scala:33:29, :34:67, :48:32, :49:23, :50:23, :51:35, :57:41
     end
   end // always @(posedge)
-  `ifdef ENABLE_INITIAL_REG_	// <stdin>:2131:3
-    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:2131:3
-      `FIRRTL_BEFORE_INITIAL	// <stdin>:2131:3
+  `ifdef ENABLE_INITIAL_REG_	// <stdin>:2445:3
+    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:2445:3
+      `FIRRTL_BEFORE_INITIAL	// <stdin>:2445:3
     `endif // FIRRTL_BEFORE_INITIAL
-    initial begin	// <stdin>:2131:3
-      automatic logic [31:0] _RANDOM[0:3];	// <stdin>:2131:3
-      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:2131:3
-        `INIT_RANDOM_PROLOG_	// <stdin>:2131:3
+    initial begin	// <stdin>:2445:3
+      automatic logic [31:0] _RANDOM[0:3];	// <stdin>:2445:3
+      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:2445:3
+        `INIT_RANDOM_PROLOG_	// <stdin>:2445:3
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// <stdin>:2131:3
+      `ifdef RANDOMIZE_REG_INIT	// <stdin>:2445:3
         for (logic [2:0] i = 3'h0; i < 3'h4; i += 3'h1) begin
-          _RANDOM[i[1:0]] = `RANDOM;	// <stdin>:2131:3
-        end	// <stdin>:2131:3
-        issue_entry_r_valid = _RANDOM[2'h0][0];	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-        issue_entry_r_bits_pc = {_RANDOM[2'h0][31:1], _RANDOM[2'h1][0]};	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-        issue_entry_r_bits_inst = {_RANDOM[2'h1][31:1], _RANDOM[2'h2][0]};	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-        issue_entry_r_bits_decoded_inst_regwen = _RANDOM[2'h2][1];	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-        issue_entry_r_bits_decoded_inst_src_0 = _RANDOM[2'h2][3:2];	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-        issue_entry_r_bits_decoded_inst_src_1 = _RANDOM[2'h2][5:4];	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-        issue_entry_r_bits_decoded_inst_src_2 = _RANDOM[2'h2][7:6];	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-        issue_entry_r_bits_decoded_inst_futype = _RANDOM[2'h2][12:8];	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-        issue_entry_r_bits_decoded_inst_fuoptype = _RANDOM[2'h2][16:13];	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-        issue_entry_r_bits_decoded_inst_dest_rs1 = _RANDOM[2'h2][17];	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-        issue_entry_r_bits_decoded_inst_selImm = _RANDOM[2'h2][20:18];	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-        issue_entry_r_bits_br_pred_taken = _RANDOM[2'h2][21];	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-        issue_entry_r_bits_br_pred_target = {_RANDOM[2'h2][31:22], _RANDOM[2'h3][21:0]};	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-        issue_entry_r_bits_exception = _RANDOM[2'h3][22];	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
+          _RANDOM[i[1:0]] = `RANDOM;	// <stdin>:2445:3
+        end	// <stdin>:2445:3
+        issue_entry_r_valid = _RANDOM[2'h0][0];	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+        issue_entry_r_bits_pc = {_RANDOM[2'h0][31:1], _RANDOM[2'h1][0]};	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+        issue_entry_r_bits_inst = {_RANDOM[2'h1][31:1], _RANDOM[2'h2][0]};	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+        issue_entry_r_bits_decoded_inst_regwen = _RANDOM[2'h2][1];	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+        issue_entry_r_bits_decoded_inst_src_0 = _RANDOM[2'h2][3:2];	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+        issue_entry_r_bits_decoded_inst_src_1 = _RANDOM[2'h2][5:4];	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+        issue_entry_r_bits_decoded_inst_src_2 = _RANDOM[2'h2][7:6];	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+        issue_entry_r_bits_decoded_inst_futype = _RANDOM[2'h2][12:8];	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+        issue_entry_r_bits_decoded_inst_fuoptype = _RANDOM[2'h2][16:13];	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+        issue_entry_r_bits_decoded_inst_dest_rs1 = _RANDOM[2'h2][17];	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+        issue_entry_r_bits_decoded_inst_selImm = _RANDOM[2'h2][20:18];	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+        issue_entry_r_bits_br_pred_taken = _RANDOM[2'h2][21];	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+        issue_entry_r_bits_br_pred_target = {_RANDOM[2'h2][31:22], _RANDOM[2'h3][21:0]};	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+        issue_entry_r_bits_exception = _RANDOM[2'h3][22];	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:2131:3
-      `FIRRTL_AFTER_INITIAL	// <stdin>:2131:3
+    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:2445:3
+      `FIRRTL_AFTER_INITIAL	// <stdin>:2445:3
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
   CircularQueue_1 inst_queue (	// playground/src/frontend/IDU.scala:33:29
@@ -2573,25 +2744,25 @@ module IDU(	// <stdin>:2131:3
     .io_decoded_inst_dest_rs1 (_decoder_io_decoded_inst_dest_rs1),
     .io_decoded_inst_selImm   (_decoder_io_decoded_inst_selImm)
   );
-  assign io_to_issue_valid = issue_entry_r_valid & ~flush_valid;	// <stdin>:2131:3, playground/src/frontend/IDU.scala:34:67, :48:32, :62:{47,49}
-  assign io_to_issue_bits_pc = issue_entry_r_bits_pc;	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-  assign io_to_issue_bits_inst = issue_entry_r_bits_inst;	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-  assign io_to_issue_bits_decoded_inst_regwen = issue_entry_r_bits_decoded_inst_regwen;	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-  assign io_to_issue_bits_decoded_inst_src_0 = issue_entry_r_bits_decoded_inst_src_0;	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-  assign io_to_issue_bits_decoded_inst_src_1 = issue_entry_r_bits_decoded_inst_src_1;	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-  assign io_to_issue_bits_decoded_inst_src_2 = issue_entry_r_bits_decoded_inst_src_2;	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-  assign io_to_issue_bits_decoded_inst_futype = issue_entry_r_bits_decoded_inst_futype;	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
+  assign io_to_issue_valid = issue_entry_r_valid & ~flush_valid;	// <stdin>:2445:3, playground/src/frontend/IDU.scala:34:67, :48:32, :62:{47,49}
+  assign io_to_issue_bits_pc = issue_entry_r_bits_pc;	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+  assign io_to_issue_bits_inst = issue_entry_r_bits_inst;	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+  assign io_to_issue_bits_decoded_inst_regwen = issue_entry_r_bits_decoded_inst_regwen;	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+  assign io_to_issue_bits_decoded_inst_src_0 = issue_entry_r_bits_decoded_inst_src_0;	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+  assign io_to_issue_bits_decoded_inst_src_1 = issue_entry_r_bits_decoded_inst_src_1;	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+  assign io_to_issue_bits_decoded_inst_src_2 = issue_entry_r_bits_decoded_inst_src_2;	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+  assign io_to_issue_bits_decoded_inst_futype = issue_entry_r_bits_decoded_inst_futype;	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
   assign io_to_issue_bits_decoded_inst_fuoptype =
-    issue_entry_r_bits_decoded_inst_fuoptype;	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
+    issue_entry_r_bits_decoded_inst_fuoptype;	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
   assign io_to_issue_bits_decoded_inst_dest_rs1 =
-    issue_entry_r_bits_decoded_inst_dest_rs1;	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-  assign io_to_issue_bits_decoded_inst_selImm = issue_entry_r_bits_decoded_inst_selImm;	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-  assign io_to_issue_bits_br_pred_taken = issue_entry_r_bits_br_pred_taken;	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-  assign io_to_issue_bits_br_pred_target = issue_entry_r_bits_br_pred_target;	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
-  assign io_to_issue_bits_exception = issue_entry_r_bits_exception;	// <stdin>:2131:3, playground/src/frontend/IDU.scala:48:32
+    issue_entry_r_bits_decoded_inst_dest_rs1;	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+  assign io_to_issue_bits_decoded_inst_selImm = issue_entry_r_bits_decoded_inst_selImm;	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+  assign io_to_issue_bits_br_pred_taken = issue_entry_r_bits_br_pred_taken;	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+  assign io_to_issue_bits_br_pred_target = issue_entry_r_bits_br_pred_target;	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
+  assign io_to_issue_bits_exception = issue_entry_r_bits_exception;	// <stdin>:2445:3, playground/src/frontend/IDU.scala:48:32
 endmodule
 
-module Arbiter10_UInt32(	// <stdin>:2221:3, :2296:3, :2371:3
+module Arbiter10_UInt32(	// <stdin>:2535:3, :2610:3, :2685:3
   input         io_in_0_valid,	// src/main/scala/chisel3/util/Arbiter.scala:140:14
   input  [31:0] io_in_0_bits,	// src/main/scala/chisel3/util/Arbiter.scala:140:14
   input         io_in_1_valid,	// src/main/scala/chisel3/util/Arbiter.scala:140:14
@@ -2618,7 +2789,7 @@ module Arbiter10_UInt32(	// <stdin>:2221:3, :2296:3, :2371:3
 
   assign io_out_valid =
     io_in_0_valid | io_in_1_valid | io_in_2_valid | io_in_3_valid | io_in_4_valid
-    | io_in_5_valid | io_in_6_valid | io_in_7_valid | io_in_8_valid | io_in_9_valid;	// <stdin>:2221:3, :2296:3, :2371:3, src/main/scala/chisel3/util/Arbiter.scala:154:31
+    | io_in_5_valid | io_in_6_valid | io_in_7_valid | io_in_8_valid | io_in_9_valid;	// <stdin>:2535:3, :2610:3, :2685:3, src/main/scala/chisel3/util/Arbiter.scala:154:31
   assign io_out_bits =
     io_in_0_valid
       ? io_in_0_bits
@@ -2636,12 +2807,12 @@ module Arbiter10_UInt32(	// <stdin>:2221:3, :2296:3, :2371:3
                               ? io_in_6_bits
                               : io_in_7_valid
                                   ? io_in_7_bits
-                                  : io_in_8_valid ? io_in_8_bits : io_in_9_bits;	// <stdin>:2221:3, :2296:3, :2371:3, src/main/scala/chisel3/util/Arbiter.scala:143:15, :145:26, :147:19
+                                  : io_in_8_valid ? io_in_8_bits : io_in_9_bits;	// <stdin>:2535:3, :2610:3, :2685:3, src/main/scala/chisel3/util/Arbiter.scala:143:15, :145:26, :147:19
 endmodule
 
-module Scoreboard(	// <stdin>:2446:3
-  input         clock,	// <stdin>:2447:11
-                reset,	// <stdin>:2448:11
+module Scoreboard(	// <stdin>:2760:3
+  input         clock,	// <stdin>:2761:11
+                reset,	// <stdin>:2762:11
                 io_from_decoder_valid,	// playground/src/issue/Scoreboard.scala:72:16
   input  [31:0] io_from_decoder_bits_pc,	// playground/src/issue/Scoreboard.scala:72:16
                 io_from_decoder_bits_inst,	// playground/src/issue/Scoreboard.scala:72:16
@@ -2661,6 +2832,9 @@ module Scoreboard(	// <stdin>:2446:3
                 io_wb_data_1_valid,	// playground/src/issue/Scoreboard.scala:72:16
   input  [2:0]  io_wb_data_1_bits_id,	// playground/src/issue/Scoreboard.scala:72:16
   input  [31:0] io_wb_data_1_bits_result,	// playground/src/issue/Scoreboard.scala:72:16
+                io_lsu_diff_paddr,	// playground/src/issue/Scoreboard.scala:72:16
+                io_lsu_diff_vaddr,	// playground/src/issue/Scoreboard.scala:72:16
+                io_lsu_diff_wdata,	// playground/src/issue/Scoreboard.scala:72:16
   output        io_from_decoder_ready,	// playground/src/issue/Scoreboard.scala:72:16
                 io_issue_inst_valid,	// playground/src/issue/Scoreboard.scala:72:16
   output [2:0]  io_issue_inst_bits_id,	// playground/src/issue/Scoreboard.scala:72:16
@@ -2673,6 +2847,9 @@ module Scoreboard(	// <stdin>:2446:3
   output [3:0]  io_commit_inst_bits_sbe_decoded_inst_fuoptype,	// playground/src/issue/Scoreboard.scala:72:16
   output        io_commit_inst_bits_sbe_decoded_inst_dest_rs1,	// playground/src/issue/Scoreboard.scala:72:16
   output [31:0] io_commit_inst_bits_sbe_raw_inst,	// playground/src/issue/Scoreboard.scala:72:16
+                io_commit_inst_bits_sbe_lsu_diff_paddr,	// playground/src/issue/Scoreboard.scala:72:16
+                io_commit_inst_bits_sbe_lsu_diff_vaddr,	// playground/src/issue/Scoreboard.scala:72:16
+                io_commit_inst_bits_sbe_lsu_diff_wdata,	// playground/src/issue/Scoreboard.scala:72:16
   output [4:0]  io_commit_inst_bits_sbe_rs1,	// playground/src/issue/Scoreboard.scala:72:16
                 io_commit_inst_bits_sbe_rd,	// playground/src/issue/Scoreboard.scala:72:16
   output        io_commit_inst_bits_sbe_exception,	// playground/src/issue/Scoreboard.scala:72:16
@@ -2698,6 +2875,9 @@ module Scoreboard(	// <stdin>:2446:3
   reg  [3:0]       sb_mem_0_bits_decoded_inst_fuoptype;	// playground/src/issue/Scoreboard.scala:76:25
   reg              sb_mem_0_bits_decoded_inst_dest_rs1;	// playground/src/issue/Scoreboard.scala:76:25
   reg  [31:0]      sb_mem_0_bits_raw_inst;	// playground/src/issue/Scoreboard.scala:76:25
+  reg  [31:0]      sb_mem_0_bits_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+  reg  [31:0]      sb_mem_0_bits_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+  reg  [31:0]      sb_mem_0_bits_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
   reg  [4:0]       sb_mem_0_bits_rs1;	// playground/src/issue/Scoreboard.scala:76:25
   reg  [4:0]       sb_mem_0_bits_rd;	// playground/src/issue/Scoreboard.scala:76:25
   reg              sb_mem_0_bits_frontend_excp;	// playground/src/issue/Scoreboard.scala:76:25
@@ -2713,6 +2893,9 @@ module Scoreboard(	// <stdin>:2446:3
   reg  [3:0]       sb_mem_1_bits_decoded_inst_fuoptype;	// playground/src/issue/Scoreboard.scala:76:25
   reg              sb_mem_1_bits_decoded_inst_dest_rs1;	// playground/src/issue/Scoreboard.scala:76:25
   reg  [31:0]      sb_mem_1_bits_raw_inst;	// playground/src/issue/Scoreboard.scala:76:25
+  reg  [31:0]      sb_mem_1_bits_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+  reg  [31:0]      sb_mem_1_bits_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+  reg  [31:0]      sb_mem_1_bits_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
   reg  [4:0]       sb_mem_1_bits_rs1;	// playground/src/issue/Scoreboard.scala:76:25
   reg  [4:0]       sb_mem_1_bits_rd;	// playground/src/issue/Scoreboard.scala:76:25
   reg              sb_mem_1_bits_frontend_excp;	// playground/src/issue/Scoreboard.scala:76:25
@@ -2728,6 +2911,9 @@ module Scoreboard(	// <stdin>:2446:3
   reg  [3:0]       sb_mem_2_bits_decoded_inst_fuoptype;	// playground/src/issue/Scoreboard.scala:76:25
   reg              sb_mem_2_bits_decoded_inst_dest_rs1;	// playground/src/issue/Scoreboard.scala:76:25
   reg  [31:0]      sb_mem_2_bits_raw_inst;	// playground/src/issue/Scoreboard.scala:76:25
+  reg  [31:0]      sb_mem_2_bits_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+  reg  [31:0]      sb_mem_2_bits_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+  reg  [31:0]      sb_mem_2_bits_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
   reg  [4:0]       sb_mem_2_bits_rs1;	// playground/src/issue/Scoreboard.scala:76:25
   reg  [4:0]       sb_mem_2_bits_rd;	// playground/src/issue/Scoreboard.scala:76:25
   reg              sb_mem_2_bits_frontend_excp;	// playground/src/issue/Scoreboard.scala:76:25
@@ -2743,6 +2929,9 @@ module Scoreboard(	// <stdin>:2446:3
   reg  [3:0]       sb_mem_3_bits_decoded_inst_fuoptype;	// playground/src/issue/Scoreboard.scala:76:25
   reg              sb_mem_3_bits_decoded_inst_dest_rs1;	// playground/src/issue/Scoreboard.scala:76:25
   reg  [31:0]      sb_mem_3_bits_raw_inst;	// playground/src/issue/Scoreboard.scala:76:25
+  reg  [31:0]      sb_mem_3_bits_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+  reg  [31:0]      sb_mem_3_bits_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+  reg  [31:0]      sb_mem_3_bits_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
   reg  [4:0]       sb_mem_3_bits_rs1;	// playground/src/issue/Scoreboard.scala:76:25
   reg  [4:0]       sb_mem_3_bits_rd;	// playground/src/issue/Scoreboard.scala:76:25
   reg              sb_mem_3_bits_frontend_excp;	// playground/src/issue/Scoreboard.scala:76:25
@@ -2758,6 +2947,9 @@ module Scoreboard(	// <stdin>:2446:3
   reg  [3:0]       sb_mem_4_bits_decoded_inst_fuoptype;	// playground/src/issue/Scoreboard.scala:76:25
   reg              sb_mem_4_bits_decoded_inst_dest_rs1;	// playground/src/issue/Scoreboard.scala:76:25
   reg  [31:0]      sb_mem_4_bits_raw_inst;	// playground/src/issue/Scoreboard.scala:76:25
+  reg  [31:0]      sb_mem_4_bits_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+  reg  [31:0]      sb_mem_4_bits_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+  reg  [31:0]      sb_mem_4_bits_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
   reg  [4:0]       sb_mem_4_bits_rs1;	// playground/src/issue/Scoreboard.scala:76:25
   reg  [4:0]       sb_mem_4_bits_rd;	// playground/src/issue/Scoreboard.scala:76:25
   reg              sb_mem_4_bits_frontend_excp;	// playground/src/issue/Scoreboard.scala:76:25
@@ -2773,6 +2965,9 @@ module Scoreboard(	// <stdin>:2446:3
   reg  [3:0]       sb_mem_5_bits_decoded_inst_fuoptype;	// playground/src/issue/Scoreboard.scala:76:25
   reg              sb_mem_5_bits_decoded_inst_dest_rs1;	// playground/src/issue/Scoreboard.scala:76:25
   reg  [31:0]      sb_mem_5_bits_raw_inst;	// playground/src/issue/Scoreboard.scala:76:25
+  reg  [31:0]      sb_mem_5_bits_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+  reg  [31:0]      sb_mem_5_bits_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+  reg  [31:0]      sb_mem_5_bits_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
   reg  [4:0]       sb_mem_5_bits_rs1;	// playground/src/issue/Scoreboard.scala:76:25
   reg  [4:0]       sb_mem_5_bits_rd;	// playground/src/issue/Scoreboard.scala:76:25
   reg              sb_mem_5_bits_frontend_excp;	// playground/src/issue/Scoreboard.scala:76:25
@@ -2788,6 +2983,9 @@ module Scoreboard(	// <stdin>:2446:3
   reg  [3:0]       sb_mem_6_bits_decoded_inst_fuoptype;	// playground/src/issue/Scoreboard.scala:76:25
   reg              sb_mem_6_bits_decoded_inst_dest_rs1;	// playground/src/issue/Scoreboard.scala:76:25
   reg  [31:0]      sb_mem_6_bits_raw_inst;	// playground/src/issue/Scoreboard.scala:76:25
+  reg  [31:0]      sb_mem_6_bits_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+  reg  [31:0]      sb_mem_6_bits_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+  reg  [31:0]      sb_mem_6_bits_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
   reg  [4:0]       sb_mem_6_bits_rs1;	// playground/src/issue/Scoreboard.scala:76:25
   reg  [4:0]       sb_mem_6_bits_rd;	// playground/src/issue/Scoreboard.scala:76:25
   reg              sb_mem_6_bits_frontend_excp;	// playground/src/issue/Scoreboard.scala:76:25
@@ -2803,6 +3001,9 @@ module Scoreboard(	// <stdin>:2446:3
   reg  [3:0]       sb_mem_7_bits_decoded_inst_fuoptype;	// playground/src/issue/Scoreboard.scala:76:25
   reg              sb_mem_7_bits_decoded_inst_dest_rs1;	// playground/src/issue/Scoreboard.scala:76:25
   reg  [31:0]      sb_mem_7_bits_raw_inst;	// playground/src/issue/Scoreboard.scala:76:25
+  reg  [31:0]      sb_mem_7_bits_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+  reg  [31:0]      sb_mem_7_bits_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+  reg  [31:0]      sb_mem_7_bits_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
   reg  [4:0]       sb_mem_7_bits_rs1;	// playground/src/issue/Scoreboard.scala:76:25
   reg  [4:0]       sb_mem_7_bits_rd;	// playground/src/issue/Scoreboard.scala:76:25
   reg              sb_mem_7_bits_frontend_excp;	// playground/src/issue/Scoreboard.scala:76:25
@@ -2934,7 +3135,34 @@ module Scoreboard(	// <stdin>:2446:3
      {sb_mem_2_bits_raw_inst},
      {sb_mem_1_bits_raw_inst},
      {sb_mem_0_bits_raw_inst}};	// playground/src/issue/Scoreboard.scala:76:25, :198:38
-  wire [7:0][4:0]  _GEN_9 =
+  wire [7:0][31:0] _GEN_9 =
+    {{sb_mem_7_bits_lsu_diff_paddr},
+     {sb_mem_6_bits_lsu_diff_paddr},
+     {sb_mem_5_bits_lsu_diff_paddr},
+     {sb_mem_4_bits_lsu_diff_paddr},
+     {sb_mem_3_bits_lsu_diff_paddr},
+     {sb_mem_2_bits_lsu_diff_paddr},
+     {sb_mem_1_bits_lsu_diff_paddr},
+     {sb_mem_0_bits_lsu_diff_paddr}};	// playground/src/issue/Scoreboard.scala:76:25, :198:38
+  wire [7:0][31:0] _GEN_10 =
+    {{sb_mem_7_bits_lsu_diff_vaddr},
+     {sb_mem_6_bits_lsu_diff_vaddr},
+     {sb_mem_5_bits_lsu_diff_vaddr},
+     {sb_mem_4_bits_lsu_diff_vaddr},
+     {sb_mem_3_bits_lsu_diff_vaddr},
+     {sb_mem_2_bits_lsu_diff_vaddr},
+     {sb_mem_1_bits_lsu_diff_vaddr},
+     {sb_mem_0_bits_lsu_diff_vaddr}};	// playground/src/issue/Scoreboard.scala:76:25, :198:38
+  wire [7:0][31:0] _GEN_11 =
+    {{sb_mem_7_bits_lsu_diff_wdata},
+     {sb_mem_6_bits_lsu_diff_wdata},
+     {sb_mem_5_bits_lsu_diff_wdata},
+     {sb_mem_4_bits_lsu_diff_wdata},
+     {sb_mem_3_bits_lsu_diff_wdata},
+     {sb_mem_2_bits_lsu_diff_wdata},
+     {sb_mem_1_bits_lsu_diff_wdata},
+     {sb_mem_0_bits_lsu_diff_wdata}};	// playground/src/issue/Scoreboard.scala:76:25, :198:38
+  wire [7:0][4:0]  _GEN_12 =
     {{sb_mem_7_bits_rs1},
      {sb_mem_6_bits_rs1},
      {sb_mem_5_bits_rs1},
@@ -2943,7 +3171,7 @@ module Scoreboard(	// <stdin>:2446:3
      {sb_mem_2_bits_rs1},
      {sb_mem_1_bits_rs1},
      {sb_mem_0_bits_rs1}};	// playground/src/issue/Scoreboard.scala:76:25, :198:38
-  wire [7:0][4:0]  _GEN_10 =
+  wire [7:0][4:0]  _GEN_13 =
     {{sb_mem_7_bits_rd},
      {sb_mem_6_bits_rd},
      {sb_mem_5_bits_rd},
@@ -2952,7 +3180,7 @@ module Scoreboard(	// <stdin>:2446:3
      {sb_mem_2_bits_rd},
      {sb_mem_1_bits_rd},
      {sb_mem_0_bits_rd}};	// playground/src/issue/Scoreboard.scala:76:25, :198:38
-  wire [7:0][31:0] _GEN_11 =
+  wire [7:0][31:0] _GEN_14 =
     {{sb_mem_7_bits_result},
      {sb_mem_6_bits_result},
      {sb_mem_5_bits_result},
@@ -2961,7 +3189,7 @@ module Scoreboard(	// <stdin>:2446:3
      {sb_mem_2_bits_result},
      {sb_mem_1_bits_result},
      {sb_mem_0_bits_result}};	// playground/src/issue/Scoreboard.scala:76:25, :198:38
-  wire [7:0][31:0] _GEN_12 =
+  wire [7:0][31:0] _GEN_15 =
     {{sb_mem_7_bits_br_info_bits_pc},
      {sb_mem_6_bits_br_info_bits_pc},
      {sb_mem_5_bits_br_info_bits_pc},
@@ -2970,7 +3198,7 @@ module Scoreboard(	// <stdin>:2446:3
      {sb_mem_2_bits_br_info_bits_pc},
      {sb_mem_1_bits_br_info_bits_pc},
      {sb_mem_0_bits_br_info_bits_pc}};	// playground/src/issue/Scoreboard.scala:76:25, :198:38
-  wire [7:0]       _GEN_13 =
+  wire [7:0]       _GEN_16 =
     {{sb_mem_7_bits_executed},
      {sb_mem_6_bits_executed},
      {sb_mem_5_bits_executed},
@@ -2979,26 +3207,26 @@ module Scoreboard(	// <stdin>:2446:3
      {sb_mem_2_bits_executed},
      {sb_mem_1_bits_executed},
      {sb_mem_0_bits_executed}};	// playground/src/issue/Scoreboard.scala:76:25, :198:38
-  assign _io_commit_inst_valid_output = _GEN_13[commit_ptr] & _GEN_5[commit_ptr];	// playground/src/issue/Scoreboard.scala:78:29, :198:38, :233:65
+  assign _io_commit_inst_valid_output = _GEN_16[commit_ptr] & _GEN_5[commit_ptr];	// playground/src/issue/Scoreboard.scala:78:29, :198:38, :233:65
   wire             _rs1_arb_io_in_0_valid_T_2 =
-    io_wb_data_0_valid & io_from_decoder_bits_inst[19:15] == _GEN_10[io_wb_data_0_bits_id]
+    io_wb_data_0_valid & io_from_decoder_bits_inst[19:15] == _GEN_13[io_wb_data_0_bits_id]
     & _GEN_6[io_wb_data_0_bits_id];	// playground/src/ISA/riscv32/ISA.scala:42:48, playground/src/issue/Scoreboard.scala:198:38, :206:23, :246:{41,68}
   wire             _rs1_arb_io_in_1_valid_T_2 =
-    io_wb_data_1_valid & io_from_decoder_bits_inst[19:15] == _GEN_10[io_wb_data_1_bits_id]
+    io_wb_data_1_valid & io_from_decoder_bits_inst[19:15] == _GEN_13[io_wb_data_1_bits_id]
     & _GEN_6[io_wb_data_1_bits_id];	// playground/src/ISA/riscv32/ISA.scala:42:48, playground/src/issue/Scoreboard.scala:198:38, :206:23, :246:{41,68}
   wire             _rs2_arb_io_in_0_valid_T_2 =
-    io_wb_data_0_valid & io_from_decoder_bits_inst[24:20] == _GEN_10[io_wb_data_0_bits_id]
+    io_wb_data_0_valid & io_from_decoder_bits_inst[24:20] == _GEN_13[io_wb_data_0_bits_id]
     & _GEN_6[io_wb_data_0_bits_id];	// playground/src/ISA/riscv32/ISA.scala:41:48, playground/src/issue/Scoreboard.scala:198:38, :206:23, :266:{41,68}
   wire             _rs2_arb_io_in_1_valid_T_2 =
-    io_wb_data_1_valid & io_from_decoder_bits_inst[24:20] == _GEN_10[io_wb_data_1_bits_id]
+    io_wb_data_1_valid & io_from_decoder_bits_inst[24:20] == _GEN_13[io_wb_data_1_bits_id]
     & _GEN_6[io_wb_data_1_bits_id];	// playground/src/ISA/riscv32/ISA.scala:41:48, playground/src/issue/Scoreboard.scala:198:38, :206:23, :266:{41,68}
   wire             _rd_arb_io_in_0_valid_T_2 =
     io_wb_data_0_valid
-    & _io_issue_inst_bits_sbe_rd_output == _GEN_10[io_wb_data_0_bits_id]
+    & _io_issue_inst_bits_sbe_rd_output == _GEN_13[io_wb_data_0_bits_id]
     & _GEN_6[io_wb_data_0_bits_id];	// playground/src/ISA/riscv32/ISA.scala:43:48, playground/src/issue/Scoreboard.scala:198:38, :206:23, :286:{40,67}
   wire             _rd_arb_io_in_1_valid_T_2 =
     io_wb_data_1_valid
-    & _io_issue_inst_bits_sbe_rd_output == _GEN_10[io_wb_data_1_bits_id]
+    & _io_issue_inst_bits_sbe_rd_output == _GEN_13[io_wb_data_1_bits_id]
     & _GEN_6[io_wb_data_1_bits_id];	// playground/src/ISA/riscv32/ISA.scala:43:48, playground/src/issue/Scoreboard.scala:198:38, :206:23, :286:{40,67}
   wire             _io_forward_msg_rs1_raw_hazard_T_61 =
     _rs1_arb_io_in_0_valid_T_2 | _rs1_arb_io_in_1_valid_T_2;	// playground/src/issue/Scoreboard.scala:246:68, :310:85
@@ -3006,14 +3234,17 @@ module Scoreboard(	// <stdin>:2446:3
     _rs2_arb_io_in_0_valid_T_2 | _rs2_arb_io_in_1_valid_T_2;	// playground/src/issue/Scoreboard.scala:266:68, :318:85
   wire             _io_forward_msg_rd_raw_hazard_T_61 =
     _rd_arb_io_in_0_valid_T_2 | _rd_arb_io_in_1_valid_T_2;	// playground/src/issue/Scoreboard.scala:286:67, :326:84
-  always @(posedge clock) begin	// <stdin>:2447:11
-    if (reset) begin	// <stdin>:2447:11
+  always @(posedge clock) begin	// <stdin>:2761:11
+    if (reset) begin	// <stdin>:2761:11
       sb_mem_0_valid <= 1'h0;	// playground/src/issue/Scoreboard.scala:72:16, :76:25, :164:26, :183:83
       sb_mem_0_bits_decoded_inst_regwen <= 1'h0;	// playground/src/issue/Scoreboard.scala:72:16, :76:25, :164:26, :183:83
       sb_mem_0_bits_decoded_inst_futype <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_0_bits_decoded_inst_fuoptype <= 4'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_0_bits_decoded_inst_dest_rs1 <= 1'h0;	// playground/src/issue/Scoreboard.scala:72:16, :76:25, :164:26, :183:83
       sb_mem_0_bits_raw_inst <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+      sb_mem_0_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+      sb_mem_0_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+      sb_mem_0_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_0_bits_rs1 <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_0_bits_rd <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_0_bits_frontend_excp <= 1'h0;	// playground/src/issue/Scoreboard.scala:72:16, :76:25, :164:26, :183:83
@@ -3029,6 +3260,9 @@ module Scoreboard(	// <stdin>:2446:3
       sb_mem_1_bits_decoded_inst_fuoptype <= 4'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_1_bits_decoded_inst_dest_rs1 <= 1'h0;	// playground/src/issue/Scoreboard.scala:72:16, :76:25, :164:26, :183:83
       sb_mem_1_bits_raw_inst <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+      sb_mem_1_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+      sb_mem_1_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+      sb_mem_1_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_1_bits_rs1 <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_1_bits_rd <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_1_bits_frontend_excp <= 1'h0;	// playground/src/issue/Scoreboard.scala:72:16, :76:25, :164:26, :183:83
@@ -3044,6 +3278,9 @@ module Scoreboard(	// <stdin>:2446:3
       sb_mem_2_bits_decoded_inst_fuoptype <= 4'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_2_bits_decoded_inst_dest_rs1 <= 1'h0;	// playground/src/issue/Scoreboard.scala:72:16, :76:25, :164:26, :183:83
       sb_mem_2_bits_raw_inst <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+      sb_mem_2_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+      sb_mem_2_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+      sb_mem_2_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_2_bits_rs1 <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_2_bits_rd <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_2_bits_frontend_excp <= 1'h0;	// playground/src/issue/Scoreboard.scala:72:16, :76:25, :164:26, :183:83
@@ -3059,6 +3296,9 @@ module Scoreboard(	// <stdin>:2446:3
       sb_mem_3_bits_decoded_inst_fuoptype <= 4'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_3_bits_decoded_inst_dest_rs1 <= 1'h0;	// playground/src/issue/Scoreboard.scala:72:16, :76:25, :164:26, :183:83
       sb_mem_3_bits_raw_inst <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+      sb_mem_3_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+      sb_mem_3_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+      sb_mem_3_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_3_bits_rs1 <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_3_bits_rd <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_3_bits_frontend_excp <= 1'h0;	// playground/src/issue/Scoreboard.scala:72:16, :76:25, :164:26, :183:83
@@ -3074,6 +3314,9 @@ module Scoreboard(	// <stdin>:2446:3
       sb_mem_4_bits_decoded_inst_fuoptype <= 4'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_4_bits_decoded_inst_dest_rs1 <= 1'h0;	// playground/src/issue/Scoreboard.scala:72:16, :76:25, :164:26, :183:83
       sb_mem_4_bits_raw_inst <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+      sb_mem_4_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+      sb_mem_4_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+      sb_mem_4_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_4_bits_rs1 <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_4_bits_rd <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_4_bits_frontend_excp <= 1'h0;	// playground/src/issue/Scoreboard.scala:72:16, :76:25, :164:26, :183:83
@@ -3089,6 +3332,9 @@ module Scoreboard(	// <stdin>:2446:3
       sb_mem_5_bits_decoded_inst_fuoptype <= 4'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_5_bits_decoded_inst_dest_rs1 <= 1'h0;	// playground/src/issue/Scoreboard.scala:72:16, :76:25, :164:26, :183:83
       sb_mem_5_bits_raw_inst <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+      sb_mem_5_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+      sb_mem_5_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+      sb_mem_5_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_5_bits_rs1 <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_5_bits_rd <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_5_bits_frontend_excp <= 1'h0;	// playground/src/issue/Scoreboard.scala:72:16, :76:25, :164:26, :183:83
@@ -3104,6 +3350,9 @@ module Scoreboard(	// <stdin>:2446:3
       sb_mem_6_bits_decoded_inst_fuoptype <= 4'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_6_bits_decoded_inst_dest_rs1 <= 1'h0;	// playground/src/issue/Scoreboard.scala:72:16, :76:25, :164:26, :183:83
       sb_mem_6_bits_raw_inst <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+      sb_mem_6_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+      sb_mem_6_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+      sb_mem_6_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_6_bits_rs1 <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_6_bits_rd <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_6_bits_frontend_excp <= 1'h0;	// playground/src/issue/Scoreboard.scala:72:16, :76:25, :164:26, :183:83
@@ -3119,6 +3368,9 @@ module Scoreboard(	// <stdin>:2446:3
       sb_mem_7_bits_decoded_inst_fuoptype <= 4'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_7_bits_decoded_inst_dest_rs1 <= 1'h0;	// playground/src/issue/Scoreboard.scala:72:16, :76:25, :164:26, :183:83
       sb_mem_7_bits_raw_inst <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+      sb_mem_7_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+      sb_mem_7_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+      sb_mem_7_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_7_bits_rs1 <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_7_bits_rd <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       sb_mem_7_bits_frontend_excp <= 1'h0;	// playground/src/issue/Scoreboard.scala:72:16, :76:25, :164:26, :183:83
@@ -3132,11 +3384,8 @@ module Scoreboard(	// <stdin>:2446:3
       issue_ptr <= 3'h0;	// playground/src/issue/Scoreboard.scala:74:32, :79:29
       issued_cnt <= 3'h0;	// playground/src/issue/Scoreboard.scala:74:32, :80:29
     end
-    else begin	// <stdin>:2447:11
+    else begin	// <stdin>:2761:11
       automatic logic       issue_ack;	// playground/src/issue/Scoreboard.scala:83:42
-      automatic logic       _GEN_14;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
-      automatic logic       _GEN_15;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
-      automatic logic       _GEN_16;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
       automatic logic       _GEN_17;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
       automatic logic       _GEN_18;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
       automatic logic       _GEN_19;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
@@ -3150,9 +3399,9 @@ module Scoreboard(	// <stdin>:2446:3
       automatic logic       _GEN_27;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
       automatic logic       _GEN_28;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
       automatic logic       _GEN_29;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
-      automatic logic       _GEN_30;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45
-      automatic logic       _GEN_31;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45
-      automatic logic       _GEN_32;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45
+      automatic logic       _GEN_30;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      automatic logic       _GEN_31;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      automatic logic       _GEN_32;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
       automatic logic       _GEN_33;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45
       automatic logic       _GEN_34;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45
       automatic logic       _GEN_35;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45
@@ -3166,255 +3415,258 @@ module Scoreboard(	// <stdin>:2446:3
       automatic logic       _GEN_43;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45
       automatic logic       _GEN_44;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45
       automatic logic       _GEN_45;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45
-      automatic logic       _GEN_46;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46
-      automatic logic       _GEN_47;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46
-      automatic logic       _GEN_48;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46
+      automatic logic       _GEN_46;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45
+      automatic logic       _GEN_47;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45
+      automatic logic       _GEN_48;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45
       automatic logic       _GEN_49;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46
       automatic logic       _GEN_50;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46
       automatic logic       _GEN_51;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46
       automatic logic       _GEN_52;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46
       automatic logic       _GEN_53;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46
-      automatic logic       _GEN_54;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53
-      automatic logic       _GEN_55;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53
-      automatic logic       _GEN_56;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53
+      automatic logic       _GEN_54;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46
+      automatic logic       _GEN_55;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46
+      automatic logic       _GEN_56;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46
       automatic logic       _GEN_57;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53
       automatic logic       _GEN_58;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53
       automatic logic       _GEN_59;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53
       automatic logic       _GEN_60;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53
       automatic logic       _GEN_61;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53
+      automatic logic       _GEN_62;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53
+      automatic logic       _GEN_63;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53
+      automatic logic       _GEN_64;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53
       automatic logic [2:0] _issue_ptr_T_2;	// playground/src/issue/Scoreboard.scala:170:56
       automatic logic       ertn_valid = commit_ack & _GEN_2 == 4'h7 & _GEN_0 == 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :82:43, :98:87, :156:16, :169:22, :171:42, :184:{20,70}, :185:58
-      automatic logic       _GEN_62 = ex_valid | ertn_valid;	// playground/src/issue/Scoreboard.scala:155:16, :156:16, :169:22, :183:{20,26}, :184:20, :187:23
-      automatic logic       _GEN_63;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-      automatic logic       _GEN_64;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :171:42, :187:38, :191:31
-      automatic logic       _GEN_65;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :191:31
-      automatic logic       _GEN_66;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38
-      automatic logic       _GEN_67;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
-      automatic logic       _GEN_68;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :171:42, :187:38, :191:31
-      automatic logic       _GEN_69;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :191:31
-      automatic logic       _GEN_70;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38
-      automatic logic       _GEN_71;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
-      automatic logic       _GEN_72;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :171:42, :187:38, :191:31
-      automatic logic       _GEN_73;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :191:31
-      automatic logic       _GEN_74;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38
-      automatic logic       _GEN_75;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
-      automatic logic       _GEN_76;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :171:42, :187:38, :191:31
-      automatic logic       _GEN_77;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :191:31
-      automatic logic       _GEN_78;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38
-      automatic logic       _GEN_79;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
-      automatic logic       _GEN_80;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :171:42, :187:38, :191:31
-      automatic logic       _GEN_81;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :191:31
-      automatic logic       _GEN_82;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38
-      automatic logic       _GEN_83;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
-      automatic logic       _GEN_84;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :171:42, :187:38, :191:31
-      automatic logic       _GEN_85;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :191:31
-      automatic logic       _GEN_86;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38
-      automatic logic       _GEN_87;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
-      automatic logic       _GEN_88;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :171:42, :187:38, :191:31
-      automatic logic       _GEN_89;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :191:31
-      automatic logic       _GEN_90;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38
-      automatic logic       _GEN_91;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
-      automatic logic       _GEN_92;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :171:42, :187:38, :191:31
-      automatic logic       _GEN_93;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :191:31
-      automatic logic       _GEN_94;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38
-      automatic logic       _GEN_95;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
-      automatic logic [7:0] _GEN_96;	// playground/src/issue/Scoreboard.scala:206:23
-      automatic logic [7:0] _GEN_97;	// playground/src/issue/Scoreboard.scala:206:23
-      automatic logic [7:0] _GEN_98;	// playground/src/issue/Scoreboard.scala:206:23
-      automatic logic       _GEN_99;	// playground/src/issue/Scoreboard.scala:206:50
-      automatic logic       _GEN_100;	// playground/src/issue/Scoreboard.scala:207:46
-      automatic logic       _GEN_101;	// playground/src/issue/Scoreboard.scala:207:46
-      automatic logic       _GEN_102;	// playground/src/issue/Scoreboard.scala:207:46
+      automatic logic       _GEN_65 = ex_valid | ertn_valid;	// playground/src/issue/Scoreboard.scala:155:16, :156:16, :169:22, :183:{20,26}, :184:20, :187:23
+      automatic logic       _GEN_66;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+      automatic logic       _GEN_67;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :171:42, :187:38, :191:31
+      automatic logic       _GEN_68;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :191:31
+      automatic logic       _GEN_69;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38
+      automatic logic       _GEN_70;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
+      automatic logic       _GEN_71;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :171:42, :187:38, :191:31
+      automatic logic       _GEN_72;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :191:31
+      automatic logic       _GEN_73;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38
+      automatic logic       _GEN_74;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
+      automatic logic       _GEN_75;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :171:42, :187:38, :191:31
+      automatic logic       _GEN_76;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :191:31
+      automatic logic       _GEN_77;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38
+      automatic logic       _GEN_78;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
+      automatic logic       _GEN_79;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :171:42, :187:38, :191:31
+      automatic logic       _GEN_80;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :191:31
+      automatic logic       _GEN_81;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38
+      automatic logic       _GEN_82;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
+      automatic logic       _GEN_83;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :171:42, :187:38, :191:31
+      automatic logic       _GEN_84;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :191:31
+      automatic logic       _GEN_85;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38
+      automatic logic       _GEN_86;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
+      automatic logic       _GEN_87;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :171:42, :187:38, :191:31
+      automatic logic       _GEN_88;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :191:31
+      automatic logic       _GEN_89;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38
+      automatic logic       _GEN_90;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
+      automatic logic       _GEN_91;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :171:42, :187:38, :191:31
+      automatic logic       _GEN_92;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :191:31
+      automatic logic       _GEN_93;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38
+      automatic logic       _GEN_94;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
+      automatic logic       _GEN_95;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :171:42, :187:38, :191:31
+      automatic logic       _GEN_96;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :191:31
+      automatic logic       _GEN_97;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38
+      automatic logic       _GEN_98;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
+      automatic logic [7:0] _GEN_99;	// playground/src/issue/Scoreboard.scala:206:23
+      automatic logic [7:0] _GEN_100;	// playground/src/issue/Scoreboard.scala:206:23
+      automatic logic [7:0] _GEN_101;	// playground/src/issue/Scoreboard.scala:206:23
+      automatic logic       _GEN_102;	// playground/src/issue/Scoreboard.scala:206:50
       automatic logic       _GEN_103;	// playground/src/issue/Scoreboard.scala:207:46
       automatic logic       _GEN_104;	// playground/src/issue/Scoreboard.scala:207:46
       automatic logic       _GEN_105;	// playground/src/issue/Scoreboard.scala:207:46
       automatic logic       _GEN_106;	// playground/src/issue/Scoreboard.scala:207:46
-      automatic logic       _GEN_107;	// playground/src/issue/Scoreboard.scala:221:44
-      automatic logic       _GEN_108;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :191:31, :221:80, :224:31
-      automatic logic       _GEN_109;	// playground/src/issue/Scoreboard.scala:209:46, :221:80, :224:31
-      automatic logic       _GEN_110;	// playground/src/issue/Scoreboard.scala:209:46, :221:80, :224:31
-      automatic logic       _GEN_111;	// playground/src/issue/Scoreboard.scala:209:46, :221:80, :224:31
+      automatic logic       _GEN_107;	// playground/src/issue/Scoreboard.scala:207:46
+      automatic logic       _GEN_108;	// playground/src/issue/Scoreboard.scala:207:46
+      automatic logic       _GEN_109;	// playground/src/issue/Scoreboard.scala:207:46
+      automatic logic       _GEN_110;	// playground/src/issue/Scoreboard.scala:221:44
+      automatic logic       _GEN_111;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :191:31, :221:80, :224:31
       automatic logic       _GEN_112;	// playground/src/issue/Scoreboard.scala:209:46, :221:80, :224:31
       automatic logic       _GEN_113;	// playground/src/issue/Scoreboard.scala:209:46, :221:80, :224:31
       automatic logic       _GEN_114;	// playground/src/issue/Scoreboard.scala:209:46, :221:80, :224:31
       automatic logic       _GEN_115;	// playground/src/issue/Scoreboard.scala:209:46, :221:80, :224:31
       automatic logic       _GEN_116;	// playground/src/issue/Scoreboard.scala:209:46, :221:80, :224:31
-      automatic logic       _GEN_117 =
+      automatic logic       _GEN_117;	// playground/src/issue/Scoreboard.scala:209:46, :221:80, :224:31
+      automatic logic       _GEN_118;	// playground/src/issue/Scoreboard.scala:209:46, :221:80, :224:31
+      automatic logic       _GEN_119;	// playground/src/issue/Scoreboard.scala:209:46, :221:80, :224:31
+      automatic logic       _GEN_120 =
         io_wb_data_1_valid & _GEN_5[io_wb_data_1_bits_id] & ~ex_valid & ~ertn_valid;	// playground/src/issue/Scoreboard.scala:155:16, :156:16, :169:22, :183:{20,26}, :184:20, :198:38, :206:{23,40,50,52}
-      automatic logic       _GEN_118;	// playground/src/issue/Scoreboard.scala:207:46
-      automatic logic       _GEN_119;	// playground/src/issue/Scoreboard.scala:207:46
-      automatic logic       _GEN_120;	// playground/src/issue/Scoreboard.scala:207:46
       automatic logic       _GEN_121;	// playground/src/issue/Scoreboard.scala:207:46
       automatic logic       _GEN_122;	// playground/src/issue/Scoreboard.scala:207:46
       automatic logic       _GEN_123;	// playground/src/issue/Scoreboard.scala:207:46
       automatic logic       _GEN_124;	// playground/src/issue/Scoreboard.scala:207:46
-      automatic logic       _GEN_125;	// playground/src/issue/Scoreboard.scala:221:44
-      automatic logic       _GEN_126;	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :222:27
-      automatic logic       _GEN_127;	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
+      automatic logic       _GEN_125;	// playground/src/issue/Scoreboard.scala:207:46
+      automatic logic       _GEN_126;	// playground/src/issue/Scoreboard.scala:207:46
+      automatic logic       _GEN_127;	// playground/src/issue/Scoreboard.scala:207:46
+      automatic logic       _GEN_128;	// playground/src/issue/Scoreboard.scala:221:44
+      automatic logic       _GEN_129;	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :222:27
+      automatic logic       _GEN_130;	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
       issue_ack = _io_issue_inst_valid_output & io_issue_inst_ready;	// playground/src/issue/Scoreboard.scala:83:42, :143:96
-      _GEN_14 = issue_ack & issue_ptr == 3'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25, :79:29, :83:42, :101:21, :103:45
-      _GEN_15 = _GEN_14 | sb_mem_0_valid;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
-      _GEN_16 = issue_ack & issue_ptr == 3'h1;	// playground/src/issue/Scoreboard.scala:76:25, :79:29, :83:42, :101:21, :103:45
-      _GEN_17 = _GEN_16 | sb_mem_1_valid;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
-      _GEN_18 = issue_ack & issue_ptr == 3'h2;	// playground/src/issue/Scoreboard.scala:76:25, :79:29, :83:42, :101:21, :103:45
-      _GEN_19 = _GEN_18 | sb_mem_2_valid;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
-      _GEN_20 = issue_ack & issue_ptr == 3'h3;	// playground/src/issue/Scoreboard.scala:76:25, :79:29, :83:42, :101:21, :103:45
-      _GEN_21 = _GEN_20 | sb_mem_3_valid;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
-      _GEN_22 = issue_ack & issue_ptr == 3'h4;	// playground/src/issue/Scoreboard.scala:76:25, :79:29, :83:42, :101:21, :103:45
-      _GEN_23 = _GEN_22 | sb_mem_4_valid;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
-      _GEN_24 = issue_ack & issue_ptr == 3'h5;	// playground/src/issue/Scoreboard.scala:76:25, :79:29, :83:42, :101:21, :103:45
-      _GEN_25 = _GEN_24 | sb_mem_5_valid;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
-      _GEN_26 = issue_ack & issue_ptr == 3'h6;	// playground/src/issue/Scoreboard.scala:76:25, :79:29, :83:42, :101:21, :103:45
-      _GEN_27 = _GEN_26 | sb_mem_6_valid;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
-      _GEN_28 = issue_ack & (&issue_ptr);	// playground/src/issue/Scoreboard.scala:76:25, :79:29, :83:42, :101:21, :103:45
-      _GEN_29 = _GEN_28 | sb_mem_7_valid;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
-      _GEN_30 =
-        _GEN_14
+      _GEN_17 = issue_ack & issue_ptr == 3'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25, :79:29, :83:42, :101:21, :103:45
+      _GEN_18 = _GEN_17 | sb_mem_0_valid;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      _GEN_19 = issue_ack & issue_ptr == 3'h1;	// playground/src/issue/Scoreboard.scala:76:25, :79:29, :83:42, :101:21, :103:45
+      _GEN_20 = _GEN_19 | sb_mem_1_valid;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      _GEN_21 = issue_ack & issue_ptr == 3'h2;	// playground/src/issue/Scoreboard.scala:76:25, :79:29, :83:42, :101:21, :103:45
+      _GEN_22 = _GEN_21 | sb_mem_2_valid;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      _GEN_23 = issue_ack & issue_ptr == 3'h3;	// playground/src/issue/Scoreboard.scala:76:25, :79:29, :83:42, :101:21, :103:45
+      _GEN_24 = _GEN_23 | sb_mem_3_valid;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      _GEN_25 = issue_ack & issue_ptr == 3'h4;	// playground/src/issue/Scoreboard.scala:76:25, :79:29, :83:42, :101:21, :103:45
+      _GEN_26 = _GEN_25 | sb_mem_4_valid;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      _GEN_27 = issue_ack & issue_ptr == 3'h5;	// playground/src/issue/Scoreboard.scala:76:25, :79:29, :83:42, :101:21, :103:45
+      _GEN_28 = _GEN_27 | sb_mem_5_valid;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      _GEN_29 = issue_ack & issue_ptr == 3'h6;	// playground/src/issue/Scoreboard.scala:76:25, :79:29, :83:42, :101:21, :103:45
+      _GEN_30 = _GEN_29 | sb_mem_6_valid;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      _GEN_31 = issue_ack & (&issue_ptr);	// playground/src/issue/Scoreboard.scala:76:25, :79:29, :83:42, :101:21, :103:45
+      _GEN_32 = _GEN_31 | sb_mem_7_valid;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      _GEN_33 =
+        _GEN_17
           ? io_from_decoder_bits_decoded_inst_regwen
           : sb_mem_0_bits_decoded_inst_regwen;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :107:45
-      _GEN_31 =
-        _GEN_14
+      _GEN_34 =
+        _GEN_17
           ? io_from_decoder_bits_decoded_inst_dest_rs1
           : sb_mem_0_bits_decoded_inst_dest_rs1;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :107:45
-      _GEN_32 =
-        _GEN_16
+      _GEN_35 =
+        _GEN_19
           ? io_from_decoder_bits_decoded_inst_regwen
           : sb_mem_1_bits_decoded_inst_regwen;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :107:45
-      _GEN_33 =
-        _GEN_16
+      _GEN_36 =
+        _GEN_19
           ? io_from_decoder_bits_decoded_inst_dest_rs1
           : sb_mem_1_bits_decoded_inst_dest_rs1;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :107:45
-      _GEN_34 =
-        _GEN_18
+      _GEN_37 =
+        _GEN_21
           ? io_from_decoder_bits_decoded_inst_regwen
           : sb_mem_2_bits_decoded_inst_regwen;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :107:45
-      _GEN_35 =
-        _GEN_18
+      _GEN_38 =
+        _GEN_21
           ? io_from_decoder_bits_decoded_inst_dest_rs1
           : sb_mem_2_bits_decoded_inst_dest_rs1;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :107:45
-      _GEN_36 =
-        _GEN_20
+      _GEN_39 =
+        _GEN_23
           ? io_from_decoder_bits_decoded_inst_regwen
           : sb_mem_3_bits_decoded_inst_regwen;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :107:45
-      _GEN_37 =
-        _GEN_20
+      _GEN_40 =
+        _GEN_23
           ? io_from_decoder_bits_decoded_inst_dest_rs1
           : sb_mem_3_bits_decoded_inst_dest_rs1;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :107:45
-      _GEN_38 =
-        _GEN_22
+      _GEN_41 =
+        _GEN_25
           ? io_from_decoder_bits_decoded_inst_regwen
           : sb_mem_4_bits_decoded_inst_regwen;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :107:45
-      _GEN_39 =
-        _GEN_22
+      _GEN_42 =
+        _GEN_25
           ? io_from_decoder_bits_decoded_inst_dest_rs1
           : sb_mem_4_bits_decoded_inst_dest_rs1;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :107:45
-      _GEN_40 =
-        _GEN_24
+      _GEN_43 =
+        _GEN_27
           ? io_from_decoder_bits_decoded_inst_regwen
           : sb_mem_5_bits_decoded_inst_regwen;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :107:45
-      _GEN_41 =
-        _GEN_24
+      _GEN_44 =
+        _GEN_27
           ? io_from_decoder_bits_decoded_inst_dest_rs1
           : sb_mem_5_bits_decoded_inst_dest_rs1;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :107:45
-      _GEN_42 =
-        _GEN_26
+      _GEN_45 =
+        _GEN_29
           ? io_from_decoder_bits_decoded_inst_regwen
           : sb_mem_6_bits_decoded_inst_regwen;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :107:45
-      _GEN_43 =
-        _GEN_26
+      _GEN_46 =
+        _GEN_29
           ? io_from_decoder_bits_decoded_inst_dest_rs1
           : sb_mem_6_bits_decoded_inst_dest_rs1;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :107:45
-      _GEN_44 =
-        _GEN_28
+      _GEN_47 =
+        _GEN_31
           ? io_from_decoder_bits_decoded_inst_regwen
           : sb_mem_7_bits_decoded_inst_regwen;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :107:45
-      _GEN_45 =
-        _GEN_28
+      _GEN_48 =
+        _GEN_31
           ? io_from_decoder_bits_decoded_inst_dest_rs1
           : sb_mem_7_bits_decoded_inst_dest_rs1;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :107:45
-      _GEN_46 = _GEN_14 ? io_from_decoder_bits_exception : sb_mem_0_bits_frontend_excp;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :111:46
-      _GEN_47 = _GEN_16 ? io_from_decoder_bits_exception : sb_mem_1_bits_frontend_excp;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :111:46
-      _GEN_48 = _GEN_18 ? io_from_decoder_bits_exception : sb_mem_2_bits_frontend_excp;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :111:46
-      _GEN_49 = _GEN_20 ? io_from_decoder_bits_exception : sb_mem_3_bits_frontend_excp;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :111:46
-      _GEN_50 = _GEN_22 ? io_from_decoder_bits_exception : sb_mem_4_bits_frontend_excp;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :111:46
-      _GEN_51 = _GEN_24 ? io_from_decoder_bits_exception : sb_mem_5_bits_frontend_excp;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :111:46
-      _GEN_52 = _GEN_26 ? io_from_decoder_bits_exception : sb_mem_6_bits_frontend_excp;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :111:46
-      _GEN_53 = _GEN_28 ? io_from_decoder_bits_exception : sb_mem_7_bits_frontend_excp;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :111:46
-      _GEN_54 = _GEN_14 ? _io_from_decoder_ready_T_6 : sb_mem_0_bits_br_info_valid;	// playground/src/issue/Scoreboard.scala:76:25, :98:45, :101:21, :103:45, :119:53
-      _GEN_55 = _GEN_16 ? _io_from_decoder_ready_T_6 : sb_mem_1_bits_br_info_valid;	// playground/src/issue/Scoreboard.scala:76:25, :98:45, :101:21, :103:45, :119:53
-      _GEN_56 = _GEN_18 ? _io_from_decoder_ready_T_6 : sb_mem_2_bits_br_info_valid;	// playground/src/issue/Scoreboard.scala:76:25, :98:45, :101:21, :103:45, :119:53
-      _GEN_57 = _GEN_20 ? _io_from_decoder_ready_T_6 : sb_mem_3_bits_br_info_valid;	// playground/src/issue/Scoreboard.scala:76:25, :98:45, :101:21, :103:45, :119:53
-      _GEN_58 = _GEN_22 ? _io_from_decoder_ready_T_6 : sb_mem_4_bits_br_info_valid;	// playground/src/issue/Scoreboard.scala:76:25, :98:45, :101:21, :103:45, :119:53
-      _GEN_59 = _GEN_24 ? _io_from_decoder_ready_T_6 : sb_mem_5_bits_br_info_valid;	// playground/src/issue/Scoreboard.scala:76:25, :98:45, :101:21, :103:45, :119:53
-      _GEN_60 = _GEN_26 ? _io_from_decoder_ready_T_6 : sb_mem_6_bits_br_info_valid;	// playground/src/issue/Scoreboard.scala:76:25, :98:45, :101:21, :103:45, :119:53
-      _GEN_61 = _GEN_28 ? _io_from_decoder_ready_T_6 : sb_mem_7_bits_br_info_valid;	// playground/src/issue/Scoreboard.scala:76:25, :98:45, :101:21, :103:45, :119:53
+      _GEN_49 = _GEN_17 ? io_from_decoder_bits_exception : sb_mem_0_bits_frontend_excp;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :111:46
+      _GEN_50 = _GEN_19 ? io_from_decoder_bits_exception : sb_mem_1_bits_frontend_excp;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :111:46
+      _GEN_51 = _GEN_21 ? io_from_decoder_bits_exception : sb_mem_2_bits_frontend_excp;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :111:46
+      _GEN_52 = _GEN_23 ? io_from_decoder_bits_exception : sb_mem_3_bits_frontend_excp;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :111:46
+      _GEN_53 = _GEN_25 ? io_from_decoder_bits_exception : sb_mem_4_bits_frontend_excp;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :111:46
+      _GEN_54 = _GEN_27 ? io_from_decoder_bits_exception : sb_mem_5_bits_frontend_excp;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :111:46
+      _GEN_55 = _GEN_29 ? io_from_decoder_bits_exception : sb_mem_6_bits_frontend_excp;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :111:46
+      _GEN_56 = _GEN_31 ? io_from_decoder_bits_exception : sb_mem_7_bits_frontend_excp;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :111:46
+      _GEN_57 = _GEN_17 ? _io_from_decoder_ready_T_6 : sb_mem_0_bits_br_info_valid;	// playground/src/issue/Scoreboard.scala:76:25, :98:45, :101:21, :103:45, :119:53
+      _GEN_58 = _GEN_19 ? _io_from_decoder_ready_T_6 : sb_mem_1_bits_br_info_valid;	// playground/src/issue/Scoreboard.scala:76:25, :98:45, :101:21, :103:45, :119:53
+      _GEN_59 = _GEN_21 ? _io_from_decoder_ready_T_6 : sb_mem_2_bits_br_info_valid;	// playground/src/issue/Scoreboard.scala:76:25, :98:45, :101:21, :103:45, :119:53
+      _GEN_60 = _GEN_23 ? _io_from_decoder_ready_T_6 : sb_mem_3_bits_br_info_valid;	// playground/src/issue/Scoreboard.scala:76:25, :98:45, :101:21, :103:45, :119:53
+      _GEN_61 = _GEN_25 ? _io_from_decoder_ready_T_6 : sb_mem_4_bits_br_info_valid;	// playground/src/issue/Scoreboard.scala:76:25, :98:45, :101:21, :103:45, :119:53
+      _GEN_62 = _GEN_27 ? _io_from_decoder_ready_T_6 : sb_mem_5_bits_br_info_valid;	// playground/src/issue/Scoreboard.scala:76:25, :98:45, :101:21, :103:45, :119:53
+      _GEN_63 = _GEN_29 ? _io_from_decoder_ready_T_6 : sb_mem_6_bits_br_info_valid;	// playground/src/issue/Scoreboard.scala:76:25, :98:45, :101:21, :103:45, :119:53
+      _GEN_64 = _GEN_31 ? _io_from_decoder_ready_T_6 : sb_mem_7_bits_br_info_valid;	// playground/src/issue/Scoreboard.scala:76:25, :98:45, :101:21, :103:45, :119:53
       _issue_ptr_T_2 = commit_ptr + 3'h1;	// playground/src/issue/Scoreboard.scala:78:29, :103:45, :170:56
-      _GEN_63 = commit_ack & _GEN_62;	// playground/src/issue/Scoreboard.scala:82:43, :101:21, :169:22, :187:{23,38}, :188:23
-      _GEN_64 = commit_ack & (_GEN_62 | ~(|commit_ptr));	// playground/src/issue/Scoreboard.scala:78:29, :82:43, :101:21, :132:46, :169:22, :171:42, :187:{23,38}, :191:31
-      _GEN_65 =
-        ~_GEN_63 & (_GEN_14 ? io_from_decoder_bits_exception : sb_mem_0_bits_exception);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :110:46, :169:22, :187:38, :188:23, :191:31
-      _GEN_66 =
-        commit_ack
-          ? ~(_GEN_62 | _GEN_14) & sb_mem_0_bits_br_info_bits_mispred
-          : ~_GEN_14 & sb_mem_0_bits_br_info_bits_mispred;	// playground/src/issue/Scoreboard.scala:76:25, :82:43, :101:21, :103:45, :118:53, :169:22, :187:{23,38}, :191:31
-      _GEN_67 = ~_GEN_64 & sb_mem_0_bits_executed;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :171:42, :172:42, :187:38, :191:31
-      _GEN_68 = commit_ack & (_GEN_62 | commit_ptr == 3'h1);	// playground/src/issue/Scoreboard.scala:78:29, :82:43, :101:21, :103:45, :169:22, :171:42, :187:{23,38}, :191:31
+      _GEN_66 = commit_ack & _GEN_65;	// playground/src/issue/Scoreboard.scala:82:43, :101:21, :169:22, :187:{23,38}, :188:23
+      _GEN_67 = commit_ack & (_GEN_65 | ~(|commit_ptr));	// playground/src/issue/Scoreboard.scala:78:29, :82:43, :101:21, :132:46, :169:22, :171:42, :187:{23,38}, :191:31
+      _GEN_68 =
+        ~_GEN_66 & (_GEN_17 ? io_from_decoder_bits_exception : sb_mem_0_bits_exception);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :110:46, :169:22, :187:38, :188:23, :191:31
       _GEN_69 =
-        ~_GEN_63 & (_GEN_16 ? io_from_decoder_bits_exception : sb_mem_1_bits_exception);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :110:46, :169:22, :187:38, :188:23, :191:31
-      _GEN_70 =
         commit_ack
-          ? ~(_GEN_62 | _GEN_16) & sb_mem_1_bits_br_info_bits_mispred
-          : ~_GEN_16 & sb_mem_1_bits_br_info_bits_mispred;	// playground/src/issue/Scoreboard.scala:76:25, :82:43, :101:21, :103:45, :118:53, :169:22, :187:{23,38}, :191:31
-      _GEN_71 = ~_GEN_68 & sb_mem_1_bits_executed;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :171:42, :172:42, :187:38, :191:31
-      _GEN_72 = commit_ack & (_GEN_62 | commit_ptr == 3'h2);	// playground/src/issue/Scoreboard.scala:78:29, :82:43, :101:21, :103:45, :169:22, :171:42, :187:{23,38}, :191:31
+          ? ~(_GEN_65 | _GEN_17) & sb_mem_0_bits_br_info_bits_mispred
+          : ~_GEN_17 & sb_mem_0_bits_br_info_bits_mispred;	// playground/src/issue/Scoreboard.scala:76:25, :82:43, :101:21, :103:45, :118:53, :169:22, :187:{23,38}, :191:31
+      _GEN_70 = ~_GEN_67 & sb_mem_0_bits_executed;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :171:42, :172:42, :187:38, :191:31
+      _GEN_71 = commit_ack & (_GEN_65 | commit_ptr == 3'h1);	// playground/src/issue/Scoreboard.scala:78:29, :82:43, :101:21, :103:45, :169:22, :171:42, :187:{23,38}, :191:31
+      _GEN_72 =
+        ~_GEN_66 & (_GEN_19 ? io_from_decoder_bits_exception : sb_mem_1_bits_exception);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :110:46, :169:22, :187:38, :188:23, :191:31
       _GEN_73 =
-        ~_GEN_63 & (_GEN_18 ? io_from_decoder_bits_exception : sb_mem_2_bits_exception);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :110:46, :169:22, :187:38, :188:23, :191:31
-      _GEN_74 =
         commit_ack
-          ? ~(_GEN_62 | _GEN_18) & sb_mem_2_bits_br_info_bits_mispred
-          : ~_GEN_18 & sb_mem_2_bits_br_info_bits_mispred;	// playground/src/issue/Scoreboard.scala:76:25, :82:43, :101:21, :103:45, :118:53, :169:22, :187:{23,38}, :191:31
-      _GEN_75 = ~_GEN_72 & sb_mem_2_bits_executed;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :171:42, :172:42, :187:38, :191:31
-      _GEN_76 = commit_ack & (_GEN_62 | commit_ptr == 3'h3);	// playground/src/issue/Scoreboard.scala:78:29, :82:43, :101:21, :103:45, :169:22, :171:42, :187:{23,38}, :191:31
+          ? ~(_GEN_65 | _GEN_19) & sb_mem_1_bits_br_info_bits_mispred
+          : ~_GEN_19 & sb_mem_1_bits_br_info_bits_mispred;	// playground/src/issue/Scoreboard.scala:76:25, :82:43, :101:21, :103:45, :118:53, :169:22, :187:{23,38}, :191:31
+      _GEN_74 = ~_GEN_71 & sb_mem_1_bits_executed;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :171:42, :172:42, :187:38, :191:31
+      _GEN_75 = commit_ack & (_GEN_65 | commit_ptr == 3'h2);	// playground/src/issue/Scoreboard.scala:78:29, :82:43, :101:21, :103:45, :169:22, :171:42, :187:{23,38}, :191:31
+      _GEN_76 =
+        ~_GEN_66 & (_GEN_21 ? io_from_decoder_bits_exception : sb_mem_2_bits_exception);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :110:46, :169:22, :187:38, :188:23, :191:31
       _GEN_77 =
-        ~_GEN_63 & (_GEN_20 ? io_from_decoder_bits_exception : sb_mem_3_bits_exception);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :110:46, :169:22, :187:38, :188:23, :191:31
-      _GEN_78 =
         commit_ack
-          ? ~(_GEN_62 | _GEN_20) & sb_mem_3_bits_br_info_bits_mispred
-          : ~_GEN_20 & sb_mem_3_bits_br_info_bits_mispred;	// playground/src/issue/Scoreboard.scala:76:25, :82:43, :101:21, :103:45, :118:53, :169:22, :187:{23,38}, :191:31
-      _GEN_79 = ~_GEN_76 & sb_mem_3_bits_executed;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :171:42, :172:42, :187:38, :191:31
-      _GEN_80 = commit_ack & (_GEN_62 | commit_ptr == 3'h4);	// playground/src/issue/Scoreboard.scala:78:29, :82:43, :101:21, :103:45, :169:22, :171:42, :187:{23,38}, :191:31
+          ? ~(_GEN_65 | _GEN_21) & sb_mem_2_bits_br_info_bits_mispred
+          : ~_GEN_21 & sb_mem_2_bits_br_info_bits_mispred;	// playground/src/issue/Scoreboard.scala:76:25, :82:43, :101:21, :103:45, :118:53, :169:22, :187:{23,38}, :191:31
+      _GEN_78 = ~_GEN_75 & sb_mem_2_bits_executed;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :171:42, :172:42, :187:38, :191:31
+      _GEN_79 = commit_ack & (_GEN_65 | commit_ptr == 3'h3);	// playground/src/issue/Scoreboard.scala:78:29, :82:43, :101:21, :103:45, :169:22, :171:42, :187:{23,38}, :191:31
+      _GEN_80 =
+        ~_GEN_66 & (_GEN_23 ? io_from_decoder_bits_exception : sb_mem_3_bits_exception);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :110:46, :169:22, :187:38, :188:23, :191:31
       _GEN_81 =
-        ~_GEN_63 & (_GEN_22 ? io_from_decoder_bits_exception : sb_mem_4_bits_exception);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :110:46, :169:22, :187:38, :188:23, :191:31
-      _GEN_82 =
         commit_ack
-          ? ~(_GEN_62 | _GEN_22) & sb_mem_4_bits_br_info_bits_mispred
-          : ~_GEN_22 & sb_mem_4_bits_br_info_bits_mispred;	// playground/src/issue/Scoreboard.scala:76:25, :82:43, :101:21, :103:45, :118:53, :169:22, :187:{23,38}, :191:31
-      _GEN_83 = ~_GEN_80 & sb_mem_4_bits_executed;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :171:42, :172:42, :187:38, :191:31
-      _GEN_84 = commit_ack & (_GEN_62 | commit_ptr == 3'h5);	// playground/src/issue/Scoreboard.scala:78:29, :82:43, :101:21, :103:45, :169:22, :171:42, :187:{23,38}, :191:31
+          ? ~(_GEN_65 | _GEN_23) & sb_mem_3_bits_br_info_bits_mispred
+          : ~_GEN_23 & sb_mem_3_bits_br_info_bits_mispred;	// playground/src/issue/Scoreboard.scala:76:25, :82:43, :101:21, :103:45, :118:53, :169:22, :187:{23,38}, :191:31
+      _GEN_82 = ~_GEN_79 & sb_mem_3_bits_executed;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :171:42, :172:42, :187:38, :191:31
+      _GEN_83 = commit_ack & (_GEN_65 | commit_ptr == 3'h4);	// playground/src/issue/Scoreboard.scala:78:29, :82:43, :101:21, :103:45, :169:22, :171:42, :187:{23,38}, :191:31
+      _GEN_84 =
+        ~_GEN_66 & (_GEN_25 ? io_from_decoder_bits_exception : sb_mem_4_bits_exception);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :110:46, :169:22, :187:38, :188:23, :191:31
       _GEN_85 =
-        ~_GEN_63 & (_GEN_24 ? io_from_decoder_bits_exception : sb_mem_5_bits_exception);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :110:46, :169:22, :187:38, :188:23, :191:31
-      _GEN_86 =
         commit_ack
-          ? ~(_GEN_62 | _GEN_24) & sb_mem_5_bits_br_info_bits_mispred
-          : ~_GEN_24 & sb_mem_5_bits_br_info_bits_mispred;	// playground/src/issue/Scoreboard.scala:76:25, :82:43, :101:21, :103:45, :118:53, :169:22, :187:{23,38}, :191:31
-      _GEN_87 = ~_GEN_84 & sb_mem_5_bits_executed;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :171:42, :172:42, :187:38, :191:31
-      _GEN_88 = commit_ack & (_GEN_62 | commit_ptr == 3'h6);	// playground/src/issue/Scoreboard.scala:78:29, :82:43, :101:21, :103:45, :169:22, :171:42, :187:{23,38}, :191:31
+          ? ~(_GEN_65 | _GEN_25) & sb_mem_4_bits_br_info_bits_mispred
+          : ~_GEN_25 & sb_mem_4_bits_br_info_bits_mispred;	// playground/src/issue/Scoreboard.scala:76:25, :82:43, :101:21, :103:45, :118:53, :169:22, :187:{23,38}, :191:31
+      _GEN_86 = ~_GEN_83 & sb_mem_4_bits_executed;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :171:42, :172:42, :187:38, :191:31
+      _GEN_87 = commit_ack & (_GEN_65 | commit_ptr == 3'h5);	// playground/src/issue/Scoreboard.scala:78:29, :82:43, :101:21, :103:45, :169:22, :171:42, :187:{23,38}, :191:31
+      _GEN_88 =
+        ~_GEN_66 & (_GEN_27 ? io_from_decoder_bits_exception : sb_mem_5_bits_exception);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :110:46, :169:22, :187:38, :188:23, :191:31
       _GEN_89 =
-        ~_GEN_63 & (_GEN_26 ? io_from_decoder_bits_exception : sb_mem_6_bits_exception);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :110:46, :169:22, :187:38, :188:23, :191:31
-      _GEN_90 =
         commit_ack
-          ? ~(_GEN_62 | _GEN_26) & sb_mem_6_bits_br_info_bits_mispred
-          : ~_GEN_26 & sb_mem_6_bits_br_info_bits_mispred;	// playground/src/issue/Scoreboard.scala:76:25, :82:43, :101:21, :103:45, :118:53, :169:22, :187:{23,38}, :191:31
-      _GEN_91 = ~_GEN_88 & sb_mem_6_bits_executed;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :171:42, :172:42, :187:38, :191:31
-      _GEN_92 = commit_ack & (_GEN_62 | (&commit_ptr));	// playground/src/issue/Scoreboard.scala:78:29, :82:43, :101:21, :132:20, :169:22, :171:42, :187:{23,38}, :191:31
+          ? ~(_GEN_65 | _GEN_27) & sb_mem_5_bits_br_info_bits_mispred
+          : ~_GEN_27 & sb_mem_5_bits_br_info_bits_mispred;	// playground/src/issue/Scoreboard.scala:76:25, :82:43, :101:21, :103:45, :118:53, :169:22, :187:{23,38}, :191:31
+      _GEN_90 = ~_GEN_87 & sb_mem_5_bits_executed;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :171:42, :172:42, :187:38, :191:31
+      _GEN_91 = commit_ack & (_GEN_65 | commit_ptr == 3'h6);	// playground/src/issue/Scoreboard.scala:78:29, :82:43, :101:21, :103:45, :169:22, :171:42, :187:{23,38}, :191:31
+      _GEN_92 =
+        ~_GEN_66 & (_GEN_29 ? io_from_decoder_bits_exception : sb_mem_6_bits_exception);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :110:46, :169:22, :187:38, :188:23, :191:31
       _GEN_93 =
-        ~_GEN_63 & (_GEN_28 ? io_from_decoder_bits_exception : sb_mem_7_bits_exception);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :110:46, :169:22, :187:38, :188:23, :191:31
-      _GEN_94 =
         commit_ack
-          ? ~(_GEN_62 | _GEN_28) & sb_mem_7_bits_br_info_bits_mispred
-          : ~_GEN_28 & sb_mem_7_bits_br_info_bits_mispred;	// playground/src/issue/Scoreboard.scala:76:25, :82:43, :101:21, :103:45, :118:53, :169:22, :187:{23,38}, :191:31
-      _GEN_95 = ~_GEN_92 & sb_mem_7_bits_executed;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :171:42, :172:42, :187:38, :191:31
+          ? ~(_GEN_65 | _GEN_29) & sb_mem_6_bits_br_info_bits_mispred
+          : ~_GEN_29 & sb_mem_6_bits_br_info_bits_mispred;	// playground/src/issue/Scoreboard.scala:76:25, :82:43, :101:21, :103:45, :118:53, :169:22, :187:{23,38}, :191:31
+      _GEN_94 = ~_GEN_91 & sb_mem_6_bits_executed;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :171:42, :172:42, :187:38, :191:31
+      _GEN_95 = commit_ack & (_GEN_65 | (&commit_ptr));	// playground/src/issue/Scoreboard.scala:78:29, :82:43, :101:21, :132:20, :169:22, :171:42, :187:{23,38}, :191:31
       _GEN_96 =
+        ~_GEN_66 & (_GEN_31 ? io_from_decoder_bits_exception : sb_mem_7_bits_exception);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :110:46, :169:22, :187:38, :188:23, :191:31
+      _GEN_97 =
+        commit_ack
+          ? ~(_GEN_65 | _GEN_31) & sb_mem_7_bits_br_info_bits_mispred
+          : ~_GEN_31 & sb_mem_7_bits_br_info_bits_mispred;	// playground/src/issue/Scoreboard.scala:76:25, :82:43, :101:21, :103:45, :118:53, :169:22, :187:{23,38}, :191:31
+      _GEN_98 = ~_GEN_95 & sb_mem_7_bits_executed;	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :171:42, :172:42, :187:38, :191:31
+      _GEN_99 =
         {{sb_mem_7_bits_frontend_excp},
          {sb_mem_6_bits_frontend_excp},
          {sb_mem_5_bits_frontend_excp},
@@ -3423,7 +3675,7 @@ module Scoreboard(	// <stdin>:2446:3
          {sb_mem_2_bits_frontend_excp},
          {sb_mem_1_bits_frontend_excp},
          {sb_mem_0_bits_frontend_excp}};	// playground/src/issue/Scoreboard.scala:76:25, :206:23
-      _GEN_97 =
+      _GEN_100 =
         {{sb_mem_7_bits_br_info_valid},
          {sb_mem_6_bits_br_info_valid},
          {sb_mem_5_bits_br_info_valid},
@@ -3432,7 +3684,7 @@ module Scoreboard(	// <stdin>:2446:3
          {sb_mem_2_bits_br_info_valid},
          {sb_mem_1_bits_br_info_valid},
          {sb_mem_0_bits_br_info_valid}};	// playground/src/issue/Scoreboard.scala:76:25, :206:23
-      _GEN_98 =
+      _GEN_101 =
         {{sb_mem_7_bits_br_info_bits_mispred},
          {sb_mem_6_bits_br_info_bits_mispred},
          {sb_mem_5_bits_br_info_bits_mispred},
@@ -3441,596 +3693,901 @@ module Scoreboard(	// <stdin>:2446:3
          {sb_mem_2_bits_br_info_bits_mispred},
          {sb_mem_1_bits_br_info_bits_mispred},
          {sb_mem_0_bits_br_info_bits_mispred}};	// playground/src/issue/Scoreboard.scala:76:25, :206:23
-      _GEN_99 =
+      _GEN_102 =
         io_wb_data_0_valid & _GEN_5[io_wb_data_0_bits_id] & ~ex_valid & ~ertn_valid;	// playground/src/issue/Scoreboard.scala:155:16, :156:16, :169:22, :183:{20,26}, :184:20, :198:38, :206:{23,40,50,52}
-      _GEN_100 = io_wb_data_0_bits_id == 3'h0;	// playground/src/issue/Scoreboard.scala:74:32, :207:46
-      _GEN_101 = io_wb_data_0_bits_id == 3'h1;	// playground/src/issue/Scoreboard.scala:103:45, :207:46
-      _GEN_102 = io_wb_data_0_bits_id == 3'h2;	// playground/src/issue/Scoreboard.scala:103:45, :207:46
-      _GEN_103 = io_wb_data_0_bits_id == 3'h3;	// playground/src/issue/Scoreboard.scala:103:45, :207:46
-      _GEN_104 = io_wb_data_0_bits_id == 3'h4;	// playground/src/issue/Scoreboard.scala:103:45, :207:46
-      _GEN_105 = io_wb_data_0_bits_id == 3'h5;	// playground/src/issue/Scoreboard.scala:103:45, :207:46
-      _GEN_106 = io_wb_data_0_bits_id == 3'h6;	// playground/src/issue/Scoreboard.scala:103:45, :207:46
-      _GEN_107 = _GEN_97[io_wb_data_0_bits_id] & _GEN_98[io_wb_data_0_bits_id];	// playground/src/issue/Scoreboard.scala:206:23, :221:44
-      _GEN_108 = _GEN_107 | _GEN_63;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23, :191:31, :221:{44,80}, :224:31
-      _GEN_109 = ~_GEN_107 & (_GEN_100 | _GEN_67);	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :207:46, :209:46, :212:46, :221:{44,80}, :224:31
-      _GEN_110 = ~_GEN_107 & (_GEN_101 | _GEN_71);	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :207:46, :209:46, :212:46, :221:{44,80}, :224:31
-      _GEN_111 = ~_GEN_107 & (_GEN_102 | _GEN_75);	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :207:46, :209:46, :212:46, :221:{44,80}, :224:31
-      _GEN_112 = ~_GEN_107 & (_GEN_103 | _GEN_79);	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :207:46, :209:46, :212:46, :221:{44,80}, :224:31
-      _GEN_113 = ~_GEN_107 & (_GEN_104 | _GEN_83);	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :207:46, :209:46, :212:46, :221:{44,80}, :224:31
-      _GEN_114 = ~_GEN_107 & (_GEN_105 | _GEN_87);	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :207:46, :209:46, :212:46, :221:{44,80}, :224:31
-      _GEN_115 = ~_GEN_107 & (_GEN_106 | _GEN_91);	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :207:46, :209:46, :212:46, :221:{44,80}, :224:31
-      _GEN_116 = ~_GEN_107 & ((&io_wb_data_0_bits_id) | _GEN_95);	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :207:46, :209:46, :212:46, :221:{44,80}, :224:31
-      _GEN_118 = io_wb_data_1_bits_id == 3'h0;	// playground/src/issue/Scoreboard.scala:74:32, :207:46
-      _GEN_119 = io_wb_data_1_bits_id == 3'h1;	// playground/src/issue/Scoreboard.scala:103:45, :207:46
-      _GEN_120 = io_wb_data_1_bits_id == 3'h2;	// playground/src/issue/Scoreboard.scala:103:45, :207:46
-      _GEN_121 = io_wb_data_1_bits_id == 3'h3;	// playground/src/issue/Scoreboard.scala:103:45, :207:46
-      _GEN_122 = io_wb_data_1_bits_id == 3'h4;	// playground/src/issue/Scoreboard.scala:103:45, :207:46
-      _GEN_123 = io_wb_data_1_bits_id == 3'h5;	// playground/src/issue/Scoreboard.scala:103:45, :207:46
-      _GEN_124 = io_wb_data_1_bits_id == 3'h6;	// playground/src/issue/Scoreboard.scala:103:45, :207:46
-      _GEN_125 = _GEN_97[io_wb_data_1_bits_id] & _GEN_98[io_wb_data_1_bits_id];	// playground/src/issue/Scoreboard.scala:206:23, :221:44
-      _GEN_126 = _GEN_117 & _GEN_125;	// playground/src/issue/Scoreboard.scala:206:{50,65}, :221:{44,80}, :222:27
-      _GEN_127 = _GEN_126 | _GEN_99 & _GEN_107 | _GEN_63;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:{44,80}, :222:27, :224:31
+      _GEN_103 = io_wb_data_0_bits_id == 3'h0;	// playground/src/issue/Scoreboard.scala:74:32, :207:46
+      _GEN_104 = io_wb_data_0_bits_id == 3'h1;	// playground/src/issue/Scoreboard.scala:103:45, :207:46
+      _GEN_105 = io_wb_data_0_bits_id == 3'h2;	// playground/src/issue/Scoreboard.scala:103:45, :207:46
+      _GEN_106 = io_wb_data_0_bits_id == 3'h3;	// playground/src/issue/Scoreboard.scala:103:45, :207:46
+      _GEN_107 = io_wb_data_0_bits_id == 3'h4;	// playground/src/issue/Scoreboard.scala:103:45, :207:46
+      _GEN_108 = io_wb_data_0_bits_id == 3'h5;	// playground/src/issue/Scoreboard.scala:103:45, :207:46
+      _GEN_109 = io_wb_data_0_bits_id == 3'h6;	// playground/src/issue/Scoreboard.scala:103:45, :207:46
+      _GEN_110 = _GEN_100[io_wb_data_0_bits_id] & _GEN_101[io_wb_data_0_bits_id];	// playground/src/issue/Scoreboard.scala:206:23, :221:44
+      _GEN_111 = _GEN_110 | _GEN_66;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23, :191:31, :221:{44,80}, :224:31
+      _GEN_112 = ~_GEN_110 & (_GEN_103 | _GEN_70);	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :207:46, :209:46, :212:46, :221:{44,80}, :224:31
+      _GEN_113 = ~_GEN_110 & (_GEN_104 | _GEN_74);	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :207:46, :209:46, :212:46, :221:{44,80}, :224:31
+      _GEN_114 = ~_GEN_110 & (_GEN_105 | _GEN_78);	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :207:46, :209:46, :212:46, :221:{44,80}, :224:31
+      _GEN_115 = ~_GEN_110 & (_GEN_106 | _GEN_82);	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :207:46, :209:46, :212:46, :221:{44,80}, :224:31
+      _GEN_116 = ~_GEN_110 & (_GEN_107 | _GEN_86);	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :207:46, :209:46, :212:46, :221:{44,80}, :224:31
+      _GEN_117 = ~_GEN_110 & (_GEN_108 | _GEN_90);	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :207:46, :209:46, :212:46, :221:{44,80}, :224:31
+      _GEN_118 = ~_GEN_110 & (_GEN_109 | _GEN_94);	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :207:46, :209:46, :212:46, :221:{44,80}, :224:31
+      _GEN_119 = ~_GEN_110 & ((&io_wb_data_0_bits_id) | _GEN_98);	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :207:46, :209:46, :212:46, :221:{44,80}, :224:31
+      _GEN_121 = io_wb_data_1_bits_id == 3'h0;	// playground/src/issue/Scoreboard.scala:74:32, :207:46
+      _GEN_122 = io_wb_data_1_bits_id == 3'h1;	// playground/src/issue/Scoreboard.scala:103:45, :207:46
+      _GEN_123 = io_wb_data_1_bits_id == 3'h2;	// playground/src/issue/Scoreboard.scala:103:45, :207:46
+      _GEN_124 = io_wb_data_1_bits_id == 3'h3;	// playground/src/issue/Scoreboard.scala:103:45, :207:46
+      _GEN_125 = io_wb_data_1_bits_id == 3'h4;	// playground/src/issue/Scoreboard.scala:103:45, :207:46
+      _GEN_126 = io_wb_data_1_bits_id == 3'h5;	// playground/src/issue/Scoreboard.scala:103:45, :207:46
+      _GEN_127 = io_wb_data_1_bits_id == 3'h6;	// playground/src/issue/Scoreboard.scala:103:45, :207:46
+      _GEN_128 = _GEN_100[io_wb_data_1_bits_id] & _GEN_101[io_wb_data_1_bits_id];	// playground/src/issue/Scoreboard.scala:206:23, :221:44
+      _GEN_129 = _GEN_120 & _GEN_128;	// playground/src/issue/Scoreboard.scala:206:{50,65}, :221:{44,80}, :222:27
+      _GEN_130 = _GEN_129 | _GEN_102 & _GEN_110 | _GEN_66;	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:{44,80}, :222:27, :224:31
       sb_mem_0_valid <=
-        ~_GEN_126 & (_GEN_99 ? ~(_GEN_107 | _GEN_64) & _GEN_15 : ~_GEN_64 & _GEN_15);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :169:22, :171:42, :187:38, :191:31, :206:{50,65}, :221:{44,80}, :222:27, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~(_GEN_110 | _GEN_67) & _GEN_18 : ~_GEN_67 & _GEN_18);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :169:22, :171:42, :187:38, :191:31, :206:{50,65}, :221:{44,80}, :222:27, :224:31
       sb_mem_0_bits_decoded_inst_regwen <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_30 : ~_GEN_63 & _GEN_30);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
-      if (_GEN_127) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_33 : ~_GEN_66 & _GEN_33);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+      if (_GEN_130) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
         sb_mem_0_bits_decoded_inst_futype <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
         sb_mem_0_bits_decoded_inst_fuoptype <= 4'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       end
-      else if (_GEN_14) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      else if (_GEN_17) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
         sb_mem_0_bits_decoded_inst_futype <= io_from_decoder_bits_decoded_inst_futype;	// playground/src/issue/Scoreboard.scala:76:25
         sb_mem_0_bits_decoded_inst_fuoptype <= io_from_decoder_bits_decoded_inst_fuoptype;	// playground/src/issue/Scoreboard.scala:76:25
       end
       sb_mem_0_bits_decoded_inst_dest_rs1 <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_31 : ~_GEN_63 & _GEN_31);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
-      if (_GEN_127) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_34 : ~_GEN_66 & _GEN_34);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+      if (_GEN_130)	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
         sb_mem_0_bits_raw_inst <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+      else if (_GEN_17)	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+        sb_mem_0_bits_raw_inst <= io_from_decoder_bits_inst;	// playground/src/issue/Scoreboard.scala:76:25
+      if (_GEN_120) begin	// playground/src/issue/Scoreboard.scala:206:50
+        if (_GEN_128) begin	// playground/src/issue/Scoreboard.scala:221:44
+          sb_mem_0_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_0_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_0_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_0_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_1_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_1_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_1_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_1_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_2_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_2_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_2_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_2_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_3_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_3_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_3_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_3_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_4_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_4_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_4_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_4_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_5_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_5_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_5_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_5_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_6_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_6_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_6_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_6_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_7_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_7_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_7_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_7_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+        end
+        else begin	// playground/src/issue/Scoreboard.scala:221:44
+          if (_GEN_121) begin	// playground/src/issue/Scoreboard.scala:207:46
+            sb_mem_0_bits_lsu_diff_paddr <= io_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_0_bits_lsu_diff_vaddr <= io_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_0_bits_lsu_diff_wdata <= io_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_0_bits_result <= io_wb_data_1_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
+          end
+          else if (_GEN_102) begin	// playground/src/issue/Scoreboard.scala:206:50
+            if (_GEN_110) begin	// playground/src/issue/Scoreboard.scala:221:44
+              sb_mem_0_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_0_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_0_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_0_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            end
+            else if (_GEN_103) begin	// playground/src/issue/Scoreboard.scala:207:46
+              sb_mem_0_bits_lsu_diff_paddr <= io_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+              sb_mem_0_bits_lsu_diff_vaddr <= io_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+              sb_mem_0_bits_lsu_diff_wdata <= io_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
+              sb_mem_0_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
+            end
+            else if (_GEN_66) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+              sb_mem_0_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_0_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_0_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_0_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            end
+          end
+          else if (_GEN_66) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+            sb_mem_0_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_0_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_0_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_0_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          end
+          if (_GEN_122) begin	// playground/src/issue/Scoreboard.scala:207:46
+            sb_mem_1_bits_lsu_diff_paddr <= io_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_1_bits_lsu_diff_vaddr <= io_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_1_bits_lsu_diff_wdata <= io_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_1_bits_result <= io_wb_data_1_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
+          end
+          else if (_GEN_102) begin	// playground/src/issue/Scoreboard.scala:206:50
+            if (_GEN_110) begin	// playground/src/issue/Scoreboard.scala:221:44
+              sb_mem_1_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_1_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_1_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_1_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            end
+            else if (_GEN_104) begin	// playground/src/issue/Scoreboard.scala:207:46
+              sb_mem_1_bits_lsu_diff_paddr <= io_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+              sb_mem_1_bits_lsu_diff_vaddr <= io_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+              sb_mem_1_bits_lsu_diff_wdata <= io_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
+              sb_mem_1_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
+            end
+            else if (_GEN_66) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+              sb_mem_1_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_1_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_1_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_1_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            end
+          end
+          else if (_GEN_66) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+            sb_mem_1_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_1_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_1_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_1_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          end
+          if (_GEN_123) begin	// playground/src/issue/Scoreboard.scala:207:46
+            sb_mem_2_bits_lsu_diff_paddr <= io_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_2_bits_lsu_diff_vaddr <= io_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_2_bits_lsu_diff_wdata <= io_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_2_bits_result <= io_wb_data_1_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
+          end
+          else if (_GEN_102) begin	// playground/src/issue/Scoreboard.scala:206:50
+            if (_GEN_110) begin	// playground/src/issue/Scoreboard.scala:221:44
+              sb_mem_2_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_2_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_2_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_2_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            end
+            else if (_GEN_105) begin	// playground/src/issue/Scoreboard.scala:207:46
+              sb_mem_2_bits_lsu_diff_paddr <= io_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+              sb_mem_2_bits_lsu_diff_vaddr <= io_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+              sb_mem_2_bits_lsu_diff_wdata <= io_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
+              sb_mem_2_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
+            end
+            else if (_GEN_66) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+              sb_mem_2_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_2_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_2_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_2_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            end
+          end
+          else if (_GEN_66) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+            sb_mem_2_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_2_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_2_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_2_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          end
+          if (_GEN_124) begin	// playground/src/issue/Scoreboard.scala:207:46
+            sb_mem_3_bits_lsu_diff_paddr <= io_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_3_bits_lsu_diff_vaddr <= io_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_3_bits_lsu_diff_wdata <= io_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_3_bits_result <= io_wb_data_1_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
+          end
+          else if (_GEN_102) begin	// playground/src/issue/Scoreboard.scala:206:50
+            if (_GEN_110) begin	// playground/src/issue/Scoreboard.scala:221:44
+              sb_mem_3_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_3_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_3_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_3_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            end
+            else if (_GEN_106) begin	// playground/src/issue/Scoreboard.scala:207:46
+              sb_mem_3_bits_lsu_diff_paddr <= io_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+              sb_mem_3_bits_lsu_diff_vaddr <= io_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+              sb_mem_3_bits_lsu_diff_wdata <= io_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
+              sb_mem_3_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
+            end
+            else if (_GEN_66) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+              sb_mem_3_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_3_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_3_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_3_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            end
+          end
+          else if (_GEN_66) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+            sb_mem_3_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_3_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_3_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_3_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          end
+          if (_GEN_125) begin	// playground/src/issue/Scoreboard.scala:207:46
+            sb_mem_4_bits_lsu_diff_paddr <= io_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_4_bits_lsu_diff_vaddr <= io_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_4_bits_lsu_diff_wdata <= io_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_4_bits_result <= io_wb_data_1_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
+          end
+          else if (_GEN_102) begin	// playground/src/issue/Scoreboard.scala:206:50
+            if (_GEN_110) begin	// playground/src/issue/Scoreboard.scala:221:44
+              sb_mem_4_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_4_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_4_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_4_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            end
+            else if (_GEN_107) begin	// playground/src/issue/Scoreboard.scala:207:46
+              sb_mem_4_bits_lsu_diff_paddr <= io_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+              sb_mem_4_bits_lsu_diff_vaddr <= io_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+              sb_mem_4_bits_lsu_diff_wdata <= io_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
+              sb_mem_4_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
+            end
+            else if (_GEN_66) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+              sb_mem_4_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_4_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_4_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_4_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            end
+          end
+          else if (_GEN_66) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+            sb_mem_4_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_4_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_4_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_4_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          end
+          if (_GEN_126) begin	// playground/src/issue/Scoreboard.scala:207:46
+            sb_mem_5_bits_lsu_diff_paddr <= io_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_5_bits_lsu_diff_vaddr <= io_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_5_bits_lsu_diff_wdata <= io_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_5_bits_result <= io_wb_data_1_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
+          end
+          else if (_GEN_102) begin	// playground/src/issue/Scoreboard.scala:206:50
+            if (_GEN_110) begin	// playground/src/issue/Scoreboard.scala:221:44
+              sb_mem_5_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_5_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_5_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_5_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            end
+            else if (_GEN_108) begin	// playground/src/issue/Scoreboard.scala:207:46
+              sb_mem_5_bits_lsu_diff_paddr <= io_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+              sb_mem_5_bits_lsu_diff_vaddr <= io_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+              sb_mem_5_bits_lsu_diff_wdata <= io_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
+              sb_mem_5_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
+            end
+            else if (_GEN_66) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+              sb_mem_5_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_5_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_5_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_5_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            end
+          end
+          else if (_GEN_66) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+            sb_mem_5_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_5_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_5_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_5_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          end
+          if (_GEN_127) begin	// playground/src/issue/Scoreboard.scala:207:46
+            sb_mem_6_bits_lsu_diff_paddr <= io_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_6_bits_lsu_diff_vaddr <= io_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_6_bits_lsu_diff_wdata <= io_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_6_bits_result <= io_wb_data_1_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
+          end
+          else if (_GEN_102) begin	// playground/src/issue/Scoreboard.scala:206:50
+            if (_GEN_110) begin	// playground/src/issue/Scoreboard.scala:221:44
+              sb_mem_6_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_6_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_6_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_6_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            end
+            else if (_GEN_109) begin	// playground/src/issue/Scoreboard.scala:207:46
+              sb_mem_6_bits_lsu_diff_paddr <= io_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+              sb_mem_6_bits_lsu_diff_vaddr <= io_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+              sb_mem_6_bits_lsu_diff_wdata <= io_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
+              sb_mem_6_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
+            end
+            else if (_GEN_66) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+              sb_mem_6_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_6_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_6_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_6_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            end
+          end
+          else if (_GEN_66) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+            sb_mem_6_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_6_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_6_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_6_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          end
+          if (&io_wb_data_1_bits_id) begin	// playground/src/issue/Scoreboard.scala:207:46
+            sb_mem_7_bits_lsu_diff_paddr <= io_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_7_bits_lsu_diff_vaddr <= io_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_7_bits_lsu_diff_wdata <= io_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_7_bits_result <= io_wb_data_1_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
+          end
+          else if (_GEN_102) begin	// playground/src/issue/Scoreboard.scala:206:50
+            if (_GEN_110) begin	// playground/src/issue/Scoreboard.scala:221:44
+              sb_mem_7_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_7_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_7_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_7_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            end
+            else if (&io_wb_data_0_bits_id) begin	// playground/src/issue/Scoreboard.scala:207:46
+              sb_mem_7_bits_lsu_diff_paddr <= io_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+              sb_mem_7_bits_lsu_diff_vaddr <= io_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+              sb_mem_7_bits_lsu_diff_wdata <= io_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
+              sb_mem_7_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
+            end
+            else if (_GEN_66) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+              sb_mem_7_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_7_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_7_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+              sb_mem_7_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            end
+          end
+          else if (_GEN_66) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+            sb_mem_7_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_7_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_7_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_7_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          end
+        end
+        sb_mem_0_bits_executed <=
+          ~_GEN_128 & (_GEN_121 | (_GEN_102 ? _GEN_112 : _GEN_70));	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :206:{50,65}, :207:46, :209:46, :221:{44,80}, :224:31
+        sb_mem_1_bits_executed <=
+          ~_GEN_128 & (_GEN_122 | (_GEN_102 ? _GEN_113 : _GEN_74));	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :206:{50,65}, :207:46, :209:46, :221:{44,80}, :224:31
+        sb_mem_2_bits_executed <=
+          ~_GEN_128 & (_GEN_123 | (_GEN_102 ? _GEN_114 : _GEN_78));	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :206:{50,65}, :207:46, :209:46, :221:{44,80}, :224:31
+        sb_mem_3_bits_executed <=
+          ~_GEN_128 & (_GEN_124 | (_GEN_102 ? _GEN_115 : _GEN_82));	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :206:{50,65}, :207:46, :209:46, :221:{44,80}, :224:31
+        sb_mem_4_bits_executed <=
+          ~_GEN_128 & (_GEN_125 | (_GEN_102 ? _GEN_116 : _GEN_86));	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :206:{50,65}, :207:46, :209:46, :221:{44,80}, :224:31
+        sb_mem_5_bits_executed <=
+          ~_GEN_128 & (_GEN_126 | (_GEN_102 ? _GEN_117 : _GEN_90));	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :206:{50,65}, :207:46, :209:46, :221:{44,80}, :224:31
+        sb_mem_6_bits_executed <=
+          ~_GEN_128 & (_GEN_127 | (_GEN_102 ? _GEN_118 : _GEN_94));	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :206:{50,65}, :207:46, :209:46, :221:{44,80}, :224:31
+        sb_mem_7_bits_executed <=
+          ~_GEN_128 & ((&io_wb_data_1_bits_id) | (_GEN_102 ? _GEN_119 : _GEN_98));	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :206:{50,65}, :207:46, :209:46, :221:{44,80}, :224:31
+      end
+      else if (_GEN_102) begin	// playground/src/issue/Scoreboard.scala:206:50
+        if (_GEN_110) begin	// playground/src/issue/Scoreboard.scala:221:44
+          sb_mem_0_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_0_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_0_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_0_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_1_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_1_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_1_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_1_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_2_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_2_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_2_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_2_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_3_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_3_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_3_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_3_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_4_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_4_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_4_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_4_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_5_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_5_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_5_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_5_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_6_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_6_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_6_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_6_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_7_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_7_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_7_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_7_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+        end
+        else begin	// playground/src/issue/Scoreboard.scala:221:44
+          if (_GEN_103) begin	// playground/src/issue/Scoreboard.scala:207:46
+            sb_mem_0_bits_lsu_diff_paddr <= io_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_0_bits_lsu_diff_vaddr <= io_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_0_bits_lsu_diff_wdata <= io_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_0_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
+          end
+          else if (_GEN_66) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+            sb_mem_0_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_0_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_0_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_0_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          end
+          if (_GEN_104) begin	// playground/src/issue/Scoreboard.scala:207:46
+            sb_mem_1_bits_lsu_diff_paddr <= io_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_1_bits_lsu_diff_vaddr <= io_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_1_bits_lsu_diff_wdata <= io_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_1_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
+          end
+          else if (_GEN_66) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+            sb_mem_1_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_1_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_1_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_1_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          end
+          if (_GEN_105) begin	// playground/src/issue/Scoreboard.scala:207:46
+            sb_mem_2_bits_lsu_diff_paddr <= io_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_2_bits_lsu_diff_vaddr <= io_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_2_bits_lsu_diff_wdata <= io_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_2_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
+          end
+          else if (_GEN_66) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+            sb_mem_2_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_2_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_2_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_2_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          end
+          if (_GEN_106) begin	// playground/src/issue/Scoreboard.scala:207:46
+            sb_mem_3_bits_lsu_diff_paddr <= io_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_3_bits_lsu_diff_vaddr <= io_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_3_bits_lsu_diff_wdata <= io_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_3_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
+          end
+          else if (_GEN_66) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+            sb_mem_3_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_3_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_3_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_3_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          end
+          if (_GEN_107) begin	// playground/src/issue/Scoreboard.scala:207:46
+            sb_mem_4_bits_lsu_diff_paddr <= io_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_4_bits_lsu_diff_vaddr <= io_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_4_bits_lsu_diff_wdata <= io_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_4_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
+          end
+          else if (_GEN_66) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+            sb_mem_4_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_4_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_4_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_4_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          end
+          if (_GEN_108) begin	// playground/src/issue/Scoreboard.scala:207:46
+            sb_mem_5_bits_lsu_diff_paddr <= io_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_5_bits_lsu_diff_vaddr <= io_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_5_bits_lsu_diff_wdata <= io_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_5_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
+          end
+          else if (_GEN_66) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+            sb_mem_5_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_5_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_5_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_5_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          end
+          if (_GEN_109) begin	// playground/src/issue/Scoreboard.scala:207:46
+            sb_mem_6_bits_lsu_diff_paddr <= io_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_6_bits_lsu_diff_vaddr <= io_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_6_bits_lsu_diff_wdata <= io_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_6_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
+          end
+          else if (_GEN_66) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+            sb_mem_6_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_6_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_6_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_6_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          end
+          if (&io_wb_data_0_bits_id) begin	// playground/src/issue/Scoreboard.scala:207:46
+            sb_mem_7_bits_lsu_diff_paddr <= io_lsu_diff_paddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_7_bits_lsu_diff_vaddr <= io_lsu_diff_vaddr;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_7_bits_lsu_diff_wdata <= io_lsu_diff_wdata;	// playground/src/issue/Scoreboard.scala:76:25
+            sb_mem_7_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
+          end
+          else if (_GEN_66) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+            sb_mem_7_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_7_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_7_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+            sb_mem_7_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          end
+        end
+        sb_mem_0_bits_executed <= _GEN_112;	// playground/src/issue/Scoreboard.scala:76:25, :209:46, :221:80, :224:31
+        sb_mem_1_bits_executed <= _GEN_113;	// playground/src/issue/Scoreboard.scala:76:25, :209:46, :221:80, :224:31
+        sb_mem_2_bits_executed <= _GEN_114;	// playground/src/issue/Scoreboard.scala:76:25, :209:46, :221:80, :224:31
+        sb_mem_3_bits_executed <= _GEN_115;	// playground/src/issue/Scoreboard.scala:76:25, :209:46, :221:80, :224:31
+        sb_mem_4_bits_executed <= _GEN_116;	// playground/src/issue/Scoreboard.scala:76:25, :209:46, :221:80, :224:31
+        sb_mem_5_bits_executed <= _GEN_117;	// playground/src/issue/Scoreboard.scala:76:25, :209:46, :221:80, :224:31
+        sb_mem_6_bits_executed <= _GEN_118;	// playground/src/issue/Scoreboard.scala:76:25, :209:46, :221:80, :224:31
+        sb_mem_7_bits_executed <= _GEN_119;	// playground/src/issue/Scoreboard.scala:76:25, :209:46, :221:80, :224:31
+      end
+      else begin	// playground/src/issue/Scoreboard.scala:206:50
+        if (_GEN_66) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+          sb_mem_0_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_0_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_0_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_0_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_1_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_1_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_1_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_1_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_2_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_2_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_2_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_2_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_3_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_3_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_3_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_3_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_4_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_4_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_4_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_4_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_5_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_5_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_5_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_5_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_6_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_6_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_6_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_6_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_7_bits_lsu_diff_paddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_7_bits_lsu_diff_vaddr <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_7_bits_lsu_diff_wdata <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+          sb_mem_7_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
+        end
+        sb_mem_0_bits_executed <= _GEN_70;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
+        sb_mem_1_bits_executed <= _GEN_74;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
+        sb_mem_2_bits_executed <= _GEN_78;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
+        sb_mem_3_bits_executed <= _GEN_82;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
+        sb_mem_4_bits_executed <= _GEN_86;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
+        sb_mem_5_bits_executed <= _GEN_90;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
+        sb_mem_6_bits_executed <= _GEN_94;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
+        sb_mem_7_bits_executed <= _GEN_98;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
+      end
+      if (_GEN_130) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
         sb_mem_0_bits_rs1 <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
         sb_mem_0_bits_rd <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       end
-      else if (_GEN_14) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
-        sb_mem_0_bits_raw_inst <= io_from_decoder_bits_inst;	// playground/src/issue/Scoreboard.scala:76:25
+      else if (_GEN_17) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
         sb_mem_0_bits_rs1 <= io_from_decoder_bits_inst[19:15];	// playground/src/ISA/riscv32/ISA.scala:42:48, playground/src/issue/Scoreboard.scala:76:25
         sb_mem_0_bits_rd <= io_from_decoder_bits_inst[11:7];	// playground/src/ISA/riscv32/ISA.scala:43:48, playground/src/issue/Scoreboard.scala:76:25
       end
       sb_mem_0_bits_frontend_excp <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_46 : ~_GEN_63 & _GEN_46);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_49 : ~_GEN_66 & _GEN_49);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
       sb_mem_0_bits_exception <=
-        ~(_GEN_117 & (_GEN_125 | ~_GEN_96[io_wb_data_1_bits_id] & _GEN_118))
-        & (_GEN_99
-             ? ~_GEN_107
-               & (~_GEN_96[io_wb_data_0_bits_id] & _GEN_100
+        ~(_GEN_120 & (_GEN_128 | ~_GEN_99[io_wb_data_1_bits_id] & _GEN_121))
+        & (_GEN_102
+             ? ~_GEN_110
+               & (~_GEN_99[io_wb_data_0_bits_id] & _GEN_103
                     ? io_wb_data_0_bits_exception
-                    : _GEN_65)
-             : _GEN_65);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :191:31, :206:{23,50,65}, :207:46, :212:{18,46}, :213:39, :221:{44,80}, :224:31
-      if (_GEN_117) begin	// playground/src/issue/Scoreboard.scala:206:50
-        if (_GEN_125) begin	// playground/src/issue/Scoreboard.scala:221:44
-          sb_mem_0_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          sb_mem_1_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          sb_mem_2_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          sb_mem_3_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          sb_mem_4_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          sb_mem_5_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          sb_mem_6_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          sb_mem_7_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-        end
-        else begin	// playground/src/issue/Scoreboard.scala:221:44
-          if (_GEN_118)	// playground/src/issue/Scoreboard.scala:207:46
-            sb_mem_0_bits_result <= io_wb_data_1_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
-          else if (_GEN_99) begin	// playground/src/issue/Scoreboard.scala:206:50
-            if (_GEN_107)	// playground/src/issue/Scoreboard.scala:221:44
-              sb_mem_0_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-            else if (_GEN_100)	// playground/src/issue/Scoreboard.scala:207:46
-              sb_mem_0_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
-            else if (_GEN_63)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-              sb_mem_0_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          end
-          else if (_GEN_63)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-            sb_mem_0_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          if (_GEN_119)	// playground/src/issue/Scoreboard.scala:207:46
-            sb_mem_1_bits_result <= io_wb_data_1_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
-          else if (_GEN_99) begin	// playground/src/issue/Scoreboard.scala:206:50
-            if (_GEN_107)	// playground/src/issue/Scoreboard.scala:221:44
-              sb_mem_1_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-            else if (_GEN_101)	// playground/src/issue/Scoreboard.scala:207:46
-              sb_mem_1_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
-            else if (_GEN_63)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-              sb_mem_1_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          end
-          else if (_GEN_63)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-            sb_mem_1_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          if (_GEN_120)	// playground/src/issue/Scoreboard.scala:207:46
-            sb_mem_2_bits_result <= io_wb_data_1_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
-          else if (_GEN_99) begin	// playground/src/issue/Scoreboard.scala:206:50
-            if (_GEN_107)	// playground/src/issue/Scoreboard.scala:221:44
-              sb_mem_2_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-            else if (_GEN_102)	// playground/src/issue/Scoreboard.scala:207:46
-              sb_mem_2_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
-            else if (_GEN_63)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-              sb_mem_2_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          end
-          else if (_GEN_63)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-            sb_mem_2_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          if (_GEN_121)	// playground/src/issue/Scoreboard.scala:207:46
-            sb_mem_3_bits_result <= io_wb_data_1_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
-          else if (_GEN_99) begin	// playground/src/issue/Scoreboard.scala:206:50
-            if (_GEN_107)	// playground/src/issue/Scoreboard.scala:221:44
-              sb_mem_3_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-            else if (_GEN_103)	// playground/src/issue/Scoreboard.scala:207:46
-              sb_mem_3_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
-            else if (_GEN_63)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-              sb_mem_3_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          end
-          else if (_GEN_63)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-            sb_mem_3_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          if (_GEN_122)	// playground/src/issue/Scoreboard.scala:207:46
-            sb_mem_4_bits_result <= io_wb_data_1_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
-          else if (_GEN_99) begin	// playground/src/issue/Scoreboard.scala:206:50
-            if (_GEN_107)	// playground/src/issue/Scoreboard.scala:221:44
-              sb_mem_4_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-            else if (_GEN_104)	// playground/src/issue/Scoreboard.scala:207:46
-              sb_mem_4_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
-            else if (_GEN_63)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-              sb_mem_4_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          end
-          else if (_GEN_63)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-            sb_mem_4_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          if (_GEN_123)	// playground/src/issue/Scoreboard.scala:207:46
-            sb_mem_5_bits_result <= io_wb_data_1_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
-          else if (_GEN_99) begin	// playground/src/issue/Scoreboard.scala:206:50
-            if (_GEN_107)	// playground/src/issue/Scoreboard.scala:221:44
-              sb_mem_5_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-            else if (_GEN_105)	// playground/src/issue/Scoreboard.scala:207:46
-              sb_mem_5_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
-            else if (_GEN_63)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-              sb_mem_5_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          end
-          else if (_GEN_63)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-            sb_mem_5_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          if (_GEN_124)	// playground/src/issue/Scoreboard.scala:207:46
-            sb_mem_6_bits_result <= io_wb_data_1_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
-          else if (_GEN_99) begin	// playground/src/issue/Scoreboard.scala:206:50
-            if (_GEN_107)	// playground/src/issue/Scoreboard.scala:221:44
-              sb_mem_6_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-            else if (_GEN_106)	// playground/src/issue/Scoreboard.scala:207:46
-              sb_mem_6_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
-            else if (_GEN_63)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-              sb_mem_6_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          end
-          else if (_GEN_63)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-            sb_mem_6_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          if (&io_wb_data_1_bits_id)	// playground/src/issue/Scoreboard.scala:207:46
-            sb_mem_7_bits_result <= io_wb_data_1_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
-          else if (_GEN_99) begin	// playground/src/issue/Scoreboard.scala:206:50
-            if (_GEN_107)	// playground/src/issue/Scoreboard.scala:221:44
-              sb_mem_7_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-            else if (&io_wb_data_0_bits_id)	// playground/src/issue/Scoreboard.scala:207:46
-              sb_mem_7_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
-            else if (_GEN_63)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-              sb_mem_7_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          end
-          else if (_GEN_63)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-            sb_mem_7_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-        end
-        sb_mem_0_bits_executed <= ~_GEN_125 & (_GEN_118 | (_GEN_99 ? _GEN_109 : _GEN_67));	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :206:{50,65}, :207:46, :209:46, :221:{44,80}, :224:31
-        sb_mem_1_bits_executed <= ~_GEN_125 & (_GEN_119 | (_GEN_99 ? _GEN_110 : _GEN_71));	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :206:{50,65}, :207:46, :209:46, :221:{44,80}, :224:31
-        sb_mem_2_bits_executed <= ~_GEN_125 & (_GEN_120 | (_GEN_99 ? _GEN_111 : _GEN_75));	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :206:{50,65}, :207:46, :209:46, :221:{44,80}, :224:31
-        sb_mem_3_bits_executed <= ~_GEN_125 & (_GEN_121 | (_GEN_99 ? _GEN_112 : _GEN_79));	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :206:{50,65}, :207:46, :209:46, :221:{44,80}, :224:31
-        sb_mem_4_bits_executed <= ~_GEN_125 & (_GEN_122 | (_GEN_99 ? _GEN_113 : _GEN_83));	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :206:{50,65}, :207:46, :209:46, :221:{44,80}, :224:31
-        sb_mem_5_bits_executed <= ~_GEN_125 & (_GEN_123 | (_GEN_99 ? _GEN_114 : _GEN_87));	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :206:{50,65}, :207:46, :209:46, :221:{44,80}, :224:31
-        sb_mem_6_bits_executed <= ~_GEN_125 & (_GEN_124 | (_GEN_99 ? _GEN_115 : _GEN_91));	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :206:{50,65}, :207:46, :209:46, :221:{44,80}, :224:31
-        sb_mem_7_bits_executed <=
-          ~_GEN_125 & ((&io_wb_data_1_bits_id) | (_GEN_99 ? _GEN_116 : _GEN_95));	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31, :206:{50,65}, :207:46, :209:46, :221:{44,80}, :224:31
-      end
-      else if (_GEN_99) begin	// playground/src/issue/Scoreboard.scala:206:50
-        if (_GEN_107) begin	// playground/src/issue/Scoreboard.scala:221:44
-          sb_mem_0_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          sb_mem_1_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          sb_mem_2_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          sb_mem_3_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          sb_mem_4_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          sb_mem_5_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          sb_mem_6_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          sb_mem_7_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-        end
-        else begin	// playground/src/issue/Scoreboard.scala:221:44
-          if (_GEN_100)	// playground/src/issue/Scoreboard.scala:207:46
-            sb_mem_0_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
-          else if (_GEN_63)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-            sb_mem_0_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          if (_GEN_101)	// playground/src/issue/Scoreboard.scala:207:46
-            sb_mem_1_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
-          else if (_GEN_63)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-            sb_mem_1_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          if (_GEN_102)	// playground/src/issue/Scoreboard.scala:207:46
-            sb_mem_2_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
-          else if (_GEN_63)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-            sb_mem_2_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          if (_GEN_103)	// playground/src/issue/Scoreboard.scala:207:46
-            sb_mem_3_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
-          else if (_GEN_63)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-            sb_mem_3_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          if (_GEN_104)	// playground/src/issue/Scoreboard.scala:207:46
-            sb_mem_4_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
-          else if (_GEN_63)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-            sb_mem_4_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          if (_GEN_105)	// playground/src/issue/Scoreboard.scala:207:46
-            sb_mem_5_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
-          else if (_GEN_63)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-            sb_mem_5_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          if (_GEN_106)	// playground/src/issue/Scoreboard.scala:207:46
-            sb_mem_6_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
-          else if (_GEN_63)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-            sb_mem_6_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          if (&io_wb_data_0_bits_id)	// playground/src/issue/Scoreboard.scala:207:46
-            sb_mem_7_bits_result <= io_wb_data_0_bits_result;	// playground/src/issue/Scoreboard.scala:76:25
-          else if (_GEN_63)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-            sb_mem_7_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-        end
-        sb_mem_0_bits_executed <= _GEN_109;	// playground/src/issue/Scoreboard.scala:76:25, :209:46, :221:80, :224:31
-        sb_mem_1_bits_executed <= _GEN_110;	// playground/src/issue/Scoreboard.scala:76:25, :209:46, :221:80, :224:31
-        sb_mem_2_bits_executed <= _GEN_111;	// playground/src/issue/Scoreboard.scala:76:25, :209:46, :221:80, :224:31
-        sb_mem_3_bits_executed <= _GEN_112;	// playground/src/issue/Scoreboard.scala:76:25, :209:46, :221:80, :224:31
-        sb_mem_4_bits_executed <= _GEN_113;	// playground/src/issue/Scoreboard.scala:76:25, :209:46, :221:80, :224:31
-        sb_mem_5_bits_executed <= _GEN_114;	// playground/src/issue/Scoreboard.scala:76:25, :209:46, :221:80, :224:31
-        sb_mem_6_bits_executed <= _GEN_115;	// playground/src/issue/Scoreboard.scala:76:25, :209:46, :221:80, :224:31
-        sb_mem_7_bits_executed <= _GEN_116;	// playground/src/issue/Scoreboard.scala:76:25, :209:46, :221:80, :224:31
-      end
-      else begin	// playground/src/issue/Scoreboard.scala:206:50
-        if (_GEN_63) begin	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
-          sb_mem_0_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          sb_mem_1_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          sb_mem_2_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          sb_mem_3_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          sb_mem_4_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          sb_mem_5_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          sb_mem_6_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-          sb_mem_7_bits_result <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-        end
-        sb_mem_0_bits_executed <= _GEN_67;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
-        sb_mem_1_bits_executed <= _GEN_71;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
-        sb_mem_2_bits_executed <= _GEN_75;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
-        sb_mem_3_bits_executed <= _GEN_79;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
-        sb_mem_4_bits_executed <= _GEN_83;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
-        sb_mem_5_bits_executed <= _GEN_87;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
-        sb_mem_6_bits_executed <= _GEN_91;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
-        sb_mem_7_bits_executed <= _GEN_95;	// playground/src/issue/Scoreboard.scala:76:25, :169:22, :172:42, :187:38, :191:31
-      end
+                    : _GEN_68)
+             : _GEN_68);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :191:31, :206:{23,50,65}, :207:46, :212:{18,46}, :213:39, :221:{44,80}, :224:31
       sb_mem_0_bits_br_info_valid <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_54 : ~_GEN_63 & _GEN_54);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
-      if (_GEN_127)	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_57 : ~_GEN_66 & _GEN_57);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+      if (_GEN_130)	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
         sb_mem_0_bits_br_info_bits_pc <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-      else if (_GEN_14)	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      else if (_GEN_17)	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
         sb_mem_0_bits_br_info_bits_pc <= io_from_decoder_bits_pc;	// playground/src/issue/Scoreboard.scala:76:25
       sb_mem_0_bits_br_info_bits_mispred <=
-        ~(_GEN_117 & (_GEN_125 | _GEN_118))
-        & (_GEN_99
-             ? ~_GEN_107 & (_GEN_100 ? io_wb_data_0_bits_mispred : _GEN_66)
-             : _GEN_66);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :206:{50,65}, :207:46, :212:46, :221:{44,80}, :224:31
+        ~(_GEN_120 & (_GEN_128 | _GEN_121))
+        & (_GEN_102
+             ? ~_GEN_110 & (_GEN_103 ? io_wb_data_0_bits_mispred : _GEN_69)
+             : _GEN_69);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :206:{50,65}, :207:46, :212:46, :221:{44,80}, :224:31
       sb_mem_1_valid <=
-        ~_GEN_126 & (_GEN_99 ? ~(_GEN_107 | _GEN_68) & _GEN_17 : ~_GEN_68 & _GEN_17);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :169:22, :171:42, :187:38, :191:31, :206:{50,65}, :221:{44,80}, :222:27, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~(_GEN_110 | _GEN_71) & _GEN_20 : ~_GEN_71 & _GEN_20);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :169:22, :171:42, :187:38, :191:31, :206:{50,65}, :221:{44,80}, :222:27, :224:31
       sb_mem_1_bits_decoded_inst_regwen <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_32 : ~_GEN_63 & _GEN_32);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
-      if (_GEN_127) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_35 : ~_GEN_66 & _GEN_35);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+      if (_GEN_130) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
         sb_mem_1_bits_decoded_inst_futype <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
         sb_mem_1_bits_decoded_inst_fuoptype <= 4'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       end
-      else if (_GEN_16) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      else if (_GEN_19) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
         sb_mem_1_bits_decoded_inst_futype <= io_from_decoder_bits_decoded_inst_futype;	// playground/src/issue/Scoreboard.scala:76:25
         sb_mem_1_bits_decoded_inst_fuoptype <= io_from_decoder_bits_decoded_inst_fuoptype;	// playground/src/issue/Scoreboard.scala:76:25
       end
       sb_mem_1_bits_decoded_inst_dest_rs1 <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_33 : ~_GEN_63 & _GEN_33);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
-      if (_GEN_127) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_36 : ~_GEN_66 & _GEN_36);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+      if (_GEN_130) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
         sb_mem_1_bits_raw_inst <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
         sb_mem_1_bits_rs1 <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
         sb_mem_1_bits_rd <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       end
-      else if (_GEN_16) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      else if (_GEN_19) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
         sb_mem_1_bits_raw_inst <= io_from_decoder_bits_inst;	// playground/src/issue/Scoreboard.scala:76:25
         sb_mem_1_bits_rs1 <= io_from_decoder_bits_inst[19:15];	// playground/src/ISA/riscv32/ISA.scala:42:48, playground/src/issue/Scoreboard.scala:76:25
         sb_mem_1_bits_rd <= io_from_decoder_bits_inst[11:7];	// playground/src/ISA/riscv32/ISA.scala:43:48, playground/src/issue/Scoreboard.scala:76:25
       end
       sb_mem_1_bits_frontend_excp <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_47 : ~_GEN_63 & _GEN_47);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_50 : ~_GEN_66 & _GEN_50);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
       sb_mem_1_bits_exception <=
-        ~(_GEN_117 & (_GEN_125 | ~_GEN_96[io_wb_data_1_bits_id] & _GEN_119))
-        & (_GEN_99
-             ? ~_GEN_107
-               & (~_GEN_96[io_wb_data_0_bits_id] & _GEN_101
+        ~(_GEN_120 & (_GEN_128 | ~_GEN_99[io_wb_data_1_bits_id] & _GEN_122))
+        & (_GEN_102
+             ? ~_GEN_110
+               & (~_GEN_99[io_wb_data_0_bits_id] & _GEN_104
                     ? io_wb_data_0_bits_exception
-                    : _GEN_69)
-             : _GEN_69);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :191:31, :206:{23,50,65}, :207:46, :212:{18,46}, :213:39, :221:{44,80}, :224:31
+                    : _GEN_72)
+             : _GEN_72);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :191:31, :206:{23,50,65}, :207:46, :212:{18,46}, :213:39, :221:{44,80}, :224:31
       sb_mem_1_bits_br_info_valid <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_55 : ~_GEN_63 & _GEN_55);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
-      if (_GEN_127)	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_58 : ~_GEN_66 & _GEN_58);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+      if (_GEN_130)	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
         sb_mem_1_bits_br_info_bits_pc <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-      else if (_GEN_16)	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      else if (_GEN_19)	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
         sb_mem_1_bits_br_info_bits_pc <= io_from_decoder_bits_pc;	// playground/src/issue/Scoreboard.scala:76:25
       sb_mem_1_bits_br_info_bits_mispred <=
-        ~(_GEN_117 & (_GEN_125 | _GEN_119))
-        & (_GEN_99
-             ? ~_GEN_107 & (_GEN_101 ? io_wb_data_0_bits_mispred : _GEN_70)
-             : _GEN_70);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :206:{50,65}, :207:46, :212:46, :221:{44,80}, :224:31
+        ~(_GEN_120 & (_GEN_128 | _GEN_122))
+        & (_GEN_102
+             ? ~_GEN_110 & (_GEN_104 ? io_wb_data_0_bits_mispred : _GEN_73)
+             : _GEN_73);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :206:{50,65}, :207:46, :212:46, :221:{44,80}, :224:31
       sb_mem_2_valid <=
-        ~_GEN_126 & (_GEN_99 ? ~(_GEN_107 | _GEN_72) & _GEN_19 : ~_GEN_72 & _GEN_19);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :169:22, :171:42, :187:38, :191:31, :206:{50,65}, :221:{44,80}, :222:27, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~(_GEN_110 | _GEN_75) & _GEN_22 : ~_GEN_75 & _GEN_22);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :169:22, :171:42, :187:38, :191:31, :206:{50,65}, :221:{44,80}, :222:27, :224:31
       sb_mem_2_bits_decoded_inst_regwen <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_34 : ~_GEN_63 & _GEN_34);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
-      if (_GEN_127) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_37 : ~_GEN_66 & _GEN_37);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+      if (_GEN_130) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
         sb_mem_2_bits_decoded_inst_futype <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
         sb_mem_2_bits_decoded_inst_fuoptype <= 4'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       end
-      else if (_GEN_18) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      else if (_GEN_21) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
         sb_mem_2_bits_decoded_inst_futype <= io_from_decoder_bits_decoded_inst_futype;	// playground/src/issue/Scoreboard.scala:76:25
         sb_mem_2_bits_decoded_inst_fuoptype <= io_from_decoder_bits_decoded_inst_fuoptype;	// playground/src/issue/Scoreboard.scala:76:25
       end
       sb_mem_2_bits_decoded_inst_dest_rs1 <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_35 : ~_GEN_63 & _GEN_35);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
-      if (_GEN_127) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_38 : ~_GEN_66 & _GEN_38);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+      if (_GEN_130) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
         sb_mem_2_bits_raw_inst <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
         sb_mem_2_bits_rs1 <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
         sb_mem_2_bits_rd <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       end
-      else if (_GEN_18) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      else if (_GEN_21) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
         sb_mem_2_bits_raw_inst <= io_from_decoder_bits_inst;	// playground/src/issue/Scoreboard.scala:76:25
         sb_mem_2_bits_rs1 <= io_from_decoder_bits_inst[19:15];	// playground/src/ISA/riscv32/ISA.scala:42:48, playground/src/issue/Scoreboard.scala:76:25
         sb_mem_2_bits_rd <= io_from_decoder_bits_inst[11:7];	// playground/src/ISA/riscv32/ISA.scala:43:48, playground/src/issue/Scoreboard.scala:76:25
       end
       sb_mem_2_bits_frontend_excp <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_48 : ~_GEN_63 & _GEN_48);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_51 : ~_GEN_66 & _GEN_51);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
       sb_mem_2_bits_exception <=
-        ~(_GEN_117 & (_GEN_125 | ~_GEN_96[io_wb_data_1_bits_id] & _GEN_120))
-        & (_GEN_99
-             ? ~_GEN_107
-               & (~_GEN_96[io_wb_data_0_bits_id] & _GEN_102
+        ~(_GEN_120 & (_GEN_128 | ~_GEN_99[io_wb_data_1_bits_id] & _GEN_123))
+        & (_GEN_102
+             ? ~_GEN_110
+               & (~_GEN_99[io_wb_data_0_bits_id] & _GEN_105
                     ? io_wb_data_0_bits_exception
-                    : _GEN_73)
-             : _GEN_73);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :191:31, :206:{23,50,65}, :207:46, :212:{18,46}, :213:39, :221:{44,80}, :224:31
+                    : _GEN_76)
+             : _GEN_76);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :191:31, :206:{23,50,65}, :207:46, :212:{18,46}, :213:39, :221:{44,80}, :224:31
       sb_mem_2_bits_br_info_valid <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_56 : ~_GEN_63 & _GEN_56);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
-      if (_GEN_127)	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_59 : ~_GEN_66 & _GEN_59);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+      if (_GEN_130)	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
         sb_mem_2_bits_br_info_bits_pc <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-      else if (_GEN_18)	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      else if (_GEN_21)	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
         sb_mem_2_bits_br_info_bits_pc <= io_from_decoder_bits_pc;	// playground/src/issue/Scoreboard.scala:76:25
       sb_mem_2_bits_br_info_bits_mispred <=
-        ~(_GEN_117 & (_GEN_125 | _GEN_120))
-        & (_GEN_99
-             ? ~_GEN_107 & (_GEN_102 ? io_wb_data_0_bits_mispred : _GEN_74)
-             : _GEN_74);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :206:{50,65}, :207:46, :212:46, :221:{44,80}, :224:31
+        ~(_GEN_120 & (_GEN_128 | _GEN_123))
+        & (_GEN_102
+             ? ~_GEN_110 & (_GEN_105 ? io_wb_data_0_bits_mispred : _GEN_77)
+             : _GEN_77);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :206:{50,65}, :207:46, :212:46, :221:{44,80}, :224:31
       sb_mem_3_valid <=
-        ~_GEN_126 & (_GEN_99 ? ~(_GEN_107 | _GEN_76) & _GEN_21 : ~_GEN_76 & _GEN_21);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :169:22, :171:42, :187:38, :191:31, :206:{50,65}, :221:{44,80}, :222:27, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~(_GEN_110 | _GEN_79) & _GEN_24 : ~_GEN_79 & _GEN_24);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :169:22, :171:42, :187:38, :191:31, :206:{50,65}, :221:{44,80}, :222:27, :224:31
       sb_mem_3_bits_decoded_inst_regwen <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_36 : ~_GEN_63 & _GEN_36);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
-      if (_GEN_127) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_39 : ~_GEN_66 & _GEN_39);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+      if (_GEN_130) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
         sb_mem_3_bits_decoded_inst_futype <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
         sb_mem_3_bits_decoded_inst_fuoptype <= 4'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       end
-      else if (_GEN_20) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      else if (_GEN_23) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
         sb_mem_3_bits_decoded_inst_futype <= io_from_decoder_bits_decoded_inst_futype;	// playground/src/issue/Scoreboard.scala:76:25
         sb_mem_3_bits_decoded_inst_fuoptype <= io_from_decoder_bits_decoded_inst_fuoptype;	// playground/src/issue/Scoreboard.scala:76:25
       end
       sb_mem_3_bits_decoded_inst_dest_rs1 <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_37 : ~_GEN_63 & _GEN_37);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
-      if (_GEN_127) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_40 : ~_GEN_66 & _GEN_40);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+      if (_GEN_130) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
         sb_mem_3_bits_raw_inst <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
         sb_mem_3_bits_rs1 <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
         sb_mem_3_bits_rd <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       end
-      else if (_GEN_20) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      else if (_GEN_23) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
         sb_mem_3_bits_raw_inst <= io_from_decoder_bits_inst;	// playground/src/issue/Scoreboard.scala:76:25
         sb_mem_3_bits_rs1 <= io_from_decoder_bits_inst[19:15];	// playground/src/ISA/riscv32/ISA.scala:42:48, playground/src/issue/Scoreboard.scala:76:25
         sb_mem_3_bits_rd <= io_from_decoder_bits_inst[11:7];	// playground/src/ISA/riscv32/ISA.scala:43:48, playground/src/issue/Scoreboard.scala:76:25
       end
       sb_mem_3_bits_frontend_excp <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_49 : ~_GEN_63 & _GEN_49);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_52 : ~_GEN_66 & _GEN_52);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
       sb_mem_3_bits_exception <=
-        ~(_GEN_117 & (_GEN_125 | ~_GEN_96[io_wb_data_1_bits_id] & _GEN_121))
-        & (_GEN_99
-             ? ~_GEN_107
-               & (~_GEN_96[io_wb_data_0_bits_id] & _GEN_103
+        ~(_GEN_120 & (_GEN_128 | ~_GEN_99[io_wb_data_1_bits_id] & _GEN_124))
+        & (_GEN_102
+             ? ~_GEN_110
+               & (~_GEN_99[io_wb_data_0_bits_id] & _GEN_106
                     ? io_wb_data_0_bits_exception
-                    : _GEN_77)
-             : _GEN_77);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :191:31, :206:{23,50,65}, :207:46, :212:{18,46}, :213:39, :221:{44,80}, :224:31
+                    : _GEN_80)
+             : _GEN_80);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :191:31, :206:{23,50,65}, :207:46, :212:{18,46}, :213:39, :221:{44,80}, :224:31
       sb_mem_3_bits_br_info_valid <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_57 : ~_GEN_63 & _GEN_57);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
-      if (_GEN_127)	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_60 : ~_GEN_66 & _GEN_60);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+      if (_GEN_130)	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
         sb_mem_3_bits_br_info_bits_pc <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-      else if (_GEN_20)	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      else if (_GEN_23)	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
         sb_mem_3_bits_br_info_bits_pc <= io_from_decoder_bits_pc;	// playground/src/issue/Scoreboard.scala:76:25
       sb_mem_3_bits_br_info_bits_mispred <=
-        ~(_GEN_117 & (_GEN_125 | _GEN_121))
-        & (_GEN_99
-             ? ~_GEN_107 & (_GEN_103 ? io_wb_data_0_bits_mispred : _GEN_78)
-             : _GEN_78);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :206:{50,65}, :207:46, :212:46, :221:{44,80}, :224:31
+        ~(_GEN_120 & (_GEN_128 | _GEN_124))
+        & (_GEN_102
+             ? ~_GEN_110 & (_GEN_106 ? io_wb_data_0_bits_mispred : _GEN_81)
+             : _GEN_81);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :206:{50,65}, :207:46, :212:46, :221:{44,80}, :224:31
       sb_mem_4_valid <=
-        ~_GEN_126 & (_GEN_99 ? ~(_GEN_107 | _GEN_80) & _GEN_23 : ~_GEN_80 & _GEN_23);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :169:22, :171:42, :187:38, :191:31, :206:{50,65}, :221:{44,80}, :222:27, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~(_GEN_110 | _GEN_83) & _GEN_26 : ~_GEN_83 & _GEN_26);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :169:22, :171:42, :187:38, :191:31, :206:{50,65}, :221:{44,80}, :222:27, :224:31
       sb_mem_4_bits_decoded_inst_regwen <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_38 : ~_GEN_63 & _GEN_38);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
-      if (_GEN_127) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_41 : ~_GEN_66 & _GEN_41);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+      if (_GEN_130) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
         sb_mem_4_bits_decoded_inst_futype <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
         sb_mem_4_bits_decoded_inst_fuoptype <= 4'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       end
-      else if (_GEN_22) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      else if (_GEN_25) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
         sb_mem_4_bits_decoded_inst_futype <= io_from_decoder_bits_decoded_inst_futype;	// playground/src/issue/Scoreboard.scala:76:25
         sb_mem_4_bits_decoded_inst_fuoptype <= io_from_decoder_bits_decoded_inst_fuoptype;	// playground/src/issue/Scoreboard.scala:76:25
       end
       sb_mem_4_bits_decoded_inst_dest_rs1 <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_39 : ~_GEN_63 & _GEN_39);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
-      if (_GEN_127) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_42 : ~_GEN_66 & _GEN_42);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+      if (_GEN_130) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
         sb_mem_4_bits_raw_inst <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
         sb_mem_4_bits_rs1 <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
         sb_mem_4_bits_rd <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       end
-      else if (_GEN_22) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      else if (_GEN_25) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
         sb_mem_4_bits_raw_inst <= io_from_decoder_bits_inst;	// playground/src/issue/Scoreboard.scala:76:25
         sb_mem_4_bits_rs1 <= io_from_decoder_bits_inst[19:15];	// playground/src/ISA/riscv32/ISA.scala:42:48, playground/src/issue/Scoreboard.scala:76:25
         sb_mem_4_bits_rd <= io_from_decoder_bits_inst[11:7];	// playground/src/ISA/riscv32/ISA.scala:43:48, playground/src/issue/Scoreboard.scala:76:25
       end
       sb_mem_4_bits_frontend_excp <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_50 : ~_GEN_63 & _GEN_50);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_53 : ~_GEN_66 & _GEN_53);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
       sb_mem_4_bits_exception <=
-        ~(_GEN_117 & (_GEN_125 | ~_GEN_96[io_wb_data_1_bits_id] & _GEN_122))
-        & (_GEN_99
-             ? ~_GEN_107
-               & (~_GEN_96[io_wb_data_0_bits_id] & _GEN_104
+        ~(_GEN_120 & (_GEN_128 | ~_GEN_99[io_wb_data_1_bits_id] & _GEN_125))
+        & (_GEN_102
+             ? ~_GEN_110
+               & (~_GEN_99[io_wb_data_0_bits_id] & _GEN_107
                     ? io_wb_data_0_bits_exception
-                    : _GEN_81)
-             : _GEN_81);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :191:31, :206:{23,50,65}, :207:46, :212:{18,46}, :213:39, :221:{44,80}, :224:31
+                    : _GEN_84)
+             : _GEN_84);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :191:31, :206:{23,50,65}, :207:46, :212:{18,46}, :213:39, :221:{44,80}, :224:31
       sb_mem_4_bits_br_info_valid <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_58 : ~_GEN_63 & _GEN_58);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
-      if (_GEN_127)	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_61 : ~_GEN_66 & _GEN_61);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+      if (_GEN_130)	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
         sb_mem_4_bits_br_info_bits_pc <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-      else if (_GEN_22)	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      else if (_GEN_25)	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
         sb_mem_4_bits_br_info_bits_pc <= io_from_decoder_bits_pc;	// playground/src/issue/Scoreboard.scala:76:25
       sb_mem_4_bits_br_info_bits_mispred <=
-        ~(_GEN_117 & (_GEN_125 | _GEN_122))
-        & (_GEN_99
-             ? ~_GEN_107 & (_GEN_104 ? io_wb_data_0_bits_mispred : _GEN_82)
-             : _GEN_82);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :206:{50,65}, :207:46, :212:46, :221:{44,80}, :224:31
+        ~(_GEN_120 & (_GEN_128 | _GEN_125))
+        & (_GEN_102
+             ? ~_GEN_110 & (_GEN_107 ? io_wb_data_0_bits_mispred : _GEN_85)
+             : _GEN_85);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :206:{50,65}, :207:46, :212:46, :221:{44,80}, :224:31
       sb_mem_5_valid <=
-        ~_GEN_126 & (_GEN_99 ? ~(_GEN_107 | _GEN_84) & _GEN_25 : ~_GEN_84 & _GEN_25);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :169:22, :171:42, :187:38, :191:31, :206:{50,65}, :221:{44,80}, :222:27, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~(_GEN_110 | _GEN_87) & _GEN_28 : ~_GEN_87 & _GEN_28);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :169:22, :171:42, :187:38, :191:31, :206:{50,65}, :221:{44,80}, :222:27, :224:31
       sb_mem_5_bits_decoded_inst_regwen <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_40 : ~_GEN_63 & _GEN_40);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
-      if (_GEN_127) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_43 : ~_GEN_66 & _GEN_43);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+      if (_GEN_130) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
         sb_mem_5_bits_decoded_inst_futype <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
         sb_mem_5_bits_decoded_inst_fuoptype <= 4'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       end
-      else if (_GEN_24) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      else if (_GEN_27) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
         sb_mem_5_bits_decoded_inst_futype <= io_from_decoder_bits_decoded_inst_futype;	// playground/src/issue/Scoreboard.scala:76:25
         sb_mem_5_bits_decoded_inst_fuoptype <= io_from_decoder_bits_decoded_inst_fuoptype;	// playground/src/issue/Scoreboard.scala:76:25
       end
       sb_mem_5_bits_decoded_inst_dest_rs1 <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_41 : ~_GEN_63 & _GEN_41);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
-      if (_GEN_127) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_44 : ~_GEN_66 & _GEN_44);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+      if (_GEN_130) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
         sb_mem_5_bits_raw_inst <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
         sb_mem_5_bits_rs1 <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
         sb_mem_5_bits_rd <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       end
-      else if (_GEN_24) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      else if (_GEN_27) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
         sb_mem_5_bits_raw_inst <= io_from_decoder_bits_inst;	// playground/src/issue/Scoreboard.scala:76:25
         sb_mem_5_bits_rs1 <= io_from_decoder_bits_inst[19:15];	// playground/src/ISA/riscv32/ISA.scala:42:48, playground/src/issue/Scoreboard.scala:76:25
         sb_mem_5_bits_rd <= io_from_decoder_bits_inst[11:7];	// playground/src/ISA/riscv32/ISA.scala:43:48, playground/src/issue/Scoreboard.scala:76:25
       end
       sb_mem_5_bits_frontend_excp <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_51 : ~_GEN_63 & _GEN_51);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_54 : ~_GEN_66 & _GEN_54);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
       sb_mem_5_bits_exception <=
-        ~(_GEN_117 & (_GEN_125 | ~_GEN_96[io_wb_data_1_bits_id] & _GEN_123))
-        & (_GEN_99
-             ? ~_GEN_107
-               & (~_GEN_96[io_wb_data_0_bits_id] & _GEN_105
+        ~(_GEN_120 & (_GEN_128 | ~_GEN_99[io_wb_data_1_bits_id] & _GEN_126))
+        & (_GEN_102
+             ? ~_GEN_110
+               & (~_GEN_99[io_wb_data_0_bits_id] & _GEN_108
                     ? io_wb_data_0_bits_exception
-                    : _GEN_85)
-             : _GEN_85);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :191:31, :206:{23,50,65}, :207:46, :212:{18,46}, :213:39, :221:{44,80}, :224:31
+                    : _GEN_88)
+             : _GEN_88);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :191:31, :206:{23,50,65}, :207:46, :212:{18,46}, :213:39, :221:{44,80}, :224:31
       sb_mem_5_bits_br_info_valid <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_59 : ~_GEN_63 & _GEN_59);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
-      if (_GEN_127)	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_62 : ~_GEN_66 & _GEN_62);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+      if (_GEN_130)	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
         sb_mem_5_bits_br_info_bits_pc <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-      else if (_GEN_24)	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      else if (_GEN_27)	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
         sb_mem_5_bits_br_info_bits_pc <= io_from_decoder_bits_pc;	// playground/src/issue/Scoreboard.scala:76:25
       sb_mem_5_bits_br_info_bits_mispred <=
-        ~(_GEN_117 & (_GEN_125 | _GEN_123))
-        & (_GEN_99
-             ? ~_GEN_107 & (_GEN_105 ? io_wb_data_0_bits_mispred : _GEN_86)
-             : _GEN_86);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :206:{50,65}, :207:46, :212:46, :221:{44,80}, :224:31
+        ~(_GEN_120 & (_GEN_128 | _GEN_126))
+        & (_GEN_102
+             ? ~_GEN_110 & (_GEN_108 ? io_wb_data_0_bits_mispred : _GEN_89)
+             : _GEN_89);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :206:{50,65}, :207:46, :212:46, :221:{44,80}, :224:31
       sb_mem_6_valid <=
-        ~_GEN_126 & (_GEN_99 ? ~(_GEN_107 | _GEN_88) & _GEN_27 : ~_GEN_88 & _GEN_27);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :169:22, :171:42, :187:38, :191:31, :206:{50,65}, :221:{44,80}, :222:27, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~(_GEN_110 | _GEN_91) & _GEN_30 : ~_GEN_91 & _GEN_30);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :169:22, :171:42, :187:38, :191:31, :206:{50,65}, :221:{44,80}, :222:27, :224:31
       sb_mem_6_bits_decoded_inst_regwen <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_42 : ~_GEN_63 & _GEN_42);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
-      if (_GEN_127) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_45 : ~_GEN_66 & _GEN_45);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+      if (_GEN_130) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
         sb_mem_6_bits_decoded_inst_futype <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
         sb_mem_6_bits_decoded_inst_fuoptype <= 4'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       end
-      else if (_GEN_26) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      else if (_GEN_29) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
         sb_mem_6_bits_decoded_inst_futype <= io_from_decoder_bits_decoded_inst_futype;	// playground/src/issue/Scoreboard.scala:76:25
         sb_mem_6_bits_decoded_inst_fuoptype <= io_from_decoder_bits_decoded_inst_fuoptype;	// playground/src/issue/Scoreboard.scala:76:25
       end
       sb_mem_6_bits_decoded_inst_dest_rs1 <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_43 : ~_GEN_63 & _GEN_43);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
-      if (_GEN_127) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_46 : ~_GEN_66 & _GEN_46);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+      if (_GEN_130) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
         sb_mem_6_bits_raw_inst <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
         sb_mem_6_bits_rs1 <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
         sb_mem_6_bits_rd <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       end
-      else if (_GEN_26) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      else if (_GEN_29) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
         sb_mem_6_bits_raw_inst <= io_from_decoder_bits_inst;	// playground/src/issue/Scoreboard.scala:76:25
         sb_mem_6_bits_rs1 <= io_from_decoder_bits_inst[19:15];	// playground/src/ISA/riscv32/ISA.scala:42:48, playground/src/issue/Scoreboard.scala:76:25
         sb_mem_6_bits_rd <= io_from_decoder_bits_inst[11:7];	// playground/src/ISA/riscv32/ISA.scala:43:48, playground/src/issue/Scoreboard.scala:76:25
       end
       sb_mem_6_bits_frontend_excp <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_52 : ~_GEN_63 & _GEN_52);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_55 : ~_GEN_66 & _GEN_55);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
       sb_mem_6_bits_exception <=
-        ~(_GEN_117 & (_GEN_125 | ~_GEN_96[io_wb_data_1_bits_id] & _GEN_124))
-        & (_GEN_99
-             ? ~_GEN_107
-               & (~_GEN_96[io_wb_data_0_bits_id] & _GEN_106
+        ~(_GEN_120 & (_GEN_128 | ~_GEN_99[io_wb_data_1_bits_id] & _GEN_127))
+        & (_GEN_102
+             ? ~_GEN_110
+               & (~_GEN_99[io_wb_data_0_bits_id] & _GEN_109
                     ? io_wb_data_0_bits_exception
-                    : _GEN_89)
-             : _GEN_89);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :191:31, :206:{23,50,65}, :207:46, :212:{18,46}, :213:39, :221:{44,80}, :224:31
+                    : _GEN_92)
+             : _GEN_92);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :191:31, :206:{23,50,65}, :207:46, :212:{18,46}, :213:39, :221:{44,80}, :224:31
       sb_mem_6_bits_br_info_valid <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_60 : ~_GEN_63 & _GEN_60);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
-      if (_GEN_127)	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_63 : ~_GEN_66 & _GEN_63);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+      if (_GEN_130)	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
         sb_mem_6_bits_br_info_bits_pc <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-      else if (_GEN_26)	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      else if (_GEN_29)	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
         sb_mem_6_bits_br_info_bits_pc <= io_from_decoder_bits_pc;	// playground/src/issue/Scoreboard.scala:76:25
       sb_mem_6_bits_br_info_bits_mispred <=
-        ~(_GEN_117 & (_GEN_125 | _GEN_124))
-        & (_GEN_99
-             ? ~_GEN_107 & (_GEN_106 ? io_wb_data_0_bits_mispred : _GEN_90)
-             : _GEN_90);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :206:{50,65}, :207:46, :212:46, :221:{44,80}, :224:31
+        ~(_GEN_120 & (_GEN_128 | _GEN_127))
+        & (_GEN_102
+             ? ~_GEN_110 & (_GEN_109 ? io_wb_data_0_bits_mispred : _GEN_93)
+             : _GEN_93);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :206:{50,65}, :207:46, :212:46, :221:{44,80}, :224:31
       sb_mem_7_valid <=
-        ~_GEN_126 & (_GEN_99 ? ~(_GEN_107 | _GEN_92) & _GEN_29 : ~_GEN_92 & _GEN_29);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :169:22, :171:42, :187:38, :191:31, :206:{50,65}, :221:{44,80}, :222:27, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~(_GEN_110 | _GEN_95) & _GEN_32 : ~_GEN_95 & _GEN_32);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45, :169:22, :171:42, :187:38, :191:31, :206:{50,65}, :221:{44,80}, :222:27, :224:31
       sb_mem_7_bits_decoded_inst_regwen <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_44 : ~_GEN_63 & _GEN_44);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
-      if (_GEN_127) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_47 : ~_GEN_66 & _GEN_47);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+      if (_GEN_130) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
         sb_mem_7_bits_decoded_inst_futype <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
         sb_mem_7_bits_decoded_inst_fuoptype <= 4'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       end
-      else if (_GEN_28) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      else if (_GEN_31) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
         sb_mem_7_bits_decoded_inst_futype <= io_from_decoder_bits_decoded_inst_futype;	// playground/src/issue/Scoreboard.scala:76:25
         sb_mem_7_bits_decoded_inst_fuoptype <= io_from_decoder_bits_decoded_inst_fuoptype;	// playground/src/issue/Scoreboard.scala:76:25
       end
       sb_mem_7_bits_decoded_inst_dest_rs1 <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_45 : ~_GEN_63 & _GEN_45);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
-      if (_GEN_127) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_48 : ~_GEN_66 & _GEN_48);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :107:45, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+      if (_GEN_130) begin	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
         sb_mem_7_bits_raw_inst <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
         sb_mem_7_bits_rs1 <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
         sb_mem_7_bits_rd <= 5'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
       end
-      else if (_GEN_28) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      else if (_GEN_31) begin	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
         sb_mem_7_bits_raw_inst <= io_from_decoder_bits_inst;	// playground/src/issue/Scoreboard.scala:76:25
         sb_mem_7_bits_rs1 <= io_from_decoder_bits_inst[19:15];	// playground/src/ISA/riscv32/ISA.scala:42:48, playground/src/issue/Scoreboard.scala:76:25
         sb_mem_7_bits_rd <= io_from_decoder_bits_inst[11:7];	// playground/src/ISA/riscv32/ISA.scala:43:48, playground/src/issue/Scoreboard.scala:76:25
       end
       sb_mem_7_bits_frontend_excp <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_53 : ~_GEN_63 & _GEN_53);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_56 : ~_GEN_66 & _GEN_56);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :111:46, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
       sb_mem_7_bits_exception <=
-        ~(_GEN_117
-          & (_GEN_125 | ~_GEN_96[io_wb_data_1_bits_id] & (&io_wb_data_1_bits_id)))
-        & (_GEN_99
-             ? ~_GEN_107
-               & (~_GEN_96[io_wb_data_0_bits_id] & (&io_wb_data_0_bits_id)
+        ~(_GEN_120
+          & (_GEN_128 | ~_GEN_99[io_wb_data_1_bits_id] & (&io_wb_data_1_bits_id)))
+        & (_GEN_102
+             ? ~_GEN_110
+               & (~_GEN_99[io_wb_data_0_bits_id] & (&io_wb_data_0_bits_id)
                     ? io_wb_data_0_bits_exception
-                    : _GEN_93)
-             : _GEN_93);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :191:31, :206:{23,50,65}, :207:46, :212:{18,46}, :213:39, :221:{44,80}, :224:31
+                    : _GEN_96)
+             : _GEN_96);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :191:31, :206:{23,50,65}, :207:46, :212:{18,46}, :213:39, :221:{44,80}, :224:31
       sb_mem_7_bits_br_info_valid <=
-        ~_GEN_126 & (_GEN_99 ? ~_GEN_108 & _GEN_61 : ~_GEN_63 & _GEN_61);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
-      if (_GEN_127)	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
+        ~_GEN_129 & (_GEN_102 ? ~_GEN_111 & _GEN_64 : ~_GEN_66 & _GEN_64);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :119:53, :169:22, :187:38, :188:23, :191:31, :206:{50,65}, :221:80, :222:27, :224:31
+      if (_GEN_130)	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :224:31
         sb_mem_7_bits_br_info_bits_pc <= 32'h0;	// playground/src/issue/Scoreboard.scala:74:32, :76:25
-      else if (_GEN_28)	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
+      else if (_GEN_31)	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :103:45
         sb_mem_7_bits_br_info_bits_pc <= io_from_decoder_bits_pc;	// playground/src/issue/Scoreboard.scala:76:25
       sb_mem_7_bits_br_info_bits_mispred <=
-        ~(_GEN_117 & (_GEN_125 | (&io_wb_data_1_bits_id)))
-        & (_GEN_99
-             ? ~_GEN_107 & ((&io_wb_data_0_bits_id) ? io_wb_data_0_bits_mispred : _GEN_94)
-             : _GEN_94);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :206:{50,65}, :207:46, :212:46, :221:{44,80}, :224:31
+        ~(_GEN_120 & (_GEN_128 | (&io_wb_data_1_bits_id)))
+        & (_GEN_102
+             ? ~_GEN_110 & ((&io_wb_data_0_bits_id) ? io_wb_data_0_bits_mispred : _GEN_97)
+             : _GEN_97);	// playground/src/issue/Scoreboard.scala:76:25, :101:21, :169:22, :187:38, :206:{50,65}, :207:46, :212:46, :221:{44,80}, :224:31
       if (commit_ack)	// playground/src/issue/Scoreboard.scala:82:43
         commit_ptr <= _issue_ptr_T_2;	// playground/src/issue/Scoreboard.scala:78:29, :170:56
-      if (_GEN_126)	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :222:27
+      if (_GEN_129)	// playground/src/issue/Scoreboard.scala:206:65, :221:80, :222:27
         issue_ptr <= commit_ptr + 3'h1;	// playground/src/issue/Scoreboard.scala:78:29, :79:29, :103:45, :222:41
-      else if (_GEN_99 & _GEN_107)	// playground/src/issue/Scoreboard.scala:169:22, :206:{50,65}, :221:{44,80}, :222:27
+      else if (_GEN_102 & _GEN_110)	// playground/src/issue/Scoreboard.scala:169:22, :206:{50,65}, :221:{44,80}, :222:27
         issue_ptr <= commit_ptr + 3'h1;	// playground/src/issue/Scoreboard.scala:78:29, :79:29, :103:45, :222:41
-      else if (_GEN_63)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
+      else if (_GEN_66)	// playground/src/issue/Scoreboard.scala:101:21, :169:22, :187:38, :188:23
         issue_ptr <= _issue_ptr_T_2;	// playground/src/issue/Scoreboard.scala:79:29, :170:56
       else if (issue_ack)	// playground/src/issue/Scoreboard.scala:83:42
         issue_ptr <= issue_ptr + 3'h1;	// playground/src/issue/Scoreboard.scala:79:29, :102:58, :103:45
@@ -4040,146 +4597,170 @@ module Scoreboard(	// <stdin>:2446:3
         issued_cnt <= issued_cnt - 3'h1;	// playground/src/issue/Scoreboard.scala:80:29, :90:50
     end
   end // always @(posedge)
-  `ifdef ENABLE_INITIAL_REG_	// <stdin>:2446:3
-    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:2446:3
-      `FIRRTL_BEFORE_INITIAL	// <stdin>:2446:3
+  `ifdef ENABLE_INITIAL_REG_	// <stdin>:2760:3
+    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:2760:3
+      `FIRRTL_BEFORE_INITIAL	// <stdin>:2760:3
     `endif // FIRRTL_BEFORE_INITIAL
-    initial begin	// <stdin>:2446:3
-      automatic logic [31:0] _RANDOM[0:82];	// <stdin>:2446:3
-      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:2446:3
-        `INIT_RANDOM_PROLOG_	// <stdin>:2446:3
+    initial begin	// <stdin>:2760:3
+      automatic logic [31:0] _RANDOM[0:82];	// <stdin>:2760:3
+      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:2760:3
+        `INIT_RANDOM_PROLOG_	// <stdin>:2760:3
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// <stdin>:2446:3
+      `ifdef RANDOMIZE_REG_INIT	// <stdin>:2760:3
         for (logic [6:0] i = 7'h0; i < 7'h53; i += 7'h1) begin
-          _RANDOM[i] = `RANDOM;	// <stdin>:2446:3
-        end	// <stdin>:2446:3
-        sb_mem_0_valid = _RANDOM[7'h0][0];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_0_bits_decoded_inst_regwen = _RANDOM[7'h0][1];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_0_bits_decoded_inst_futype = _RANDOM[7'h0][12:8];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_0_bits_decoded_inst_fuoptype = _RANDOM[7'h0][16:13];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_0_bits_decoded_inst_dest_rs1 = _RANDOM[7'h0][17];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_0_bits_raw_inst = {_RANDOM[7'h2][31:21], _RANDOM[7'h3][20:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_0_bits_rs1 = _RANDOM[7'h6][30:26];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_0_bits_rd = {_RANDOM[7'h6][31], _RANDOM[7'h7][3:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_0_bits_frontend_excp = _RANDOM[7'h7][4];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_0_bits_exception = _RANDOM[7'h7][5];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_0_bits_result = {_RANDOM[7'h7][31:6], _RANDOM[7'h8][5:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_0_bits_br_info_valid = _RANDOM[7'h8][6];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_0_bits_br_info_bits_pc = {_RANDOM[7'h8][31:7], _RANDOM[7'h9][6:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_0_bits_br_info_bits_mispred = _RANDOM[7'hA][8];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_0_bits_executed = _RANDOM[7'hA][9];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_1_valid = _RANDOM[7'hA][10];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_1_bits_decoded_inst_regwen = _RANDOM[7'hA][11];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_1_bits_decoded_inst_futype = _RANDOM[7'hA][22:18];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_1_bits_decoded_inst_fuoptype = _RANDOM[7'hA][26:23];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_1_bits_decoded_inst_dest_rs1 = _RANDOM[7'hA][27];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_1_bits_raw_inst = {_RANDOM[7'hC][31], _RANDOM[7'hD][30:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_1_bits_rs1 = _RANDOM[7'h11][8:4];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_1_bits_rd = _RANDOM[7'h11][13:9];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_1_bits_frontend_excp = _RANDOM[7'h11][14];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_1_bits_exception = _RANDOM[7'h11][15];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_1_bits_result = {_RANDOM[7'h11][31:16], _RANDOM[7'h12][15:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_1_bits_br_info_valid = _RANDOM[7'h12][16];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_1_bits_br_info_bits_pc = {_RANDOM[7'h12][31:17], _RANDOM[7'h13][16:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_1_bits_br_info_bits_mispred = _RANDOM[7'h14][18];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_1_bits_executed = _RANDOM[7'h14][19];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_2_valid = _RANDOM[7'h14][20];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_2_bits_decoded_inst_regwen = _RANDOM[7'h14][21];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_2_bits_decoded_inst_futype = {_RANDOM[7'h14][31:28], _RANDOM[7'h15][0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_2_bits_decoded_inst_fuoptype = _RANDOM[7'h15][4:1];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_2_bits_decoded_inst_dest_rs1 = _RANDOM[7'h15][5];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_2_bits_raw_inst = {_RANDOM[7'h17][31:9], _RANDOM[7'h18][8:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_2_bits_rs1 = _RANDOM[7'h1B][18:14];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_2_bits_rd = _RANDOM[7'h1B][23:19];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_2_bits_frontend_excp = _RANDOM[7'h1B][24];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_2_bits_exception = _RANDOM[7'h1B][25];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_2_bits_result = {_RANDOM[7'h1B][31:26], _RANDOM[7'h1C][25:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_2_bits_br_info_valid = _RANDOM[7'h1C][26];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_2_bits_br_info_bits_pc = {_RANDOM[7'h1C][31:27], _RANDOM[7'h1D][26:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_2_bits_br_info_bits_mispred = _RANDOM[7'h1E][28];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_2_bits_executed = _RANDOM[7'h1E][29];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_3_valid = _RANDOM[7'h1E][30];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_3_bits_decoded_inst_regwen = _RANDOM[7'h1E][31];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_3_bits_decoded_inst_futype = _RANDOM[7'h1F][10:6];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_3_bits_decoded_inst_fuoptype = _RANDOM[7'h1F][14:11];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_3_bits_decoded_inst_dest_rs1 = _RANDOM[7'h1F][15];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_3_bits_raw_inst = {_RANDOM[7'h21][31:19], _RANDOM[7'h22][18:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_3_bits_rs1 = _RANDOM[7'h25][28:24];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_3_bits_rd = {_RANDOM[7'h25][31:29], _RANDOM[7'h26][1:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_3_bits_frontend_excp = _RANDOM[7'h26][2];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_3_bits_exception = _RANDOM[7'h26][3];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_3_bits_result = {_RANDOM[7'h26][31:4], _RANDOM[7'h27][3:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_3_bits_br_info_valid = _RANDOM[7'h27][4];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_3_bits_br_info_bits_pc = {_RANDOM[7'h27][31:5], _RANDOM[7'h28][4:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_3_bits_br_info_bits_mispred = _RANDOM[7'h29][6];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_3_bits_executed = _RANDOM[7'h29][7];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_4_valid = _RANDOM[7'h29][8];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_4_bits_decoded_inst_regwen = _RANDOM[7'h29][9];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_4_bits_decoded_inst_futype = _RANDOM[7'h29][20:16];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_4_bits_decoded_inst_fuoptype = _RANDOM[7'h29][24:21];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_4_bits_decoded_inst_dest_rs1 = _RANDOM[7'h29][25];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_4_bits_raw_inst = {_RANDOM[7'h2B][31:29], _RANDOM[7'h2C][28:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_4_bits_rs1 = _RANDOM[7'h30][6:2];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_4_bits_rd = _RANDOM[7'h30][11:7];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_4_bits_frontend_excp = _RANDOM[7'h30][12];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_4_bits_exception = _RANDOM[7'h30][13];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_4_bits_result = {_RANDOM[7'h30][31:14], _RANDOM[7'h31][13:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_4_bits_br_info_valid = _RANDOM[7'h31][14];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_4_bits_br_info_bits_pc = {_RANDOM[7'h31][31:15], _RANDOM[7'h32][14:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_4_bits_br_info_bits_mispred = _RANDOM[7'h33][16];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_4_bits_executed = _RANDOM[7'h33][17];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_5_valid = _RANDOM[7'h33][18];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_5_bits_decoded_inst_regwen = _RANDOM[7'h33][19];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_5_bits_decoded_inst_futype = _RANDOM[7'h33][30:26];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_5_bits_decoded_inst_fuoptype = {_RANDOM[7'h33][31], _RANDOM[7'h34][2:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_5_bits_decoded_inst_dest_rs1 = _RANDOM[7'h34][3];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_5_bits_raw_inst = {_RANDOM[7'h36][31:7], _RANDOM[7'h37][6:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_5_bits_rs1 = _RANDOM[7'h3A][16:12];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_5_bits_rd = _RANDOM[7'h3A][21:17];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_5_bits_frontend_excp = _RANDOM[7'h3A][22];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_5_bits_exception = _RANDOM[7'h3A][23];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_5_bits_result = {_RANDOM[7'h3A][31:24], _RANDOM[7'h3B][23:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_5_bits_br_info_valid = _RANDOM[7'h3B][24];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_5_bits_br_info_bits_pc = {_RANDOM[7'h3B][31:25], _RANDOM[7'h3C][24:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_5_bits_br_info_bits_mispred = _RANDOM[7'h3D][26];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_5_bits_executed = _RANDOM[7'h3D][27];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_6_valid = _RANDOM[7'h3D][28];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_6_bits_decoded_inst_regwen = _RANDOM[7'h3D][29];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_6_bits_decoded_inst_futype = _RANDOM[7'h3E][8:4];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_6_bits_decoded_inst_fuoptype = _RANDOM[7'h3E][12:9];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_6_bits_decoded_inst_dest_rs1 = _RANDOM[7'h3E][13];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_6_bits_raw_inst = {_RANDOM[7'h40][31:17], _RANDOM[7'h41][16:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_6_bits_rs1 = _RANDOM[7'h44][26:22];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_6_bits_rd = _RANDOM[7'h44][31:27];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_6_bits_frontend_excp = _RANDOM[7'h45][0];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_6_bits_exception = _RANDOM[7'h45][1];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_6_bits_result = {_RANDOM[7'h45][31:2], _RANDOM[7'h46][1:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_6_bits_br_info_valid = _RANDOM[7'h46][2];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_6_bits_br_info_bits_pc = {_RANDOM[7'h46][31:3], _RANDOM[7'h47][2:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_6_bits_br_info_bits_mispred = _RANDOM[7'h48][4];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_6_bits_executed = _RANDOM[7'h48][5];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_7_valid = _RANDOM[7'h48][6];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_7_bits_decoded_inst_regwen = _RANDOM[7'h48][7];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_7_bits_decoded_inst_futype = _RANDOM[7'h48][18:14];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_7_bits_decoded_inst_fuoptype = _RANDOM[7'h48][22:19];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_7_bits_decoded_inst_dest_rs1 = _RANDOM[7'h48][23];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_7_bits_raw_inst = {_RANDOM[7'h4A][31:27], _RANDOM[7'h4B][26:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_7_bits_rs1 = _RANDOM[7'h4F][4:0];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_7_bits_rd = _RANDOM[7'h4F][9:5];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_7_bits_frontend_excp = _RANDOM[7'h4F][10];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_7_bits_exception = _RANDOM[7'h4F][11];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_7_bits_result = {_RANDOM[7'h4F][31:12], _RANDOM[7'h50][11:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_7_bits_br_info_valid = _RANDOM[7'h50][12];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_7_bits_br_info_bits_pc = {_RANDOM[7'h50][31:13], _RANDOM[7'h51][12:0]};	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_7_bits_br_info_bits_mispred = _RANDOM[7'h52][14];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        sb_mem_7_bits_executed = _RANDOM[7'h52][15];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25
-        commit_ptr = _RANDOM[7'h52][18:16];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25, :78:29
-        issue_ptr = _RANDOM[7'h52][21:19];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25, :79:29
-        issued_cnt = _RANDOM[7'h52][24:22];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25, :80:29
+          _RANDOM[i] = `RANDOM;	// <stdin>:2760:3
+        end	// <stdin>:2760:3
+        sb_mem_0_valid = _RANDOM[7'h0][0];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_0_bits_decoded_inst_regwen = _RANDOM[7'h0][1];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_0_bits_decoded_inst_futype = _RANDOM[7'h0][12:8];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_0_bits_decoded_inst_fuoptype = _RANDOM[7'h0][16:13];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_0_bits_decoded_inst_dest_rs1 = _RANDOM[7'h0][17];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_0_bits_raw_inst = {_RANDOM[7'h2][31:21], _RANDOM[7'h3][20:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_0_bits_lsu_diff_paddr = {_RANDOM[7'h3][31:21], _RANDOM[7'h4][20:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_0_bits_lsu_diff_vaddr = {_RANDOM[7'h4][31:21], _RANDOM[7'h5][20:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_0_bits_lsu_diff_wdata = {_RANDOM[7'h5][31:21], _RANDOM[7'h6][20:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_0_bits_rs1 = _RANDOM[7'h6][30:26];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_0_bits_rd = {_RANDOM[7'h6][31], _RANDOM[7'h7][3:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_0_bits_frontend_excp = _RANDOM[7'h7][4];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_0_bits_exception = _RANDOM[7'h7][5];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_0_bits_result = {_RANDOM[7'h7][31:6], _RANDOM[7'h8][5:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_0_bits_br_info_valid = _RANDOM[7'h8][6];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_0_bits_br_info_bits_pc = {_RANDOM[7'h8][31:7], _RANDOM[7'h9][6:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_0_bits_br_info_bits_mispred = _RANDOM[7'hA][8];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_0_bits_executed = _RANDOM[7'hA][9];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_1_valid = _RANDOM[7'hA][10];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_1_bits_decoded_inst_regwen = _RANDOM[7'hA][11];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_1_bits_decoded_inst_futype = _RANDOM[7'hA][22:18];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_1_bits_decoded_inst_fuoptype = _RANDOM[7'hA][26:23];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_1_bits_decoded_inst_dest_rs1 = _RANDOM[7'hA][27];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_1_bits_raw_inst = {_RANDOM[7'hC][31], _RANDOM[7'hD][30:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_1_bits_lsu_diff_paddr = {_RANDOM[7'hD][31], _RANDOM[7'hE][30:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_1_bits_lsu_diff_vaddr = {_RANDOM[7'hE][31], _RANDOM[7'hF][30:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_1_bits_lsu_diff_wdata = {_RANDOM[7'hF][31], _RANDOM[7'h10][30:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_1_bits_rs1 = _RANDOM[7'h11][8:4];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_1_bits_rd = _RANDOM[7'h11][13:9];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_1_bits_frontend_excp = _RANDOM[7'h11][14];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_1_bits_exception = _RANDOM[7'h11][15];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_1_bits_result = {_RANDOM[7'h11][31:16], _RANDOM[7'h12][15:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_1_bits_br_info_valid = _RANDOM[7'h12][16];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_1_bits_br_info_bits_pc = {_RANDOM[7'h12][31:17], _RANDOM[7'h13][16:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_1_bits_br_info_bits_mispred = _RANDOM[7'h14][18];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_1_bits_executed = _RANDOM[7'h14][19];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_2_valid = _RANDOM[7'h14][20];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_2_bits_decoded_inst_regwen = _RANDOM[7'h14][21];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_2_bits_decoded_inst_futype = {_RANDOM[7'h14][31:28], _RANDOM[7'h15][0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_2_bits_decoded_inst_fuoptype = _RANDOM[7'h15][4:1];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_2_bits_decoded_inst_dest_rs1 = _RANDOM[7'h15][5];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_2_bits_raw_inst = {_RANDOM[7'h17][31:9], _RANDOM[7'h18][8:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_2_bits_lsu_diff_paddr = {_RANDOM[7'h18][31:9], _RANDOM[7'h19][8:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_2_bits_lsu_diff_vaddr = {_RANDOM[7'h19][31:9], _RANDOM[7'h1A][8:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_2_bits_lsu_diff_wdata = {_RANDOM[7'h1A][31:9], _RANDOM[7'h1B][8:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_2_bits_rs1 = _RANDOM[7'h1B][18:14];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_2_bits_rd = _RANDOM[7'h1B][23:19];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_2_bits_frontend_excp = _RANDOM[7'h1B][24];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_2_bits_exception = _RANDOM[7'h1B][25];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_2_bits_result = {_RANDOM[7'h1B][31:26], _RANDOM[7'h1C][25:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_2_bits_br_info_valid = _RANDOM[7'h1C][26];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_2_bits_br_info_bits_pc = {_RANDOM[7'h1C][31:27], _RANDOM[7'h1D][26:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_2_bits_br_info_bits_mispred = _RANDOM[7'h1E][28];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_2_bits_executed = _RANDOM[7'h1E][29];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_3_valid = _RANDOM[7'h1E][30];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_3_bits_decoded_inst_regwen = _RANDOM[7'h1E][31];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_3_bits_decoded_inst_futype = _RANDOM[7'h1F][10:6];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_3_bits_decoded_inst_fuoptype = _RANDOM[7'h1F][14:11];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_3_bits_decoded_inst_dest_rs1 = _RANDOM[7'h1F][15];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_3_bits_raw_inst = {_RANDOM[7'h21][31:19], _RANDOM[7'h22][18:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_3_bits_lsu_diff_paddr = {_RANDOM[7'h22][31:19], _RANDOM[7'h23][18:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_3_bits_lsu_diff_vaddr = {_RANDOM[7'h23][31:19], _RANDOM[7'h24][18:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_3_bits_lsu_diff_wdata = {_RANDOM[7'h24][31:19], _RANDOM[7'h25][18:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_3_bits_rs1 = _RANDOM[7'h25][28:24];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_3_bits_rd = {_RANDOM[7'h25][31:29], _RANDOM[7'h26][1:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_3_bits_frontend_excp = _RANDOM[7'h26][2];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_3_bits_exception = _RANDOM[7'h26][3];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_3_bits_result = {_RANDOM[7'h26][31:4], _RANDOM[7'h27][3:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_3_bits_br_info_valid = _RANDOM[7'h27][4];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_3_bits_br_info_bits_pc = {_RANDOM[7'h27][31:5], _RANDOM[7'h28][4:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_3_bits_br_info_bits_mispred = _RANDOM[7'h29][6];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_3_bits_executed = _RANDOM[7'h29][7];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_4_valid = _RANDOM[7'h29][8];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_4_bits_decoded_inst_regwen = _RANDOM[7'h29][9];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_4_bits_decoded_inst_futype = _RANDOM[7'h29][20:16];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_4_bits_decoded_inst_fuoptype = _RANDOM[7'h29][24:21];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_4_bits_decoded_inst_dest_rs1 = _RANDOM[7'h29][25];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_4_bits_raw_inst = {_RANDOM[7'h2B][31:29], _RANDOM[7'h2C][28:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_4_bits_lsu_diff_paddr = {_RANDOM[7'h2C][31:29], _RANDOM[7'h2D][28:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_4_bits_lsu_diff_vaddr = {_RANDOM[7'h2D][31:29], _RANDOM[7'h2E][28:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_4_bits_lsu_diff_wdata = {_RANDOM[7'h2E][31:29], _RANDOM[7'h2F][28:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_4_bits_rs1 = _RANDOM[7'h30][6:2];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_4_bits_rd = _RANDOM[7'h30][11:7];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_4_bits_frontend_excp = _RANDOM[7'h30][12];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_4_bits_exception = _RANDOM[7'h30][13];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_4_bits_result = {_RANDOM[7'h30][31:14], _RANDOM[7'h31][13:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_4_bits_br_info_valid = _RANDOM[7'h31][14];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_4_bits_br_info_bits_pc = {_RANDOM[7'h31][31:15], _RANDOM[7'h32][14:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_4_bits_br_info_bits_mispred = _RANDOM[7'h33][16];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_4_bits_executed = _RANDOM[7'h33][17];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_5_valid = _RANDOM[7'h33][18];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_5_bits_decoded_inst_regwen = _RANDOM[7'h33][19];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_5_bits_decoded_inst_futype = _RANDOM[7'h33][30:26];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_5_bits_decoded_inst_fuoptype = {_RANDOM[7'h33][31], _RANDOM[7'h34][2:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_5_bits_decoded_inst_dest_rs1 = _RANDOM[7'h34][3];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_5_bits_raw_inst = {_RANDOM[7'h36][31:7], _RANDOM[7'h37][6:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_5_bits_lsu_diff_paddr = {_RANDOM[7'h37][31:7], _RANDOM[7'h38][6:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_5_bits_lsu_diff_vaddr = {_RANDOM[7'h38][31:7], _RANDOM[7'h39][6:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_5_bits_lsu_diff_wdata = {_RANDOM[7'h39][31:7], _RANDOM[7'h3A][6:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_5_bits_rs1 = _RANDOM[7'h3A][16:12];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_5_bits_rd = _RANDOM[7'h3A][21:17];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_5_bits_frontend_excp = _RANDOM[7'h3A][22];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_5_bits_exception = _RANDOM[7'h3A][23];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_5_bits_result = {_RANDOM[7'h3A][31:24], _RANDOM[7'h3B][23:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_5_bits_br_info_valid = _RANDOM[7'h3B][24];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_5_bits_br_info_bits_pc = {_RANDOM[7'h3B][31:25], _RANDOM[7'h3C][24:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_5_bits_br_info_bits_mispred = _RANDOM[7'h3D][26];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_5_bits_executed = _RANDOM[7'h3D][27];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_6_valid = _RANDOM[7'h3D][28];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_6_bits_decoded_inst_regwen = _RANDOM[7'h3D][29];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_6_bits_decoded_inst_futype = _RANDOM[7'h3E][8:4];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_6_bits_decoded_inst_fuoptype = _RANDOM[7'h3E][12:9];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_6_bits_decoded_inst_dest_rs1 = _RANDOM[7'h3E][13];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_6_bits_raw_inst = {_RANDOM[7'h40][31:17], _RANDOM[7'h41][16:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_6_bits_lsu_diff_paddr = {_RANDOM[7'h41][31:17], _RANDOM[7'h42][16:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_6_bits_lsu_diff_vaddr = {_RANDOM[7'h42][31:17], _RANDOM[7'h43][16:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_6_bits_lsu_diff_wdata = {_RANDOM[7'h43][31:17], _RANDOM[7'h44][16:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_6_bits_rs1 = _RANDOM[7'h44][26:22];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_6_bits_rd = _RANDOM[7'h44][31:27];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_6_bits_frontend_excp = _RANDOM[7'h45][0];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_6_bits_exception = _RANDOM[7'h45][1];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_6_bits_result = {_RANDOM[7'h45][31:2], _RANDOM[7'h46][1:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_6_bits_br_info_valid = _RANDOM[7'h46][2];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_6_bits_br_info_bits_pc = {_RANDOM[7'h46][31:3], _RANDOM[7'h47][2:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_6_bits_br_info_bits_mispred = _RANDOM[7'h48][4];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_6_bits_executed = _RANDOM[7'h48][5];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_7_valid = _RANDOM[7'h48][6];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_7_bits_decoded_inst_regwen = _RANDOM[7'h48][7];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_7_bits_decoded_inst_futype = _RANDOM[7'h48][18:14];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_7_bits_decoded_inst_fuoptype = _RANDOM[7'h48][22:19];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_7_bits_decoded_inst_dest_rs1 = _RANDOM[7'h48][23];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_7_bits_raw_inst = {_RANDOM[7'h4A][31:27], _RANDOM[7'h4B][26:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_7_bits_lsu_diff_paddr = {_RANDOM[7'h4B][31:27], _RANDOM[7'h4C][26:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_7_bits_lsu_diff_vaddr = {_RANDOM[7'h4C][31:27], _RANDOM[7'h4D][26:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_7_bits_lsu_diff_wdata = {_RANDOM[7'h4D][31:27], _RANDOM[7'h4E][26:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_7_bits_rs1 = _RANDOM[7'h4F][4:0];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_7_bits_rd = _RANDOM[7'h4F][9:5];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_7_bits_frontend_excp = _RANDOM[7'h4F][10];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_7_bits_exception = _RANDOM[7'h4F][11];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_7_bits_result = {_RANDOM[7'h4F][31:12], _RANDOM[7'h50][11:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_7_bits_br_info_valid = _RANDOM[7'h50][12];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_7_bits_br_info_bits_pc = {_RANDOM[7'h50][31:13], _RANDOM[7'h51][12:0]};	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_7_bits_br_info_bits_mispred = _RANDOM[7'h52][14];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        sb_mem_7_bits_executed = _RANDOM[7'h52][15];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25
+        commit_ptr = _RANDOM[7'h52][18:16];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25, :78:29
+        issue_ptr = _RANDOM[7'h52][21:19];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25, :79:29
+        issued_cnt = _RANDOM[7'h52][24:22];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25, :80:29
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:2446:3
-      `FIRRTL_AFTER_INITIAL	// <stdin>:2446:3
+    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:2760:3
+      `FIRRTL_AFTER_INITIAL	// <stdin>:2760:3
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
   Arbiter10_UInt32 rs1_arb (	// playground/src/issue/Scoreboard.scala:242:25
@@ -4304,23 +4885,26 @@ module Scoreboard(	// <stdin>:2446:3
   );
   assign io_from_decoder_ready =
     io_operands_rdy & io_issue_inst_ready & _io_from_decoder_ready_T_1 & ~waw_hazard
-    & (_io_from_decoder_ready_T_5 | _io_from_decoder_ready_T_6 & ~unresolved_branch);	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:96:35, :98:45, :128:42, :141:24, :143:72, :144:{31,91}, :149:102, :150:{47,88}
-  assign io_issue_inst_valid = _io_issue_inst_valid_output;	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:143:96
-  assign io_issue_inst_bits_id = issue_ptr;	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:79:29
-  assign io_issue_inst_bits_sbe_rs2 = io_from_decoder_bits_inst[24:20];	// <stdin>:2446:3, playground/src/ISA/riscv32/ISA.scala:41:48
-  assign io_issue_inst_bits_sbe_rs1 = io_from_decoder_bits_inst[19:15];	// <stdin>:2446:3, playground/src/ISA/riscv32/ISA.scala:42:48
-  assign io_issue_inst_bits_sbe_rd = _io_issue_inst_bits_sbe_rd_output;	// <stdin>:2446:3, playground/src/ISA/riscv32/ISA.scala:43:48
-  assign io_commit_inst_valid = _io_commit_inst_valid_output;	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:233:65
-  assign io_commit_inst_bits_sbe_decoded_inst_regwen = _GEN_6[commit_ptr];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:78:29, :198:38
-  assign io_commit_inst_bits_sbe_decoded_inst_futype = _GEN_0;	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:171:42
-  assign io_commit_inst_bits_sbe_decoded_inst_fuoptype = _GEN_2;	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:171:42
-  assign io_commit_inst_bits_sbe_decoded_inst_dest_rs1 = _GEN_7[commit_ptr];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:78:29, :198:38
-  assign io_commit_inst_bits_sbe_raw_inst = _GEN_8[commit_ptr];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:78:29, :198:38
-  assign io_commit_inst_bits_sbe_rs1 = _GEN_9[commit_ptr];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:78:29, :198:38
-  assign io_commit_inst_bits_sbe_rd = _GEN_10[commit_ptr];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:78:29, :198:38
-  assign io_commit_inst_bits_sbe_exception = _GEN_4;	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:171:42
-  assign io_commit_inst_bits_sbe_result = _GEN_11[commit_ptr];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:78:29, :198:38
-  assign io_commit_inst_bits_sbe_br_info_bits_pc = _GEN_12[commit_ptr];	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:78:29, :198:38
+    & (_io_from_decoder_ready_T_5 | _io_from_decoder_ready_T_6 & ~unresolved_branch);	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:96:35, :98:45, :128:42, :141:24, :143:72, :144:{31,91}, :149:102, :150:{47,88}
+  assign io_issue_inst_valid = _io_issue_inst_valid_output;	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:143:96
+  assign io_issue_inst_bits_id = issue_ptr;	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:79:29
+  assign io_issue_inst_bits_sbe_rs2 = io_from_decoder_bits_inst[24:20];	// <stdin>:2760:3, playground/src/ISA/riscv32/ISA.scala:41:48
+  assign io_issue_inst_bits_sbe_rs1 = io_from_decoder_bits_inst[19:15];	// <stdin>:2760:3, playground/src/ISA/riscv32/ISA.scala:42:48
+  assign io_issue_inst_bits_sbe_rd = _io_issue_inst_bits_sbe_rd_output;	// <stdin>:2760:3, playground/src/ISA/riscv32/ISA.scala:43:48
+  assign io_commit_inst_valid = _io_commit_inst_valid_output;	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:233:65
+  assign io_commit_inst_bits_sbe_decoded_inst_regwen = _GEN_6[commit_ptr];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:78:29, :198:38
+  assign io_commit_inst_bits_sbe_decoded_inst_futype = _GEN_0;	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:171:42
+  assign io_commit_inst_bits_sbe_decoded_inst_fuoptype = _GEN_2;	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:171:42
+  assign io_commit_inst_bits_sbe_decoded_inst_dest_rs1 = _GEN_7[commit_ptr];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:78:29, :198:38
+  assign io_commit_inst_bits_sbe_raw_inst = _GEN_8[commit_ptr];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:78:29, :198:38
+  assign io_commit_inst_bits_sbe_lsu_diff_paddr = _GEN_9[commit_ptr];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:78:29, :198:38
+  assign io_commit_inst_bits_sbe_lsu_diff_vaddr = _GEN_10[commit_ptr];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:78:29, :198:38
+  assign io_commit_inst_bits_sbe_lsu_diff_wdata = _GEN_11[commit_ptr];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:78:29, :198:38
+  assign io_commit_inst_bits_sbe_rs1 = _GEN_12[commit_ptr];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:78:29, :198:38
+  assign io_commit_inst_bits_sbe_rd = _GEN_13[commit_ptr];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:78:29, :198:38
+  assign io_commit_inst_bits_sbe_exception = _GEN_4;	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:171:42
+  assign io_commit_inst_bits_sbe_result = _GEN_14[commit_ptr];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:78:29, :198:38
+  assign io_commit_inst_bits_sbe_br_info_bits_pc = _GEN_15[commit_ptr];	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:78:29, :198:38
   assign io_forward_msg_rs1_raw_hazard =
     sb_mem_0_valid & ~sb_mem_0_bits_executed & sb_mem_0_bits_decoded_inst_regwen
     & sb_mem_0_bits_rd == io_from_decoder_bits_inst[19:15]
@@ -4345,7 +4929,7 @@ module Scoreboard(	// <stdin>:2446:3
     & ~_io_forward_msg_rs1_raw_hazard_T_61 | sb_mem_7_valid & ~sb_mem_7_bits_executed
     & sb_mem_7_bits_decoded_inst_regwen
     & sb_mem_7_bits_rd == io_from_decoder_bits_inst[19:15]
-    & ~_io_forward_msg_rs1_raw_hazard_T_61;	// <stdin>:2446:3, playground/src/ISA/riscv32/ISA.scala:42:48, playground/src/issue/Scoreboard.scala:76:25, :307:26, :309:33, :310:{17,20,85}, :312:19
+    & ~_io_forward_msg_rs1_raw_hazard_T_61;	// <stdin>:2760:3, playground/src/ISA/riscv32/ISA.scala:42:48, playground/src/issue/Scoreboard.scala:76:25, :307:26, :309:33, :310:{17,20,85}, :312:19
   assign io_forward_msg_rs2_raw_hazard =
     sb_mem_0_valid & ~sb_mem_0_bits_executed & sb_mem_0_bits_decoded_inst_regwen
     & sb_mem_0_bits_rd == io_from_decoder_bits_inst[24:20]
@@ -4370,7 +4954,7 @@ module Scoreboard(	// <stdin>:2446:3
     & ~_io_forward_msg_rs2_raw_hazard_T_61 | sb_mem_7_valid & ~sb_mem_7_bits_executed
     & sb_mem_7_bits_decoded_inst_regwen
     & sb_mem_7_bits_rd == io_from_decoder_bits_inst[24:20]
-    & ~_io_forward_msg_rs2_raw_hazard_T_61;	// <stdin>:2446:3, playground/src/ISA/riscv32/ISA.scala:41:48, playground/src/issue/Scoreboard.scala:76:25, :307:26, :317:33, :318:{17,20,85}, :320:19
+    & ~_io_forward_msg_rs2_raw_hazard_T_61;	// <stdin>:2760:3, playground/src/ISA/riscv32/ISA.scala:41:48, playground/src/issue/Scoreboard.scala:76:25, :307:26, :317:33, :318:{17,20,85}, :320:19
   assign io_forward_msg_rd_raw_hazard =
     sb_mem_0_valid & ~sb_mem_0_bits_executed & sb_mem_0_bits_decoded_inst_regwen
     & _io_forward_msg_rd_raw_hazard_T_3 & ~_io_forward_msg_rd_raw_hazard_T_61
@@ -4387,13 +4971,13 @@ module Scoreboard(	// <stdin>:2446:3
     | sb_mem_6_valid & ~sb_mem_6_bits_executed & sb_mem_6_bits_decoded_inst_regwen
     & _io_forward_msg_rd_raw_hazard_T_51 & ~_io_forward_msg_rd_raw_hazard_T_61
     | sb_mem_7_valid & ~sb_mem_7_bits_executed & sb_mem_7_bits_decoded_inst_regwen
-    & _io_forward_msg_rd_raw_hazard_T_59 & ~_io_forward_msg_rd_raw_hazard_T_61;	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:76:25, :131:26, :307:26, :326:{17,20,84}, :328:19
-  assign io_excp_info_valid = ex_valid;	// <stdin>:2446:3, playground/src/issue/Scoreboard.scala:155:16, :169:22, :183:{20,26}
+    & _io_forward_msg_rd_raw_hazard_T_59 & ~_io_forward_msg_rd_raw_hazard_T_61;	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:76:25, :131:26, :307:26, :326:{17,20,84}, :328:19
+  assign io_excp_info_valid = ex_valid;	// <stdin>:2760:3, playground/src/issue/Scoreboard.scala:155:16, :169:22, :183:{20,26}
 endmodule
 
-module MkRegfiles(	// <stdin>:3243:3
-  input         clock,	// <stdin>:3244:11
-                reset,	// <stdin>:3245:11
+module MkRegfiles(	// <stdin>:3557:3
+  input         clock,	// <stdin>:3558:11
+                reset,	// <stdin>:3559:11
   input  [4:0]  read_io_0_raddr,	// playground/src/issue/Regfiles.scala:21:22
                 read_io_1_raddr,	// playground/src/issue/Regfiles.scala:21:22
                 read_io_2_raddr,	// playground/src/issue/Regfiles.scala:21:22
@@ -4502,8 +5086,8 @@ module MkRegfiles(	// <stdin>:3243:3
      {registers_2},
      {registers_1},
      {registers_0}};	// playground/src/issue/Regfiles.scala:25:28, :27:32
-  always @(posedge clock) begin	// <stdin>:3244:11
-    if (reset) begin	// <stdin>:3244:11
+  always @(posedge clock) begin	// <stdin>:3558:11
+    if (reset) begin	// <stdin>:3558:11
       registers_0 <= 32'h0;	// playground/src/issue/Regfiles.scala:25:{28,36}
       registers_1 <= 32'h0;	// playground/src/issue/Regfiles.scala:25:{28,36}
       registers_2 <= 32'h0;	// playground/src/issue/Regfiles.scala:25:{28,36}
@@ -4537,163 +5121,163 @@ module MkRegfiles(	// <stdin>:3243:3
       registers_30 <= 32'h0;	// playground/src/issue/Regfiles.scala:25:{28,36}
       registers_31 <= 32'h0;	// playground/src/issue/Regfiles.scala:25:{28,36}
     end
-    else begin	// <stdin>:3244:11
+    else begin	// <stdin>:3558:11
       automatic logic _GEN_0 = write_io_wen & (|write_io_waddr);	// playground/src/issue/Regfiles.scala:30:{23,42}
       if (_GEN_0 & ~(|write_io_waddr))	// playground/src/issue/Regfiles.scala:25:28, :30:{23,42,52}, :31:35
         registers_0 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'h1)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'h1)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_1 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'h2)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'h2)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_2 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'h3)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'h3)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_3 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'h4)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'h4)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_4 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'h5)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'h5)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_5 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'h6)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'h6)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_6 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'h7)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'h7)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_7 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'h8)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'h8)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_8 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'h9)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'h9)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_9 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'hA)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'hA)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_10 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'hB)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'hB)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_11 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'hC)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'hC)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_12 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'hD)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'hD)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_13 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'hE)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'hE)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_14 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'hF)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'hF)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_15 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'h10)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'h10)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_16 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'h11)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'h11)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_17 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'h12)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'h12)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_18 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'h13)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'h13)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_19 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'h14)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'h14)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_20 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'h15)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'h15)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_21 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'h16)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'h16)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_22 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'h17)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'h17)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_23 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'h18)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'h18)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_24 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'h19)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'h19)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_25 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'h1A)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'h1A)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_26 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'h1B)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'h1B)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_27 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'h1C)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'h1C)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_28 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'h1D)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'h1D)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_29 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
-      if (_GEN_0 & write_io_waddr == 5'h1E)	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
+      if (_GEN_0 & write_io_waddr == 5'h1E)	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_30 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
       if (_GEN_0 & (&write_io_waddr))	// playground/src/issue/Regfiles.scala:25:28, :30:{23,52}, :31:35
         registers_31 <= write_io_wdata;	// playground/src/issue/Regfiles.scala:25:28
     end
   end // always @(posedge)
-  `ifdef ENABLE_INITIAL_REG_	// <stdin>:3243:3
-    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:3243:3
-      `FIRRTL_BEFORE_INITIAL	// <stdin>:3243:3
+  `ifdef ENABLE_INITIAL_REG_	// <stdin>:3557:3
+    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:3557:3
+      `FIRRTL_BEFORE_INITIAL	// <stdin>:3557:3
     `endif // FIRRTL_BEFORE_INITIAL
-    initial begin	// <stdin>:3243:3
-      automatic logic [31:0] _RANDOM[0:31];	// <stdin>:3243:3
-      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:3243:3
-        `INIT_RANDOM_PROLOG_	// <stdin>:3243:3
+    initial begin	// <stdin>:3557:3
+      automatic logic [31:0] _RANDOM[0:31];	// <stdin>:3557:3
+      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:3557:3
+        `INIT_RANDOM_PROLOG_	// <stdin>:3557:3
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// <stdin>:3243:3
+      `ifdef RANDOMIZE_REG_INIT	// <stdin>:3557:3
         for (logic [5:0] i = 6'h0; i < 6'h20; i += 6'h1) begin
-          _RANDOM[i[4:0]] = `RANDOM;	// <stdin>:3243:3
-        end	// <stdin>:3243:3
-        registers_0 = _RANDOM[5'h0];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_1 = _RANDOM[5'h1];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_2 = _RANDOM[5'h2];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_3 = _RANDOM[5'h3];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_4 = _RANDOM[5'h4];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_5 = _RANDOM[5'h5];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_6 = _RANDOM[5'h6];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_7 = _RANDOM[5'h7];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_8 = _RANDOM[5'h8];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_9 = _RANDOM[5'h9];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_10 = _RANDOM[5'hA];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_11 = _RANDOM[5'hB];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_12 = _RANDOM[5'hC];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_13 = _RANDOM[5'hD];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_14 = _RANDOM[5'hE];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_15 = _RANDOM[5'hF];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_16 = _RANDOM[5'h10];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_17 = _RANDOM[5'h11];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_18 = _RANDOM[5'h12];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_19 = _RANDOM[5'h13];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_20 = _RANDOM[5'h14];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_21 = _RANDOM[5'h15];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_22 = _RANDOM[5'h16];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_23 = _RANDOM[5'h17];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_24 = _RANDOM[5'h18];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_25 = _RANDOM[5'h19];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_26 = _RANDOM[5'h1A];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_27 = _RANDOM[5'h1B];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_28 = _RANDOM[5'h1C];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_29 = _RANDOM[5'h1D];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_30 = _RANDOM[5'h1E];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-        registers_31 = _RANDOM[5'h1F];	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
+          _RANDOM[i[4:0]] = `RANDOM;	// <stdin>:3557:3
+        end	// <stdin>:3557:3
+        registers_0 = _RANDOM[5'h0];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_1 = _RANDOM[5'h1];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_2 = _RANDOM[5'h2];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_3 = _RANDOM[5'h3];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_4 = _RANDOM[5'h4];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_5 = _RANDOM[5'h5];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_6 = _RANDOM[5'h6];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_7 = _RANDOM[5'h7];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_8 = _RANDOM[5'h8];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_9 = _RANDOM[5'h9];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_10 = _RANDOM[5'hA];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_11 = _RANDOM[5'hB];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_12 = _RANDOM[5'hC];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_13 = _RANDOM[5'hD];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_14 = _RANDOM[5'hE];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_15 = _RANDOM[5'hF];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_16 = _RANDOM[5'h10];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_17 = _RANDOM[5'h11];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_18 = _RANDOM[5'h12];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_19 = _RANDOM[5'h13];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_20 = _RANDOM[5'h14];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_21 = _RANDOM[5'h15];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_22 = _RANDOM[5'h16];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_23 = _RANDOM[5'h17];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_24 = _RANDOM[5'h18];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_25 = _RANDOM[5'h19];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_26 = _RANDOM[5'h1A];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_27 = _RANDOM[5'h1B];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_28 = _RANDOM[5'h1C];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_29 = _RANDOM[5'h1D];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_30 = _RANDOM[5'h1E];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+        registers_31 = _RANDOM[5'h1F];	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:3243:3
-      `FIRRTL_AFTER_INITIAL	// <stdin>:3243:3
+    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:3557:3
+      `FIRRTL_AFTER_INITIAL	// <stdin>:3557:3
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  assign read_io_0_rdata = (|read_io_0_raddr) ? _GEN[read_io_0_raddr] : 32'h0;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:36, :27:{32,50}
-  assign read_io_1_rdata = (|read_io_1_raddr) ? _GEN[read_io_1_raddr] : 32'h0;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:36, :27:{32,50}
-  assign read_io_2_rdata = (|read_io_2_raddr) ? _GEN[read_io_2_raddr] : 32'h0;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:36, :27:{32,50}
-  assign diff_gpr_0 = registers_0;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_1 = registers_1;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_2 = registers_2;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_3 = registers_3;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_4 = registers_4;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_5 = registers_5;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_6 = registers_6;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_7 = registers_7;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_8 = registers_8;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_9 = registers_9;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_10 = registers_10;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_11 = registers_11;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_12 = registers_12;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_13 = registers_13;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_14 = registers_14;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_15 = registers_15;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_16 = registers_16;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_17 = registers_17;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_18 = registers_18;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_19 = registers_19;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_20 = registers_20;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_21 = registers_21;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_22 = registers_22;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_23 = registers_23;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_24 = registers_24;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_25 = registers_25;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_26 = registers_26;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_27 = registers_27;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_28 = registers_28;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_29 = registers_29;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_30 = registers_30;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
-  assign diff_gpr_31 = registers_31;	// <stdin>:3243:3, playground/src/issue/Regfiles.scala:25:28
+  assign read_io_0_rdata = (|read_io_0_raddr) ? _GEN[read_io_0_raddr] : 32'h0;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:36, :27:{32,50}
+  assign read_io_1_rdata = (|read_io_1_raddr) ? _GEN[read_io_1_raddr] : 32'h0;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:36, :27:{32,50}
+  assign read_io_2_rdata = (|read_io_2_raddr) ? _GEN[read_io_2_raddr] : 32'h0;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:36, :27:{32,50}
+  assign diff_gpr_0 = registers_0;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_1 = registers_1;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_2 = registers_2;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_3 = registers_3;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_4 = registers_4;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_5 = registers_5;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_6 = registers_6;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_7 = registers_7;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_8 = registers_8;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_9 = registers_9;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_10 = registers_10;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_11 = registers_11;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_12 = registers_12;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_13 = registers_13;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_14 = registers_14;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_15 = registers_15;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_16 = registers_16;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_17 = registers_17;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_18 = registers_18;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_19 = registers_19;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_20 = registers_20;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_21 = registers_21;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_22 = registers_22;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_23 = registers_23;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_24 = registers_24;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_25 = registers_25;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_26 = registers_26;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_27 = registers_27;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_28 = registers_28;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_29 = registers_29;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_30 = registers_30;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
+  assign diff_gpr_31 = registers_31;	// <stdin>:3557:3, playground/src/issue/Regfiles.scala:25:28
 endmodule
 
-module RV32OperandGen(	// <stdin>:3331:3
+module RV32OperandGen(	// <stdin>:3645:3
   input  [31:0] io_pc,	// playground/src/issue/Issue.scala:22:16
                 io_raw_inst,	// playground/src/issue/Issue.scala:22:16
   input  [1:0]  io_decoded_inst_src_0,	// playground/src/issue/Issue.scala:22:16
@@ -4736,28 +5320,30 @@ module RV32OperandGen(	// <stdin>:3331:3
       ? io_pc
       : io_sb_forward_rs1_fwd_data_valid & (|(io_raw_inst[19:15]))
           ? io_sb_forward_rs1_fwd_data_bits
-          : io_gpr_rdatas_1;	// <stdin>:3331:3, playground/src/ISA/riscv32/OperandGen.scala:15:42, :24:35, :30:{23,43,55}, :50:24
+          : io_gpr_rdatas_1;	// <stdin>:3645:3, playground/src/ISA/riscv32/OperandGen.scala:15:42, :24:35, :30:{23,43,55}, :50:24
   assign io_operand_b =
     (|io_decoded_inst_src_2)
       ? _GEN[io_decoded_inst_selImm]
       : io_sb_forward_rs2_fwd_data_valid & (|(io_raw_inst[24:20]))
           ? io_sb_forward_rs2_fwd_data_bits
-          : io_gpr_rdatas_0;	// <stdin>:3331:3, playground/src/ISA/riscv32/OperandGen.scala:14:42, :21:35, :29:{23,43,55}, :49:57, :51:24
+          : io_gpr_rdatas_0;	// <stdin>:3645:3, playground/src/ISA/riscv32/OperandGen.scala:14:42, :21:35, :29:{23,43,55}, :49:57, :51:24
   assign io_operand_c =
-    io_sb_forward_rd_fwd_data_valid & (|(io_raw_inst[11:7]))
-      ? io_sb_forward_rd_fwd_data_bits
-      : io_gpr_rdatas_2;	// <stdin>:3331:3, playground/src/ISA/riscv32/OperandGen.scala:27:35, :31:{23,42,53}
+    (|io_decoded_inst_src_0)
+      ? _GEN[io_decoded_inst_selImm]
+      : io_sb_forward_rd_fwd_data_valid & (|(io_raw_inst[11:7]))
+          ? io_sb_forward_rd_fwd_data_bits
+          : io_gpr_rdatas_2;	// <stdin>:3645:3, playground/src/ISA/riscv32/OperandGen.scala:16:42, :27:35, :31:{23,42,53}, :49:57, :52:24
   assign io_operand_rdy =
     ((|io_decoded_inst_src_1) | ~(|io_decoded_inst_src_1) & ~io_sb_forward_rs1_raw_hazard)
     & ((|io_decoded_inst_src_2) | ~(|io_decoded_inst_src_2)
        & ~io_sb_forward_rs2_raw_hazard)
     & ((|io_decoded_inst_src_0) | ~(|io_decoded_inst_src_0)
-       & ~io_sb_forward_rd_raw_hazard);	// <stdin>:3331:3, playground/src/ISA/riscv32/OperandGen.scala:14:42, :15:42, :16:42, :54:{32,44,46}, :55:{32,44,46}, :56:{31,42,44}, :58:49
+       & ~io_sb_forward_rd_raw_hazard);	// <stdin>:3645:3, playground/src/ISA/riscv32/OperandGen.scala:14:42, :15:42, :16:42, :54:{32,44,46}, :55:{32,44,46}, :56:{31,42,44}, :58:49
 endmodule
 
-module IssueStage(	// <stdin>:3498:3
-  input         clock,	// <stdin>:3499:11
-                reset,	// <stdin>:3500:11
+module IssueStage(	// <stdin>:3814:3
+  input         clock,	// <stdin>:3815:11
+                reset,	// <stdin>:3816:11
                 io_from_decoder_valid,	// playground/src/issue/Issue.scala:82:16
   input  [31:0] io_from_decoder_bits_pc,	// playground/src/issue/Issue.scala:82:16
                 io_from_decoder_bits_inst,	// playground/src/issue/Issue.scala:82:16
@@ -4782,6 +5368,9 @@ module IssueStage(	// <stdin>:3498:3
   input  [31:0] io_wb_data_1_bits_result,	// playground/src/issue/Issue.scala:82:16
   input         io_trans_ready,	// playground/src/issue/Issue.scala:82:16
                 io_store_commit_ready,	// playground/src/issue/Issue.scala:82:16
+  input  [31:0] io_lsu_diff_paddr,	// playground/src/issue/Issue.scala:82:16
+                io_lsu_diff_vaddr,	// playground/src/issue/Issue.scala:82:16
+                io_lsu_diff_wdata,	// playground/src/issue/Issue.scala:82:16
   output        io_from_decoder_ready,	// playground/src/issue/Issue.scala:82:16
                 io_trans_valid,	// playground/src/issue/Issue.scala:82:16
   output [2:0]  io_trans_bits_fuinput_id,	// playground/src/issue/Issue.scala:82:16
@@ -4831,8 +5420,13 @@ module IssueStage(	// <stdin>:3498:3
                 io_diff_gpr_31,	// playground/src/issue/Issue.scala:82:16
   output        io_diff_commit_inst_valid,	// playground/src/issue/Issue.scala:82:16
                 io_diff_commit_inst_bits_sbe_decoded_inst_regwen,	// playground/src/issue/Issue.scala:82:16
-                io_diff_commit_inst_bits_sbe_decoded_inst_dest_rs1,	// playground/src/issue/Issue.scala:82:16
+  output [4:0]  io_diff_commit_inst_bits_sbe_decoded_inst_futype,	// playground/src/issue/Issue.scala:82:16
+  output [3:0]  io_diff_commit_inst_bits_sbe_decoded_inst_fuoptype,	// playground/src/issue/Issue.scala:82:16
+  output        io_diff_commit_inst_bits_sbe_decoded_inst_dest_rs1,	// playground/src/issue/Issue.scala:82:16
   output [31:0] io_diff_commit_inst_bits_sbe_raw_inst,	// playground/src/issue/Issue.scala:82:16
+                io_diff_commit_inst_bits_sbe_lsu_diff_paddr,	// playground/src/issue/Issue.scala:82:16
+                io_diff_commit_inst_bits_sbe_lsu_diff_vaddr,	// playground/src/issue/Issue.scala:82:16
+                io_diff_commit_inst_bits_sbe_lsu_diff_wdata,	// playground/src/issue/Issue.scala:82:16
   output [4:0]  io_diff_commit_inst_bits_sbe_rs1,	// playground/src/issue/Issue.scala:82:16
                 io_diff_commit_inst_bits_sbe_rd,	// playground/src/issue/Issue.scala:82:16
   output [31:0] io_diff_commit_inst_bits_sbe_result,	// playground/src/issue/Issue.scala:82:16
@@ -4902,6 +5496,9 @@ module IssueStage(	// <stdin>:3498:3
     .io_wb_data_1_valid                            (io_wb_data_1_valid),
     .io_wb_data_1_bits_id                          (io_wb_data_1_bits_id),
     .io_wb_data_1_bits_result                      (io_wb_data_1_bits_result),
+    .io_lsu_diff_paddr                             (io_lsu_diff_paddr),
+    .io_lsu_diff_vaddr                             (io_lsu_diff_vaddr),
+    .io_lsu_diff_wdata                             (io_lsu_diff_wdata),
     .io_from_decoder_ready                         (io_from_decoder_ready),
     .io_issue_inst_valid                           (io_trans_valid),
     .io_issue_inst_bits_id                         (io_trans_bits_fuinput_id),
@@ -4922,6 +5519,12 @@ module IssueStage(	// <stdin>:3498:3
       (_scoreboard_io_commit_inst_bits_sbe_decoded_inst_dest_rs1),
     .io_commit_inst_bits_sbe_raw_inst
       (io_diff_commit_inst_bits_sbe_raw_inst),
+    .io_commit_inst_bits_sbe_lsu_diff_paddr
+      (io_diff_commit_inst_bits_sbe_lsu_diff_paddr),
+    .io_commit_inst_bits_sbe_lsu_diff_vaddr
+      (io_diff_commit_inst_bits_sbe_lsu_diff_vaddr),
+    .io_commit_inst_bits_sbe_lsu_diff_wdata
+      (io_diff_commit_inst_bits_sbe_lsu_diff_wdata),
     .io_commit_inst_bits_sbe_rs1
       (_scoreboard_io_commit_inst_bits_sbe_rs1),
     .io_commit_inst_bits_sbe_rd
@@ -5030,33 +5633,37 @@ module IssueStage(	// <stdin>:3498:3
     .io_operand_c                     (io_trans_bits_fuinput_operand_c),
     .io_operand_rdy                   (_opr_gen_io_operand_rdy)
   );
-  assign io_trans_bits_fuinput_pc = io_from_decoder_bits_pc;	// <stdin>:3498:3
-  assign io_trans_bits_fuinput_optype = io_from_decoder_bits_decoded_inst_fuoptype;	// <stdin>:3498:3
-  assign io_trans_bits_fuinput_exception = io_from_decoder_bits_exception;	// <stdin>:3498:3
-  assign io_trans_bits_futype = io_from_decoder_bits_decoded_inst_futype;	// <stdin>:3498:3
-  assign io_trans_bits_br_pred_taken = io_from_decoder_bits_br_pred_taken;	// <stdin>:3498:3
-  assign io_trans_bits_br_pred_target = io_from_decoder_bits_br_pred_target;	// <stdin>:3498:3
+  assign io_trans_bits_fuinput_pc = io_from_decoder_bits_pc;	// <stdin>:3814:3
+  assign io_trans_bits_fuinput_optype = io_from_decoder_bits_decoded_inst_fuoptype;	// <stdin>:3814:3
+  assign io_trans_bits_fuinput_exception = io_from_decoder_bits_exception;	// <stdin>:3814:3
+  assign io_trans_bits_futype = io_from_decoder_bits_decoded_inst_futype;	// <stdin>:3814:3
+  assign io_trans_bits_br_pred_taken = io_from_decoder_bits_br_pred_taken;	// <stdin>:3814:3
+  assign io_trans_bits_br_pred_target = io_from_decoder_bits_br_pred_target;	// <stdin>:3814:3
   assign io_store_commit_valid =
     is_commit_store & _scoreboard_io_commit_inst_valid
-    & ~_scoreboard_io_commit_inst_bits_sbe_exception;	// <stdin>:3498:3, playground/src/issue/Issue.scala:84:30, :132:62, :143:66, :144:66
-  assign io_excp_commit_valid = _scoreboard_io_excp_info_valid;	// <stdin>:3498:3, playground/src/issue/Issue.scala:84:30
+    & ~_scoreboard_io_commit_inst_bits_sbe_exception;	// <stdin>:3814:3, playground/src/issue/Issue.scala:84:30, :132:62, :143:66, :144:66
+  assign io_excp_commit_valid = _scoreboard_io_excp_info_valid;	// <stdin>:3814:3, playground/src/issue/Issue.scala:84:30
   assign io_ertn_commit =
     _io_diff_is_CNTinst_T
     & _scoreboard_io_commit_inst_bits_sbe_decoded_inst_fuoptype == 4'h7
-    & _scoreboard_io_commit_inst_valid & ~_scoreboard_io_commit_inst_bits_sbe_exception;	// <stdin>:3498:3, playground/src/issue/Issue.scala:84:30, :136:{46,105}, :143:66, :145:65
+    & _scoreboard_io_commit_inst_valid & ~_scoreboard_io_commit_inst_bits_sbe_exception;	// <stdin>:3814:3, playground/src/issue/Issue.scala:84:30, :136:{46,105}, :143:66, :145:65
   assign io_diff_commit_inst_valid =
     _scoreboard_io_commit_inst_valid & _scoreboard_io_commit_inst_ready_T_4
-    & ~_scoreboard_io_excp_info_valid;	// <stdin>:3498:3, playground/src/issue/Issue.scala:84:30, :161:87, :167:80, src/main/scala/chisel3/util/Mux.scala:141:16
+    & ~_scoreboard_io_excp_info_valid;	// <stdin>:3814:3, playground/src/issue/Issue.scala:84:30, :161:87, :167:80, src/main/scala/chisel3/util/Mux.scala:141:16
   assign io_diff_commit_inst_bits_sbe_decoded_inst_regwen =
-    _scoreboard_io_commit_inst_bits_sbe_decoded_inst_regwen;	// <stdin>:3498:3, playground/src/issue/Issue.scala:84:30
+    _scoreboard_io_commit_inst_bits_sbe_decoded_inst_regwen;	// <stdin>:3814:3, playground/src/issue/Issue.scala:84:30
+  assign io_diff_commit_inst_bits_sbe_decoded_inst_futype =
+    _scoreboard_io_commit_inst_bits_sbe_decoded_inst_futype;	// <stdin>:3814:3, playground/src/issue/Issue.scala:84:30
+  assign io_diff_commit_inst_bits_sbe_decoded_inst_fuoptype =
+    _scoreboard_io_commit_inst_bits_sbe_decoded_inst_fuoptype;	// <stdin>:3814:3, playground/src/issue/Issue.scala:84:30
   assign io_diff_commit_inst_bits_sbe_decoded_inst_dest_rs1 =
-    _scoreboard_io_commit_inst_bits_sbe_decoded_inst_dest_rs1;	// <stdin>:3498:3, playground/src/issue/Issue.scala:84:30
-  assign io_diff_commit_inst_bits_sbe_rs1 = _scoreboard_io_commit_inst_bits_sbe_rs1;	// <stdin>:3498:3, playground/src/issue/Issue.scala:84:30
-  assign io_diff_commit_inst_bits_sbe_rd = _scoreboard_io_commit_inst_bits_sbe_rd;	// <stdin>:3498:3, playground/src/issue/Issue.scala:84:30
-  assign io_diff_commit_inst_bits_sbe_result = _scoreboard_io_commit_inst_bits_sbe_result;	// <stdin>:3498:3, playground/src/issue/Issue.scala:84:30
+    _scoreboard_io_commit_inst_bits_sbe_decoded_inst_dest_rs1;	// <stdin>:3814:3, playground/src/issue/Issue.scala:84:30
+  assign io_diff_commit_inst_bits_sbe_rs1 = _scoreboard_io_commit_inst_bits_sbe_rs1;	// <stdin>:3814:3, playground/src/issue/Issue.scala:84:30
+  assign io_diff_commit_inst_bits_sbe_rd = _scoreboard_io_commit_inst_bits_sbe_rd;	// <stdin>:3814:3, playground/src/issue/Issue.scala:84:30
+  assign io_diff_commit_inst_bits_sbe_result = _scoreboard_io_commit_inst_bits_sbe_result;	// <stdin>:3814:3, playground/src/issue/Issue.scala:84:30
 endmodule
 
-module ALUResultSelector(	// <stdin>:3639:3
+module ALUResultSelector(	// <stdin>:3955:3
   input  [3:0]  io_op,	// playground/src/backend/ALU.scala:21:16
   input  [31:0] io_operand_a,	// playground/src/backend/ALU.scala:21:16
                 io_operand_b,	// playground/src/backend/ALU.scala:21:16
@@ -5089,10 +5696,10 @@ module ALUResultSelector(	// <stdin>:3639:3
       ? io_operand_a + _GEN
       : io_op == 4'hC
           ? $signed($signed(io_operand_a) >>> _GEN_2)
-          : io_op == 4'hB ? io_operand_a >> _GEN_2 : _GEN_3[io_op];	// <stdin>:3639:3, playground/src/backend/ALU.scala:34:43, :42:32, :43:39, :44:32, :50:45
+          : io_op == 4'hB ? io_operand_a >> _GEN_2 : _GEN_3[io_op];	// <stdin>:3955:3, playground/src/backend/ALU.scala:34:43, :42:32, :43:39, :44:32, :50:45
 endmodule
 
-module MkALUWrapper(	// <stdin>:3702:3
+module MkALUWrapper(	// <stdin>:4018:3
   input         io_in_valid,	// playground/src/backend/Excute.scala:31:21
   input  [2:0]  io_in_bits_id,	// playground/src/backend/Excute.scala:31:21
   input  [3:0]  io_in_bits_optype,	// playground/src/backend/Excute.scala:31:21
@@ -5111,20 +5718,21 @@ module MkALUWrapper(	// <stdin>:3702:3
     .io_operand_b (io_in_bits_operand_b),
     .io_result    (io_out_bits_result)
   );
-  assign io_out_valid = io_in_valid;	// <stdin>:3702:3
-  assign io_out_bits_id = io_in_bits_id;	// <stdin>:3702:3
-  assign io_out_bits_exception = io_in_bits_exception;	// <stdin>:3702:3
+  assign io_out_valid = io_in_valid;	// <stdin>:4018:3
+  assign io_out_bits_id = io_in_bits_id;	// <stdin>:4018:3
+  assign io_out_bits_exception = io_in_bits_exception;	// <stdin>:4018:3
 endmodule
 
-module CircularQueue_2(	// <stdin>:3720:3
-  input         clock,	// <stdin>:3721:11
-                reset,	// <stdin>:3722:11
+module CircularQueue_2(	// <stdin>:4036:3
+  input         clock,	// <stdin>:4037:11
+                reset,	// <stdin>:4038:11
                 io_in_clear,	// playground/src/utils/Queue.scala:25:16
   input  [2:0]  io_in_enq_data_id,	// playground/src/utils/Queue.scala:25:16
   input  [31:0] io_in_enq_data_addr,	// playground/src/utils/Queue.scala:25:16
   input  [1:0]  io_in_enq_data_wtype,	// playground/src/utils/Queue.scala:25:16
   input  [31:0] io_in_enq_data_wdata,	// playground/src/utils/Queue.scala:25:16
-  input         io_in_enq_valid,	// playground/src/utils/Queue.scala:25:16
+  input         io_in_enq_data_uncached,	// playground/src/utils/Queue.scala:25:16
+                io_in_enq_valid,	// playground/src/utils/Queue.scala:25:16
                 io_in_deq_valid,	// playground/src/utils/Queue.scala:25:16
   output [31:0] io_out_front_data_addr,	// playground/src/utils/Queue.scala:25:16
   output [1:0]  io_out_front_data_wtype,	// playground/src/utils/Queue.scala:25:16
@@ -5263,52 +5871,52 @@ module CircularQueue_2(	// <stdin>:3720:3
      {queue_2_bits_uncached},
      {queue_1_bits_uncached},
      {queue_0_bits_uncached}};	// playground/src/utils/Queue.scala:51:24, :67:23
-  always @(posedge clock) begin	// <stdin>:3721:11
-    if (reset) begin	// <stdin>:3721:11
-      queue_0_valid <= 1'h0;	// playground/src/utils/Queue.scala:25:16, :51:24
+  always @(posedge clock) begin	// <stdin>:4037:11
+    if (reset) begin	// <stdin>:4037:11
+      queue_0_valid <= 1'h0;	// playground/src/utils/Queue.scala:51:{24,56}
       queue_0_bits_addr <= 32'h0;	// playground/src/utils/Queue.scala:51:{24,56}
       queue_0_bits_wtype <= 2'h0;	// playground/src/utils/Queue.scala:51:{24,56}
       queue_0_bits_wdata <= 32'h0;	// playground/src/utils/Queue.scala:51:{24,56}
-      queue_0_bits_uncached <= 1'h0;	// playground/src/utils/Queue.scala:25:16, :51:24
-      queue_1_valid <= 1'h0;	// playground/src/utils/Queue.scala:25:16, :51:24
+      queue_0_bits_uncached <= 1'h0;	// playground/src/utils/Queue.scala:51:{24,56}
+      queue_1_valid <= 1'h0;	// playground/src/utils/Queue.scala:51:{24,56}
       queue_1_bits_addr <= 32'h0;	// playground/src/utils/Queue.scala:51:{24,56}
       queue_1_bits_wtype <= 2'h0;	// playground/src/utils/Queue.scala:51:{24,56}
       queue_1_bits_wdata <= 32'h0;	// playground/src/utils/Queue.scala:51:{24,56}
-      queue_1_bits_uncached <= 1'h0;	// playground/src/utils/Queue.scala:25:16, :51:24
-      queue_2_valid <= 1'h0;	// playground/src/utils/Queue.scala:25:16, :51:24
+      queue_1_bits_uncached <= 1'h0;	// playground/src/utils/Queue.scala:51:{24,56}
+      queue_2_valid <= 1'h0;	// playground/src/utils/Queue.scala:51:{24,56}
       queue_2_bits_addr <= 32'h0;	// playground/src/utils/Queue.scala:51:{24,56}
       queue_2_bits_wtype <= 2'h0;	// playground/src/utils/Queue.scala:51:{24,56}
       queue_2_bits_wdata <= 32'h0;	// playground/src/utils/Queue.scala:51:{24,56}
-      queue_2_bits_uncached <= 1'h0;	// playground/src/utils/Queue.scala:25:16, :51:24
-      queue_3_valid <= 1'h0;	// playground/src/utils/Queue.scala:25:16, :51:24
+      queue_2_bits_uncached <= 1'h0;	// playground/src/utils/Queue.scala:51:{24,56}
+      queue_3_valid <= 1'h0;	// playground/src/utils/Queue.scala:51:{24,56}
       queue_3_bits_addr <= 32'h0;	// playground/src/utils/Queue.scala:51:{24,56}
       queue_3_bits_wtype <= 2'h0;	// playground/src/utils/Queue.scala:51:{24,56}
       queue_3_bits_wdata <= 32'h0;	// playground/src/utils/Queue.scala:51:{24,56}
-      queue_3_bits_uncached <= 1'h0;	// playground/src/utils/Queue.scala:25:16, :51:24
-      queue_4_valid <= 1'h0;	// playground/src/utils/Queue.scala:25:16, :51:24
+      queue_3_bits_uncached <= 1'h0;	// playground/src/utils/Queue.scala:51:{24,56}
+      queue_4_valid <= 1'h0;	// playground/src/utils/Queue.scala:51:{24,56}
       queue_4_bits_addr <= 32'h0;	// playground/src/utils/Queue.scala:51:{24,56}
       queue_4_bits_wtype <= 2'h0;	// playground/src/utils/Queue.scala:51:{24,56}
       queue_4_bits_wdata <= 32'h0;	// playground/src/utils/Queue.scala:51:{24,56}
-      queue_4_bits_uncached <= 1'h0;	// playground/src/utils/Queue.scala:25:16, :51:24
-      queue_5_valid <= 1'h0;	// playground/src/utils/Queue.scala:25:16, :51:24
+      queue_4_bits_uncached <= 1'h0;	// playground/src/utils/Queue.scala:51:{24,56}
+      queue_5_valid <= 1'h0;	// playground/src/utils/Queue.scala:51:{24,56}
       queue_5_bits_addr <= 32'h0;	// playground/src/utils/Queue.scala:51:{24,56}
       queue_5_bits_wtype <= 2'h0;	// playground/src/utils/Queue.scala:51:{24,56}
       queue_5_bits_wdata <= 32'h0;	// playground/src/utils/Queue.scala:51:{24,56}
-      queue_5_bits_uncached <= 1'h0;	// playground/src/utils/Queue.scala:25:16, :51:24
-      queue_6_valid <= 1'h0;	// playground/src/utils/Queue.scala:25:16, :51:24
+      queue_5_bits_uncached <= 1'h0;	// playground/src/utils/Queue.scala:51:{24,56}
+      queue_6_valid <= 1'h0;	// playground/src/utils/Queue.scala:51:{24,56}
       queue_6_bits_addr <= 32'h0;	// playground/src/utils/Queue.scala:51:{24,56}
       queue_6_bits_wtype <= 2'h0;	// playground/src/utils/Queue.scala:51:{24,56}
       queue_6_bits_wdata <= 32'h0;	// playground/src/utils/Queue.scala:51:{24,56}
-      queue_6_bits_uncached <= 1'h0;	// playground/src/utils/Queue.scala:25:16, :51:24
-      queue_7_valid <= 1'h0;	// playground/src/utils/Queue.scala:25:16, :51:24
+      queue_6_bits_uncached <= 1'h0;	// playground/src/utils/Queue.scala:51:{24,56}
+      queue_7_valid <= 1'h0;	// playground/src/utils/Queue.scala:51:{24,56}
       queue_7_bits_addr <= 32'h0;	// playground/src/utils/Queue.scala:51:{24,56}
       queue_7_bits_wtype <= 2'h0;	// playground/src/utils/Queue.scala:51:{24,56}
       queue_7_bits_wdata <= 32'h0;	// playground/src/utils/Queue.scala:51:{24,56}
-      queue_7_bits_uncached <= 1'h0;	// playground/src/utils/Queue.scala:25:16, :51:24
+      queue_7_bits_uncached <= 1'h0;	// playground/src/utils/Queue.scala:51:{24,56}
       rear <= 3'h0;	// playground/src/utils/Queue.scala:51:56, :53:33
       front <= 3'h0;	// playground/src/utils/Queue.scala:51:56, :54:33
     end
-    else begin	// <stdin>:3721:11
+    else begin	// <stdin>:4037:11
       automatic logic _GEN_7;	// playground/src/utils/Queue.scala:51:24, :76:31, :77:31
       automatic logic _GEN_8;	// playground/src/utils/Queue.scala:51:24, :76:31, :77:31
       automatic logic _GEN_9;	// playground/src/utils/Queue.scala:51:24, :76:31, :77:31
@@ -5409,288 +6017,296 @@ module CircularQueue_2(	// <stdin>:3720:3
             front <= _idx_T_16;	// playground/src/utils/Queue.scala:54:33, :56:32
         end
       end
-      queue_0_bits_uncached <= ~io_in_clear & ~_GEN_7 & queue_0_bits_uncached;	// playground/src/utils/Queue.scala:51:24, :69:23, :73:22, :76:31, :77:31
+      queue_0_bits_uncached <=
+        ~io_in_clear & (_GEN_7 ? io_in_enq_data_uncached : queue_0_bits_uncached);	// playground/src/utils/Queue.scala:51:24, :69:23, :73:22, :76:31, :77:31
       queue_1_valid <=
         ~(io_in_clear | io_in_deq_valid & front == 3'h1) & (_GEN_8 | queue_1_valid);	// playground/src/utils/Queue.scala:51:24, :54:33, :69:23, :73:22, :76:31, :77:31, :78:31, :81:31, :82:32
-      queue_1_bits_uncached <= ~io_in_clear & ~_GEN_8 & queue_1_bits_uncached;	// playground/src/utils/Queue.scala:51:24, :69:23, :73:22, :76:31, :77:31
+      queue_1_bits_uncached <=
+        ~io_in_clear & (_GEN_8 ? io_in_enq_data_uncached : queue_1_bits_uncached);	// playground/src/utils/Queue.scala:51:24, :69:23, :73:22, :76:31, :77:31
       queue_2_valid <=
         ~(io_in_clear | io_in_deq_valid & front == 3'h2) & (_GEN_9 | queue_2_valid);	// playground/src/utils/Queue.scala:51:24, :54:33, :69:23, :73:22, :76:31, :77:31, :78:31, :81:31, :82:32
-      queue_2_bits_uncached <= ~io_in_clear & ~_GEN_9 & queue_2_bits_uncached;	// playground/src/utils/Queue.scala:51:24, :69:23, :73:22, :76:31, :77:31
+      queue_2_bits_uncached <=
+        ~io_in_clear & (_GEN_9 ? io_in_enq_data_uncached : queue_2_bits_uncached);	// playground/src/utils/Queue.scala:51:24, :69:23, :73:22, :76:31, :77:31
       queue_3_valid <=
         ~(io_in_clear | io_in_deq_valid & front == 3'h3) & (_GEN_10 | queue_3_valid);	// playground/src/utils/Queue.scala:51:24, :54:33, :69:23, :73:22, :76:31, :77:31, :78:31, :81:31, :82:32
-      queue_3_bits_uncached <= ~io_in_clear & ~_GEN_10 & queue_3_bits_uncached;	// playground/src/utils/Queue.scala:51:24, :69:23, :73:22, :76:31, :77:31
+      queue_3_bits_uncached <=
+        ~io_in_clear & (_GEN_10 ? io_in_enq_data_uncached : queue_3_bits_uncached);	// playground/src/utils/Queue.scala:51:24, :69:23, :73:22, :76:31, :77:31
       queue_4_valid <=
         ~(io_in_clear | io_in_deq_valid & front == 3'h4) & (_GEN_11 | queue_4_valid);	// playground/src/utils/Queue.scala:51:24, :54:33, :60:34, :69:23, :73:22, :76:31, :77:31, :78:31, :81:31, :82:32
-      queue_4_bits_uncached <= ~io_in_clear & ~_GEN_11 & queue_4_bits_uncached;	// playground/src/utils/Queue.scala:51:24, :69:23, :73:22, :76:31, :77:31
+      queue_4_bits_uncached <=
+        ~io_in_clear & (_GEN_11 ? io_in_enq_data_uncached : queue_4_bits_uncached);	// playground/src/utils/Queue.scala:51:24, :69:23, :73:22, :76:31, :77:31
       queue_5_valid <=
         ~(io_in_clear | io_in_deq_valid & front == 3'h5) & (_GEN_12 | queue_5_valid);	// playground/src/utils/Queue.scala:51:24, :54:33, :60:34, :69:23, :73:22, :76:31, :77:31, :78:31, :81:31, :82:32
-      queue_5_bits_uncached <= ~io_in_clear & ~_GEN_12 & queue_5_bits_uncached;	// playground/src/utils/Queue.scala:51:24, :69:23, :73:22, :76:31, :77:31
+      queue_5_bits_uncached <=
+        ~io_in_clear & (_GEN_12 ? io_in_enq_data_uncached : queue_5_bits_uncached);	// playground/src/utils/Queue.scala:51:24, :69:23, :73:22, :76:31, :77:31
       queue_6_valid <=
         ~(io_in_clear | io_in_deq_valid & front == 3'h6) & (_GEN_13 | queue_6_valid);	// playground/src/utils/Queue.scala:51:24, :54:33, :60:34, :69:23, :73:22, :76:31, :77:31, :78:31, :81:31, :82:32
-      queue_6_bits_uncached <= ~io_in_clear & ~_GEN_13 & queue_6_bits_uncached;	// playground/src/utils/Queue.scala:51:24, :69:23, :73:22, :76:31, :77:31
+      queue_6_bits_uncached <=
+        ~io_in_clear & (_GEN_13 ? io_in_enq_data_uncached : queue_6_bits_uncached);	// playground/src/utils/Queue.scala:51:24, :69:23, :73:22, :76:31, :77:31
       queue_7_valid <=
         ~(io_in_clear | io_in_deq_valid & (&front)) & (_GEN_14 | queue_7_valid);	// playground/src/utils/Queue.scala:51:24, :54:33, :69:23, :73:22, :76:31, :77:31, :78:31, :81:31, :82:32
-      queue_7_bits_uncached <= ~io_in_clear & ~_GEN_14 & queue_7_bits_uncached;	// playground/src/utils/Queue.scala:51:24, :69:23, :73:22, :76:31, :77:31
+      queue_7_bits_uncached <=
+        ~io_in_clear & (_GEN_14 ? io_in_enq_data_uncached : queue_7_bits_uncached);	// playground/src/utils/Queue.scala:51:24, :69:23, :73:22, :76:31, :77:31
     end
   end // always @(posedge)
-  `ifdef ENABLE_INITIAL_REG_	// <stdin>:3720:3
-    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:3720:3
-      `FIRRTL_BEFORE_INITIAL	// <stdin>:3720:3
+  `ifdef ENABLE_INITIAL_REG_	// <stdin>:4036:3
+    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:4036:3
+      `FIRRTL_BEFORE_INITIAL	// <stdin>:4036:3
     `endif // FIRRTL_BEFORE_INITIAL
-    initial begin	// <stdin>:3720:3
-      automatic logic [31:0] _RANDOM[0:17];	// <stdin>:3720:3
-      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:3720:3
-        `INIT_RANDOM_PROLOG_	// <stdin>:3720:3
+    initial begin	// <stdin>:4036:3
+      automatic logic [31:0] _RANDOM[0:17];	// <stdin>:4036:3
+      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:4036:3
+        `INIT_RANDOM_PROLOG_	// <stdin>:4036:3
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// <stdin>:3720:3
+      `ifdef RANDOMIZE_REG_INIT	// <stdin>:4036:3
         for (logic [4:0] i = 5'h0; i < 5'h12; i += 5'h1) begin
-          _RANDOM[i] = `RANDOM;	// <stdin>:3720:3
-        end	// <stdin>:3720:3
-        queue_0_valid = _RANDOM[5'h0][0];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_0_bits_addr = {_RANDOM[5'h0][31:4], _RANDOM[5'h1][3:0]};	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_0_bits_wtype = _RANDOM[5'h1][5:4];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_0_bits_wdata = {_RANDOM[5'h1][31:6], _RANDOM[5'h2][5:0]};	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_0_bits_uncached = _RANDOM[5'h2][6];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_1_valid = _RANDOM[5'h2][7];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_1_bits_addr = {_RANDOM[5'h2][31:11], _RANDOM[5'h3][10:0]};	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_1_bits_wtype = _RANDOM[5'h3][12:11];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_1_bits_wdata = {_RANDOM[5'h3][31:13], _RANDOM[5'h4][12:0]};	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_1_bits_uncached = _RANDOM[5'h4][13];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_2_valid = _RANDOM[5'h4][14];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_2_bits_addr = {_RANDOM[5'h4][31:18], _RANDOM[5'h5][17:0]};	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_2_bits_wtype = _RANDOM[5'h5][19:18];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_2_bits_wdata = {_RANDOM[5'h5][31:20], _RANDOM[5'h6][19:0]};	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_2_bits_uncached = _RANDOM[5'h6][20];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_3_valid = _RANDOM[5'h6][21];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_3_bits_addr = {_RANDOM[5'h6][31:25], _RANDOM[5'h7][24:0]};	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_3_bits_wtype = _RANDOM[5'h7][26:25];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_3_bits_wdata = {_RANDOM[5'h7][31:27], _RANDOM[5'h8][26:0]};	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_3_bits_uncached = _RANDOM[5'h8][27];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_4_valid = _RANDOM[5'h8][28];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_4_bits_addr = _RANDOM[5'h9];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_4_bits_wtype = _RANDOM[5'hA][1:0];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_4_bits_wdata = {_RANDOM[5'hA][31:2], _RANDOM[5'hB][1:0]};	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_4_bits_uncached = _RANDOM[5'hB][2];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_5_valid = _RANDOM[5'hB][3];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_5_bits_addr = {_RANDOM[5'hB][31:7], _RANDOM[5'hC][6:0]};	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_5_bits_wtype = _RANDOM[5'hC][8:7];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_5_bits_wdata = {_RANDOM[5'hC][31:9], _RANDOM[5'hD][8:0]};	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_5_bits_uncached = _RANDOM[5'hD][9];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_6_valid = _RANDOM[5'hD][10];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_6_bits_addr = {_RANDOM[5'hD][31:14], _RANDOM[5'hE][13:0]};	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_6_bits_wtype = _RANDOM[5'hE][15:14];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_6_bits_wdata = {_RANDOM[5'hE][31:16], _RANDOM[5'hF][15:0]};	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_6_bits_uncached = _RANDOM[5'hF][16];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_7_valid = _RANDOM[5'hF][17];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_7_bits_addr = {_RANDOM[5'hF][31:21], _RANDOM[5'h10][20:0]};	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_7_bits_wtype = _RANDOM[5'h10][22:21];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_7_bits_wdata = {_RANDOM[5'h10][31:23], _RANDOM[5'h11][22:0]};	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        queue_7_bits_uncached = _RANDOM[5'h11][23];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24
-        rear = _RANDOM[5'h11][26:24];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24, :53:33
-        front = _RANDOM[5'h11][29:27];	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24, :54:33
+          _RANDOM[i] = `RANDOM;	// <stdin>:4036:3
+        end	// <stdin>:4036:3
+        queue_0_valid = _RANDOM[5'h0][0];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_0_bits_addr = {_RANDOM[5'h0][31:4], _RANDOM[5'h1][3:0]};	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_0_bits_wtype = _RANDOM[5'h1][5:4];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_0_bits_wdata = {_RANDOM[5'h1][31:6], _RANDOM[5'h2][5:0]};	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_0_bits_uncached = _RANDOM[5'h2][6];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_1_valid = _RANDOM[5'h2][7];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_1_bits_addr = {_RANDOM[5'h2][31:11], _RANDOM[5'h3][10:0]};	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_1_bits_wtype = _RANDOM[5'h3][12:11];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_1_bits_wdata = {_RANDOM[5'h3][31:13], _RANDOM[5'h4][12:0]};	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_1_bits_uncached = _RANDOM[5'h4][13];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_2_valid = _RANDOM[5'h4][14];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_2_bits_addr = {_RANDOM[5'h4][31:18], _RANDOM[5'h5][17:0]};	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_2_bits_wtype = _RANDOM[5'h5][19:18];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_2_bits_wdata = {_RANDOM[5'h5][31:20], _RANDOM[5'h6][19:0]};	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_2_bits_uncached = _RANDOM[5'h6][20];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_3_valid = _RANDOM[5'h6][21];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_3_bits_addr = {_RANDOM[5'h6][31:25], _RANDOM[5'h7][24:0]};	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_3_bits_wtype = _RANDOM[5'h7][26:25];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_3_bits_wdata = {_RANDOM[5'h7][31:27], _RANDOM[5'h8][26:0]};	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_3_bits_uncached = _RANDOM[5'h8][27];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_4_valid = _RANDOM[5'h8][28];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_4_bits_addr = _RANDOM[5'h9];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_4_bits_wtype = _RANDOM[5'hA][1:0];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_4_bits_wdata = {_RANDOM[5'hA][31:2], _RANDOM[5'hB][1:0]};	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_4_bits_uncached = _RANDOM[5'hB][2];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_5_valid = _RANDOM[5'hB][3];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_5_bits_addr = {_RANDOM[5'hB][31:7], _RANDOM[5'hC][6:0]};	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_5_bits_wtype = _RANDOM[5'hC][8:7];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_5_bits_wdata = {_RANDOM[5'hC][31:9], _RANDOM[5'hD][8:0]};	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_5_bits_uncached = _RANDOM[5'hD][9];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_6_valid = _RANDOM[5'hD][10];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_6_bits_addr = {_RANDOM[5'hD][31:14], _RANDOM[5'hE][13:0]};	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_6_bits_wtype = _RANDOM[5'hE][15:14];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_6_bits_wdata = {_RANDOM[5'hE][31:16], _RANDOM[5'hF][15:0]};	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_6_bits_uncached = _RANDOM[5'hF][16];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_7_valid = _RANDOM[5'hF][17];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_7_bits_addr = {_RANDOM[5'hF][31:21], _RANDOM[5'h10][20:0]};	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_7_bits_wtype = _RANDOM[5'h10][22:21];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_7_bits_wdata = {_RANDOM[5'h10][31:23], _RANDOM[5'h11][22:0]};	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        queue_7_bits_uncached = _RANDOM[5'h11][23];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24
+        rear = _RANDOM[5'h11][26:24];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24, :53:33
+        front = _RANDOM[5'h11][29:27];	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24, :54:33
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:3720:3
-      `FIRRTL_AFTER_INITIAL	// <stdin>:3720:3
+    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:4036:3
+      `FIRRTL_AFTER_INITIAL	// <stdin>:4036:3
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  assign io_out_front_data_addr = _GEN_1;	// <stdin>:3720:3, playground/src/utils/Queue.scala:61:39
-  assign io_out_front_data_wtype = _GEN_3;	// <stdin>:3720:3, playground/src/utils/Queue.scala:61:39
-  assign io_out_front_data_wdata = _GEN_5;	// <stdin>:3720:3, playground/src/utils/Queue.scala:61:39
-  assign io_out_front_data_uncached = _GEN_6[front];	// <stdin>:3720:3, playground/src/utils/Queue.scala:54:33, :67:23
+  assign io_out_front_data_addr = _GEN_1;	// <stdin>:4036:3, playground/src/utils/Queue.scala:61:39
+  assign io_out_front_data_wtype = _GEN_3;	// <stdin>:4036:3, playground/src/utils/Queue.scala:61:39
+  assign io_out_front_data_wdata = _GEN_5;	// <stdin>:4036:3, playground/src/utils/Queue.scala:61:39
+  assign io_out_front_data_uncached = _GEN_6[front];	// <stdin>:4036:3, playground/src/utils/Queue.scala:54:33, :67:23
   assign io_out_empty =
     ~(queue_0_valid | queue_1_valid | queue_2_valid | queue_3_valid | queue_4_valid
-      | queue_5_valid | queue_6_valid | queue_7_valid);	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24, :66:{26,60}
+      | queue_5_valid | queue_6_valid | queue_7_valid);	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24, :66:{26,60}
   assign io_out_full =
     queue_0_valid & queue_1_valid & queue_2_valid & queue_3_valid & queue_4_valid
-    & queue_5_valid & queue_6_valid & queue_7_valid;	// <stdin>:3720:3, playground/src/utils/Queue.scala:51:24, :65:59
-  assign io_out_element_vec_0_valid = _GEN[front];	// <stdin>:3720:3, playground/src/utils/Queue.scala:54:33, :61:39
-  assign io_out_element_vec_0_bits_addr = _GEN_1;	// <stdin>:3720:3, playground/src/utils/Queue.scala:61:39
-  assign io_out_element_vec_0_bits_wtype = _GEN_3;	// <stdin>:3720:3, playground/src/utils/Queue.scala:61:39
-  assign io_out_element_vec_0_bits_wdata = _GEN_5;	// <stdin>:3720:3, playground/src/utils/Queue.scala:61:39
-  assign io_out_element_vec_1_valid = _GEN[_idx_T_16];	// <stdin>:3720:3, playground/src/utils/Queue.scala:56:32, :61:39
-  assign io_out_element_vec_1_bits_addr = _GEN_0[_idx_T_16];	// <stdin>:3720:3, playground/src/utils/Queue.scala:56:32, :61:39
-  assign io_out_element_vec_1_bits_wtype = _GEN_2[_idx_T_16];	// <stdin>:3720:3, playground/src/utils/Queue.scala:56:32, :61:39
-  assign io_out_element_vec_1_bits_wdata = _GEN_4[_idx_T_16];	// <stdin>:3720:3, playground/src/utils/Queue.scala:56:32, :61:39
-  assign io_out_element_vec_2_valid = _GEN[_idx_T_25];	// <stdin>:3720:3, playground/src/utils/Queue.scala:60:34, :61:39
-  assign io_out_element_vec_2_bits_addr = _GEN_0[_idx_T_25];	// <stdin>:3720:3, playground/src/utils/Queue.scala:60:34, :61:39
-  assign io_out_element_vec_2_bits_wtype = _GEN_2[_idx_T_25];	// <stdin>:3720:3, playground/src/utils/Queue.scala:60:34, :61:39
-  assign io_out_element_vec_2_bits_wdata = _GEN_4[_idx_T_25];	// <stdin>:3720:3, playground/src/utils/Queue.scala:60:34, :61:39
-  assign io_out_element_vec_3_valid = _GEN[_idx_T_34];	// <stdin>:3720:3, playground/src/utils/Queue.scala:60:34, :61:39
-  assign io_out_element_vec_3_bits_addr = _GEN_0[_idx_T_34];	// <stdin>:3720:3, playground/src/utils/Queue.scala:60:34, :61:39
-  assign io_out_element_vec_3_bits_wtype = _GEN_2[_idx_T_34];	// <stdin>:3720:3, playground/src/utils/Queue.scala:60:34, :61:39
-  assign io_out_element_vec_3_bits_wdata = _GEN_4[_idx_T_34];	// <stdin>:3720:3, playground/src/utils/Queue.scala:60:34, :61:39
-  assign io_out_element_vec_4_valid = _GEN[_idx_T_43];	// <stdin>:3720:3, playground/src/utils/Queue.scala:60:34, :61:39
-  assign io_out_element_vec_4_bits_addr = _GEN_0[_idx_T_43];	// <stdin>:3720:3, playground/src/utils/Queue.scala:60:34, :61:39
-  assign io_out_element_vec_4_bits_wtype = _GEN_2[_idx_T_43];	// <stdin>:3720:3, playground/src/utils/Queue.scala:60:34, :61:39
-  assign io_out_element_vec_4_bits_wdata = _GEN_4[_idx_T_43];	// <stdin>:3720:3, playground/src/utils/Queue.scala:60:34, :61:39
-  assign io_out_element_vec_5_valid = _GEN[_idx_T_52];	// <stdin>:3720:3, playground/src/utils/Queue.scala:60:34, :61:39
-  assign io_out_element_vec_5_bits_addr = _GEN_0[_idx_T_52];	// <stdin>:3720:3, playground/src/utils/Queue.scala:60:34, :61:39
-  assign io_out_element_vec_5_bits_wtype = _GEN_2[_idx_T_52];	// <stdin>:3720:3, playground/src/utils/Queue.scala:60:34, :61:39
-  assign io_out_element_vec_5_bits_wdata = _GEN_4[_idx_T_52];	// <stdin>:3720:3, playground/src/utils/Queue.scala:60:34, :61:39
-  assign io_out_element_vec_6_valid = _GEN[_idx_T_61];	// <stdin>:3720:3, playground/src/utils/Queue.scala:60:34, :61:39
-  assign io_out_element_vec_6_bits_addr = _GEN_0[_idx_T_61];	// <stdin>:3720:3, playground/src/utils/Queue.scala:60:34, :61:39
-  assign io_out_element_vec_6_bits_wtype = _GEN_2[_idx_T_61];	// <stdin>:3720:3, playground/src/utils/Queue.scala:60:34, :61:39
-  assign io_out_element_vec_6_bits_wdata = _GEN_4[_idx_T_61];	// <stdin>:3720:3, playground/src/utils/Queue.scala:60:34, :61:39
-  assign io_out_element_vec_7_valid = _GEN[_idx_T_70];	// <stdin>:3720:3, playground/src/utils/Queue.scala:60:34, :61:39
-  assign io_out_element_vec_7_bits_addr = _GEN_0[_idx_T_70];	// <stdin>:3720:3, playground/src/utils/Queue.scala:60:34, :61:39
-  assign io_out_element_vec_7_bits_wtype = _GEN_2[_idx_T_70];	// <stdin>:3720:3, playground/src/utils/Queue.scala:60:34, :61:39
-  assign io_out_element_vec_7_bits_wdata = _GEN_4[_idx_T_70];	// <stdin>:3720:3, playground/src/utils/Queue.scala:60:34, :61:39
+    & queue_5_valid & queue_6_valid & queue_7_valid;	// <stdin>:4036:3, playground/src/utils/Queue.scala:51:24, :65:59
+  assign io_out_element_vec_0_valid = _GEN[front];	// <stdin>:4036:3, playground/src/utils/Queue.scala:54:33, :61:39
+  assign io_out_element_vec_0_bits_addr = _GEN_1;	// <stdin>:4036:3, playground/src/utils/Queue.scala:61:39
+  assign io_out_element_vec_0_bits_wtype = _GEN_3;	// <stdin>:4036:3, playground/src/utils/Queue.scala:61:39
+  assign io_out_element_vec_0_bits_wdata = _GEN_5;	// <stdin>:4036:3, playground/src/utils/Queue.scala:61:39
+  assign io_out_element_vec_1_valid = _GEN[_idx_T_16];	// <stdin>:4036:3, playground/src/utils/Queue.scala:56:32, :61:39
+  assign io_out_element_vec_1_bits_addr = _GEN_0[_idx_T_16];	// <stdin>:4036:3, playground/src/utils/Queue.scala:56:32, :61:39
+  assign io_out_element_vec_1_bits_wtype = _GEN_2[_idx_T_16];	// <stdin>:4036:3, playground/src/utils/Queue.scala:56:32, :61:39
+  assign io_out_element_vec_1_bits_wdata = _GEN_4[_idx_T_16];	// <stdin>:4036:3, playground/src/utils/Queue.scala:56:32, :61:39
+  assign io_out_element_vec_2_valid = _GEN[_idx_T_25];	// <stdin>:4036:3, playground/src/utils/Queue.scala:60:34, :61:39
+  assign io_out_element_vec_2_bits_addr = _GEN_0[_idx_T_25];	// <stdin>:4036:3, playground/src/utils/Queue.scala:60:34, :61:39
+  assign io_out_element_vec_2_bits_wtype = _GEN_2[_idx_T_25];	// <stdin>:4036:3, playground/src/utils/Queue.scala:60:34, :61:39
+  assign io_out_element_vec_2_bits_wdata = _GEN_4[_idx_T_25];	// <stdin>:4036:3, playground/src/utils/Queue.scala:60:34, :61:39
+  assign io_out_element_vec_3_valid = _GEN[_idx_T_34];	// <stdin>:4036:3, playground/src/utils/Queue.scala:60:34, :61:39
+  assign io_out_element_vec_3_bits_addr = _GEN_0[_idx_T_34];	// <stdin>:4036:3, playground/src/utils/Queue.scala:60:34, :61:39
+  assign io_out_element_vec_3_bits_wtype = _GEN_2[_idx_T_34];	// <stdin>:4036:3, playground/src/utils/Queue.scala:60:34, :61:39
+  assign io_out_element_vec_3_bits_wdata = _GEN_4[_idx_T_34];	// <stdin>:4036:3, playground/src/utils/Queue.scala:60:34, :61:39
+  assign io_out_element_vec_4_valid = _GEN[_idx_T_43];	// <stdin>:4036:3, playground/src/utils/Queue.scala:60:34, :61:39
+  assign io_out_element_vec_4_bits_addr = _GEN_0[_idx_T_43];	// <stdin>:4036:3, playground/src/utils/Queue.scala:60:34, :61:39
+  assign io_out_element_vec_4_bits_wtype = _GEN_2[_idx_T_43];	// <stdin>:4036:3, playground/src/utils/Queue.scala:60:34, :61:39
+  assign io_out_element_vec_4_bits_wdata = _GEN_4[_idx_T_43];	// <stdin>:4036:3, playground/src/utils/Queue.scala:60:34, :61:39
+  assign io_out_element_vec_5_valid = _GEN[_idx_T_52];	// <stdin>:4036:3, playground/src/utils/Queue.scala:60:34, :61:39
+  assign io_out_element_vec_5_bits_addr = _GEN_0[_idx_T_52];	// <stdin>:4036:3, playground/src/utils/Queue.scala:60:34, :61:39
+  assign io_out_element_vec_5_bits_wtype = _GEN_2[_idx_T_52];	// <stdin>:4036:3, playground/src/utils/Queue.scala:60:34, :61:39
+  assign io_out_element_vec_5_bits_wdata = _GEN_4[_idx_T_52];	// <stdin>:4036:3, playground/src/utils/Queue.scala:60:34, :61:39
+  assign io_out_element_vec_6_valid = _GEN[_idx_T_61];	// <stdin>:4036:3, playground/src/utils/Queue.scala:60:34, :61:39
+  assign io_out_element_vec_6_bits_addr = _GEN_0[_idx_T_61];	// <stdin>:4036:3, playground/src/utils/Queue.scala:60:34, :61:39
+  assign io_out_element_vec_6_bits_wtype = _GEN_2[_idx_T_61];	// <stdin>:4036:3, playground/src/utils/Queue.scala:60:34, :61:39
+  assign io_out_element_vec_6_bits_wdata = _GEN_4[_idx_T_61];	// <stdin>:4036:3, playground/src/utils/Queue.scala:60:34, :61:39
+  assign io_out_element_vec_7_valid = _GEN[_idx_T_70];	// <stdin>:4036:3, playground/src/utils/Queue.scala:60:34, :61:39
+  assign io_out_element_vec_7_bits_addr = _GEN_0[_idx_T_70];	// <stdin>:4036:3, playground/src/utils/Queue.scala:60:34, :61:39
+  assign io_out_element_vec_7_bits_wtype = _GEN_2[_idx_T_70];	// <stdin>:4036:3, playground/src/utils/Queue.scala:60:34, :61:39
+  assign io_out_element_vec_7_bits_wdata = _GEN_4[_idx_T_70];	// <stdin>:4036:3, playground/src/utils/Queue.scala:60:34, :61:39
 endmodule
 
-module DelayN(	// <stdin>:4012:3, :4052:3
-  input        clock,	// <stdin>:4013:11, :4053:11
+module DelayN(	// <stdin>:4328:3, :4368:3
+  input        clock,	// <stdin>:4329:11, :4369:11
   input  [2:0] io_in,	// playground/src/utils/utils.scala:36:17
   output [2:0] io_out	// playground/src/utils/utils.scala:36:17
 );
 
   reg [2:0] REG;	// playground/src/utils/utils.scala:42:22
-  always @(posedge clock)	// <stdin>:4013:11, :4053:11
+  always @(posedge clock)	// <stdin>:4329:11, :4369:11
     REG <= io_in;	// playground/src/utils/utils.scala:42:22
-  `ifdef ENABLE_INITIAL_REG_	// <stdin>:4012:3, :4052:3
-    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:4012:3, :4052:3
-      `FIRRTL_BEFORE_INITIAL	// <stdin>:4012:3, :4052:3
+  `ifdef ENABLE_INITIAL_REG_	// <stdin>:4328:3, :4368:3
+    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:4328:3, :4368:3
+      `FIRRTL_BEFORE_INITIAL	// <stdin>:4328:3, :4368:3
     `endif // FIRRTL_BEFORE_INITIAL
-    initial begin	// <stdin>:4012:3, :4052:3
-      automatic logic [31:0] _RANDOM[0:0];	// <stdin>:4012:3, :4052:3
-      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:4012:3, :4052:3
-        `INIT_RANDOM_PROLOG_	// <stdin>:4012:3, :4052:3
+    initial begin	// <stdin>:4328:3, :4368:3
+      automatic logic [31:0] _RANDOM[0:0];	// <stdin>:4328:3, :4368:3
+      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:4328:3, :4368:3
+        `INIT_RANDOM_PROLOG_	// <stdin>:4328:3, :4368:3
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// <stdin>:4012:3, :4052:3
-        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// <stdin>:4012:3, :4052:3
-        REG = _RANDOM[/*Zero width*/ 1'b0][2:0];	// <stdin>:4012:3, :4052:3, playground/src/utils/utils.scala:42:22
+      `ifdef RANDOMIZE_REG_INIT	// <stdin>:4328:3, :4368:3
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// <stdin>:4328:3, :4368:3
+        REG = _RANDOM[/*Zero width*/ 1'b0][2:0];	// <stdin>:4328:3, :4368:3, playground/src/utils/utils.scala:42:22
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:4012:3, :4052:3
-      `FIRRTL_AFTER_INITIAL	// <stdin>:4012:3, :4052:3
+    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:4328:3, :4368:3
+      `FIRRTL_AFTER_INITIAL	// <stdin>:4328:3, :4368:3
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  assign io_out = REG;	// <stdin>:4012:3, :4052:3, playground/src/utils/utils.scala:42:22
+  assign io_out = REG;	// <stdin>:4328:3, :4368:3, playground/src/utils/utils.scala:42:22
 endmodule
 
-module DelayN_1(	// <stdin>:4022:3
-  input        clock,	// <stdin>:4023:11
+module DelayN_1(	// <stdin>:4338:3
+  input        clock,	// <stdin>:4339:11
   input  [1:0] io_in,	// playground/src/utils/utils.scala:36:17
   output [1:0] io_out	// playground/src/utils/utils.scala:36:17
 );
 
   reg [1:0] REG;	// playground/src/utils/utils.scala:42:22
-  always @(posedge clock)	// <stdin>:4023:11
+  always @(posedge clock)	// <stdin>:4339:11
     REG <= io_in;	// playground/src/utils/utils.scala:42:22
-  `ifdef ENABLE_INITIAL_REG_	// <stdin>:4022:3
-    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:4022:3
-      `FIRRTL_BEFORE_INITIAL	// <stdin>:4022:3
+  `ifdef ENABLE_INITIAL_REG_	// <stdin>:4338:3
+    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:4338:3
+      `FIRRTL_BEFORE_INITIAL	// <stdin>:4338:3
     `endif // FIRRTL_BEFORE_INITIAL
-    initial begin	// <stdin>:4022:3
-      automatic logic [31:0] _RANDOM[0:0];	// <stdin>:4022:3
-      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:4022:3
-        `INIT_RANDOM_PROLOG_	// <stdin>:4022:3
+    initial begin	// <stdin>:4338:3
+      automatic logic [31:0] _RANDOM[0:0];	// <stdin>:4338:3
+      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:4338:3
+        `INIT_RANDOM_PROLOG_	// <stdin>:4338:3
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// <stdin>:4022:3
-        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// <stdin>:4022:3
-        REG = _RANDOM[/*Zero width*/ 1'b0][1:0];	// <stdin>:4022:3, playground/src/utils/utils.scala:42:22
+      `ifdef RANDOMIZE_REG_INIT	// <stdin>:4338:3
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// <stdin>:4338:3
+        REG = _RANDOM[/*Zero width*/ 1'b0][1:0];	// <stdin>:4338:3, playground/src/utils/utils.scala:42:22
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:4022:3
-      `FIRRTL_AFTER_INITIAL	// <stdin>:4022:3
+    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:4338:3
+      `FIRRTL_AFTER_INITIAL	// <stdin>:4338:3
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  assign io_out = REG;	// <stdin>:4022:3, playground/src/utils/utils.scala:42:22
+  assign io_out = REG;	// <stdin>:4338:3, playground/src/utils/utils.scala:42:22
 endmodule
 
-module DelayN_2(	// <stdin>:4032:3
-  input         clock,	// <stdin>:4033:11
+module DelayN_2(	// <stdin>:4348:3
+  input         clock,	// <stdin>:4349:11
   input  [62:0] io_in,	// playground/src/utils/utils.scala:36:17
   output [62:0] io_out	// playground/src/utils/utils.scala:36:17
 );
 
   reg [62:0] REG;	// playground/src/utils/utils.scala:42:22
-  always @(posedge clock)	// <stdin>:4033:11
+  always @(posedge clock)	// <stdin>:4349:11
     REG <= io_in;	// playground/src/utils/utils.scala:42:22
-  `ifdef ENABLE_INITIAL_REG_	// <stdin>:4032:3
-    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:4032:3
-      `FIRRTL_BEFORE_INITIAL	// <stdin>:4032:3
+  `ifdef ENABLE_INITIAL_REG_	// <stdin>:4348:3
+    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:4348:3
+      `FIRRTL_BEFORE_INITIAL	// <stdin>:4348:3
     `endif // FIRRTL_BEFORE_INITIAL
-    initial begin	// <stdin>:4032:3
-      automatic logic [31:0] _RANDOM[0:1];	// <stdin>:4032:3
-      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:4032:3
-        `INIT_RANDOM_PROLOG_	// <stdin>:4032:3
+    initial begin	// <stdin>:4348:3
+      automatic logic [31:0] _RANDOM[0:1];	// <stdin>:4348:3
+      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:4348:3
+        `INIT_RANDOM_PROLOG_	// <stdin>:4348:3
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// <stdin>:4032:3
+      `ifdef RANDOMIZE_REG_INIT	// <stdin>:4348:3
         for (logic [1:0] i = 2'h0; i < 2'h2; i += 2'h1) begin
-          _RANDOM[i[0]] = `RANDOM;	// <stdin>:4032:3
-        end	// <stdin>:4032:3
-        REG = {_RANDOM[1'h0], _RANDOM[1'h1][30:0]};	// <stdin>:4032:3, playground/src/utils/utils.scala:42:22
+          _RANDOM[i[0]] = `RANDOM;	// <stdin>:4348:3
+        end	// <stdin>:4348:3
+        REG = {_RANDOM[1'h0], _RANDOM[1'h1][30:0]};	// <stdin>:4348:3, playground/src/utils/utils.scala:42:22
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:4032:3
-      `FIRRTL_AFTER_INITIAL	// <stdin>:4032:3
+    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:4348:3
+      `FIRRTL_AFTER_INITIAL	// <stdin>:4348:3
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  assign io_out = REG;	// <stdin>:4032:3, playground/src/utils/utils.scala:42:22
+  assign io_out = REG;	// <stdin>:4348:3, playground/src/utils/utils.scala:42:22
 endmodule
 
-module DelayN_3(	// <stdin>:4042:3, :4082:3, :8339:3, :8349:3, :8379:3
-  input         clock,	// <stdin>:4043:11, :4083:11, :8340:11, :8350:11, :8380:11
+module DelayN_3(	// <stdin>:4358:3, :4398:3, :8682:3, :8692:3, :8722:3, :8787:3, :8797:3, :8807:3, :8835:3, :8845:3
+  input         clock,	// <stdin>:4359:11, :4399:11, :8683:11, :8693:11, :8723:11, :8788:11, :8798:11, :8808:11, :8836:11, :8846:11
   input  [31:0] io_in,	// playground/src/utils/utils.scala:36:17
   output [31:0] io_out	// playground/src/utils/utils.scala:36:17
 );
 
   reg [31:0] REG;	// playground/src/utils/utils.scala:42:22
-  always @(posedge clock)	// <stdin>:4043:11, :4083:11, :8340:11, :8350:11, :8380:11
+  always @(posedge clock)	// <stdin>:4359:11, :4399:11, :8683:11, :8693:11, :8723:11, :8788:11, :8798:11, :8808:11, :8836:11, :8846:11
     REG <= io_in;	// playground/src/utils/utils.scala:42:22
-  `ifdef ENABLE_INITIAL_REG_	// <stdin>:4042:3, :4082:3, :8339:3, :8349:3, :8379:3
-    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:4042:3, :4082:3, :8339:3, :8349:3, :8379:3
-      `FIRRTL_BEFORE_INITIAL	// <stdin>:4042:3, :4082:3, :8339:3, :8349:3, :8379:3
+  `ifdef ENABLE_INITIAL_REG_	// <stdin>:4358:3, :4398:3, :8682:3, :8692:3, :8722:3, :8787:3, :8797:3, :8807:3, :8835:3, :8845:3
+    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:4358:3, :4398:3, :8682:3, :8692:3, :8722:3, :8787:3, :8797:3, :8807:3, :8835:3, :8845:3
+      `FIRRTL_BEFORE_INITIAL	// <stdin>:4358:3, :4398:3, :8682:3, :8692:3, :8722:3, :8787:3, :8797:3, :8807:3, :8835:3, :8845:3
     `endif // FIRRTL_BEFORE_INITIAL
-    initial begin	// <stdin>:4042:3, :4082:3, :8339:3, :8349:3, :8379:3
-      automatic logic [31:0] _RANDOM[0:0];	// <stdin>:4042:3, :4082:3, :8339:3, :8349:3, :8379:3
-      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:4042:3, :4082:3, :8339:3, :8349:3, :8379:3
-        `INIT_RANDOM_PROLOG_	// <stdin>:4042:3, :4082:3, :8339:3, :8349:3, :8379:3
+    initial begin	// <stdin>:4358:3, :4398:3, :8682:3, :8692:3, :8722:3, :8787:3, :8797:3, :8807:3, :8835:3, :8845:3
+      automatic logic [31:0] _RANDOM[0:0];	// <stdin>:4358:3, :4398:3, :8682:3, :8692:3, :8722:3, :8787:3, :8797:3, :8807:3, :8835:3, :8845:3
+      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:4358:3, :4398:3, :8682:3, :8692:3, :8722:3, :8787:3, :8797:3, :8807:3, :8835:3, :8845:3
+        `INIT_RANDOM_PROLOG_	// <stdin>:4358:3, :4398:3, :8682:3, :8692:3, :8722:3, :8787:3, :8797:3, :8807:3, :8835:3, :8845:3
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// <stdin>:4042:3, :4082:3, :8339:3, :8349:3, :8379:3
-        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// <stdin>:4042:3, :4082:3, :8339:3, :8349:3, :8379:3
-        REG = _RANDOM[/*Zero width*/ 1'b0];	// <stdin>:4042:3, :4082:3, :8339:3, :8349:3, :8379:3, playground/src/utils/utils.scala:42:22
+      `ifdef RANDOMIZE_REG_INIT	// <stdin>:4358:3, :4398:3, :8682:3, :8692:3, :8722:3, :8787:3, :8797:3, :8807:3, :8835:3, :8845:3
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// <stdin>:4358:3, :4398:3, :8682:3, :8692:3, :8722:3, :8787:3, :8797:3, :8807:3, :8835:3, :8845:3
+        REG = _RANDOM[/*Zero width*/ 1'b0];	// <stdin>:4358:3, :4398:3, :8682:3, :8692:3, :8722:3, :8787:3, :8797:3, :8807:3, :8835:3, :8845:3, playground/src/utils/utils.scala:42:22
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:4042:3, :4082:3, :8339:3, :8349:3, :8379:3
-      `FIRRTL_AFTER_INITIAL	// <stdin>:4042:3, :4082:3, :8339:3, :8349:3, :8379:3
+    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:4358:3, :4398:3, :8682:3, :8692:3, :8722:3, :8787:3, :8797:3, :8807:3, :8835:3, :8845:3
+      `FIRRTL_AFTER_INITIAL	// <stdin>:4358:3, :4398:3, :8682:3, :8692:3, :8722:3, :8787:3, :8797:3, :8807:3, :8835:3, :8845:3
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  assign io_out = REG;	// <stdin>:4042:3, :4082:3, :8339:3, :8349:3, :8379:3, playground/src/utils/utils.scala:42:22
+  assign io_out = REG;	// <stdin>:4358:3, :4398:3, :8682:3, :8692:3, :8722:3, :8787:3, :8797:3, :8807:3, :8835:3, :8845:3, playground/src/utils/utils.scala:42:22
 endmodule
 
-module DelayN_5(	// <stdin>:4062:3, :4072:3, :8329:3, :8359:3
-  input  clock,	// <stdin>:4063:11, :4073:11, :8330:11, :8360:11
+module DelayN_5(	// <stdin>:4378:3, :4388:3, :4456:3, :8672:3, :8702:3
+  input  clock,	// <stdin>:4379:11, :4389:11, :4457:11, :8673:11, :8703:11
          io_in,	// playground/src/utils/utils.scala:36:17
   output io_out	// playground/src/utils/utils.scala:36:17
 );
 
   reg REG;	// playground/src/utils/utils.scala:42:22
-  always @(posedge clock)	// <stdin>:4063:11, :4073:11, :8330:11, :8360:11
+  always @(posedge clock)	// <stdin>:4379:11, :4389:11, :4457:11, :8673:11, :8703:11
     REG <= io_in;	// playground/src/utils/utils.scala:42:22
-  `ifdef ENABLE_INITIAL_REG_	// <stdin>:4062:3, :4072:3, :8329:3, :8359:3
-    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:4062:3, :4072:3, :8329:3, :8359:3
-      `FIRRTL_BEFORE_INITIAL	// <stdin>:4062:3, :4072:3, :8329:3, :8359:3
+  `ifdef ENABLE_INITIAL_REG_	// <stdin>:4378:3, :4388:3, :4456:3, :8672:3, :8702:3
+    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:4378:3, :4388:3, :4456:3, :8672:3, :8702:3
+      `FIRRTL_BEFORE_INITIAL	// <stdin>:4378:3, :4388:3, :4456:3, :8672:3, :8702:3
     `endif // FIRRTL_BEFORE_INITIAL
-    initial begin	// <stdin>:4062:3, :4072:3, :8329:3, :8359:3
-      automatic logic [31:0] _RANDOM[0:0];	// <stdin>:4062:3, :4072:3, :8329:3, :8359:3
-      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:4062:3, :4072:3, :8329:3, :8359:3
-        `INIT_RANDOM_PROLOG_	// <stdin>:4062:3, :4072:3, :8329:3, :8359:3
+    initial begin	// <stdin>:4378:3, :4388:3, :4456:3, :8672:3, :8702:3
+      automatic logic [31:0] _RANDOM[0:0];	// <stdin>:4378:3, :4388:3, :4456:3, :8672:3, :8702:3
+      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:4378:3, :4388:3, :4456:3, :8672:3, :8702:3
+        `INIT_RANDOM_PROLOG_	// <stdin>:4378:3, :4388:3, :4456:3, :8672:3, :8702:3
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// <stdin>:4062:3, :4072:3, :8329:3, :8359:3
-        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// <stdin>:4062:3, :4072:3, :8329:3, :8359:3
-        REG = _RANDOM[/*Zero width*/ 1'b0][0];	// <stdin>:4062:3, :4072:3, :8329:3, :8359:3, playground/src/utils/utils.scala:42:22
+      `ifdef RANDOMIZE_REG_INIT	// <stdin>:4378:3, :4388:3, :4456:3, :8672:3, :8702:3
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// <stdin>:4378:3, :4388:3, :4456:3, :8672:3, :8702:3
+        REG = _RANDOM[/*Zero width*/ 1'b0][0];	// <stdin>:4378:3, :4388:3, :4456:3, :8672:3, :8702:3, playground/src/utils/utils.scala:42:22
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:4062:3, :4072:3, :8329:3, :8359:3
-      `FIRRTL_AFTER_INITIAL	// <stdin>:4062:3, :4072:3, :8329:3, :8359:3
+    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:4378:3, :4388:3, :4456:3, :8672:3, :8702:3
+      `FIRRTL_AFTER_INITIAL	// <stdin>:4378:3, :4388:3, :4456:3, :8672:3, :8702:3
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  assign io_out = REG;	// <stdin>:4062:3, :4072:3, :8329:3, :8359:3, playground/src/utils/utils.scala:42:22
+  assign io_out = REG;	// <stdin>:4378:3, :4388:3, :4456:3, :8672:3, :8702:3, playground/src/utils/utils.scala:42:22
 endmodule
 
-module Arbiter2_CacheReqIO(	// <stdin>:4092:3
+module Arbiter2_CacheReqIO(	// <stdin>:4408:3
   input         io_in_0_valid,	// src/main/scala/chisel3/util/Arbiter.scala:140:14
   input  [31:0] io_in_0_bits_vaddr,	// src/main/scala/chisel3/util/Arbiter.scala:140:14
   input  [1:0]  io_in_0_bits_wtype,	// src/main/scala/chisel3/util/Arbiter.scala:140:14
@@ -5711,49 +6327,49 @@ module Arbiter2_CacheReqIO(	// <stdin>:4092:3
                 io_chosen	// src/main/scala/chisel3/util/Arbiter.scala:140:14
 );
 
-  assign io_in_0_ready = io_out_ready;	// <stdin>:4092:3
-  assign io_in_1_ready = ~io_in_0_valid & io_out_ready;	// <stdin>:4092:3, src/main/scala/chisel3/util/Arbiter.scala:45:78, :153:19
-  assign io_out_valid = io_in_0_valid | io_in_1_valid;	// <stdin>:4092:3, src/main/scala/chisel3/util/Arbiter.scala:154:31
-  assign io_out_bits_wr = io_in_0_valid;	// <stdin>:4092:3
-  assign io_out_bits_vaddr = io_in_0_valid ? io_in_0_bits_vaddr : io_in_1_bits_vaddr;	// <stdin>:4092:3, src/main/scala/chisel3/util/Arbiter.scala:143:15, :145:26, :147:19
-  assign io_out_bits_wtype = io_in_0_valid ? io_in_0_bits_wtype : 2'h0;	// <stdin>:4092:3, src/main/scala/chisel3/util/Arbiter.scala:140:14, :143:15, :145:26, :147:19
-  assign io_out_bits_wdata = io_in_0_valid ? io_in_0_bits_wdata : 32'h0;	// <stdin>:4092:3, src/main/scala/chisel3/util/Arbiter.scala:140:14, :143:15, :145:26, :147:19
+  assign io_in_0_ready = io_out_ready;	// <stdin>:4408:3
+  assign io_in_1_ready = ~io_in_0_valid & io_out_ready;	// <stdin>:4408:3, src/main/scala/chisel3/util/Arbiter.scala:45:78, :153:19
+  assign io_out_valid = io_in_0_valid | io_in_1_valid;	// <stdin>:4408:3, src/main/scala/chisel3/util/Arbiter.scala:154:31
+  assign io_out_bits_wr = io_in_0_valid;	// <stdin>:4408:3
+  assign io_out_bits_vaddr = io_in_0_valid ? io_in_0_bits_vaddr : io_in_1_bits_vaddr;	// <stdin>:4408:3, src/main/scala/chisel3/util/Arbiter.scala:143:15, :145:26, :147:19
+  assign io_out_bits_wtype = io_in_0_valid ? io_in_0_bits_wtype : 2'h0;	// <stdin>:4408:3, src/main/scala/chisel3/util/Arbiter.scala:140:14, :143:15, :145:26, :147:19
+  assign io_out_bits_wdata = io_in_0_valid ? io_in_0_bits_wdata : 32'h0;	// <stdin>:4408:3, src/main/scala/chisel3/util/Arbiter.scala:140:14, :143:15, :145:26, :147:19
   assign io_out_bits_uncached =
-    io_in_0_valid ? io_in_0_bits_uncached : io_in_1_bits_uncached;	// <stdin>:4092:3, src/main/scala/chisel3/util/Arbiter.scala:143:15, :145:26, :147:19
-  assign io_chosen = ~io_in_0_valid;	// <stdin>:4092:3, src/main/scala/chisel3/util/Arbiter.scala:142:13, :145:26, :146:17
+    io_in_0_valid ? io_in_0_bits_uncached : io_in_1_bits_uncached;	// <stdin>:4408:3, src/main/scala/chisel3/util/Arbiter.scala:143:15, :145:26, :147:19
+  assign io_chosen = ~io_in_0_valid;	// <stdin>:4408:3, src/main/scala/chisel3/util/Arbiter.scala:142:13, :145:26, :146:17
 endmodule
 
-module DelayN_8(	// <stdin>:4111:3
-  input  clock,	// <stdin>:4112:11
+module DelayN_8(	// <stdin>:4427:3
+  input  clock,	// <stdin>:4428:11
          io_in,	// playground/src/utils/utils.scala:36:17
   output io_out	// playground/src/utils/utils.scala:36:17
 );
 
   reg REG;	// playground/src/utils/utils.scala:42:22
-  always @(posedge clock)	// <stdin>:4112:11
+  always @(posedge clock)	// <stdin>:4428:11
     REG <= io_in;	// playground/src/utils/utils.scala:42:22
-  `ifdef ENABLE_INITIAL_REG_	// <stdin>:4111:3
-    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:4111:3
-      `FIRRTL_BEFORE_INITIAL	// <stdin>:4111:3
+  `ifdef ENABLE_INITIAL_REG_	// <stdin>:4427:3
+    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:4427:3
+      `FIRRTL_BEFORE_INITIAL	// <stdin>:4427:3
     `endif // FIRRTL_BEFORE_INITIAL
-    initial begin	// <stdin>:4111:3
-      automatic logic [31:0] _RANDOM[0:0];	// <stdin>:4111:3
-      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:4111:3
-        `INIT_RANDOM_PROLOG_	// <stdin>:4111:3
+    initial begin	// <stdin>:4427:3
+      automatic logic [31:0] _RANDOM[0:0];	// <stdin>:4427:3
+      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:4427:3
+        `INIT_RANDOM_PROLOG_	// <stdin>:4427:3
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// <stdin>:4111:3
-        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// <stdin>:4111:3
-        REG = _RANDOM[/*Zero width*/ 1'b0][0];	// <stdin>:4111:3, playground/src/utils/utils.scala:42:22
+      `ifdef RANDOMIZE_REG_INIT	// <stdin>:4427:3
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// <stdin>:4427:3
+        REG = _RANDOM[/*Zero width*/ 1'b0][0];	// <stdin>:4427:3, playground/src/utils/utils.scala:42:22
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:4111:3
-      `FIRRTL_AFTER_INITIAL	// <stdin>:4111:3
+    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:4427:3
+      `FIRRTL_AFTER_INITIAL	// <stdin>:4427:3
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  assign io_out = REG;	// <stdin>:4111:3, playground/src/utils/utils.scala:42:22
+  assign io_out = REG;	// <stdin>:4427:3, playground/src/utils/utils.scala:42:22
 endmodule
 
-module Arbiter2_BaseFuOutput(	// <stdin>:4121:3
+module Arbiter2_BaseFuOutput(	// <stdin>:4437:3
   input         io_in_0_valid,	// src/main/scala/chisel3/util/Arbiter.scala:140:14
   input  [2:0]  io_in_0_bits_id,	// src/main/scala/chisel3/util/Arbiter.scala:140:14
   input  [31:0] io_in_0_bits_result,	// src/main/scala/chisel3/util/Arbiter.scala:140:14
@@ -5766,15 +6382,15 @@ module Arbiter2_BaseFuOutput(	// <stdin>:4121:3
   output [31:0] io_out_bits_result	// src/main/scala/chisel3/util/Arbiter.scala:140:14
 );
 
-  assign io_in_1_ready = ~io_in_0_valid;	// <stdin>:4121:3, src/main/scala/chisel3/util/Arbiter.scala:45:78
-  assign io_out_valid = io_in_0_valid | io_in_1_valid;	// <stdin>:4121:3, src/main/scala/chisel3/util/Arbiter.scala:154:31
-  assign io_out_bits_id = io_in_0_valid ? io_in_0_bits_id : io_in_1_bits_id;	// <stdin>:4121:3, src/main/scala/chisel3/util/Arbiter.scala:143:15, :145:26, :147:19
-  assign io_out_bits_result = io_in_0_valid ? io_in_0_bits_result : io_in_1_bits_result;	// <stdin>:4121:3, src/main/scala/chisel3/util/Arbiter.scala:143:15, :145:26, :147:19
+  assign io_in_1_ready = ~io_in_0_valid;	// <stdin>:4437:3, src/main/scala/chisel3/util/Arbiter.scala:45:78
+  assign io_out_valid = io_in_0_valid | io_in_1_valid;	// <stdin>:4437:3, src/main/scala/chisel3/util/Arbiter.scala:154:31
+  assign io_out_bits_id = io_in_0_valid ? io_in_0_bits_id : io_in_1_bits_id;	// <stdin>:4437:3, src/main/scala/chisel3/util/Arbiter.scala:143:15, :145:26, :147:19
+  assign io_out_bits_result = io_in_0_valid ? io_in_0_bits_result : io_in_1_bits_result;	// <stdin>:4437:3, src/main/scala/chisel3/util/Arbiter.scala:143:15, :145:26, :147:19
 endmodule
 
-module RV32LSU(	// <stdin>:4140:3
-  input         clock,	// <stdin>:4141:11
-                reset,	// <stdin>:4142:11
+module RV32LSU(	// <stdin>:4466:3
+  input         clock,	// <stdin>:4467:11
+                reset,	// <stdin>:4468:11
                 lsu_io_cache_req_ready,	// playground/src/backend/LSU/LSU.scala:37:31
                 lsu_io_cache_resp_valid,	// playground/src/backend/LSU/LSU.scala:37:31
                 lsu_io_cache_resp_bits_done,	// playground/src/backend/LSU/LSU.scala:37:31
@@ -5798,14 +6414,18 @@ module RV32LSU(	// <stdin>:4140:3
   output        lsu_io_cache_req_bits_uncached,	// playground/src/backend/LSU/LSU.scala:37:31
                 lsu_io_store_commit_ready,	// playground/src/backend/LSU/LSU.scala:37:31
   output [31:0] lsu_io_data_trans_req_vaddr,	// playground/src/backend/LSU/LSU.scala:37:31
+                lsu_io_lsu_diff_paddr,	// playground/src/backend/LSU/LSU.scala:37:31
+                lsu_io_lsu_diff_vaddr,	// playground/src/backend/LSU/LSU.scala:37:31
+                lsu_io_lsu_diff_wdata,	// playground/src/backend/LSU/LSU.scala:37:31
   output        wtype_io_in_ready,	// playground/src/backend/Excute.scala:31:21
                 wtype_io_out_valid,	// playground/src/backend/Excute.scala:31:21
   output [2:0]  wtype_io_out_bits_id,	// playground/src/backend/Excute.scala:31:21
   output [31:0] wtype_io_out_bits_result	// playground/src/backend/Excute.scala:31:21
 );
 
-  wire [31:0] _vaddr_T;	// playground/src/ISA/riscv32/LSU.scala:16:21
+  wire [31:0] _vaddr_T_3;	// playground/src/ISA/riscv32/LSU.scala:20:18
   wire        _wtype_io_in_ready_output;	// src/main/scala/chisel3/util/Mux.scala:141:16
+  wire        _uncached_delay_io_out;	// playground/src/utils/utils.scala:49:27
   wire        _wb_arb_io_in_1_ready;	// playground/src/backend/LSU/LSU.scala:258:24
   wire        _lsu_io_cache_req_bits_paddr_delay_io_out;	// playground/src/utils/utils.scala:49:27
   wire        _req_arb_io_in_0_ready;	// playground/src/backend/LSU/LSU.scala:250:25
@@ -5863,6 +6483,7 @@ module RV32LSU(	// <stdin>:4140:3
   reg  [3:0]  load_buf_ldtype;	// playground/src/backend/LSU/LSU.scala:60:29
   reg         load_buf_uncached;	// playground/src/backend/LSU/LSU.scala:60:29
   reg  [31:0] load_buf_rdata;	// playground/src/backend/LSU/LSU.scala:60:29
+  reg  [31:0] load_vaddr;	// playground/src/backend/LSU/LSU.scala:72:31
   wire        _load_buf_rdata_T_8 = load_buf_ldtype == 4'h9;	// playground/src/backend/LSU/LSU.scala:60:29, :95:59
   wire        _load_buf_rdata_T_10 = load_buf_ldtype == 4'hC;	// playground/src/backend/LSU/LSU.scala:60:29, :95:59
   wire        _load_buf_rdata_T_12 = load_buf_ldtype == 4'hA;	// playground/src/backend/LSU/LSU.scala:60:29, :95:59
@@ -5873,7 +6494,7 @@ module RV32LSU(	// <stdin>:4140:3
   reg  [31:0] stq_hit_item_bits_wdata;	// playground/src/backend/LSU/LSU.scala:113:35
   wire [6:0]  real_rdata_wstrb =
     {3'h0, 4'hF >> 4'h4 - (4'h1 << stq_hit_item_bits_wtype)}
-    << stq_hit_item_bits_addr[1:0];	// <stdin>:4140:3, playground/src/backend/LSU/LSU.scala:41:{9,19,27,34,45}, :113:35, :117:90
+    << stq_hit_item_bits_addr[1:0];	// <stdin>:4466:3, playground/src/backend/LSU/LSU.scala:41:{9,19,27,34,45}, :113:35, :117:90, :199:62
   wire [31:0] _real_rdata_T_33 =
     {real_rdata_wstrb[3] ? stq_hit_item_bits_wdata[31] : lsu_io_cache_resp_bits_rdata[31],
      real_rdata_wstrb[3] ? stq_hit_item_bits_wdata[30] : lsu_io_cache_resp_bits_rdata[30],
@@ -5908,12 +6529,11 @@ module RV32LSU(	// <stdin>:4140:3
      real_rdata_wstrb[0] ? stq_hit_item_bits_wdata[1] : lsu_io_cache_resp_bits_rdata[1],
      real_rdata_wstrb[0] ? stq_hit_item_bits_wdata[0] : lsu_io_cache_resp_bits_rdata[0]};	// playground/src/backend/LSU/LSU.scala:41:45, :113:35, :118:79, :120:{32,54}, :126:32, :127:{30,38}, :130:19
   wire [31:0] real_rdata = stq_hit ? _real_rdata_T_33 : lsu_io_cache_resp_bits_rdata;	// playground/src/backend/LSU/LSU.scala:112:35, :114:22, :130:19
-  wire        load_ready = lstate == 2'h0;	// playground/src/backend/LSU/LSU.scala:37:31, :58:62, :134:20, :250:25
   wire        _GEN = lstate == 2'h1;	// playground/src/backend/LSU/LSU.scala:58:62, :111:34, :134:20
   reg  [1:0]  paddr_v_REG;	// playground/src/backend/LSU/LSU.scala:149:35
   wire        paddr_v = paddr_v_REG != 2'h1;	// playground/src/backend/LSU/LSU.scala:111:34, :149:{35,44}
   wire        _GEN_0 = lstate == 2'h2;	// playground/src/backend/LSU/LSU.scala:58:62, :77:71, :134:20
-  wire        _GEN_1 = load_ready | _GEN | _GEN_0;	// playground/src/backend/LSU/LSU.scala:93:25, :134:20
+  wire        _GEN_1 = ~(|lstate) | _GEN | _GEN_0;	// playground/src/backend/LSU/LSU.scala:58:62, :72:46, :93:25, :134:20
   wire        _GEN_2 = _GEN_1 | ~(&lstate);	// playground/src/backend/LSU/LSU.scala:58:62, :92:25, :93:25, :134:20
   wire        _store_queue_io_in_clear_T = wtype_io_flush_ertn | wtype_io_flush_exception;	// playground/src/backend/LSU/LSU.scala:219:96
   wire        store_en =
@@ -5931,44 +6551,51 @@ module RV32LSU(	// <stdin>:4140:3
   `endif // not def SYNTHESIS
   assign _wtype_io_in_ready_output =
     wtype_io_in_bits_optype[3]
-      ? load_ready
-      : wtype_io_in_bits_optype < 4'h4 & ~_store_queue_io_out_full;	// playground/src/ISA/ISAFactory.scala:125:50, :126:50, playground/src/backend/LSU/LSU.scala:41:27, :49:29, :134:20, :210:28, src/main/scala/chisel3/util/Mux.scala:141:16
-  assign _vaddr_T = wtype_io_in_bits_operand_a + wtype_io_in_bits_operand_c;	// playground/src/ISA/riscv32/LSU.scala:16:21
-  always @(posedge clock) begin	// <stdin>:4141:11
-    if (reset) begin	// <stdin>:4141:11
+      ? ~(|lstate)
+      : wtype_io_in_bits_optype < 4'h4 & ~_store_queue_io_out_full;	// playground/src/ISA/ISAFactory.scala:125:50, :126:50, playground/src/backend/LSU/LSU.scala:41:27, :49:29, :58:62, :72:46, :134:20, :210:28, src/main/scala/chisel3/util/Mux.scala:141:16
+  assign _vaddr_T_3 =
+    wtype_io_in_bits_operand_a
+    + (wtype_io_in_bits_optype < 4'h4
+         ? wtype_io_in_bits_operand_c
+         : wtype_io_in_bits_operand_b);	// playground/src/ISA/ISAFactory.scala:126:50, playground/src/ISA/riscv32/LSU.scala:20:{18,23}, playground/src/backend/LSU/LSU.scala:41:27
+  always @(posedge clock) begin	// <stdin>:4467:11
+    if (reset) begin	// <stdin>:4467:11
       lstate <= 2'h0;	// playground/src/backend/LSU/LSU.scala:37:31, :58:62, :250:25
-      load_buf_id <= 3'h0;	// <stdin>:4140:3, playground/src/backend/LSU/LSU.scala:60:29
+      load_buf_id <= 3'h0;	// <stdin>:4466:3, playground/src/backend/LSU/LSU.scala:60:29
       load_buf_addr <= 32'h0;	// playground/src/backend/LSU/LSU.scala:60:{29,42}
       load_buf_ldtype <= 4'h0;	// playground/src/backend/LSU/LSU.scala:60:{29,42}
-      load_buf_uncached <= 1'h0;	// playground/src/backend/Excute.scala:31:21, playground/src/backend/LSU/LSU.scala:37:31, :38:31, :49:29, :60:29, :250:25, :258:24
+      load_buf_uncached <= 1'h0;	// playground/src/backend/Excute.scala:31:21, playground/src/backend/LSU/LSU.scala:37:31, :38:31, :60:29, :250:25, :258:24
       load_buf_rdata <= 32'h0;	// playground/src/backend/LSU/LSU.scala:60:{29,42}
     end
-    else begin	// <stdin>:4141:11
-      automatic logic            _GEN_3;	// playground/src/backend/LSU/LSU.scala:137:44
-      automatic logic            _GEN_4;	// playground/src/backend/LSU/LSU.scala:60:29, :134:20, :159:27, :161:35
-      automatic logic            _GEN_5 =
-        lsu_io_cache_resp_valid & lsu_io_cache_resp_bits_done;	// playground/src/backend/LSU/LSU.scala:171:34
-      automatic logic [3:0][1:0] _GEN_6;	// playground/src/backend/LSU/LSU.scala:58:62, :134:20, :137:87, :159:27, :171:57, :186:36
+    else begin	// <stdin>:4467:11
+      automatic logic _GEN_3;	// playground/src/backend/LSU/LSU.scala:137:44
+      automatic logic _GEN_4;	// playground/src/backend/LSU/LSU.scala:60:29, :134:20, :159:27, :161:35
+      automatic logic _GEN_5;	// playground/src/backend/LSU/LSU.scala:171:34
       _GEN_3 = wtype_io_in_valid & _wtype_io_in_ready_output & wtype_io_in_bits_optype[3];	// playground/src/ISA/ISAFactory.scala:125:50, playground/src/backend/LSU/LSU.scala:137:44, src/main/scala/chisel3/util/Mux.scala:141:16
       _GEN_4 = _GEN & paddr_v;	// playground/src/backend/LSU/LSU.scala:60:29, :134:20, :149:44, :159:27, :161:35
-      _GEN_6 =
-        {{_wb_arb_io_in_1_ready ? 2'h0 : 2'h3},
-         {_GEN_5 ? 2'h3 : lstate},
-         {_req_arb_io_in_1_ready ? 2'h2 : lstate},
-         {_GEN_3 ? 2'h1 : lstate}};	// playground/src/backend/LSU/LSU.scala:37:31, :58:62, :77:71, :111:34, :134:20, :137:{44,87}, :143:36, :156:34, :157:24, :159:27, :171:{34,57}, :182:32, :186:{36,42}, :250:25, :258:24
-      lstate <= _GEN_6[lstate];	// playground/src/backend/LSU/LSU.scala:58:62, :134:20, :137:87, :159:27, :171:57, :186:36
-      if (load_ready & _GEN_3) begin	// playground/src/backend/LSU/LSU.scala:60:29, :134:20, :137:{44,87}, :138:36
+      _GEN_5 = lsu_io_cache_resp_valid & lsu_io_cache_resp_bits_done;	// playground/src/backend/LSU/LSU.scala:171:34
+      if (|lstate) begin	// playground/src/backend/LSU/LSU.scala:58:62, :72:46
+        automatic logic [3:0][1:0] _GEN_6;	// playground/src/backend/LSU/LSU.scala:58:62, :134:20, :159:27, :171:57, :186:36
+        _GEN_6 =
+          {{_wb_arb_io_in_1_ready ? 2'h0 : 2'h3},
+           {_GEN_5 ? 2'h3 : lstate},
+           {_req_arb_io_in_1_ready ? 2'h2 : lstate},
+           {lstate}};	// playground/src/backend/LSU/LSU.scala:37:31, :58:62, :77:71, :134:20, :156:34, :157:24, :159:27, :171:{34,57}, :182:32, :186:{36,42}, :250:25, :258:24
+        lstate <= _GEN_6[lstate];	// playground/src/backend/LSU/LSU.scala:58:62, :134:20, :159:27, :171:57, :186:36
+        if (_GEN_4)	// playground/src/backend/LSU/LSU.scala:60:29, :134:20, :159:27, :161:35
+          load_buf_addr <= lsu_io_data_trans_resp_paddr;	// playground/src/backend/LSU/LSU.scala:60:29
+      end
+      else if (_GEN_3) begin	// playground/src/backend/LSU/LSU.scala:137:44
+        lstate <= 2'h1;	// playground/src/backend/LSU/LSU.scala:58:62, :111:34
+        load_buf_addr <= _vaddr_T_3;	// playground/src/ISA/riscv32/LSU.scala:20:18, playground/src/backend/LSU/LSU.scala:60:29
+      end
+      if (~(|lstate) & _GEN_3) begin	// playground/src/backend/LSU/LSU.scala:58:62, :60:29, :72:46, :134:20, :137:{44,87}, :138:36
         load_buf_id <= wtype_io_in_bits_id;	// playground/src/backend/LSU/LSU.scala:60:29
         load_buf_ldtype <= wtype_io_in_bits_optype;	// playground/src/backend/LSU/LSU.scala:60:29
       end
-      if (load_ready) begin	// playground/src/backend/LSU/LSU.scala:134:20
-        if (_GEN_3)	// playground/src/backend/LSU/LSU.scala:137:44
-          load_buf_addr <= _vaddr_T;	// playground/src/ISA/riscv32/LSU.scala:16:21, playground/src/backend/LSU/LSU.scala:60:29
-      end
-      else if (_GEN_4)	// playground/src/backend/LSU/LSU.scala:60:29, :134:20, :159:27, :161:35
-        load_buf_addr <= lsu_io_data_trans_resp_paddr;	// playground/src/backend/LSU/LSU.scala:60:29
-      load_buf_uncached <= (load_ready | ~_GEN_4) & load_buf_uncached;	// playground/src/backend/LSU/LSU.scala:60:29, :134:20, :159:27, :161:35
-      if (load_ready | _GEN | ~(_GEN_0 & _GEN_5)) begin	// playground/src/backend/LSU/LSU.scala:60:29, :134:20, :171:{34,57}, :172:32
+      if ((|lstate) & _GEN_4)	// playground/src/backend/LSU/LSU.scala:58:62, :60:29, :72:46, :134:20, :159:27, :161:35
+        load_buf_uncached <= _uncached_delay_io_out;	// playground/src/backend/LSU/LSU.scala:60:29, playground/src/utils/utils.scala:49:27
+      if (~(|lstate) | _GEN | ~(_GEN_0 & _GEN_5)) begin	// playground/src/backend/LSU/LSU.scala:58:62, :60:29, :72:46, :134:20, :171:{34,57}, :172:32
       end
       else if (load_buf_ldtype == 4'hD | _load_buf_rdata_T_12) begin	// playground/src/backend/LSU/LSU.scala:60:29, :95:59, :172:79
         if (stq_hit)	// playground/src/backend/LSU/LSU.scala:112:35
@@ -6005,6 +6632,8 @@ module RV32LSU(	// <stdin>:4140:3
         end
       end
     end
+    if (~(|lstate))	// playground/src/backend/LSU/LSU.scala:58:62, :72:46
+      load_vaddr <= _vaddr_T_3;	// playground/src/ISA/riscv32/LSU.scala:20:18, playground/src/backend/LSU/LSU.scala:72:31
     stq_hit_en_REG <= lstate;	// playground/src/backend/LSU/LSU.scala:58:62, :111:55
     if (lstate == 2'h1 & stq_hit_en_REG != 2'h1) begin	// playground/src/backend/LSU/LSU.scala:58:62, :111:{34,44,55,64}
       automatic logic             stq_total_hits_1 =
@@ -6073,35 +6702,36 @@ module RV32LSU(	// <stdin>:4140:3
     end
     paddr_v_REG <= lstate;	// playground/src/backend/LSU/LSU.scala:58:62, :149:35
   end // always @(posedge)
-  `ifdef ENABLE_INITIAL_REG_	// <stdin>:4140:3
-    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:4140:3
-      `FIRRTL_BEFORE_INITIAL	// <stdin>:4140:3
+  `ifdef ENABLE_INITIAL_REG_	// <stdin>:4466:3
+    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:4466:3
+      `FIRRTL_BEFORE_INITIAL	// <stdin>:4466:3
     `endif // FIRRTL_BEFORE_INITIAL
-    initial begin	// <stdin>:4140:3
-      automatic logic [31:0] _RANDOM[0:5];	// <stdin>:4140:3
-      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:4140:3
-        `INIT_RANDOM_PROLOG_	// <stdin>:4140:3
+    initial begin	// <stdin>:4466:3
+      automatic logic [31:0] _RANDOM[0:5];	// <stdin>:4466:3
+      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:4466:3
+        `INIT_RANDOM_PROLOG_	// <stdin>:4466:3
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// <stdin>:4140:3
+      `ifdef RANDOMIZE_REG_INIT	// <stdin>:4466:3
         for (logic [2:0] i = 3'h0; i < 3'h6; i += 3'h1) begin
-          _RANDOM[i] = `RANDOM;	// <stdin>:4140:3
-        end	// <stdin>:4140:3
-        lstate = _RANDOM[3'h0][1:0];	// <stdin>:4140:3, playground/src/backend/LSU/LSU.scala:58:62
-        load_buf_id = _RANDOM[3'h0][4:2];	// <stdin>:4140:3, playground/src/backend/LSU/LSU.scala:58:62, :60:29
-        load_buf_addr = {_RANDOM[3'h0][31:5], _RANDOM[3'h1][4:0]};	// <stdin>:4140:3, playground/src/backend/LSU/LSU.scala:58:62, :60:29
-        load_buf_ldtype = _RANDOM[3'h1][8:5];	// <stdin>:4140:3, playground/src/backend/LSU/LSU.scala:60:29
-        load_buf_uncached = _RANDOM[3'h1][9];	// <stdin>:4140:3, playground/src/backend/LSU/LSU.scala:60:29
-        load_buf_rdata = {_RANDOM[3'h1][31:10], _RANDOM[3'h2][9:0]};	// <stdin>:4140:3, playground/src/backend/LSU/LSU.scala:60:29
-        stq_hit_en_REG = _RANDOM[3'h3][13:12];	// <stdin>:4140:3, playground/src/backend/LSU/LSU.scala:111:55
-        stq_hit = _RANDOM[3'h3][14];	// <stdin>:4140:3, playground/src/backend/LSU/LSU.scala:111:55, :112:35
-        stq_hit_item_bits_addr = {_RANDOM[3'h3][31:19], _RANDOM[3'h4][18:0]};	// <stdin>:4140:3, playground/src/backend/LSU/LSU.scala:111:55, :113:35
-        stq_hit_item_bits_wtype = _RANDOM[3'h4][20:19];	// <stdin>:4140:3, playground/src/backend/LSU/LSU.scala:113:35
-        stq_hit_item_bits_wdata = {_RANDOM[3'h4][31:21], _RANDOM[3'h5][20:0]};	// <stdin>:4140:3, playground/src/backend/LSU/LSU.scala:113:35
-        paddr_v_REG = _RANDOM[3'h5][23:22];	// <stdin>:4140:3, playground/src/backend/LSU/LSU.scala:113:35, :149:35
+          _RANDOM[i] = `RANDOM;	// <stdin>:4466:3
+        end	// <stdin>:4466:3
+        lstate = _RANDOM[3'h0][1:0];	// <stdin>:4466:3, playground/src/backend/LSU/LSU.scala:58:62
+        load_buf_id = _RANDOM[3'h0][4:2];	// <stdin>:4466:3, playground/src/backend/LSU/LSU.scala:58:62, :60:29
+        load_buf_addr = {_RANDOM[3'h0][31:5], _RANDOM[3'h1][4:0]};	// <stdin>:4466:3, playground/src/backend/LSU/LSU.scala:58:62, :60:29
+        load_buf_ldtype = _RANDOM[3'h1][8:5];	// <stdin>:4466:3, playground/src/backend/LSU/LSU.scala:60:29
+        load_buf_uncached = _RANDOM[3'h1][9];	// <stdin>:4466:3, playground/src/backend/LSU/LSU.scala:60:29
+        load_buf_rdata = {_RANDOM[3'h1][31:10], _RANDOM[3'h2][9:0]};	// <stdin>:4466:3, playground/src/backend/LSU/LSU.scala:60:29
+        load_vaddr = {_RANDOM[3'h2][31:12], _RANDOM[3'h3][11:0]};	// <stdin>:4466:3, playground/src/backend/LSU/LSU.scala:60:29, :72:31
+        stq_hit_en_REG = _RANDOM[3'h3][13:12];	// <stdin>:4466:3, playground/src/backend/LSU/LSU.scala:72:31, :111:55
+        stq_hit = _RANDOM[3'h3][14];	// <stdin>:4466:3, playground/src/backend/LSU/LSU.scala:72:31, :112:35
+        stq_hit_item_bits_addr = {_RANDOM[3'h3][31:19], _RANDOM[3'h4][18:0]};	// <stdin>:4466:3, playground/src/backend/LSU/LSU.scala:72:31, :113:35
+        stq_hit_item_bits_wtype = _RANDOM[3'h4][20:19];	// <stdin>:4466:3, playground/src/backend/LSU/LSU.scala:113:35
+        stq_hit_item_bits_wdata = {_RANDOM[3'h4][31:21], _RANDOM[3'h5][20:0]};	// <stdin>:4466:3, playground/src/backend/LSU/LSU.scala:113:35
+        paddr_v_REG = _RANDOM[3'h5][23:22];	// <stdin>:4466:3, playground/src/backend/LSU/LSU.scala:113:35, :149:35
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:4140:3
-      `FIRRTL_AFTER_INITIAL	// <stdin>:4140:3
+    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:4466:3
+      `FIRRTL_AFTER_INITIAL	// <stdin>:4466:3
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
   CircularQueue_2 store_queue (	// playground/src/backend/LSU/LSU.scala:49:29
@@ -6112,6 +6742,7 @@ module RV32LSU(	// <stdin>:4140:3
     .io_in_enq_data_addr             (lsu_io_data_trans_resp_paddr),
     .io_in_enq_data_wtype            (_new_store_inst_wtype_delay_io_out),	// playground/src/utils/utils.scala:49:27
     .io_in_enq_data_wdata            (_new_store_inst_wdata_delay_io_out[31:0]),	// playground/src/backend/LSU/LSU.scala:215:29, playground/src/utils/utils.scala:49:27
+    .io_in_enq_data_uncached         (_uncached_delay_io_out),	// playground/src/utils/utils.scala:49:27
     .io_in_enq_valid                 (_store_queue_io_in_enq_valid_delay_io_out),	// playground/src/utils/utils.scala:49:27
     .io_in_deq_valid                 (lsu_io_store_commit_valid & _req_arb_io_in_0_ready),	// playground/src/backend/LSU/LSU.scala:228:62, :250:25
     .io_out_front_data_addr          (_store_queue_io_out_front_data_addr),
@@ -6165,12 +6796,12 @@ module RV32LSU(	// <stdin>:4140:3
   );
   DelayN_2 new_store_inst_wdata_delay (	// playground/src/utils/utils.scala:49:27
     .clock  (clock),
-    .io_in  ({31'h0, wtype_io_in_bits_operand_b} << {58'h0, _vaddr_T[1:0], 3'h0}),	// <stdin>:4140:3, playground/src/ISA/riscv32/LSU.scala:16:21, playground/src/backend/LSU/LSU.scala:215:{45,54}
+    .io_in  ({31'h0, wtype_io_in_bits_operand_b} << {58'h0, _vaddr_T_3[1:0], 3'h0}),	// <stdin>:4466:3, playground/src/ISA/riscv32/LSU.scala:20:18, playground/src/backend/LSU/LSU.scala:215:{45,54}
     .io_out (_new_store_inst_wdata_delay_io_out)
   );
   DelayN_3 store_wb_bits_result_delay (	// playground/src/utils/utils.scala:49:27
     .clock  (clock),
-    .io_in  (_vaddr_T),	// playground/src/ISA/riscv32/LSU.scala:16:21
+    .io_in  (_vaddr_T_3),	// playground/src/ISA/riscv32/LSU.scala:20:18
     .io_out (_store_wb_bits_result_delay_io_out)
   );
   DelayN store_wb_bits_id_delay (	// playground/src/utils/utils.scala:49:27
@@ -6200,12 +6831,13 @@ module RV32LSU(	// <stdin>:4140:3
     .io_in_0_bits_wdata    (_store_queue_io_out_front_data_wdata),	// playground/src/backend/LSU/LSU.scala:49:29
     .io_in_0_bits_uncached (_store_queue_io_out_front_data_uncached),	// playground/src/backend/LSU/LSU.scala:49:29
     .io_in_1_valid
-      (~load_ready & _GEN
+      ((|lstate) & _GEN
        & ~(_load_buf_rdata_T_12
              ? load_buf_addr[0] | load_buf_addr[1]
-             : (_load_buf_rdata_T_10 | _load_buf_rdata_T_8) & load_buf_addr[0])),	// playground/src/backend/LSU/LSU.scala:60:29, :85:40, :91:25, :95:59, :97:34, :99:39, :134:20, :150:39
-    .io_in_1_bits_vaddr    (load_ready | ~_GEN ? 32'h0 : load_buf_addr),	// playground/src/backend/LSU/LSU.scala:60:{29,42}, :90:25, :134:20
-    .io_in_1_bits_uncached (~load_ready & _GEN & ~paddr_v & load_buf_uncached),	// playground/src/backend/LSU/LSU.scala:60:29, :90:25, :91:25, :134:20, :149:44, :155:42
+             : (_load_buf_rdata_T_10 | _load_buf_rdata_T_8) & load_buf_addr[0])),	// playground/src/backend/LSU/LSU.scala:58:62, :60:29, :72:46, :85:40, :91:25, :95:59, :97:34, :99:39, :134:20, :150:39
+    .io_in_1_bits_vaddr    ((|lstate) & _GEN ? load_buf_addr : 32'h0),	// playground/src/backend/LSU/LSU.scala:58:62, :60:{29,42}, :72:46, :90:25, :134:20
+    .io_in_1_bits_uncached
+      ((|lstate) & _GEN & (paddr_v ? _uncached_delay_io_out : load_buf_uncached)),	// playground/src/backend/LSU/LSU.scala:58:62, :60:29, :72:46, :90:25, :134:20, :149:44, :155:42, playground/src/utils/utils.scala:49:27
     .io_out_ready          (lsu_io_cache_req_ready),
     .io_in_0_ready         (_req_arb_io_in_0_ready),
     .io_in_1_ready         (_req_arb_io_in_1_ready),
@@ -6227,133 +6859,150 @@ module RV32LSU(	// <stdin>:4140:3
     .io_in_0_bits_id     (_store_wb_bits_id_delay_io_out),	// playground/src/utils/utils.scala:49:27
     .io_in_0_bits_result (_store_wb_bits_result_delay_io_out),	// playground/src/utils/utils.scala:49:27
     .io_in_1_valid       (~_GEN_1 & (&lstate)),	// playground/src/backend/LSU/LSU.scala:58:62, :93:25, :134:20
-    .io_in_1_bits_id     (_GEN_2 ? 3'h0 : load_buf_id),	// <stdin>:4140:3, playground/src/backend/LSU/LSU.scala:60:29, :92:25, :134:20
+    .io_in_1_bits_id     (_GEN_2 ? 3'h0 : load_buf_id),	// <stdin>:4466:3, playground/src/backend/LSU/LSU.scala:60:29, :92:25, :134:20
     .io_in_1_bits_result (_GEN_2 ? 32'h0 : load_buf_rdata),	// playground/src/backend/LSU/LSU.scala:60:{29,42}, :92:25, :134:20
     .io_in_1_ready       (_wb_arb_io_in_1_ready),
     .io_out_valid        (wtype_io_out_valid),
     .io_out_bits_id      (wtype_io_out_bits_id),
     .io_out_bits_result  (wtype_io_out_bits_result)
   );
+  DelayN_5 uncached_delay (	// playground/src/utils/utils.scala:49:27
+    .clock  (clock),
+    .io_in  (_vaddr_T_3 > 32'hA0000000),	// playground/src/ISA/riscv32/LSU.scala:13:44, :20:18
+    .io_out (_uncached_delay_io_out)
+  );
   assign lsu_io_cache_req_bits_paddr =
     _lsu_io_cache_req_bits_paddr_delay_io_out
       ? load_buf_addr
-      : _store_req_bits_paddr_delay_io_out;	// <stdin>:4140:3, playground/src/backend/LSU/LSU.scala:60:29, :256:33, playground/src/utils/utils.scala:49:27
-  assign lsu_io_store_commit_ready = _req_arb_io_in_0_ready;	// <stdin>:4140:3, playground/src/backend/LSU/LSU.scala:250:25
-  assign lsu_io_data_trans_req_vaddr = _vaddr_T;	// <stdin>:4140:3, playground/src/ISA/riscv32/LSU.scala:16:21
-  assign wtype_io_in_ready = _wtype_io_in_ready_output;	// <stdin>:4140:3, src/main/scala/chisel3/util/Mux.scala:141:16
+      : _store_req_bits_paddr_delay_io_out;	// <stdin>:4466:3, playground/src/backend/LSU/LSU.scala:60:29, :256:33, playground/src/utils/utils.scala:49:27
+  assign lsu_io_store_commit_ready = _req_arb_io_in_0_ready;	// <stdin>:4466:3, playground/src/backend/LSU/LSU.scala:250:25
+  assign lsu_io_data_trans_req_vaddr = _vaddr_T_3;	// <stdin>:4466:3, playground/src/ISA/riscv32/LSU.scala:20:18
+  assign lsu_io_lsu_diff_paddr =
+    _store_wb_valid_delay_io_out ? lsu_io_data_trans_resp_paddr : load_buf_addr;	// <stdin>:4466:3, playground/src/backend/LSU/LSU.scala:60:29, :263:41, playground/src/utils/utils.scala:49:27
+  assign lsu_io_lsu_diff_vaddr =
+    _store_wb_valid_delay_io_out ? _store_wb_bits_result_delay_io_out : load_vaddr;	// <stdin>:4466:3, playground/src/backend/LSU/LSU.scala:72:31, :264:41, playground/src/utils/utils.scala:49:27
+  assign lsu_io_lsu_diff_wdata =
+    _new_store_inst_wtype_delay_io_out == 2'h0
+      ? _new_store_inst_wdata_delay_io_out[31:0] & 32'hFFFFFFFF
+        >> {27'h0, 2'h3 - _store_wb_bits_result_delay_io_out[1:0], 3'h0}
+      : _new_store_inst_wtype_delay_io_out != 2'h1 | _store_wb_bits_result_delay_io_out[1]
+          ? _new_store_inst_wdata_delay_io_out[31:0]
+          : {16'h0, _new_store_inst_wdata_delay_io_out[15:0]};	// <stdin>:4466:3, playground/src/backend/LSU/LSU.scala:37:31, :77:71, :111:34, :215:29, :250:25, :265:87, :269:{28,40,87}, :270:{46,63,72,85}, playground/src/utils/utils.scala:31:12, :49:27
+  assign wtype_io_in_ready = _wtype_io_in_ready_output;	// <stdin>:4466:3, src/main/scala/chisel3/util/Mux.scala:141:16
 endmodule
 
-module FakeMultiplier(	// <stdin>:4884:3
-  input         clock,	// <stdin>:4885:11
-                reset,	// <stdin>:4886:11
-                rj_io_in_valid,	// playground/src/backend/Excute.scala:31:21
-  input  [2:0]  rj_io_in_bits_id,	// playground/src/backend/Excute.scala:31:21
-  input  [3:0]  rj_io_in_bits_optype,	// playground/src/backend/Excute.scala:31:21
-  input         rj_io_in_bits_exception,	// playground/src/backend/Excute.scala:31:21
-  input  [31:0] rj_io_in_bits_operand_a,	// playground/src/backend/Excute.scala:31:21
-                rj_io_in_bits_operand_b,	// playground/src/backend/Excute.scala:31:21
-  input         rj_io_out_ready,	// playground/src/backend/Excute.scala:31:21
-                rj_io_flush_exception,	// playground/src/backend/Excute.scala:31:21
-                rj_io_flush_ertn,	// playground/src/backend/Excute.scala:31:21
-  output        rj_io_in_ready,	// playground/src/backend/Excute.scala:31:21
-                rj_io_out_valid,	// playground/src/backend/Excute.scala:31:21
-  output [2:0]  rj_io_out_bits_id,	// playground/src/backend/Excute.scala:31:21
-  output [31:0] rj_io_out_bits_result,	// playground/src/backend/Excute.scala:31:21
-  output        rj_io_out_bits_exception,	// playground/src/backend/Excute.scala:31:21
-                rj_io_out_bits_mispred	// playground/src/backend/Excute.scala:31:21
+module FakeMultiplier(	// <stdin>:5218:3
+  input         clock,	// <stdin>:5219:11
+                reset,	// <stdin>:5220:11
+                rs1_io_in_valid,	// playground/src/backend/Excute.scala:31:21
+  input  [2:0]  rs1_io_in_bits_id,	// playground/src/backend/Excute.scala:31:21
+  input  [3:0]  rs1_io_in_bits_optype,	// playground/src/backend/Excute.scala:31:21
+  input         rs1_io_in_bits_exception,	// playground/src/backend/Excute.scala:31:21
+  input  [31:0] rs1_io_in_bits_operand_a,	// playground/src/backend/Excute.scala:31:21
+                rs1_io_in_bits_operand_b,	// playground/src/backend/Excute.scala:31:21
+  input         rs1_io_out_ready,	// playground/src/backend/Excute.scala:31:21
+                rs1_io_flush_exception,	// playground/src/backend/Excute.scala:31:21
+                rs1_io_flush_ertn,	// playground/src/backend/Excute.scala:31:21
+  output        rs1_io_in_ready,	// playground/src/backend/Excute.scala:31:21
+                rs1_io_out_valid,	// playground/src/backend/Excute.scala:31:21
+  output [2:0]  rs1_io_out_bits_id,	// playground/src/backend/Excute.scala:31:21
+  output [31:0] rs1_io_out_bits_result,	// playground/src/backend/Excute.scala:31:21
+  output        rs1_io_out_bits_exception,	// playground/src/backend/Excute.scala:31:21
+                rs1_io_out_bits_mispred	// playground/src/backend/Excute.scala:31:21
 );
 
-  reg        ready_r;	// playground/src/backend/FakeMultiplier.scala:33:31
-  reg [2:0]  result_buf_id;	// playground/src/backend/FakeMultiplier.scala:34:31
-  reg [31:0] result_buf_result;	// playground/src/backend/FakeMultiplier.scala:34:31
-  reg        result_buf_exception;	// playground/src/backend/FakeMultiplier.scala:34:31
-  reg        result_buf_mispred;	// playground/src/backend/FakeMultiplier.scala:34:31
-  reg        result_valid;	// playground/src/backend/FakeMultiplier.scala:35:31
-  always @(posedge clock) begin	// <stdin>:4885:11
-    if (reset) begin	// <stdin>:4885:11
-      ready_r <= 1'h1;	// <stdin>:4884:3, playground/src/backend/FakeMultiplier.scala:33:31
-      result_buf_id <= 3'h0;	// playground/src/backend/FakeMultiplier.scala:34:{31,44}
-      result_buf_result <= 32'h0;	// playground/src/backend/FakeMultiplier.scala:34:{31,44}
-      result_buf_exception <= 1'h0;	// <stdin>:4884:3, playground/src/backend/FakeMultiplier.scala:34:31
-      result_buf_mispred <= 1'h0;	// <stdin>:4884:3, playground/src/backend/FakeMultiplier.scala:34:31
-      result_valid <= 1'h0;	// <stdin>:4884:3, playground/src/backend/FakeMultiplier.scala:35:31
+  reg        ready_r;	// playground/src/backend/FakeMultiplier.scala:32:31
+  reg [2:0]  result_buf_id;	// playground/src/backend/FakeMultiplier.scala:33:31
+  reg [31:0] result_buf_result;	// playground/src/backend/FakeMultiplier.scala:33:31
+  reg        result_buf_exception;	// playground/src/backend/FakeMultiplier.scala:33:31
+  reg        result_buf_mispred;	// playground/src/backend/FakeMultiplier.scala:33:31
+  reg        result_valid;	// playground/src/backend/FakeMultiplier.scala:34:31
+  always @(posedge clock) begin	// <stdin>:5219:11
+    if (reset) begin	// <stdin>:5219:11
+      ready_r <= 1'h1;	// <stdin>:5218:3, playground/src/backend/FakeMultiplier.scala:32:31
+      result_buf_id <= 3'h0;	// playground/src/backend/FakeMultiplier.scala:33:{31,44}
+      result_buf_result <= 32'h0;	// playground/src/backend/FakeMultiplier.scala:33:{31,44}
+      result_buf_exception <= 1'h0;	// <stdin>:5218:3, playground/src/backend/FakeMultiplier.scala:33:31
+      result_buf_mispred <= 1'h0;	// <stdin>:5218:3, playground/src/backend/FakeMultiplier.scala:33:31
+      result_valid <= 1'h0;	// <stdin>:5218:3, playground/src/backend/FakeMultiplier.scala:34:31
     end
-    else begin	// <stdin>:4885:11
-      automatic logic _GEN = rj_io_flush_ertn | rj_io_flush_exception;	// playground/src/backend/FakeMultiplier.scala:37:24
-      automatic logic _GEN_0;	// playground/src/backend/FakeMultiplier.scala:40:42
-      automatic logic _GEN_1;	// playground/src/backend/FakeMultiplier.scala:34:31, :37:46, :40:61
-      automatic logic _GEN_2;	// playground/src/backend/FakeMultiplier.scala:37:46, :38:22, :40:61, :49:39, :50:22
-      _GEN_0 = rj_io_in_valid & ready_r & ~result_valid;	// playground/src/backend/FakeMultiplier.scala:33:31, :35:31, :40:{42,45}
-      _GEN_1 = _GEN | ~_GEN_0;	// playground/src/backend/FakeMultiplier.scala:33:31, :34:31, :37:{24,46}, :40:{42,61}, :41:30
-      _GEN_2 = result_valid & rj_io_out_ready | _GEN;	// playground/src/backend/FakeMultiplier.scala:35:31, :37:{24,46}, :38:22, :40:61, :49:{23,39}, :50:22
-      ready_r <= _GEN_2 | ~_GEN_0 & ready_r;	// playground/src/backend/FakeMultiplier.scala:33:31, :37:46, :38:22, :40:{42,61}, :41:30, :49:39, :50:22
-      if (_GEN_1) begin	// playground/src/backend/FakeMultiplier.scala:34:31, :37:46, :40:61
+    else begin	// <stdin>:5219:11
+      automatic logic _GEN = rs1_io_flush_ertn | rs1_io_flush_exception;	// playground/src/backend/FakeMultiplier.scala:36:24
+      automatic logic _GEN_0;	// playground/src/backend/FakeMultiplier.scala:39:42
+      automatic logic _GEN_1;	// playground/src/backend/FakeMultiplier.scala:33:31, :36:46, :39:61
+      automatic logic _GEN_2;	// playground/src/backend/FakeMultiplier.scala:36:46, :37:22, :39:61, :48:39, :49:22
+      _GEN_0 = rs1_io_in_valid & ready_r & ~result_valid;	// playground/src/backend/FakeMultiplier.scala:32:31, :34:31, :39:{42,45}
+      _GEN_1 = _GEN | ~_GEN_0;	// playground/src/backend/FakeMultiplier.scala:32:31, :33:31, :36:{24,46}, :39:{42,61}, :40:30
+      _GEN_2 = result_valid & rs1_io_out_ready | _GEN;	// playground/src/backend/FakeMultiplier.scala:34:31, :36:{24,46}, :37:22, :39:61, :48:{23,39}, :49:22
+      ready_r <= _GEN_2 | ~_GEN_0 & ready_r;	// playground/src/backend/FakeMultiplier.scala:32:31, :36:46, :37:22, :39:{42,61}, :40:30, :48:39, :49:22
+      if (_GEN_1) begin	// playground/src/backend/FakeMultiplier.scala:33:31, :36:46, :39:61
       end
-      else begin	// playground/src/backend/FakeMultiplier.scala:34:31, :37:46, :40:61
+      else begin	// playground/src/backend/FakeMultiplier.scala:33:31, :36:46, :39:61
         automatic logic [63:0] _GEN_3 =
-          {32'h0, rj_io_in_bits_operand_a} * {32'h0, rj_io_in_bits_operand_b};	// playground/src/backend/FakeMultiplier.scala:20:22, :34:44
+          {32'h0, rs1_io_in_bits_operand_a} * {32'h0, rs1_io_in_bits_operand_b};	// playground/src/backend/FakeMultiplier.scala:19:23, :33:44
         automatic logic [32:0] _GEN_4 =
-          $signed({rj_io_in_bits_operand_a[31], rj_io_in_bits_operand_a})
-          / $signed({rj_io_in_bits_operand_b[31], rj_io_in_bits_operand_b});	// playground/src/backend/FakeMultiplier.scala:21:29, :23:29
-        automatic logic [31:0] _GEN_5 = rj_io_in_bits_operand_a / rj_io_in_bits_operand_b;	// playground/src/backend/FakeMultiplier.scala:24:22
+          $signed({rs1_io_in_bits_operand_a[31], rs1_io_in_bits_operand_a})
+          / $signed({rs1_io_in_bits_operand_b[31], rs1_io_in_bits_operand_b});	// playground/src/backend/FakeMultiplier.scala:20:30, :22:30
+        automatic logic [31:0] _GEN_5 =
+          rs1_io_in_bits_operand_a / rs1_io_in_bits_operand_b;	// playground/src/backend/FakeMultiplier.scala:23:23
         automatic logic [63:0] _GEN_6 =
-          {{32{rj_io_in_bits_operand_a[31]}}, rj_io_in_bits_operand_a}
-          * {{32{rj_io_in_bits_operand_b[31]}}, rj_io_in_bits_operand_b};	// playground/src/backend/FakeMultiplier.scala:21:29
-        result_buf_id <= rj_io_in_bits_id;	// playground/src/backend/FakeMultiplier.scala:34:31
+          {{32{rs1_io_in_bits_operand_a[31]}}, rs1_io_in_bits_operand_a}
+          * {{32{rs1_io_in_bits_operand_b[31]}}, rs1_io_in_bits_operand_b};	// playground/src/backend/FakeMultiplier.scala:20:30
+        result_buf_id <= rs1_io_in_bits_id;	// playground/src/backend/FakeMultiplier.scala:33:31
         result_buf_result <=
-          rj_io_in_bits_optype == 4'h6
-            ? rj_io_in_bits_operand_a - _GEN_5 * rj_io_in_bits_operand_b
-            : rj_io_in_bits_optype == 4'h5
-                ? rj_io_in_bits_operand_a - _GEN_4[31:0] * rj_io_in_bits_operand_b
-                : rj_io_in_bits_optype == 4'h4
+          rs1_io_in_bits_optype == 4'h6
+            ? rs1_io_in_bits_operand_a - _GEN_5 * rs1_io_in_bits_operand_b
+            : rs1_io_in_bits_optype == 4'h5
+                ? rs1_io_in_bits_operand_a - _GEN_4[31:0] * rs1_io_in_bits_operand_b
+                : rs1_io_in_bits_optype == 4'h4
                     ? _GEN_5
-                    : rj_io_in_bits_optype == 4'h3
+                    : rs1_io_in_bits_optype == 4'h3
                         ? _GEN_4[31:0]
-                        : rj_io_in_bits_optype == 4'h2
+                        : rs1_io_in_bits_optype == 4'h2
                             ? _GEN_3[63:32]
-                            : rj_io_in_bits_optype == 4'h1
+                            : rs1_io_in_bits_optype == 4'h1
                                 ? _GEN_6[63:32]
-                                : rj_io_in_bits_optype == 4'h0 ? _GEN_3[31:0] : 32'h0;	// playground/src/backend/FakeMultiplier.scala:20:22, :21:{29,42,48}, :22:27, :23:{29,42,48}, :24:22, :25:{29,55}, :26:{22,34}, :31:51, :34:{31,44}
-        result_buf_exception <= rj_io_in_bits_exception;	// playground/src/backend/FakeMultiplier.scala:34:31
+                                : rs1_io_in_bits_optype == 4'h0 ? _GEN_3[31:0] : 32'h0;	// playground/src/backend/FakeMultiplier.scala:19:23, :20:{30,44,50}, :21:29, :22:{30,44,50}, :23:23, :24:{30,58}, :25:{23,37}, :30:51, :33:{31,44}
+        result_buf_exception <= rs1_io_in_bits_exception;	// playground/src/backend/FakeMultiplier.scala:33:31
       end
-      result_buf_mispred <= _GEN_1 & result_buf_mispred;	// playground/src/backend/FakeMultiplier.scala:34:31, :37:46, :40:61
-      result_valid <= ~_GEN_2 & (_GEN_0 | result_valid);	// playground/src/backend/FakeMultiplier.scala:35:31, :37:46, :38:22, :39:22, :40:{42,61}, :46:30, :49:39, :50:22, :51:22
+      result_buf_mispred <= _GEN_1 & result_buf_mispred;	// playground/src/backend/FakeMultiplier.scala:33:31, :36:46, :39:61
+      result_valid <= ~_GEN_2 & (_GEN_0 | result_valid);	// playground/src/backend/FakeMultiplier.scala:34:31, :36:46, :37:22, :38:22, :39:{42,61}, :45:30, :48:39, :49:22, :50:22
     end
   end // always @(posedge)
-  `ifdef ENABLE_INITIAL_REG_	// <stdin>:4884:3
-    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:4884:3
-      `FIRRTL_BEFORE_INITIAL	// <stdin>:4884:3
+  `ifdef ENABLE_INITIAL_REG_	// <stdin>:5218:3
+    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:5218:3
+      `FIRRTL_BEFORE_INITIAL	// <stdin>:5218:3
     `endif // FIRRTL_BEFORE_INITIAL
-    initial begin	// <stdin>:4884:3
-      automatic logic [31:0] _RANDOM[0:1];	// <stdin>:4884:3
-      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:4884:3
-        `INIT_RANDOM_PROLOG_	// <stdin>:4884:3
+    initial begin	// <stdin>:5218:3
+      automatic logic [31:0] _RANDOM[0:1];	// <stdin>:5218:3
+      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:5218:3
+        `INIT_RANDOM_PROLOG_	// <stdin>:5218:3
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// <stdin>:4884:3
+      `ifdef RANDOMIZE_REG_INIT	// <stdin>:5218:3
         for (logic [1:0] i = 2'h0; i < 2'h2; i += 2'h1) begin
-          _RANDOM[i[0]] = `RANDOM;	// <stdin>:4884:3
-        end	// <stdin>:4884:3
-        ready_r = _RANDOM[1'h0][0];	// <stdin>:4884:3, playground/src/backend/FakeMultiplier.scala:33:31
-        result_buf_id = _RANDOM[1'h0][3:1];	// <stdin>:4884:3, playground/src/backend/FakeMultiplier.scala:33:31, :34:31
-        result_buf_result = {_RANDOM[1'h0][31:4], _RANDOM[1'h1][3:0]};	// <stdin>:4884:3, playground/src/backend/FakeMultiplier.scala:33:31, :34:31
-        result_buf_exception = _RANDOM[1'h1][4];	// <stdin>:4884:3, playground/src/backend/FakeMultiplier.scala:34:31
-        result_buf_mispred = _RANDOM[1'h1][5];	// <stdin>:4884:3, playground/src/backend/FakeMultiplier.scala:34:31
-        result_valid = _RANDOM[1'h1][6];	// <stdin>:4884:3, playground/src/backend/FakeMultiplier.scala:34:31, :35:31
+          _RANDOM[i[0]] = `RANDOM;	// <stdin>:5218:3
+        end	// <stdin>:5218:3
+        ready_r = _RANDOM[1'h0][0];	// <stdin>:5218:3, playground/src/backend/FakeMultiplier.scala:32:31
+        result_buf_id = _RANDOM[1'h0][3:1];	// <stdin>:5218:3, playground/src/backend/FakeMultiplier.scala:32:31, :33:31
+        result_buf_result = {_RANDOM[1'h0][31:4], _RANDOM[1'h1][3:0]};	// <stdin>:5218:3, playground/src/backend/FakeMultiplier.scala:32:31, :33:31
+        result_buf_exception = _RANDOM[1'h1][4];	// <stdin>:5218:3, playground/src/backend/FakeMultiplier.scala:33:31
+        result_buf_mispred = _RANDOM[1'h1][5];	// <stdin>:5218:3, playground/src/backend/FakeMultiplier.scala:33:31
+        result_valid = _RANDOM[1'h1][6];	// <stdin>:5218:3, playground/src/backend/FakeMultiplier.scala:33:31, :34:31
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:4884:3
-      `FIRRTL_AFTER_INITIAL	// <stdin>:4884:3
+    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:5218:3
+      `FIRRTL_AFTER_INITIAL	// <stdin>:5218:3
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  assign rj_io_in_ready = ready_r;	// <stdin>:4884:3, playground/src/backend/FakeMultiplier.scala:33:31
-  assign rj_io_out_valid = result_valid;	// <stdin>:4884:3, playground/src/backend/FakeMultiplier.scala:35:31
-  assign rj_io_out_bits_id = result_buf_id;	// <stdin>:4884:3, playground/src/backend/FakeMultiplier.scala:34:31
-  assign rj_io_out_bits_result = result_buf_result;	// <stdin>:4884:3, playground/src/backend/FakeMultiplier.scala:34:31
-  assign rj_io_out_bits_exception = result_buf_exception;	// <stdin>:4884:3, playground/src/backend/FakeMultiplier.scala:34:31
-  assign rj_io_out_bits_mispred = result_buf_mispred;	// <stdin>:4884:3, playground/src/backend/FakeMultiplier.scala:34:31
+  assign rs1_io_in_ready = ready_r;	// <stdin>:5218:3, playground/src/backend/FakeMultiplier.scala:32:31
+  assign rs1_io_out_valid = result_valid;	// <stdin>:5218:3, playground/src/backend/FakeMultiplier.scala:34:31
+  assign rs1_io_out_bits_id = result_buf_id;	// <stdin>:5218:3, playground/src/backend/FakeMultiplier.scala:33:31
+  assign rs1_io_out_bits_result = result_buf_result;	// <stdin>:5218:3, playground/src/backend/FakeMultiplier.scala:33:31
+  assign rs1_io_out_bits_exception = result_buf_exception;	// <stdin>:5218:3, playground/src/backend/FakeMultiplier.scala:33:31
+  assign rs1_io_out_bits_mispred = result_buf_mispred;	// <stdin>:5218:3, playground/src/backend/FakeMultiplier.scala:33:31
 endmodule
 
-module RV32BranchUnit(	// <stdin>:4972:3
+module RV32BranchUnit(	// <stdin>:5306:3
   input         bru_io_br_pred_taken,	// playground/src/backend/BranchUnit.scala:18:20
   input  [31:0] bru_io_br_pred_target,	// playground/src/backend/BranchUnit.scala:18:20
   input         io_in_valid,	// playground/src/backend/Excute.scala:31:21
@@ -6376,60 +7025,57 @@ module RV32BranchUnit(	// <stdin>:4972:3
 );
 
   wire [31:0] _br_target_T_11;	// src/main/scala/chisel3/util/Mux.scala:141:16
-  wire        link_flag;	// playground/src/ISA/riscv32/BranchUnit.scala:20:27
+  wire        link_flag;	// playground/src/ISA/riscv32/BranchUnit.scala:25:26
   wire        taken =
     (io_in_bits_optype == 4'h5
-       ? io_in_bits_operand_a >= io_in_bits_operand_c
+       ? io_in_bits_operand_a >= io_in_bits_operand_b
        : io_in_bits_optype == 4'h3
-           ? $signed(io_in_bits_operand_a) >= $signed(io_in_bits_operand_c)
+           ? $signed(io_in_bits_operand_a) >= $signed(io_in_bits_operand_b)
            : io_in_bits_optype == 4'h4
-               ? io_in_bits_operand_a < io_in_bits_operand_c
+               ? io_in_bits_operand_a < io_in_bits_operand_b
                : io_in_bits_optype == 4'h2
-                   ? $signed(io_in_bits_operand_a) < $signed(io_in_bits_operand_c)
+                   ? $signed(io_in_bits_operand_a) < $signed(io_in_bits_operand_b)
                    : io_in_bits_optype == 4'h1
-                       ? io_in_bits_operand_a != io_in_bits_operand_c
+                       ? io_in_bits_operand_a != io_in_bits_operand_b
                        : io_in_bits_optype == 4'h0
-                         & io_in_bits_operand_a == io_in_bits_operand_c) | link_flag;	// playground/src/ISA/riscv32/BranchUnit.scala:20:27, playground/src/backend/BranchUnit.scala:30:23, :31:23, :32:30, :33:23, :34:30, :35:23, :37:60, :43:29
+                         & io_in_bits_operand_a == io_in_bits_operand_b) | link_flag;	// playground/src/ISA/riscv32/BranchUnit.scala:25:26, playground/src/backend/BranchUnit.scala:31:23, :32:23, :33:30, :34:23, :35:30, :36:23, :38:60, :44:29
   wire        mispred =
     taken ^ bru_io_br_pred_taken | taken & bru_io_br_pred_taken
-    & _br_target_T_11 != bru_io_br_pred_target;	// playground/src/backend/BranchUnit.scala:43:29, :48:{30,44,67,80}, src/main/scala/chisel3/util/Mux.scala:141:16
-  wire [31:0] _br_target_T = io_in_bits_pc + 32'h4;	// playground/src/backend/BranchUnit.scala:58:54
-  wire        is_jalr = io_in_bits_optype == 4'h7;	// playground/src/ISA/riscv32/BranchUnit.scala:18:38
-  assign link_flag = io_in_bits_optype == 4'h6 | is_jalr;	// playground/src/ISA/riscv32/BranchUnit.scala:17:38, :18:38, :20:27
-  wire [3:0]  br_target_hi_hi = {2{{2{io_in_bits_operand_b[19]}}}};	// playground/src/ISA/riscv32/BranchUnit.scala:27:49, playground/src/utils/utils.scala:23:32, :24:12
+    & _br_target_T_11 != bru_io_br_pred_target;	// playground/src/backend/BranchUnit.scala:44:29, :49:{30,44,67,80}, src/main/scala/chisel3/util/Mux.scala:141:16
+  wire [31:0] _br_target_T = io_in_bits_pc + 32'h4;	// playground/src/backend/BranchUnit.scala:59:54
+  wire        is_jalr = io_in_bits_optype == 4'h7;	// playground/src/ISA/riscv32/BranchUnit.scala:23:38
+  assign link_flag = io_in_bits_optype == 4'h6 | is_jalr;	// playground/src/ISA/riscv32/BranchUnit.scala:22:38, :23:38, :25:26
+  wire [31:0] imm = link_flag ? io_in_bits_operand_b : io_in_bits_operand_c;	// playground/src/ISA/riscv32/BranchUnit.scala:25:{18,26}
+  wire [3:0]  br_target_hi_hi = {2{{2{imm[19]}}}};	// playground/src/ISA/riscv32/BranchUnit.scala:25:18, :34:49, playground/src/utils/utils.scala:23:32, :24:12
   assign _br_target_T_11 =
     taken & is_jalr
-      ? io_in_bits_operand_a + io_in_bits_operand_b
+      ? io_in_bits_operand_a + imm
       : taken
-          ? io_in_bits_pc
-            + {br_target_hi_hi[2:0],
-               {8{io_in_bits_operand_b[19]}},
-               io_in_bits_operand_b[19:0],
-               1'h0}
-          : _br_target_T;	// playground/src/ISA/riscv32/BranchUnit.scala:18:38, :26:{20,39}, :27:{38,49}, playground/src/backend/BranchUnit.scala:37:60, :43:29, :58:54, playground/src/utils/utils.scala:23:32, :24:12, src/main/scala/chisel3/util/Mux.scala:141:16
-  assign bru_io_update_valid = io_in_valid & mispred;	// <stdin>:4972:3, playground/src/backend/BranchUnit.scala:48:44, :55:48
-  assign bru_io_update_bits_pc = io_in_bits_pc;	// <stdin>:4972:3
-  assign bru_io_update_bits_is_taken = taken;	// <stdin>:4972:3, playground/src/backend/BranchUnit.scala:43:29
-  assign bru_io_update_bits_target = _br_target_T_11;	// <stdin>:4972:3, src/main/scala/chisel3/util/Mux.scala:141:16
-  assign io_out_valid = io_in_valid;	// <stdin>:4972:3
-  assign io_out_bits_id = io_in_bits_id;	// <stdin>:4972:3
-  assign io_out_bits_result = link_flag ? _br_target_T : 32'h0;	// <stdin>:4972:3, playground/src/ISA/riscv32/BranchUnit.scala:20:27, playground/src/backend/BranchUnit.scala:58:{39,54}
-  assign io_out_bits_exception = io_in_bits_exception;	// <stdin>:4972:3
-  assign io_out_bits_mispred = mispred;	// <stdin>:4972:3, playground/src/backend/BranchUnit.scala:48:44
+          ? io_in_bits_pc + {br_target_hi_hi[2:0], {8{imm[19]}}, imm[19:0], 1'h0}
+          : _br_target_T;	// playground/src/ISA/riscv32/BranchUnit.scala:23:38, :25:18, :33:{20,39}, :34:{38,49}, playground/src/backend/BranchUnit.scala:38:60, :44:29, :59:54, playground/src/utils/utils.scala:23:32, :24:12, src/main/scala/chisel3/util/Mux.scala:141:16
+  assign bru_io_update_valid = io_in_valid & mispred;	// <stdin>:5306:3, playground/src/backend/BranchUnit.scala:49:44, :56:48
+  assign bru_io_update_bits_pc = io_in_bits_pc;	// <stdin>:5306:3
+  assign bru_io_update_bits_is_taken = taken;	// <stdin>:5306:3, playground/src/backend/BranchUnit.scala:44:29
+  assign bru_io_update_bits_target = _br_target_T_11;	// <stdin>:5306:3, src/main/scala/chisel3/util/Mux.scala:141:16
+  assign io_out_valid = io_in_valid;	// <stdin>:5306:3
+  assign io_out_bits_id = io_in_bits_id;	// <stdin>:5306:3
+  assign io_out_bits_result = link_flag ? _br_target_T : 32'h0;	// <stdin>:5306:3, playground/src/ISA/riscv32/BranchUnit.scala:25:26, playground/src/backend/BranchUnit.scala:59:{39,54}
+  assign io_out_bits_exception = io_in_bits_exception;	// <stdin>:5306:3
+  assign io_out_bits_mispred = mispred;	// <stdin>:5306:3, playground/src/backend/BranchUnit.scala:49:44
 endmodule
 
-module RV32CSRBuffer(	// <stdin>:5058:3
+module RV32CSRBuffer(	// <stdin>:5398:3
   input        csr_vec_io_in_valid,	// playground/src/backend/Excute.scala:31:21
   input  [2:0] csr_vec_io_in_bits_id,	// playground/src/backend/Excute.scala:31:21
   output       csr_vec_io_out_valid,	// playground/src/backend/Excute.scala:31:21
   output [2:0] csr_vec_io_out_bits_id	// playground/src/backend/Excute.scala:31:21
 );
 
-  assign csr_vec_io_out_valid = csr_vec_io_in_valid;	// <stdin>:5058:3
-  assign csr_vec_io_out_bits_id = csr_vec_io_in_bits_id;	// <stdin>:5058:3
+  assign csr_vec_io_out_valid = csr_vec_io_in_valid;	// <stdin>:5398:3
+  assign csr_vec_io_out_bits_id = csr_vec_io_in_bits_id;	// <stdin>:5398:3
 endmodule
 
-module RV32MiscFu(	// <stdin>:5118:3
+module RV32MiscFu(	// <stdin>:5458:3
   input        io_in_valid,	// playground/src/backend/Excute.scala:31:21
   input  [2:0] io_in_bits_id,	// playground/src/backend/Excute.scala:31:21
   input        io_in_bits_exception,	// playground/src/backend/Excute.scala:31:21
@@ -6438,12 +7084,12 @@ module RV32MiscFu(	// <stdin>:5118:3
   output       io_out_bits_exception	// playground/src/backend/Excute.scala:31:21
 );
 
-  assign io_out_valid = io_in_valid;	// <stdin>:5118:3
-  assign io_out_bits_id = io_in_bits_id;	// <stdin>:5118:3
-  assign io_out_bits_exception = io_in_bits_exception;	// <stdin>:5118:3
+  assign io_out_valid = io_in_valid;	// <stdin>:5458:3
+  assign io_out_bits_id = io_in_bits_id;	// <stdin>:5458:3
+  assign io_out_bits_exception = io_in_bits_exception;	// <stdin>:5458:3
 endmodule
 
-module Arbiter5_BaseFuOutput(	// <stdin>:5131:3
+module Arbiter5_BaseFuOutput(	// <stdin>:5471:3
   input         io_in_0_valid,	// src/main/scala/chisel3/util/Arbiter.scala:140:14
   input  [2:0]  io_in_0_bits_id,	// src/main/scala/chisel3/util/Arbiter.scala:140:14
   input  [31:0] io_in_0_bits_result,	// src/main/scala/chisel3/util/Arbiter.scala:140:14
@@ -6473,8 +7119,8 @@ module Arbiter5_BaseFuOutput(	// <stdin>:5131:3
 );
 
   wire _io_out_valid_T = io_in_0_valid | io_in_1_valid | io_in_2_valid | io_in_3_valid;	// src/main/scala/chisel3/util/Arbiter.scala:45:68
-  assign io_in_4_ready = ~_io_out_valid_T & io_out_ready;	// <stdin>:5131:3, src/main/scala/chisel3/util/Arbiter.scala:45:{68,78}, :153:19
-  assign io_out_valid = _io_out_valid_T | io_in_4_valid;	// <stdin>:5131:3, src/main/scala/chisel3/util/Arbiter.scala:45:68, :154:31
+  assign io_in_4_ready = ~_io_out_valid_T & io_out_ready;	// <stdin>:5471:3, src/main/scala/chisel3/util/Arbiter.scala:45:{68,78}, :153:19
+  assign io_out_valid = _io_out_valid_T | io_in_4_valid;	// <stdin>:5471:3, src/main/scala/chisel3/util/Arbiter.scala:45:68, :154:31
   assign io_out_bits_id =
     io_in_0_valid
       ? io_in_0_bits_id
@@ -6482,13 +7128,13 @@ module Arbiter5_BaseFuOutput(	// <stdin>:5131:3
           ? io_in_1_bits_id
           : io_in_2_valid
               ? io_in_2_bits_id
-              : io_in_3_valid ? io_in_3_bits_id : io_in_4_bits_id;	// <stdin>:5131:3, src/main/scala/chisel3/util/Arbiter.scala:143:15, :145:26, :147:19
+              : io_in_3_valid ? io_in_3_bits_id : io_in_4_bits_id;	// <stdin>:5471:3, src/main/scala/chisel3/util/Arbiter.scala:143:15, :145:26, :147:19
   assign io_out_bits_result =
     io_in_0_valid
       ? io_in_0_bits_result
       : io_in_1_valid
           ? io_in_1_bits_result
-          : io_in_2_valid ? 32'h77777777 : io_in_3_valid ? 32'h0 : io_in_4_bits_result;	// <stdin>:5131:3, src/main/scala/chisel3/util/Arbiter.scala:140:14, :143:15, :145:26, :147:19
+          : io_in_2_valid ? 32'h77777777 : io_in_3_valid ? 32'h0 : io_in_4_bits_result;	// <stdin>:5471:3, src/main/scala/chisel3/util/Arbiter.scala:140:14, :143:15, :145:26, :147:19
   assign io_out_bits_exception =
     io_in_0_valid
       ? io_in_0_bits_exception
@@ -6496,16 +7142,16 @@ module Arbiter5_BaseFuOutput(	// <stdin>:5131:3
           ? io_in_1_bits_exception
           : io_in_2_valid
               ? io_in_2_bits_exception
-              : ~io_in_3_valid & io_in_4_bits_exception;	// <stdin>:5131:3, src/main/scala/chisel3/util/Arbiter.scala:143:15, :145:26, :147:19
+              : ~io_in_3_valid & io_in_4_bits_exception;	// <stdin>:5471:3, src/main/scala/chisel3/util/Arbiter.scala:143:15, :145:26, :147:19
   assign io_out_bits_mispred =
     io_in_0_valid
       ? io_in_0_bits_mispred
-      : ~(io_in_1_valid | io_in_2_valid | io_in_3_valid) & io_in_4_bits_mispred;	// <stdin>:5131:3, src/main/scala/chisel3/util/Arbiter.scala:143:15, :145:26, :147:19
+      : ~(io_in_1_valid | io_in_2_valid | io_in_3_valid) & io_in_4_bits_mispred;	// <stdin>:5471:3, src/main/scala/chisel3/util/Arbiter.scala:143:15, :145:26, :147:19
 endmodule
 
-module EXU(	// <stdin>:5171:3
-  input         clock,	// <stdin>:5172:11
-                reset,	// <stdin>:5173:11
+module EXU(	// <stdin>:5511:3
+  input         clock,	// <stdin>:5512:11
+                reset,	// <stdin>:5513:11
                 io_in_valid,	// playground/src/backend/Excute.scala:53:16
   input  [2:0]  io_in_bits_id,	// playground/src/backend/Excute.scala:53:16
   input  [31:0] io_in_bits_pc,	// playground/src/backend/Excute.scala:53:16
@@ -6546,7 +7192,10 @@ module EXU(	// <stdin>:5171:3
   output [31:0] lsu_io_cache_req_bits_wdata,	// playground/src/backend/Excute.scala:62:21
   output        lsu_io_cache_req_bits_uncached,	// playground/src/backend/Excute.scala:62:21
                 lsu_io_store_commit_ready,	// playground/src/backend/Excute.scala:62:21
-  output [31:0] lsu_io_data_trans_req_vaddr	// playground/src/backend/Excute.scala:62:21
+  output [31:0] lsu_io_data_trans_req_vaddr,	// playground/src/backend/Excute.scala:62:21
+                lsu_io_lsu_diff_paddr,	// playground/src/backend/Excute.scala:62:21
+                lsu_io_lsu_diff_vaddr,	// playground/src/backend/Excute.scala:62:21
+                lsu_io_lsu_diff_wdata	// playground/src/backend/Excute.scala:62:21
 );
 
   wire        _result_arb_io_in_4_ready;	// playground/src/backend/Excute.scala:111:28
@@ -6565,12 +7214,12 @@ module EXU(	// <stdin>:5171:3
   wire [31:0] _bru_io_out_bits_result;	// playground/src/backend/Excute.scala:58:22
   wire        _bru_io_out_bits_exception;	// playground/src/backend/Excute.scala:58:22
   wire        _bru_io_out_bits_mispred;	// playground/src/backend/Excute.scala:58:22
-  wire        _mul_rj_io_in_ready;	// playground/src/backend/Excute.scala:57:22
-  wire        _mul_rj_io_out_valid;	// playground/src/backend/Excute.scala:57:22
-  wire [2:0]  _mul_rj_io_out_bits_id;	// playground/src/backend/Excute.scala:57:22
-  wire [31:0] _mul_rj_io_out_bits_result;	// playground/src/backend/Excute.scala:57:22
-  wire        _mul_rj_io_out_bits_exception;	// playground/src/backend/Excute.scala:57:22
-  wire        _mul_rj_io_out_bits_mispred;	// playground/src/backend/Excute.scala:57:22
+  wire        _mul_rs1_io_in_ready;	// playground/src/backend/Excute.scala:57:22
+  wire        _mul_rs1_io_out_valid;	// playground/src/backend/Excute.scala:57:22
+  wire [2:0]  _mul_rs1_io_out_bits_id;	// playground/src/backend/Excute.scala:57:22
+  wire [31:0] _mul_rs1_io_out_bits_result;	// playground/src/backend/Excute.scala:57:22
+  wire        _mul_rs1_io_out_bits_exception;	// playground/src/backend/Excute.scala:57:22
+  wire        _mul_rs1_io_out_bits_mispred;	// playground/src/backend/Excute.scala:57:22
   wire        _lsu_wtype_io_in_ready;	// playground/src/backend/Excute.scala:56:22
   wire        _alu_io_out_valid;	// playground/src/backend/Excute.scala:55:22
   wire [2:0]  _alu_io_out_bits_id;	// playground/src/backend/Excute.scala:55:22
@@ -6595,12 +7244,12 @@ module EXU(	// <stdin>:5171:3
   wire        _GEN_4 = futype_r == 5'h0;	// playground/src/backend/Excute.scala:56:22, :62:21, :84:29, :101:23
   wire        _io_in_ready_output =
     _GEN_4 | _GEN_3
-    | (_GEN_2 ? _lsu_wtype_io_in_ready : _GEN_1 ? _mul_rj_io_in_ready : _GEN_0 | _GEN);	// playground/src/backend/Excute.scala:56:22, :57:22, :101:{23,34}, :103:31
+    | (_GEN_2 ? _lsu_wtype_io_in_ready : _GEN_1 ? _mul_rs1_io_in_ready : _GEN_0 | _GEN);	// playground/src/backend/Excute.scala:56:22, :57:22, :101:{23,34}, :103:31
   wire        _GEN_5 = fu_base_in_valid & inst_excp;	// playground/src/backend/Excute.scala:83:29, :123:27
-  always @(posedge clock) begin	// <stdin>:5172:11
-    if (reset) begin	// <stdin>:5172:11
+  always @(posedge clock) begin	// <stdin>:5512:11
+    if (reset) begin	// <stdin>:5512:11
       fu_base_in_valid <= 1'h0;	// playground/src/backend/Excute.scala:53:16, :55:22, :56:22, :59:22, :60:22, :62:21, :63:21, :83:29, :111:28
-      fu_base_in_bits_id <= 3'h0;	// <stdin>:5171:3, playground/src/backend/Excute.scala:83:29
+      fu_base_in_bits_id <= 3'h0;	// <stdin>:5511:3, playground/src/backend/Excute.scala:83:29
       fu_base_in_bits_pc <= 32'h0;	// playground/src/backend/Excute.scala:59:22, :63:21, :83:29, :111:28
       fu_base_in_bits_optype <= 4'h0;	// playground/src/backend/Excute.scala:83:{29,42}
       inst_excp <= 1'h0;	// playground/src/backend/Excute.scala:53:16, :55:22, :56:22, :59:22, :60:22, :62:21, :63:21, :83:29, :111:28
@@ -6625,34 +7274,34 @@ module EXU(	// <stdin>:5171:3
       br_pred_r_target <= io_br_pred_target;	// playground/src/backend/Excute.scala:85:29
     end
   end // always @(posedge)
-  `ifdef ENABLE_INITIAL_REG_	// <stdin>:5171:3
-    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:5171:3
-      `FIRRTL_BEFORE_INITIAL	// <stdin>:5171:3
+  `ifdef ENABLE_INITIAL_REG_	// <stdin>:5511:3
+    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:5511:3
+      `FIRRTL_BEFORE_INITIAL	// <stdin>:5511:3
     `endif // FIRRTL_BEFORE_INITIAL
-    initial begin	// <stdin>:5171:3
-      automatic logic [31:0] _RANDOM[0:5];	// <stdin>:5171:3
-      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:5171:3
-        `INIT_RANDOM_PROLOG_	// <stdin>:5171:3
+    initial begin	// <stdin>:5511:3
+      automatic logic [31:0] _RANDOM[0:5];	// <stdin>:5511:3
+      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:5511:3
+        `INIT_RANDOM_PROLOG_	// <stdin>:5511:3
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// <stdin>:5171:3
+      `ifdef RANDOMIZE_REG_INIT	// <stdin>:5511:3
         for (logic [2:0] i = 3'h0; i < 3'h6; i += 3'h1) begin
-          _RANDOM[i] = `RANDOM;	// <stdin>:5171:3
-        end	// <stdin>:5171:3
-        fu_base_in_valid = _RANDOM[3'h0][0];	// <stdin>:5171:3, playground/src/backend/Excute.scala:83:29
-        fu_base_in_bits_id = _RANDOM[3'h0][3:1];	// <stdin>:5171:3, playground/src/backend/Excute.scala:83:29
-        fu_base_in_bits_pc = {_RANDOM[3'h0][31:4], _RANDOM[3'h1][3:0]};	// <stdin>:5171:3, playground/src/backend/Excute.scala:83:29
-        fu_base_in_bits_optype = _RANDOM[3'h1][7:4];	// <stdin>:5171:3, playground/src/backend/Excute.scala:83:29
-        inst_excp = _RANDOM[3'h1][8];	// <stdin>:5171:3, playground/src/backend/Excute.scala:83:29
-        fu_base_in_bits_operand_a = {_RANDOM[3'h1][31:9], _RANDOM[3'h2][8:0]};	// <stdin>:5171:3, playground/src/backend/Excute.scala:83:29
-        fu_base_in_bits_operand_b = {_RANDOM[3'h2][31:9], _RANDOM[3'h3][8:0]};	// <stdin>:5171:3, playground/src/backend/Excute.scala:83:29
-        fu_base_in_bits_operand_c = {_RANDOM[3'h3][31:9], _RANDOM[3'h4][8:0]};	// <stdin>:5171:3, playground/src/backend/Excute.scala:83:29
-        futype_r = _RANDOM[3'h4][13:9];	// <stdin>:5171:3, playground/src/backend/Excute.scala:83:29, :84:29
-        br_pred_r_taken = _RANDOM[3'h4][14];	// <stdin>:5171:3, playground/src/backend/Excute.scala:83:29, :85:29
-        br_pred_r_target = {_RANDOM[3'h4][31:15], _RANDOM[3'h5][14:0]};	// <stdin>:5171:3, playground/src/backend/Excute.scala:83:29, :85:29
+          _RANDOM[i] = `RANDOM;	// <stdin>:5511:3
+        end	// <stdin>:5511:3
+        fu_base_in_valid = _RANDOM[3'h0][0];	// <stdin>:5511:3, playground/src/backend/Excute.scala:83:29
+        fu_base_in_bits_id = _RANDOM[3'h0][3:1];	// <stdin>:5511:3, playground/src/backend/Excute.scala:83:29
+        fu_base_in_bits_pc = {_RANDOM[3'h0][31:4], _RANDOM[3'h1][3:0]};	// <stdin>:5511:3, playground/src/backend/Excute.scala:83:29
+        fu_base_in_bits_optype = _RANDOM[3'h1][7:4];	// <stdin>:5511:3, playground/src/backend/Excute.scala:83:29
+        inst_excp = _RANDOM[3'h1][8];	// <stdin>:5511:3, playground/src/backend/Excute.scala:83:29
+        fu_base_in_bits_operand_a = {_RANDOM[3'h1][31:9], _RANDOM[3'h2][8:0]};	// <stdin>:5511:3, playground/src/backend/Excute.scala:83:29
+        fu_base_in_bits_operand_b = {_RANDOM[3'h2][31:9], _RANDOM[3'h3][8:0]};	// <stdin>:5511:3, playground/src/backend/Excute.scala:83:29
+        fu_base_in_bits_operand_c = {_RANDOM[3'h3][31:9], _RANDOM[3'h4][8:0]};	// <stdin>:5511:3, playground/src/backend/Excute.scala:83:29
+        futype_r = _RANDOM[3'h4][13:9];	// <stdin>:5511:3, playground/src/backend/Excute.scala:83:29, :84:29
+        br_pred_r_taken = _RANDOM[3'h4][14];	// <stdin>:5511:3, playground/src/backend/Excute.scala:83:29, :85:29
+        br_pred_r_target = {_RANDOM[3'h4][31:15], _RANDOM[3'h5][14:0]};	// <stdin>:5511:3, playground/src/backend/Excute.scala:83:29, :85:29
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:5171:3
-      `FIRRTL_AFTER_INITIAL	// <stdin>:5171:3
+    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:5511:3
+      `FIRRTL_AFTER_INITIAL	// <stdin>:5511:3
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
   MkALUWrapper alu (	// playground/src/backend/Excute.scala:55:22
@@ -6693,29 +7342,32 @@ module EXU(	// <stdin>:5171:3
     .lsu_io_cache_req_bits_uncached (lsu_io_cache_req_bits_uncached),
     .lsu_io_store_commit_ready      (lsu_io_store_commit_ready),
     .lsu_io_data_trans_req_vaddr    (lsu_io_data_trans_req_vaddr),
+    .lsu_io_lsu_diff_paddr          (lsu_io_lsu_diff_paddr),
+    .lsu_io_lsu_diff_vaddr          (lsu_io_lsu_diff_vaddr),
+    .lsu_io_lsu_diff_wdata          (lsu_io_lsu_diff_wdata),
     .wtype_io_in_ready              (_lsu_wtype_io_in_ready),
     .wtype_io_out_valid             (io_out_lsu_out_valid),
     .wtype_io_out_bits_id           (io_out_lsu_out_bits_id),
     .wtype_io_out_bits_result       (io_out_lsu_out_bits_result)
   );
   FakeMultiplier mul (	// playground/src/backend/Excute.scala:57:22
-    .clock                    (clock),
-    .reset                    (reset),
-    .rj_io_in_valid           (_GEN_1 & fu_base_in_valid & ~inst_excp),	// playground/src/backend/Excute.scala:83:29, :96:45, :101:{23,34}, :102:{31,53}
-    .rj_io_in_bits_id         (fu_base_in_bits_id),	// playground/src/backend/Excute.scala:83:29
-    .rj_io_in_bits_optype     (fu_base_in_bits_optype),	// playground/src/backend/Excute.scala:83:29
-    .rj_io_in_bits_exception  (inst_excp),	// playground/src/backend/Excute.scala:83:29
-    .rj_io_in_bits_operand_a  (fu_base_in_bits_operand_a),	// playground/src/backend/Excute.scala:83:29
-    .rj_io_in_bits_operand_b  (fu_base_in_bits_operand_b),	// playground/src/backend/Excute.scala:83:29
-    .rj_io_out_ready          (_result_arb_io_in_4_ready),	// playground/src/backend/Excute.scala:111:28
-    .rj_io_flush_exception    (io_flush_exception),
-    .rj_io_flush_ertn         (io_flush_ertn),
-    .rj_io_in_ready           (_mul_rj_io_in_ready),
-    .rj_io_out_valid          (_mul_rj_io_out_valid),
-    .rj_io_out_bits_id        (_mul_rj_io_out_bits_id),
-    .rj_io_out_bits_result    (_mul_rj_io_out_bits_result),
-    .rj_io_out_bits_exception (_mul_rj_io_out_bits_exception),
-    .rj_io_out_bits_mispred   (_mul_rj_io_out_bits_mispred)
+    .clock                     (clock),
+    .reset                     (reset),
+    .rs1_io_in_valid           (_GEN_1 & fu_base_in_valid & ~inst_excp),	// playground/src/backend/Excute.scala:83:29, :96:45, :101:{23,34}, :102:{31,53}
+    .rs1_io_in_bits_id         (fu_base_in_bits_id),	// playground/src/backend/Excute.scala:83:29
+    .rs1_io_in_bits_optype     (fu_base_in_bits_optype),	// playground/src/backend/Excute.scala:83:29
+    .rs1_io_in_bits_exception  (inst_excp),	// playground/src/backend/Excute.scala:83:29
+    .rs1_io_in_bits_operand_a  (fu_base_in_bits_operand_a),	// playground/src/backend/Excute.scala:83:29
+    .rs1_io_in_bits_operand_b  (fu_base_in_bits_operand_b),	// playground/src/backend/Excute.scala:83:29
+    .rs1_io_out_ready          (_result_arb_io_in_4_ready),	// playground/src/backend/Excute.scala:111:28
+    .rs1_io_flush_exception    (io_flush_exception),
+    .rs1_io_flush_ertn         (io_flush_ertn),
+    .rs1_io_in_ready           (_mul_rs1_io_in_ready),
+    .rs1_io_out_valid          (_mul_rs1_io_out_valid),
+    .rs1_io_out_bits_id        (_mul_rs1_io_out_bits_id),
+    .rs1_io_out_bits_result    (_mul_rs1_io_out_bits_result),
+    .rs1_io_out_bits_exception (_mul_rs1_io_out_bits_exception),
+    .rs1_io_out_bits_mispred   (_mul_rs1_io_out_bits_mispred)
   );
   RV32BranchUnit bru (	// playground/src/backend/Excute.scala:58:22
     .bru_io_br_pred_taken        (br_pred_r_taken),	// playground/src/backend/Excute.scala:85:29
@@ -6767,11 +7419,11 @@ module EXU(	// <stdin>:5171:3
     .io_in_2_bits_exception (_misc_io_out_bits_exception),	// playground/src/backend/Excute.scala:60:22
     .io_in_3_valid          (_csr_csr_vec_io_out_valid),	// playground/src/backend/Excute.scala:59:22
     .io_in_3_bits_id        (_csr_csr_vec_io_out_bits_id),	// playground/src/backend/Excute.scala:59:22
-    .io_in_4_valid          (_mul_rj_io_out_valid),	// playground/src/backend/Excute.scala:57:22
-    .io_in_4_bits_id        (_mul_rj_io_out_bits_id),	// playground/src/backend/Excute.scala:57:22
-    .io_in_4_bits_result    (_mul_rj_io_out_bits_result),	// playground/src/backend/Excute.scala:57:22
-    .io_in_4_bits_exception (_mul_rj_io_out_bits_exception),	// playground/src/backend/Excute.scala:57:22
-    .io_in_4_bits_mispred   (_mul_rj_io_out_bits_mispred),	// playground/src/backend/Excute.scala:57:22
+    .io_in_4_valid          (_mul_rs1_io_out_valid),	// playground/src/backend/Excute.scala:57:22
+    .io_in_4_bits_id        (_mul_rs1_io_out_bits_id),	// playground/src/backend/Excute.scala:57:22
+    .io_in_4_bits_result    (_mul_rs1_io_out_bits_result),	// playground/src/backend/Excute.scala:57:22
+    .io_in_4_bits_exception (_mul_rs1_io_out_bits_exception),	// playground/src/backend/Excute.scala:57:22
+    .io_in_4_bits_mispred   (_mul_rs1_io_out_bits_mispred),	// playground/src/backend/Excute.scala:57:22
     .io_out_ready           (~_GEN_5),	// playground/src/backend/Excute.scala:53:16, :55:22, :56:22, :58:22, :59:22, :60:22, :62:21, :63:21, :111:28, :123:{27,40}, :126:33, :128:24
     .io_in_4_ready          (_result_arb_io_in_4_ready),
     .io_out_valid           (_result_arb_io_out_valid),
@@ -6780,15 +7432,15 @@ module EXU(	// <stdin>:5171:3
     .io_out_bits_exception  (_result_arb_io_out_bits_exception),
     .io_out_bits_mispred    (_result_arb_io_out_bits_mispred)
   );
-  assign io_in_ready = _io_in_ready_output;	// <stdin>:5171:3, playground/src/backend/Excute.scala:101:34, :103:31
-  assign io_out_flu_out_valid = _GEN_5 | _result_arb_io_out_valid;	// <stdin>:5171:3, playground/src/backend/Excute.scala:111:28, :123:{27,40}, :124:33, :128:24
+  assign io_in_ready = _io_in_ready_output;	// <stdin>:5511:3, playground/src/backend/Excute.scala:101:34, :103:31
+  assign io_out_flu_out_valid = _GEN_5 | _result_arb_io_out_valid;	// <stdin>:5511:3, playground/src/backend/Excute.scala:111:28, :123:{27,40}, :124:33, :128:24
   assign io_out_flu_out_bits_id =
-    _GEN_5 ? fu_base_in_bits_id : _result_arb_io_out_bits_id;	// <stdin>:5171:3, playground/src/backend/Excute.scala:83:29, :111:28, :123:{27,40}, :125:33, :128:24
+    _GEN_5 ? fu_base_in_bits_id : _result_arb_io_out_bits_id;	// <stdin>:5511:3, playground/src/backend/Excute.scala:83:29, :111:28, :123:{27,40}, :125:33, :128:24
   assign io_out_flu_out_bits_result =
-    _GEN_5 ? fu_base_in_bits_pc : _result_arb_io_out_bits_result;	// <stdin>:5171:3, playground/src/backend/Excute.scala:83:29, :111:28, :123:{27,40}, :125:33, :128:24
+    _GEN_5 ? fu_base_in_bits_pc : _result_arb_io_out_bits_result;	// <stdin>:5511:3, playground/src/backend/Excute.scala:83:29, :111:28, :123:{27,40}, :125:33, :128:24
   assign io_out_flu_out_bits_exception =
-    _GEN_5 ? inst_excp : _result_arb_io_out_bits_exception;	// <stdin>:5171:3, playground/src/backend/Excute.scala:83:29, :111:28, :123:{27,40}, :125:33, :128:24
-  assign io_out_flu_out_bits_mispred = ~_GEN_5 & _result_arb_io_out_bits_mispred;	// <stdin>:5171:3, playground/src/backend/Excute.scala:111:28, :123:{27,40}, :125:33, :128:24
+    _GEN_5 ? inst_excp : _result_arb_io_out_bits_exception;	// <stdin>:5511:3, playground/src/backend/Excute.scala:83:29, :111:28, :123:{27,40}, :125:33, :128:24
+  assign io_out_flu_out_bits_mispred = ~_GEN_5 & _result_arb_io_out_bits_mispred;	// <stdin>:5511:3, playground/src/backend/Excute.scala:111:28, :123:{27,40}, :125:33, :128:24
 endmodule
 
 // VCS coverage exclude_file
@@ -6837,8 +7489,8 @@ module mem_256x21(	// playground/src/utils/SRAM.scala:19:30
   assign R0_data = _R0_en_d0 ? Memory[_R0_addr_d0] : 21'bx;	// playground/src/utils/SRAM.scala:19:30
 endmodule
 
-module SRAMTemplate(	// <stdin>:5640:3, :5657:3, :6493:3, :6510:3
-  input         clock,	// <stdin>:5641:11, :5658:11, :6494:11, :6511:11
+module SRAMTemplate(	// <stdin>:5980:3, :5997:3, :6833:3, :6850:3
+  input         clock,	// <stdin>:5981:11, :5998:11, :6834:11, :6851:11
   input  [7:0]  io_addr,	// playground/src/utils/SRAM.scala:10:22
   input  [20:0] io_din,	// playground/src/utils/SRAM.scala:10:22
   input         io_wen,	// playground/src/utils/SRAM.scala:10:22
@@ -6847,7 +7499,7 @@ module SRAMTemplate(	// <stdin>:5640:3, :5657:3, :6493:3, :6510:3
 
   mem_256x21 mem_ext (	// playground/src/utils/SRAM.scala:19:30
     .R0_addr (io_addr),
-    .R0_en   (1'h1),	// <stdin>:5640:3, :5657:3, :6493:3, :6510:3
+    .R0_en   (1'h1),	// <stdin>:5980:3, :5997:3, :6833:3, :6850:3
     .R0_clk  (clock),
     .W0_addr (io_addr),
     .W0_en   (io_wen),
@@ -6910,8 +7562,8 @@ module mem_256x32(	// playground/src/utils/SRAM.scala:25:30
   assign R0_data = _R0_en_d0 ? Memory[_R0_addr_d0] : 32'bx;	// playground/src/utils/SRAM.scala:25:30
 endmodule
 
-module SRAMTemplate_2(	// <stdin>:5674:3, :5716:3, :5758:3, :5800:3, :5842:3, :5884:3, :5926:3, :5968:3, :6527:3, :6569:3, :6611:3, :6653:3, :6695:3, :6737:3, :6779:3, :6821:3
-  input         clock,	// <stdin>:5675:11, :5717:11, :5759:11, :5801:11, :5843:11, :5885:11, :5927:11, :5969:11, :6528:11, :6570:11, :6612:11, :6654:11, :6696:11, :6738:11, :6780:11, :6822:11
+module SRAMTemplate_2(	// <stdin>:6014:3, :6056:3, :6098:3, :6140:3, :6182:3, :6224:3, :6266:3, :6308:3, :6867:3, :6909:3, :6951:3, :6993:3, :7035:3, :7077:3, :7119:3, :7161:3
+  input         clock,	// <stdin>:6015:11, :6057:11, :6099:11, :6141:11, :6183:11, :6225:11, :6267:11, :6309:11, :6868:11, :6910:11, :6952:11, :6994:11, :7036:11, :7078:11, :7120:11, :7162:11
   input  [7:0]  io_addr,	// playground/src/utils/SRAM.scala:10:22
   input  [31:0] io_din,	// playground/src/utils/SRAM.scala:10:22
   input  [3:0]  io_wen,	// playground/src/utils/SRAM.scala:10:22
@@ -6920,7 +7572,7 @@ module SRAMTemplate_2(	// <stdin>:5674:3, :5716:3, :5758:3, :5800:3, :5842:3, :5
 
   mem_256x32 mem_ext (	// playground/src/utils/SRAM.scala:25:30
     .R0_addr (io_addr),
-    .R0_en   (1'h1),	// <stdin>:5674:3, :5716:3, :5758:3, :5800:3, :5842:3, :5884:3, :5926:3, :5968:3, :6527:3, :6569:3, :6611:3, :6653:3, :6695:3, :6737:3, :6779:3, :6821:3
+    .R0_en   (1'h1),	// <stdin>:6014:3, :6056:3, :6098:3, :6140:3, :6182:3, :6224:3, :6266:3, :6308:3, :6867:3, :6909:3, :6951:3, :6993:3, :7035:3, :7077:3, :7119:3, :7161:3
     .R0_clk  (clock),
     .W0_addr (io_addr),
     .W0_en   (|io_wen),	// playground/src/utils/SRAM.scala:26:21
@@ -6931,9 +7583,9 @@ module SRAMTemplate_2(	// <stdin>:5674:3, :5716:3, :5758:3, :5800:3, :5842:3, :5
   );
 endmodule
 
-module MaxPeriodFibonacciLFSR(	// <stdin>:6010:3, :6863:3
-  input  clock,	// <stdin>:6011:11, :6864:11
-         reset,	// <stdin>:6012:11, :6865:11
+module MaxPeriodFibonacciLFSR(	// <stdin>:6350:3, :7203:3
+  input  clock,	// <stdin>:6351:11, :7204:11
+         reset,	// <stdin>:6352:11, :7205:11
   output io_out_0,	// src/main/scala/chisel3/util/random/PRNG.scala:42:22
          io_out_1,	// src/main/scala/chisel3/util/random/PRNG.scala:42:22
          io_out_2,	// src/main/scala/chisel3/util/random/PRNG.scala:42:22
@@ -6944,50 +7596,50 @@ module MaxPeriodFibonacciLFSR(	// <stdin>:6010:3, :6863:3
   reg state_1;	// src/main/scala/chisel3/util/random/PRNG.scala:55:49
   reg state_2;	// src/main/scala/chisel3/util/random/PRNG.scala:55:49
   reg state_3;	// src/main/scala/chisel3/util/random/PRNG.scala:55:49
-  always @(posedge clock) begin	// <stdin>:6011:11, :6864:11
-    if (reset) begin	// <stdin>:6011:11, :6864:11
-      state_0 <= 1'h1;	// <stdin>:6010:3, :6863:3, src/main/scala/chisel3/util/random/PRNG.scala:55:49
-      state_1 <= 1'h0;	// <stdin>:6010:3, :6863:3, src/main/scala/chisel3/util/random/PRNG.scala:55:49
-      state_2 <= 1'h0;	// <stdin>:6010:3, :6863:3, src/main/scala/chisel3/util/random/PRNG.scala:55:49
-      state_3 <= 1'h0;	// <stdin>:6010:3, :6863:3, src/main/scala/chisel3/util/random/PRNG.scala:55:49
+  always @(posedge clock) begin	// <stdin>:6351:11, :7204:11
+    if (reset) begin	// <stdin>:6351:11, :7204:11
+      state_0 <= 1'h1;	// <stdin>:6350:3, :7203:3, src/main/scala/chisel3/util/random/PRNG.scala:55:49
+      state_1 <= 1'h0;	// <stdin>:6350:3, :7203:3, src/main/scala/chisel3/util/random/PRNG.scala:55:49
+      state_2 <= 1'h0;	// <stdin>:6350:3, :7203:3, src/main/scala/chisel3/util/random/PRNG.scala:55:49
+      state_3 <= 1'h0;	// <stdin>:6350:3, :7203:3, src/main/scala/chisel3/util/random/PRNG.scala:55:49
     end
-    else begin	// <stdin>:6011:11, :6864:11
+    else begin	// <stdin>:6351:11, :7204:11
       state_0 <= state_3 ^ state_2;	// src/main/scala/chisel3/util/random/LFSR.scala:15:41, src/main/scala/chisel3/util/random/PRNG.scala:55:49
       state_1 <= state_0;	// src/main/scala/chisel3/util/random/PRNG.scala:55:49
       state_2 <= state_1;	// src/main/scala/chisel3/util/random/PRNG.scala:55:49
       state_3 <= state_2;	// src/main/scala/chisel3/util/random/PRNG.scala:55:49
     end
   end // always @(posedge)
-  `ifdef ENABLE_INITIAL_REG_	// <stdin>:6010:3, :6863:3
-    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:6010:3, :6863:3
-      `FIRRTL_BEFORE_INITIAL	// <stdin>:6010:3, :6863:3
+  `ifdef ENABLE_INITIAL_REG_	// <stdin>:6350:3, :7203:3
+    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:6350:3, :7203:3
+      `FIRRTL_BEFORE_INITIAL	// <stdin>:6350:3, :7203:3
     `endif // FIRRTL_BEFORE_INITIAL
-    initial begin	// <stdin>:6010:3, :6863:3
-      automatic logic [31:0] _RANDOM[0:0];	// <stdin>:6010:3, :6863:3
-      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:6010:3, :6863:3
-        `INIT_RANDOM_PROLOG_	// <stdin>:6010:3, :6863:3
+    initial begin	// <stdin>:6350:3, :7203:3
+      automatic logic [31:0] _RANDOM[0:0];	// <stdin>:6350:3, :7203:3
+      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:6350:3, :7203:3
+        `INIT_RANDOM_PROLOG_	// <stdin>:6350:3, :7203:3
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// <stdin>:6010:3, :6863:3
-        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// <stdin>:6010:3, :6863:3
-        state_0 = _RANDOM[/*Zero width*/ 1'b0][0];	// <stdin>:6010:3, :6863:3, src/main/scala/chisel3/util/random/PRNG.scala:55:49
-        state_1 = _RANDOM[/*Zero width*/ 1'b0][1];	// <stdin>:6010:3, :6863:3, src/main/scala/chisel3/util/random/PRNG.scala:55:49
-        state_2 = _RANDOM[/*Zero width*/ 1'b0][2];	// <stdin>:6010:3, :6863:3, src/main/scala/chisel3/util/random/PRNG.scala:55:49
-        state_3 = _RANDOM[/*Zero width*/ 1'b0][3];	// <stdin>:6010:3, :6863:3, src/main/scala/chisel3/util/random/PRNG.scala:55:49
+      `ifdef RANDOMIZE_REG_INIT	// <stdin>:6350:3, :7203:3
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// <stdin>:6350:3, :7203:3
+        state_0 = _RANDOM[/*Zero width*/ 1'b0][0];	// <stdin>:6350:3, :7203:3, src/main/scala/chisel3/util/random/PRNG.scala:55:49
+        state_1 = _RANDOM[/*Zero width*/ 1'b0][1];	// <stdin>:6350:3, :7203:3, src/main/scala/chisel3/util/random/PRNG.scala:55:49
+        state_2 = _RANDOM[/*Zero width*/ 1'b0][2];	// <stdin>:6350:3, :7203:3, src/main/scala/chisel3/util/random/PRNG.scala:55:49
+        state_3 = _RANDOM[/*Zero width*/ 1'b0][3];	// <stdin>:6350:3, :7203:3, src/main/scala/chisel3/util/random/PRNG.scala:55:49
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:6010:3, :6863:3
-      `FIRRTL_AFTER_INITIAL	// <stdin>:6010:3, :6863:3
+    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:6350:3, :7203:3
+      `FIRRTL_AFTER_INITIAL	// <stdin>:6350:3, :7203:3
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  assign io_out_0 = state_0;	// <stdin>:6010:3, :6863:3, src/main/scala/chisel3/util/random/PRNG.scala:55:49
-  assign io_out_1 = state_1;	// <stdin>:6010:3, :6863:3, src/main/scala/chisel3/util/random/PRNG.scala:55:49
-  assign io_out_2 = state_2;	// <stdin>:6010:3, :6863:3, src/main/scala/chisel3/util/random/PRNG.scala:55:49
-  assign io_out_3 = state_3;	// <stdin>:6010:3, :6863:3, src/main/scala/chisel3/util/random/PRNG.scala:55:49
+  assign io_out_0 = state_0;	// <stdin>:6350:3, :7203:3, src/main/scala/chisel3/util/random/PRNG.scala:55:49
+  assign io_out_1 = state_1;	// <stdin>:6350:3, :7203:3, src/main/scala/chisel3/util/random/PRNG.scala:55:49
+  assign io_out_2 = state_2;	// <stdin>:6350:3, :7203:3, src/main/scala/chisel3/util/random/PRNG.scala:55:49
+  assign io_out_3 = state_3;	// <stdin>:6350:3, :7203:3, src/main/scala/chisel3/util/random/PRNG.scala:55:49
 endmodule
 
-module MkCache(	// <stdin>:6035:3
-  input         clock,	// <stdin>:6036:11
-                reset,	// <stdin>:6037:11
+module MkCache(	// <stdin>:6375:3
+  input         clock,	// <stdin>:6376:11
+                reset,	// <stdin>:6377:11
                 io_req_valid,	// playground/src/Cache.scala:132:24
   input  [31:0] io_req_bits_vaddr,	// playground/src/Cache.scala:132:24
                 io_req_bits_paddr,	// playground/src/Cache.scala:132:24
@@ -7034,7 +7686,7 @@ module MkCache(	// <stdin>:6035:3
   wire [19:0]      real_tag = paddr_v ? io_req_bits_paddr[31:12] : req_tag;	// playground/src/Cache.scala:180:44, :183:36, :215:30, :217:26
   wire             total_hits_1 =
     _SRAMTemplate_1_io_dout[20] & _SRAMTemplate_1_io_dout[19:0] == real_tag;	// playground/src/Cache.scala:139:52, :211:88, :217:26, :218:{75,95}
-  wire             _io_req_ready_T_1 = state == 3'h1;	// <stdin>:6035:3, playground/src/Cache.scala:167:24, :219:59
+  wire             _io_req_ready_T_1 = state == 3'h1;	// <stdin>:6375:3, playground/src/Cache.scala:167:24, :219:59
   wire             hit =
     (_SRAMTemplate_io_dout[20] & _SRAMTemplate_io_dout[19:0] == real_tag | total_hits_1)
     & _io_req_ready_T_1 & ~req_cacop_en & ~req_uncached;	// playground/src/Cache.scala:139:52, :173:35, :176:35, :211:88, :217:26, :218:{75,95}, :219:{43,59,75,89,91}
@@ -7046,7 +7698,7 @@ module MkCache(	// <stdin>:6035:3
   reg  [6:0]       recv_cnt;	// playground/src/Cache.scala:223:30
   reg              replace_way;	// playground/src/Cache.scala:228:35
   assign _io_req_ready_output = ~(|state) | _io_req_ready_T_1 & hit & ~req_uncached;	// playground/src/Cache.scala:167:24, :173:35, :219:{59,89,91}, :240:{27,38,83}
-  wire             _GEN = state == 3'h1;	// <stdin>:6035:3, playground/src/Cache.scala:167:24, :242:19
+  wire             _GEN = state == 3'h1;	// <stdin>:6375:3, playground/src/Cache.scala:167:24, :242:19
   wire [3:0][31:0] _GEN_0 =
     total_hits_1
       ? {{_SRAMTemplate_9_io_dout},
@@ -7057,7 +7709,7 @@ module MkCache(	// <stdin>:6035:3
          {_SRAMTemplate_4_io_dout},
          {_SRAMTemplate_3_io_dout},
          {_SRAMTemplate_2_io_dout}};	// playground/src/Cache.scala:141:52, :156:16, :218:75, :255:32
-  wire             _GEN_1 = state == 3'h2;	// <stdin>:6035:3, playground/src/Cache.scala:167:24, :242:19
+  wire             _GEN_1 = state == 3'h2;	// <stdin>:6375:3, playground/src/Cache.scala:167:24, :242:19
   wire             _GEN_2 = req_uncached & req_wr;	// playground/src/Cache.scala:173:35, :174:35, :286:31
   `ifndef SYNTHESIS	// playground/src/Cache.scala:287:23
     always @(posedge clock) begin	// playground/src/Cache.scala:287:23
@@ -7075,12 +7727,12 @@ module MkCache(	// <stdin>:6035:3
   wire             _GEN_4 = _GEN_2 | req_cacop_en;	// playground/src/Cache.scala:41:33, :76:33, :176:35, :286:{31,42}, :292:36
   wire             _GEN_5 = _GEN_3 | ~_GEN_1 | _GEN_4;	// playground/src/Cache.scala:40:33, :41:33, :76:33, :242:19, :286:42, :292:36
   wire             _GEN_6 = _GEN_3 | ~_GEN_1;	// playground/src/Cache.scala:40:33, :41:33, :48:33, :242:19, :286:42
-  wire             _GEN_7 = state == 3'h3;	// <stdin>:6035:3, playground/src/Cache.scala:167:24, :242:19
+  wire             _GEN_7 = state == 3'h3;	// <stdin>:6375:3, playground/src/Cache.scala:167:24, :242:19
   wire             _GEN_8 = ~(|state) | _GEN | _GEN_1;	// playground/src/Cache.scala:50:28, :167:24, :240:27, :242:19
   wire             _GEN_9 = req_uncached & ~req_wr;	// playground/src/Cache.scala:173:35, :174:35, :327:{35,37}
   wire             _state_T_2 = io_axi_readData_bits_last & io_axi_readData_valid;	// playground/src/Cache.scala:329:49
   wire             _GEN_10 = ~_GEN_1 & _GEN_7 & ~req_cacop_en & _GEN_9 & _state_T_2;	// playground/src/Cache.scala:41:33, :176:35, :208:24, :242:19, :286:42, :317:32, :327:{35,46}, :329:49
-  wire             _GEN_11 = state == 3'h4;	// <stdin>:6035:3, playground/src/Cache.scala:167:24, :242:19
+  wire             _GEN_11 = state == 3'h4;	// <stdin>:6375:3, playground/src/Cache.scala:167:24, :242:19
   wire             _GEN_12 = ~(|state) | _GEN | _GEN_1 | _GEN_7;	// playground/src/Cache.scala:167:24, :203:33, :240:27, :242:19
   wire [3:0]       data_ram_0_3_wen =
     _GEN_12 ? 4'h0 : {4{_GEN_11 & ~req_cacop_en & ~replace_way}};	// playground/src/Cache.scala:176:35, :203:33, :219:75, :228:35, :242:19, :349:33, :352:50
@@ -7089,15 +7741,15 @@ module MkCache(	// <stdin>:6035:3
   wire             _GEN_13 =
     req_cacop_func == 2'h0 & req_cacop_en | req_cacop_func == 2'h1 & req_cacop_en;	// playground/src/Cache.scala:132:24, :176:35, :177:35, :187:{43,56}, :188:{43,56}, :323:41, :359:38
   wire [20:0]      tagv_ram_1_din = req_cacop_en ? 21'h0 : {1'h1, req_tag};	// playground/src/Cache.scala:132:24, :176:35, :183:36, :349:33, :355:{43,49}, :360:49, :368:37, src/main/scala/chisel3/util/random/PRNG.scala:91:22
-  always @(posedge clock) begin	// <stdin>:6036:11
+  always @(posedge clock) begin	// <stdin>:6376:11
     automatic logic _paddr_v_T;	// playground/src/Cache.scala:172:68
     automatic logic _next_state_T;	// playground/src/Cache.scala:270:35
     automatic logic _next_state_T_2;	// playground/src/Cache.scala:272:26
     _paddr_v_T = io_req_valid & _io_req_ready_output;	// playground/src/Cache.scala:172:68, :240:38
     _next_state_T = req_uncached | req_cacop_en;	// playground/src/Cache.scala:173:35, :176:35, :270:35
     _next_state_T_2 = hit & io_req_valid;	// playground/src/Cache.scala:219:89, :272:26
-    if (reset) begin	// <stdin>:6036:11
-      state <= 3'h0;	// <stdin>:6035:3, playground/src/Cache.scala:167:24
+    if (reset) begin	// <stdin>:6376:11
+      state <= 3'h0;	// <stdin>:6375:3, playground/src/Cache.scala:167:24
       recv_data_0 <= 32'h0;	// playground/src/Cache.scala:132:24, :222:30
       recv_data_1 <= 32'h0;	// playground/src/Cache.scala:132:24, :222:30
       recv_data_2 <= 32'h0;	// playground/src/Cache.scala:132:24, :222:30
@@ -7105,19 +7757,19 @@ module MkCache(	// <stdin>:6035:3
       recv_cnt <= 7'h0;	// playground/src/Cache.scala:223:30
       replace_way <= 1'h0;	// playground/src/Cache.scala:132:24, :228:35, src/main/scala/chisel3/util/random/PRNG.scala:91:22
     end
-    else begin	// <stdin>:6036:11
+    else begin	// <stdin>:6376:11
       if (|state) begin	// playground/src/Cache.scala:167:24, :240:27
         if (_GEN) begin	// playground/src/Cache.scala:242:19
           if (_next_state_T)	// playground/src/Cache.scala:270:35
-            state <= 3'h2;	// <stdin>:6035:3, playground/src/Cache.scala:167:24
+            state <= 3'h2;	// <stdin>:6375:3, playground/src/Cache.scala:167:24
           else if (_next_state_T_2)	// playground/src/Cache.scala:272:26
-            state <= 3'h1;	// <stdin>:6035:3, playground/src/Cache.scala:167:24
+            state <= 3'h1;	// <stdin>:6375:3, playground/src/Cache.scala:167:24
           else	// playground/src/Cache.scala:272:26
             state <= {1'h0, ~hit, 1'h0};	// playground/src/Cache.scala:132:24, :167:24, :219:89, :273:22, src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/chisel3/util/random/PRNG.scala:91:22
         end
         else if (_GEN_1) begin	// playground/src/Cache.scala:242:19
           if (_GEN_2)	// playground/src/Cache.scala:286:31
-            state <= 3'h2;	// <stdin>:6035:3, playground/src/Cache.scala:167:24
+            state <= 3'h2;	// <stdin>:6375:3, playground/src/Cache.scala:167:24
           else	// playground/src/Cache.scala:286:31
             state <=
               {2'h1,
@@ -7125,17 +7777,17 @@ module MkCache(	// <stdin>:6035:3
         end
         else if (_GEN_7) begin	// playground/src/Cache.scala:242:19
           if (req_cacop_en)	// playground/src/Cache.scala:176:35
-            state <= 3'h4;	// <stdin>:6035:3, playground/src/Cache.scala:167:24
+            state <= 3'h4;	// <stdin>:6375:3, playground/src/Cache.scala:167:24
           else if (_GEN_9) begin	// playground/src/Cache.scala:327:35
             if (_state_T_2)	// playground/src/Cache.scala:329:49
-              state <= 3'h0;	// <stdin>:6035:3, playground/src/Cache.scala:167:24
+              state <= 3'h0;	// <stdin>:6375:3, playground/src/Cache.scala:167:24
             else	// playground/src/Cache.scala:329:49
-              state <= 3'h3;	// <stdin>:6035:3, playground/src/Cache.scala:167:24
+              state <= 3'h3;	// <stdin>:6375:3, playground/src/Cache.scala:167:24
           end
           else if (io_axi_readData_valid & io_axi_readData_bits_last | recv_cnt == 7'h4)	// playground/src/Cache.scala:223:30, :333:{50,59,72}
-            state <= 3'h4;	// <stdin>:6035:3, playground/src/Cache.scala:167:24
+            state <= 3'h4;	// <stdin>:6375:3, playground/src/Cache.scala:167:24
           else	// playground/src/Cache.scala:333:59
-            state <= 3'h3;	// <stdin>:6035:3, playground/src/Cache.scala:167:24
+            state <= 3'h3;	// <stdin>:6375:3, playground/src/Cache.scala:167:24
         end
         else if (_GEN_11)	// playground/src/Cache.scala:242:19
           state <= {2'h0, ~req_cacop_en};	// playground/src/Cache.scala:132:24, :167:24, :176:35, :219:75, :349:33, :350:43, :358:30
@@ -7143,22 +7795,22 @@ module MkCache(	// <stdin>:6035:3
       else	// playground/src/Cache.scala:240:27
         state <= {2'h0, io_req_valid};	// playground/src/Cache.scala:132:24, :167:24, :246:24, :248:32, :249:23
       if (_GEN_8 | ~_GEN_7 | req_cacop_en
-          | ~(io_axi_readData_valid & recv_cnt[1:0] == 2'h0)) begin	// <stdin>:6433:30, playground/src/Cache.scala:50:28, :132:24, :176:35, :222:30, :223:30, :242:19, :317:32, :322:30, :323:41
+          | ~(io_axi_readData_valid & recv_cnt[1:0] == 2'h0)) begin	// <stdin>:6773:30, playground/src/Cache.scala:50:28, :132:24, :176:35, :222:30, :223:30, :242:19, :317:32, :322:30, :323:41
       end
       else	// playground/src/Cache.scala:222:30, :242:19
         recv_data_0 <= io_axi_readData_bits_data;	// playground/src/Cache.scala:222:30
       if (_GEN_8 | ~_GEN_7 | req_cacop_en
-          | ~(io_axi_readData_valid & recv_cnt[1:0] == 2'h1)) begin	// <stdin>:6433:30, playground/src/Cache.scala:50:28, :176:35, :222:30, :223:30, :242:19, :317:32, :322:30, :323:41
+          | ~(io_axi_readData_valid & recv_cnt[1:0] == 2'h1)) begin	// <stdin>:6773:30, playground/src/Cache.scala:50:28, :176:35, :222:30, :223:30, :242:19, :317:32, :322:30, :323:41
       end
       else	// playground/src/Cache.scala:222:30, :242:19
         recv_data_1 <= io_axi_readData_bits_data;	// playground/src/Cache.scala:222:30
       if (_GEN_8 | ~_GEN_7 | req_cacop_en
-          | ~(io_axi_readData_valid & recv_cnt[1:0] == 2'h2)) begin	// <stdin>:6433:30, playground/src/Cache.scala:50:28, :176:35, :189:43, :222:30, :223:30, :242:19, :317:32, :322:30, :323:41
+          | ~(io_axi_readData_valid & recv_cnt[1:0] == 2'h2)) begin	// <stdin>:6773:30, playground/src/Cache.scala:50:28, :176:35, :189:43, :222:30, :223:30, :242:19, :317:32, :322:30, :323:41
       end
       else	// playground/src/Cache.scala:222:30, :242:19
         recv_data_2 <= io_axi_readData_bits_data;	// playground/src/Cache.scala:222:30
       if (_GEN_8 | ~_GEN_7 | req_cacop_en
-          | ~(io_axi_readData_valid & (&(recv_cnt[1:0])))) begin	// <stdin>:6433:30, playground/src/Cache.scala:50:28, :176:35, :222:30, :223:30, :242:19, :317:32, :322:30, :323:41
+          | ~(io_axi_readData_valid & (&(recv_cnt[1:0])))) begin	// <stdin>:6773:30, playground/src/Cache.scala:50:28, :176:35, :222:30, :223:30, :242:19, :317:32, :322:30, :323:41
       end
       else	// playground/src/Cache.scala:222:30, :242:19
         recv_data_3 <= io_axi_readData_bits_data;	// playground/src/Cache.scala:222:30
@@ -7195,39 +7847,39 @@ module MkCache(	// <stdin>:6035:3
     paddr_v <= _paddr_v_T;	// playground/src/Cache.scala:172:68, :215:30
     hit_way_r <= total_hits_1;	// playground/src/Cache.scala:218:75, :221:30
   end // always @(posedge)
-  `ifdef ENABLE_INITIAL_REG_	// <stdin>:6035:3
-    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:6035:3
-      `FIRRTL_BEFORE_INITIAL	// <stdin>:6035:3
+  `ifdef ENABLE_INITIAL_REG_	// <stdin>:6375:3
+    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:6375:3
+      `FIRRTL_BEFORE_INITIAL	// <stdin>:6375:3
     `endif // FIRRTL_BEFORE_INITIAL
-    initial begin	// <stdin>:6035:3
-      automatic logic [31:0] _RANDOM[0:6];	// <stdin>:6035:3
-      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:6035:3
-        `INIT_RANDOM_PROLOG_	// <stdin>:6035:3
+    initial begin	// <stdin>:6375:3
+      automatic logic [31:0] _RANDOM[0:6];	// <stdin>:6375:3
+      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:6375:3
+        `INIT_RANDOM_PROLOG_	// <stdin>:6375:3
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// <stdin>:6035:3
+      `ifdef RANDOMIZE_REG_INIT	// <stdin>:6375:3
         for (logic [2:0] i = 3'h0; i < 3'h7; i += 3'h1) begin
-          _RANDOM[i] = `RANDOM;	// <stdin>:6035:3
-        end	// <stdin>:6035:3
-        state = _RANDOM[3'h0][2:0];	// <stdin>:6035:3, playground/src/Cache.scala:167:24
-        req_uncached = _RANDOM[3'h0][6];	// <stdin>:6035:3, playground/src/Cache.scala:167:24, :173:35
-        req_wr = _RANDOM[3'h0][7];	// <stdin>:6035:3, playground/src/Cache.scala:167:24, :174:35
-        req_cacop_en = _RANDOM[3'h1][8];	// <stdin>:6035:3, playground/src/Cache.scala:176:35
-        req_cacop_func = _RANDOM[3'h1][10:9];	// <stdin>:6035:3, playground/src/Cache.scala:176:35, :177:35
-        req_tag = _RANDOM[3'h1][30:11];	// <stdin>:6035:3, playground/src/Cache.scala:176:35, :183:36
-        req_idx = {_RANDOM[3'h1][31], _RANDOM[3'h2][6:0]};	// <stdin>:6035:3, playground/src/Cache.scala:176:35, :184:36
-        req_offset = _RANDOM[3'h2][10:7];	// <stdin>:6035:3, playground/src/Cache.scala:184:36, :185:36
-        paddr_v = _RANDOM[3'h2][12];	// <stdin>:6035:3, playground/src/Cache.scala:184:36, :215:30
-        hit_way_r = _RANDOM[3'h2][13];	// <stdin>:6035:3, playground/src/Cache.scala:184:36, :221:30
-        recv_data_0 = {_RANDOM[3'h2][31:14], _RANDOM[3'h3][13:0]};	// <stdin>:6035:3, playground/src/Cache.scala:184:36, :222:30
-        recv_data_1 = {_RANDOM[3'h3][31:14], _RANDOM[3'h4][13:0]};	// <stdin>:6035:3, playground/src/Cache.scala:222:30
-        recv_data_2 = {_RANDOM[3'h4][31:14], _RANDOM[3'h5][13:0]};	// <stdin>:6035:3, playground/src/Cache.scala:222:30
-        recv_data_3 = {_RANDOM[3'h5][31:14], _RANDOM[3'h6][13:0]};	// <stdin>:6035:3, playground/src/Cache.scala:222:30
-        recv_cnt = _RANDOM[3'h6][20:14];	// <stdin>:6035:3, playground/src/Cache.scala:222:30, :223:30
-        replace_way = _RANDOM[3'h6][21];	// <stdin>:6035:3, playground/src/Cache.scala:222:30, :228:35
+          _RANDOM[i] = `RANDOM;	// <stdin>:6375:3
+        end	// <stdin>:6375:3
+        state = _RANDOM[3'h0][2:0];	// <stdin>:6375:3, playground/src/Cache.scala:167:24
+        req_uncached = _RANDOM[3'h0][6];	// <stdin>:6375:3, playground/src/Cache.scala:167:24, :173:35
+        req_wr = _RANDOM[3'h0][7];	// <stdin>:6375:3, playground/src/Cache.scala:167:24, :174:35
+        req_cacop_en = _RANDOM[3'h1][8];	// <stdin>:6375:3, playground/src/Cache.scala:176:35
+        req_cacop_func = _RANDOM[3'h1][10:9];	// <stdin>:6375:3, playground/src/Cache.scala:176:35, :177:35
+        req_tag = _RANDOM[3'h1][30:11];	// <stdin>:6375:3, playground/src/Cache.scala:176:35, :183:36
+        req_idx = {_RANDOM[3'h1][31], _RANDOM[3'h2][6:0]};	// <stdin>:6375:3, playground/src/Cache.scala:176:35, :184:36
+        req_offset = _RANDOM[3'h2][10:7];	// <stdin>:6375:3, playground/src/Cache.scala:184:36, :185:36
+        paddr_v = _RANDOM[3'h2][12];	// <stdin>:6375:3, playground/src/Cache.scala:184:36, :215:30
+        hit_way_r = _RANDOM[3'h2][13];	// <stdin>:6375:3, playground/src/Cache.scala:184:36, :221:30
+        recv_data_0 = {_RANDOM[3'h2][31:14], _RANDOM[3'h3][13:0]};	// <stdin>:6375:3, playground/src/Cache.scala:184:36, :222:30
+        recv_data_1 = {_RANDOM[3'h3][31:14], _RANDOM[3'h4][13:0]};	// <stdin>:6375:3, playground/src/Cache.scala:222:30
+        recv_data_2 = {_RANDOM[3'h4][31:14], _RANDOM[3'h5][13:0]};	// <stdin>:6375:3, playground/src/Cache.scala:222:30
+        recv_data_3 = {_RANDOM[3'h5][31:14], _RANDOM[3'h6][13:0]};	// <stdin>:6375:3, playground/src/Cache.scala:222:30
+        recv_cnt = _RANDOM[3'h6][20:14];	// <stdin>:6375:3, playground/src/Cache.scala:222:30, :223:30
+        replace_way = _RANDOM[3'h6][21];	// <stdin>:6375:3, playground/src/Cache.scala:222:30, :228:35
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:6035:3
-      `FIRRTL_AFTER_INITIAL	// <stdin>:6035:3
+    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:6375:3
+      `FIRRTL_AFTER_INITIAL	// <stdin>:6375:3
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
   SRAMTemplate SRAMTemplate (	// playground/src/Cache.scala:139:52
@@ -7316,11 +7968,11 @@ module MkCache(	// <stdin>:6035:3
     .io_out_2 (/* unused */),
     .io_out_3 (/* unused */)
   );
-  assign io_req_ready = _io_req_ready_output;	// <stdin>:6035:3, playground/src/Cache.scala:240:38
+  assign io_req_ready = _io_req_ready_output;	// <stdin>:6375:3, playground/src/Cache.scala:240:38
   assign io_resp_valid =
-    (|state) & (_GEN ? hit & ~req_uncached & ~req_cacop_en : _GEN_10);	// <stdin>:6035:3, playground/src/Cache.scala:167:24, :173:35, :176:35, :207:24, :219:{75,89,91}, :240:27, :242:19, :256:{32,68}, :286:42
+    (|state) & (_GEN ? hit & ~req_uncached & ~req_cacop_en : _GEN_10);	// <stdin>:6375:3, playground/src/Cache.scala:167:24, :173:35, :176:35, :207:24, :219:{75,89,91}, :240:27, :242:19, :256:{32,68}, :286:42
   assign io_resp_bits_done =
-    (|state) & (_GEN ? hit & ~req_uncached & ~req_cacop_en : _GEN_10);	// <stdin>:6035:3, playground/src/Cache.scala:167:24, :173:35, :176:35, :208:24, :219:{75,89,91}, :240:27, :242:19, :257:{32,68}, :286:42
+    (|state) & (_GEN ? hit & ~req_uncached & ~req_cacop_en : _GEN_10);	// <stdin>:6375:3, playground/src/Cache.scala:167:24, :173:35, :176:35, :208:24, :219:{75,89,91}, :240:27, :242:19, :257:{32,68}, :286:42
   assign io_resp_bits_rdata =
     (|state)
       ? (_GEN
@@ -7328,19 +7980,19 @@ module MkCache(	// <stdin>:6035:3
            : _GEN_1 | ~_GEN_7 | req_cacop_en | ~_GEN_9
                ? 32'h7777
                : io_axi_readData_bits_data)
-      : 32'h7777;	// <stdin>:6035:3, playground/src/Cache.scala:167:24, :176:35, :185:36, :209:24, :222:30, :236:34, :240:27, :242:19, :255:32, :317:32, :327:{35,46}
-  assign io_axi_readAddr_valid = _io_axi_readAddr_valid_output;	// <stdin>:6035:3, playground/src/Cache.scala:40:33, :242:19
+      : 32'h7777;	// <stdin>:6375:3, playground/src/Cache.scala:167:24, :176:35, :185:36, :209:24, :222:30, :236:34, :240:27, :242:19, :255:32, :317:32, :327:{35,46}
+  assign io_axi_readAddr_valid = _io_axi_readAddr_valid_output;	// <stdin>:6375:3, playground/src/Cache.scala:40:33, :242:19
   assign io_axi_readAddr_bits_addr =
-    _GEN_5 ? 32'h0 : {req_tag, req_idx, req_uncached ? {req_offset[3:2], 2'h0} : 4'h0};	// <stdin>:6035:3, playground/src/Cache.scala:41:33, :132:24, :173:35, :183:36, :184:36, :185:36, :203:33, :242:19, :295:40, :297:{33,54}
-  assign io_axi_readAddr_bits_size = _GEN_6 ? 3'h0 : {1'h0, ~_GEN_4, 1'h0};	// <stdin>:6035:3, playground/src/Cache.scala:41:33, :48:33, :76:33, :78:33, :132:24, :242:19, :286:42, :292:36, src/main/scala/chisel3/util/random/PRNG.scala:91:22
-  assign io_axi_readAddr_bits_len = _GEN_5 ? 8'h0 : {6'h0, req_uncached ? 2'h0 : 2'h3};	// <stdin>:6035:3, playground/src/Cache.scala:41:33, :44:33, :77:33, :132:24, :156:16, :173:35, :242:19, :300:40
-  assign io_axi_readAddr_bits_burst = _GEN_6 ? 2'h0 : {1'h0, ~_GEN_4};	// <stdin>:6035:3, playground/src/Cache.scala:41:33, :42:33, :48:33, :76:33, :78:33, :79:33, :132:24, :242:19, :286:42, :292:36, src/main/scala/chisel3/util/random/PRNG.scala:91:22
-  assign io_axi_readData_ready = ~_GEN_8 & _GEN_7 & ~req_cacop_en;	// <stdin>:6035:3, playground/src/Cache.scala:40:33, :50:28, :74:33, :170:35, :176:35, :188:43, :242:19, :292:36
+    _GEN_5 ? 32'h0 : {req_tag, req_idx, req_uncached ? {req_offset[3:2], 2'h0} : 4'h0};	// <stdin>:6375:3, playground/src/Cache.scala:41:33, :132:24, :173:35, :183:36, :184:36, :185:36, :203:33, :242:19, :295:40, :297:{33,54}
+  assign io_axi_readAddr_bits_size = _GEN_6 ? 3'h0 : {1'h0, ~_GEN_4, 1'h0};	// <stdin>:6375:3, playground/src/Cache.scala:41:33, :48:33, :76:33, :78:33, :132:24, :242:19, :286:42, :292:36, src/main/scala/chisel3/util/random/PRNG.scala:91:22
+  assign io_axi_readAddr_bits_len = _GEN_5 ? 8'h0 : {6'h0, req_uncached ? 2'h0 : 2'h3};	// <stdin>:6375:3, playground/src/Cache.scala:41:33, :44:33, :77:33, :132:24, :156:16, :173:35, :242:19, :300:40
+  assign io_axi_readAddr_bits_burst = _GEN_6 ? 2'h0 : {1'h0, ~_GEN_4};	// <stdin>:6375:3, playground/src/Cache.scala:41:33, :42:33, :48:33, :76:33, :78:33, :79:33, :132:24, :242:19, :286:42, :292:36, src/main/scala/chisel3/util/random/PRNG.scala:91:22
+  assign io_axi_readData_ready = ~_GEN_8 & _GEN_7 & ~req_cacop_en;	// <stdin>:6375:3, playground/src/Cache.scala:40:33, :50:28, :74:33, :170:35, :176:35, :188:43, :242:19, :292:36
 endmodule
 
-module MkCache_1(	// <stdin>:6888:3
-  input         clock,	// <stdin>:6889:11
-                reset,	// <stdin>:6890:11
+module MkCache_1(	// <stdin>:7228:3
+  input         clock,	// <stdin>:7229:11
+                reset,	// <stdin>:7230:11
                 io_req_valid,	// playground/src/Cache.scala:132:24
                 io_req_bits_wr,	// playground/src/Cache.scala:132:24
   input  [31:0] io_req_bits_vaddr,	// playground/src/Cache.scala:132:24
@@ -8019,7 +8671,7 @@ module MkCache_1(	// <stdin>:6888:3
   wire             _io_axi_writeData_valid_output = ~_GEN_32 & _GEN_31;	// playground/src/Cache.scala:62:33, :458:24
   wire [3:0][31:0] _GEN_33 = {{dreq_data_3}, {dreq_data_2}, {dreq_data_1}, {dreq_data_0}};	// playground/src/Cache.scala:114:33, :422:36
   wire             _GEN_34 = _GEN_32 | ~_GEN_31;	// playground/src/Cache.scala:62:33, :63:33, :458:24
-  always @(posedge clock) begin	// <stdin>:6889:11
+  always @(posedge clock) begin	// <stdin>:7229:11
     automatic logic        _paddr_v_T;	// playground/src/Cache.scala:172:68
     automatic logic [31:0] req_addr;	// playground/src/Cache.scala:186:30
     automatic logic        _next_state_T;	// playground/src/Cache.scala:270:35
@@ -8030,7 +8682,7 @@ module MkCache_1(	// <stdin>:6888:3
     _next_state_T = req_uncached | req_cacop_en;	// playground/src/Cache.scala:173:35, :176:35, :270:35
     _GEN_35 = hit & war_stall | hit & io_req_valid;	// playground/src/Cache.scala:219:89, :271:26, :272:26, :397:70, src/main/scala/chisel3/util/Mux.scala:141:16
     _wstate_T = hit & req_wr;	// playground/src/Cache.scala:174:35, :219:89, :383:54
-    if (reset) begin	// <stdin>:6889:11
+    if (reset) begin	// <stdin>:7229:11
       dirty_bits_it_0_0 <= 1'h0;	// playground/src/Cache.scala:132:24, :142:52, src/main/scala/chisel3/util/random/PRNG.scala:91:22
       dirty_bits_it_0_1 <= 1'h0;	// playground/src/Cache.scala:132:24, :142:52, src/main/scala/chisel3/util/random/PRNG.scala:91:22
       dirty_bits_it_0_2 <= 1'h0;	// playground/src/Cache.scala:132:24, :142:52, src/main/scala/chisel3/util/random/PRNG.scala:91:22
@@ -8562,7 +9214,7 @@ module MkCache_1(	// <stdin>:6888:3
       dreq_uncached <= 1'h0;	// playground/src/Cache.scala:132:24, :425:36, src/main/scala/chisel3/util/random/PRNG.scala:91:22
       send_cnt <= 7'h0;	// playground/src/Cache.scala:223:30, :426:36
     end
-    else begin	// <stdin>:6889:11
+    else begin	// <stdin>:7229:11
       automatic logic [255:0] _GEN_36;	// playground/src/Cache.scala:337:48
       automatic logic [255:0] _GEN_37;	// playground/src/Cache.scala:337:48
       automatic logic         _GEN_38;	// playground/src/Cache.scala:409:56
@@ -9595,7 +10247,7 @@ module MkCache_1(	// <stdin>:6888:3
          {dirty_bits_it_0_2},
          {dirty_bits_it_0_1},
          {dirty_bits_it_0_0}};	// playground/src/Cache.scala:142:52, :337:48
-      _GEN_38 = wreq_addr[11:4] == 8'h0;	// <stdin>:7932:35, playground/src/Cache.scala:384:38, :387:47, :409:56
+      _GEN_38 = wreq_addr[11:4] == 8'h0;	// <stdin>:8272:35, playground/src/Cache.scala:384:38, :387:47, :409:56
       _GEN_39 = wreq_addr[11:4] == 8'h1;	// playground/src/Cache.scala:384:38, :387:47, :409:56
       _GEN_40 = wreq_addr[11:4] == 8'h2;	// playground/src/Cache.scala:384:38, :387:47, :409:56
       _GEN_41 = wreq_addr[11:4] == 8'h3;	// playground/src/Cache.scala:384:38, :387:47, :409:56
@@ -9857,7 +10509,7 @@ module MkCache_1(	// <stdin>:6888:3
         state == 3'h3 & _GEN_293[req_idx] & _dirty_way_v_WIRE_1[20] & ~req_uncached;	// playground/src/Cache.scala:167:24, :173:35, :184:36, :219:91, :293:27, :435:60, :437:{39,53,102}
       uncached_wr_en = state == 3'h2 & req_uncached & req_wr & ~(|dstate);	// playground/src/Cache.scala:167:24, :173:35, :174:35, :420:56, :438:{39,76}, :440:32, src/main/scala/chisel3/util/Mux.scala:141:16
       _GEN_294 = cacheline_wr_en & ~(|dstate);	// playground/src/Cache.scala:420:56, :437:102, :440:32, :441:30
-      _GEN_295 = req_idx == 8'h0;	// <stdin>:7932:35, playground/src/Cache.scala:184:36, :449:48
+      _GEN_295 = req_idx == 8'h0;	// <stdin>:8272:35, playground/src/Cache.scala:184:36, :449:48
       _GEN_296 = req_idx == 8'h1;	// playground/src/Cache.scala:184:36, :409:56, :449:48
       _GEN_297 = req_idx == 8'h2;	// playground/src/Cache.scala:184:36, :409:56, :449:48
       _GEN_298 = req_idx == 8'h3;	// playground/src/Cache.scala:184:36, :409:56, :449:48
@@ -11694,22 +12346,22 @@ module MkCache_1(	// <stdin>:6888:3
       else	// playground/src/Cache.scala:240:27
         state <= {2'h0, io_req_valid};	// playground/src/Cache.scala:132:24, :167:24, :246:24, :248:32, :249:23
       if (_GEN_8 | ~_GEN_7 | req_cacop_en
-          | ~(io_axi_readData_valid & recv_cnt[1:0] == 2'h0)) begin	// <stdin>:7801:30, playground/src/Cache.scala:50:28, :132:24, :176:35, :222:30, :223:30, :242:19, :317:32, :322:30, :323:41
+          | ~(io_axi_readData_valid & recv_cnt[1:0] == 2'h0)) begin	// <stdin>:8141:30, playground/src/Cache.scala:50:28, :132:24, :176:35, :222:30, :223:30, :242:19, :317:32, :322:30, :323:41
       end
       else	// playground/src/Cache.scala:222:30, :242:19
         recv_data_0 <= io_axi_readData_bits_data;	// playground/src/Cache.scala:222:30
       if (_GEN_8 | ~_GEN_7 | req_cacop_en
-          | ~(io_axi_readData_valid & recv_cnt[1:0] == 2'h1)) begin	// <stdin>:7801:30, playground/src/Cache.scala:50:28, :176:35, :222:30, :223:30, :242:19, :317:32, :322:30, :323:41
+          | ~(io_axi_readData_valid & recv_cnt[1:0] == 2'h1)) begin	// <stdin>:8141:30, playground/src/Cache.scala:50:28, :176:35, :222:30, :223:30, :242:19, :317:32, :322:30, :323:41
       end
       else	// playground/src/Cache.scala:222:30, :242:19
         recv_data_1 <= io_axi_readData_bits_data;	// playground/src/Cache.scala:222:30
       if (_GEN_8 | ~_GEN_7 | req_cacop_en
-          | ~(io_axi_readData_valid & recv_cnt[1:0] == 2'h2)) begin	// <stdin>:7801:30, playground/src/Cache.scala:50:28, :176:35, :189:43, :222:30, :223:30, :242:19, :317:32, :322:30, :323:41
+          | ~(io_axi_readData_valid & recv_cnt[1:0] == 2'h2)) begin	// <stdin>:8141:30, playground/src/Cache.scala:50:28, :176:35, :189:43, :222:30, :223:30, :242:19, :317:32, :322:30, :323:41
       end
       else	// playground/src/Cache.scala:222:30, :242:19
         recv_data_2 <= io_axi_readData_bits_data;	// playground/src/Cache.scala:222:30
       if (_GEN_8 | ~_GEN_7 | req_cacop_en
-          | ~(io_axi_readData_valid & (&(recv_cnt[1:0])))) begin	// <stdin>:7801:30, playground/src/Cache.scala:50:28, :176:35, :222:30, :223:30, :242:19, :317:32, :322:30, :323:41
+          | ~(io_axi_readData_valid & (&(recv_cnt[1:0])))) begin	// <stdin>:8141:30, playground/src/Cache.scala:50:28, :176:35, :222:30, :223:30, :242:19, :317:32, :322:30, :323:41
       end
       else	// playground/src/Cache.scala:222:30, :242:19
         recv_data_3 <= io_axi_readData_bits_data;	// playground/src/Cache.scala:222:30
@@ -11808,571 +12460,571 @@ module MkCache_1(	// <stdin>:6888:3
     war_case_1_REG_1 <= wreq_way;	// playground/src/Cache.scala:238:27, :393:66
     war_case_1_REG_2 <= wreq_addr[3:2];	// playground/src/Cache.scala:384:38, :390:24, :393:106
   end // always @(posedge)
-  `ifdef ENABLE_INITIAL_REG_	// <stdin>:6888:3
-    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:6888:3
-      `FIRRTL_BEFORE_INITIAL	// <stdin>:6888:3
+  `ifdef ENABLE_INITIAL_REG_	// <stdin>:7228:3
+    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:7228:3
+      `FIRRTL_BEFORE_INITIAL	// <stdin>:7228:3
     `endif // FIRRTL_BEFORE_INITIAL
-    initial begin	// <stdin>:6888:3
-      automatic logic [31:0] _RANDOM[0:30];	// <stdin>:6888:3
-      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:6888:3
-        `INIT_RANDOM_PROLOG_	// <stdin>:6888:3
+    initial begin	// <stdin>:7228:3
+      automatic logic [31:0] _RANDOM[0:30];	// <stdin>:7228:3
+      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:7228:3
+        `INIT_RANDOM_PROLOG_	// <stdin>:7228:3
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// <stdin>:6888:3
+      `ifdef RANDOMIZE_REG_INIT	// <stdin>:7228:3
         for (logic [4:0] i = 5'h0; i < 5'h1F; i += 5'h1) begin
-          _RANDOM[i] = `RANDOM;	// <stdin>:6888:3
-        end	// <stdin>:6888:3
-        dirty_bits_it_0_0 = _RANDOM[5'h0][0];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_1 = _RANDOM[5'h0][1];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_2 = _RANDOM[5'h0][2];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_3 = _RANDOM[5'h0][3];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_4 = _RANDOM[5'h0][4];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_5 = _RANDOM[5'h0][5];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_6 = _RANDOM[5'h0][6];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_7 = _RANDOM[5'h0][7];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_8 = _RANDOM[5'h0][8];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_9 = _RANDOM[5'h0][9];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_10 = _RANDOM[5'h0][10];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_11 = _RANDOM[5'h0][11];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_12 = _RANDOM[5'h0][12];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_13 = _RANDOM[5'h0][13];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_14 = _RANDOM[5'h0][14];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_15 = _RANDOM[5'h0][15];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_16 = _RANDOM[5'h0][16];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_17 = _RANDOM[5'h0][17];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_18 = _RANDOM[5'h0][18];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_19 = _RANDOM[5'h0][19];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_20 = _RANDOM[5'h0][20];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_21 = _RANDOM[5'h0][21];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_22 = _RANDOM[5'h0][22];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_23 = _RANDOM[5'h0][23];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_24 = _RANDOM[5'h0][24];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_25 = _RANDOM[5'h0][25];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_26 = _RANDOM[5'h0][26];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_27 = _RANDOM[5'h0][27];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_28 = _RANDOM[5'h0][28];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_29 = _RANDOM[5'h0][29];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_30 = _RANDOM[5'h0][30];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_31 = _RANDOM[5'h0][31];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_32 = _RANDOM[5'h1][0];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_33 = _RANDOM[5'h1][1];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_34 = _RANDOM[5'h1][2];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_35 = _RANDOM[5'h1][3];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_36 = _RANDOM[5'h1][4];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_37 = _RANDOM[5'h1][5];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_38 = _RANDOM[5'h1][6];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_39 = _RANDOM[5'h1][7];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_40 = _RANDOM[5'h1][8];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_41 = _RANDOM[5'h1][9];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_42 = _RANDOM[5'h1][10];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_43 = _RANDOM[5'h1][11];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_44 = _RANDOM[5'h1][12];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_45 = _RANDOM[5'h1][13];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_46 = _RANDOM[5'h1][14];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_47 = _RANDOM[5'h1][15];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_48 = _RANDOM[5'h1][16];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_49 = _RANDOM[5'h1][17];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_50 = _RANDOM[5'h1][18];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_51 = _RANDOM[5'h1][19];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_52 = _RANDOM[5'h1][20];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_53 = _RANDOM[5'h1][21];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_54 = _RANDOM[5'h1][22];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_55 = _RANDOM[5'h1][23];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_56 = _RANDOM[5'h1][24];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_57 = _RANDOM[5'h1][25];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_58 = _RANDOM[5'h1][26];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_59 = _RANDOM[5'h1][27];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_60 = _RANDOM[5'h1][28];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_61 = _RANDOM[5'h1][29];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_62 = _RANDOM[5'h1][30];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_63 = _RANDOM[5'h1][31];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_64 = _RANDOM[5'h2][0];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_65 = _RANDOM[5'h2][1];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_66 = _RANDOM[5'h2][2];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_67 = _RANDOM[5'h2][3];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_68 = _RANDOM[5'h2][4];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_69 = _RANDOM[5'h2][5];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_70 = _RANDOM[5'h2][6];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_71 = _RANDOM[5'h2][7];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_72 = _RANDOM[5'h2][8];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_73 = _RANDOM[5'h2][9];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_74 = _RANDOM[5'h2][10];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_75 = _RANDOM[5'h2][11];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_76 = _RANDOM[5'h2][12];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_77 = _RANDOM[5'h2][13];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_78 = _RANDOM[5'h2][14];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_79 = _RANDOM[5'h2][15];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_80 = _RANDOM[5'h2][16];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_81 = _RANDOM[5'h2][17];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_82 = _RANDOM[5'h2][18];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_83 = _RANDOM[5'h2][19];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_84 = _RANDOM[5'h2][20];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_85 = _RANDOM[5'h2][21];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_86 = _RANDOM[5'h2][22];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_87 = _RANDOM[5'h2][23];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_88 = _RANDOM[5'h2][24];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_89 = _RANDOM[5'h2][25];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_90 = _RANDOM[5'h2][26];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_91 = _RANDOM[5'h2][27];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_92 = _RANDOM[5'h2][28];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_93 = _RANDOM[5'h2][29];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_94 = _RANDOM[5'h2][30];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_95 = _RANDOM[5'h2][31];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_96 = _RANDOM[5'h3][0];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_97 = _RANDOM[5'h3][1];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_98 = _RANDOM[5'h3][2];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_99 = _RANDOM[5'h3][3];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_100 = _RANDOM[5'h3][4];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_101 = _RANDOM[5'h3][5];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_102 = _RANDOM[5'h3][6];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_103 = _RANDOM[5'h3][7];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_104 = _RANDOM[5'h3][8];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_105 = _RANDOM[5'h3][9];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_106 = _RANDOM[5'h3][10];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_107 = _RANDOM[5'h3][11];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_108 = _RANDOM[5'h3][12];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_109 = _RANDOM[5'h3][13];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_110 = _RANDOM[5'h3][14];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_111 = _RANDOM[5'h3][15];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_112 = _RANDOM[5'h3][16];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_113 = _RANDOM[5'h3][17];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_114 = _RANDOM[5'h3][18];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_115 = _RANDOM[5'h3][19];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_116 = _RANDOM[5'h3][20];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_117 = _RANDOM[5'h3][21];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_118 = _RANDOM[5'h3][22];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_119 = _RANDOM[5'h3][23];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_120 = _RANDOM[5'h3][24];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_121 = _RANDOM[5'h3][25];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_122 = _RANDOM[5'h3][26];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_123 = _RANDOM[5'h3][27];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_124 = _RANDOM[5'h3][28];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_125 = _RANDOM[5'h3][29];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_126 = _RANDOM[5'h3][30];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_127 = _RANDOM[5'h3][31];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_128 = _RANDOM[5'h4][0];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_129 = _RANDOM[5'h4][1];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_130 = _RANDOM[5'h4][2];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_131 = _RANDOM[5'h4][3];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_132 = _RANDOM[5'h4][4];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_133 = _RANDOM[5'h4][5];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_134 = _RANDOM[5'h4][6];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_135 = _RANDOM[5'h4][7];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_136 = _RANDOM[5'h4][8];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_137 = _RANDOM[5'h4][9];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_138 = _RANDOM[5'h4][10];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_139 = _RANDOM[5'h4][11];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_140 = _RANDOM[5'h4][12];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_141 = _RANDOM[5'h4][13];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_142 = _RANDOM[5'h4][14];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_143 = _RANDOM[5'h4][15];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_144 = _RANDOM[5'h4][16];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_145 = _RANDOM[5'h4][17];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_146 = _RANDOM[5'h4][18];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_147 = _RANDOM[5'h4][19];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_148 = _RANDOM[5'h4][20];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_149 = _RANDOM[5'h4][21];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_150 = _RANDOM[5'h4][22];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_151 = _RANDOM[5'h4][23];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_152 = _RANDOM[5'h4][24];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_153 = _RANDOM[5'h4][25];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_154 = _RANDOM[5'h4][26];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_155 = _RANDOM[5'h4][27];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_156 = _RANDOM[5'h4][28];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_157 = _RANDOM[5'h4][29];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_158 = _RANDOM[5'h4][30];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_159 = _RANDOM[5'h4][31];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_160 = _RANDOM[5'h5][0];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_161 = _RANDOM[5'h5][1];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_162 = _RANDOM[5'h5][2];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_163 = _RANDOM[5'h5][3];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_164 = _RANDOM[5'h5][4];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_165 = _RANDOM[5'h5][5];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_166 = _RANDOM[5'h5][6];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_167 = _RANDOM[5'h5][7];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_168 = _RANDOM[5'h5][8];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_169 = _RANDOM[5'h5][9];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_170 = _RANDOM[5'h5][10];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_171 = _RANDOM[5'h5][11];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_172 = _RANDOM[5'h5][12];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_173 = _RANDOM[5'h5][13];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_174 = _RANDOM[5'h5][14];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_175 = _RANDOM[5'h5][15];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_176 = _RANDOM[5'h5][16];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_177 = _RANDOM[5'h5][17];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_178 = _RANDOM[5'h5][18];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_179 = _RANDOM[5'h5][19];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_180 = _RANDOM[5'h5][20];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_181 = _RANDOM[5'h5][21];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_182 = _RANDOM[5'h5][22];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_183 = _RANDOM[5'h5][23];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_184 = _RANDOM[5'h5][24];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_185 = _RANDOM[5'h5][25];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_186 = _RANDOM[5'h5][26];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_187 = _RANDOM[5'h5][27];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_188 = _RANDOM[5'h5][28];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_189 = _RANDOM[5'h5][29];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_190 = _RANDOM[5'h5][30];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_191 = _RANDOM[5'h5][31];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_192 = _RANDOM[5'h6][0];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_193 = _RANDOM[5'h6][1];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_194 = _RANDOM[5'h6][2];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_195 = _RANDOM[5'h6][3];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_196 = _RANDOM[5'h6][4];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_197 = _RANDOM[5'h6][5];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_198 = _RANDOM[5'h6][6];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_199 = _RANDOM[5'h6][7];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_200 = _RANDOM[5'h6][8];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_201 = _RANDOM[5'h6][9];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_202 = _RANDOM[5'h6][10];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_203 = _RANDOM[5'h6][11];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_204 = _RANDOM[5'h6][12];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_205 = _RANDOM[5'h6][13];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_206 = _RANDOM[5'h6][14];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_207 = _RANDOM[5'h6][15];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_208 = _RANDOM[5'h6][16];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_209 = _RANDOM[5'h6][17];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_210 = _RANDOM[5'h6][18];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_211 = _RANDOM[5'h6][19];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_212 = _RANDOM[5'h6][20];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_213 = _RANDOM[5'h6][21];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_214 = _RANDOM[5'h6][22];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_215 = _RANDOM[5'h6][23];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_216 = _RANDOM[5'h6][24];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_217 = _RANDOM[5'h6][25];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_218 = _RANDOM[5'h6][26];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_219 = _RANDOM[5'h6][27];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_220 = _RANDOM[5'h6][28];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_221 = _RANDOM[5'h6][29];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_222 = _RANDOM[5'h6][30];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_223 = _RANDOM[5'h6][31];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_224 = _RANDOM[5'h7][0];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_225 = _RANDOM[5'h7][1];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_226 = _RANDOM[5'h7][2];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_227 = _RANDOM[5'h7][3];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_228 = _RANDOM[5'h7][4];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_229 = _RANDOM[5'h7][5];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_230 = _RANDOM[5'h7][6];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_231 = _RANDOM[5'h7][7];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_232 = _RANDOM[5'h7][8];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_233 = _RANDOM[5'h7][9];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_234 = _RANDOM[5'h7][10];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_235 = _RANDOM[5'h7][11];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_236 = _RANDOM[5'h7][12];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_237 = _RANDOM[5'h7][13];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_238 = _RANDOM[5'h7][14];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_239 = _RANDOM[5'h7][15];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_240 = _RANDOM[5'h7][16];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_241 = _RANDOM[5'h7][17];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_242 = _RANDOM[5'h7][18];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_243 = _RANDOM[5'h7][19];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_244 = _RANDOM[5'h7][20];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_245 = _RANDOM[5'h7][21];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_246 = _RANDOM[5'h7][22];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_247 = _RANDOM[5'h7][23];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_248 = _RANDOM[5'h7][24];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_249 = _RANDOM[5'h7][25];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_250 = _RANDOM[5'h7][26];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_251 = _RANDOM[5'h7][27];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_252 = _RANDOM[5'h7][28];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_253 = _RANDOM[5'h7][29];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_254 = _RANDOM[5'h7][30];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_0_255 = _RANDOM[5'h7][31];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_0 = _RANDOM[5'h8][0];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_1 = _RANDOM[5'h8][1];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_2 = _RANDOM[5'h8][2];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_3 = _RANDOM[5'h8][3];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_4 = _RANDOM[5'h8][4];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_5 = _RANDOM[5'h8][5];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_6 = _RANDOM[5'h8][6];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_7 = _RANDOM[5'h8][7];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_8 = _RANDOM[5'h8][8];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_9 = _RANDOM[5'h8][9];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_10 = _RANDOM[5'h8][10];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_11 = _RANDOM[5'h8][11];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_12 = _RANDOM[5'h8][12];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_13 = _RANDOM[5'h8][13];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_14 = _RANDOM[5'h8][14];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_15 = _RANDOM[5'h8][15];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_16 = _RANDOM[5'h8][16];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_17 = _RANDOM[5'h8][17];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_18 = _RANDOM[5'h8][18];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_19 = _RANDOM[5'h8][19];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_20 = _RANDOM[5'h8][20];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_21 = _RANDOM[5'h8][21];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_22 = _RANDOM[5'h8][22];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_23 = _RANDOM[5'h8][23];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_24 = _RANDOM[5'h8][24];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_25 = _RANDOM[5'h8][25];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_26 = _RANDOM[5'h8][26];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_27 = _RANDOM[5'h8][27];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_28 = _RANDOM[5'h8][28];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_29 = _RANDOM[5'h8][29];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_30 = _RANDOM[5'h8][30];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_31 = _RANDOM[5'h8][31];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_32 = _RANDOM[5'h9][0];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_33 = _RANDOM[5'h9][1];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_34 = _RANDOM[5'h9][2];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_35 = _RANDOM[5'h9][3];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_36 = _RANDOM[5'h9][4];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_37 = _RANDOM[5'h9][5];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_38 = _RANDOM[5'h9][6];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_39 = _RANDOM[5'h9][7];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_40 = _RANDOM[5'h9][8];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_41 = _RANDOM[5'h9][9];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_42 = _RANDOM[5'h9][10];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_43 = _RANDOM[5'h9][11];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_44 = _RANDOM[5'h9][12];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_45 = _RANDOM[5'h9][13];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_46 = _RANDOM[5'h9][14];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_47 = _RANDOM[5'h9][15];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_48 = _RANDOM[5'h9][16];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_49 = _RANDOM[5'h9][17];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_50 = _RANDOM[5'h9][18];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_51 = _RANDOM[5'h9][19];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_52 = _RANDOM[5'h9][20];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_53 = _RANDOM[5'h9][21];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_54 = _RANDOM[5'h9][22];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_55 = _RANDOM[5'h9][23];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_56 = _RANDOM[5'h9][24];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_57 = _RANDOM[5'h9][25];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_58 = _RANDOM[5'h9][26];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_59 = _RANDOM[5'h9][27];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_60 = _RANDOM[5'h9][28];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_61 = _RANDOM[5'h9][29];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_62 = _RANDOM[5'h9][30];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_63 = _RANDOM[5'h9][31];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_64 = _RANDOM[5'hA][0];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_65 = _RANDOM[5'hA][1];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_66 = _RANDOM[5'hA][2];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_67 = _RANDOM[5'hA][3];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_68 = _RANDOM[5'hA][4];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_69 = _RANDOM[5'hA][5];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_70 = _RANDOM[5'hA][6];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_71 = _RANDOM[5'hA][7];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_72 = _RANDOM[5'hA][8];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_73 = _RANDOM[5'hA][9];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_74 = _RANDOM[5'hA][10];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_75 = _RANDOM[5'hA][11];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_76 = _RANDOM[5'hA][12];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_77 = _RANDOM[5'hA][13];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_78 = _RANDOM[5'hA][14];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_79 = _RANDOM[5'hA][15];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_80 = _RANDOM[5'hA][16];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_81 = _RANDOM[5'hA][17];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_82 = _RANDOM[5'hA][18];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_83 = _RANDOM[5'hA][19];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_84 = _RANDOM[5'hA][20];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_85 = _RANDOM[5'hA][21];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_86 = _RANDOM[5'hA][22];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_87 = _RANDOM[5'hA][23];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_88 = _RANDOM[5'hA][24];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_89 = _RANDOM[5'hA][25];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_90 = _RANDOM[5'hA][26];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_91 = _RANDOM[5'hA][27];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_92 = _RANDOM[5'hA][28];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_93 = _RANDOM[5'hA][29];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_94 = _RANDOM[5'hA][30];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_95 = _RANDOM[5'hA][31];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_96 = _RANDOM[5'hB][0];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_97 = _RANDOM[5'hB][1];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_98 = _RANDOM[5'hB][2];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_99 = _RANDOM[5'hB][3];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_100 = _RANDOM[5'hB][4];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_101 = _RANDOM[5'hB][5];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_102 = _RANDOM[5'hB][6];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_103 = _RANDOM[5'hB][7];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_104 = _RANDOM[5'hB][8];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_105 = _RANDOM[5'hB][9];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_106 = _RANDOM[5'hB][10];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_107 = _RANDOM[5'hB][11];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_108 = _RANDOM[5'hB][12];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_109 = _RANDOM[5'hB][13];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_110 = _RANDOM[5'hB][14];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_111 = _RANDOM[5'hB][15];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_112 = _RANDOM[5'hB][16];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_113 = _RANDOM[5'hB][17];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_114 = _RANDOM[5'hB][18];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_115 = _RANDOM[5'hB][19];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_116 = _RANDOM[5'hB][20];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_117 = _RANDOM[5'hB][21];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_118 = _RANDOM[5'hB][22];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_119 = _RANDOM[5'hB][23];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_120 = _RANDOM[5'hB][24];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_121 = _RANDOM[5'hB][25];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_122 = _RANDOM[5'hB][26];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_123 = _RANDOM[5'hB][27];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_124 = _RANDOM[5'hB][28];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_125 = _RANDOM[5'hB][29];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_126 = _RANDOM[5'hB][30];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_127 = _RANDOM[5'hB][31];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_128 = _RANDOM[5'hC][0];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_129 = _RANDOM[5'hC][1];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_130 = _RANDOM[5'hC][2];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_131 = _RANDOM[5'hC][3];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_132 = _RANDOM[5'hC][4];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_133 = _RANDOM[5'hC][5];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_134 = _RANDOM[5'hC][6];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_135 = _RANDOM[5'hC][7];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_136 = _RANDOM[5'hC][8];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_137 = _RANDOM[5'hC][9];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_138 = _RANDOM[5'hC][10];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_139 = _RANDOM[5'hC][11];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_140 = _RANDOM[5'hC][12];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_141 = _RANDOM[5'hC][13];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_142 = _RANDOM[5'hC][14];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_143 = _RANDOM[5'hC][15];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_144 = _RANDOM[5'hC][16];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_145 = _RANDOM[5'hC][17];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_146 = _RANDOM[5'hC][18];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_147 = _RANDOM[5'hC][19];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_148 = _RANDOM[5'hC][20];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_149 = _RANDOM[5'hC][21];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_150 = _RANDOM[5'hC][22];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_151 = _RANDOM[5'hC][23];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_152 = _RANDOM[5'hC][24];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_153 = _RANDOM[5'hC][25];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_154 = _RANDOM[5'hC][26];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_155 = _RANDOM[5'hC][27];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_156 = _RANDOM[5'hC][28];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_157 = _RANDOM[5'hC][29];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_158 = _RANDOM[5'hC][30];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_159 = _RANDOM[5'hC][31];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_160 = _RANDOM[5'hD][0];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_161 = _RANDOM[5'hD][1];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_162 = _RANDOM[5'hD][2];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_163 = _RANDOM[5'hD][3];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_164 = _RANDOM[5'hD][4];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_165 = _RANDOM[5'hD][5];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_166 = _RANDOM[5'hD][6];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_167 = _RANDOM[5'hD][7];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_168 = _RANDOM[5'hD][8];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_169 = _RANDOM[5'hD][9];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_170 = _RANDOM[5'hD][10];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_171 = _RANDOM[5'hD][11];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_172 = _RANDOM[5'hD][12];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_173 = _RANDOM[5'hD][13];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_174 = _RANDOM[5'hD][14];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_175 = _RANDOM[5'hD][15];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_176 = _RANDOM[5'hD][16];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_177 = _RANDOM[5'hD][17];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_178 = _RANDOM[5'hD][18];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_179 = _RANDOM[5'hD][19];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_180 = _RANDOM[5'hD][20];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_181 = _RANDOM[5'hD][21];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_182 = _RANDOM[5'hD][22];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_183 = _RANDOM[5'hD][23];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_184 = _RANDOM[5'hD][24];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_185 = _RANDOM[5'hD][25];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_186 = _RANDOM[5'hD][26];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_187 = _RANDOM[5'hD][27];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_188 = _RANDOM[5'hD][28];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_189 = _RANDOM[5'hD][29];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_190 = _RANDOM[5'hD][30];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_191 = _RANDOM[5'hD][31];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_192 = _RANDOM[5'hE][0];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_193 = _RANDOM[5'hE][1];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_194 = _RANDOM[5'hE][2];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_195 = _RANDOM[5'hE][3];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_196 = _RANDOM[5'hE][4];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_197 = _RANDOM[5'hE][5];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_198 = _RANDOM[5'hE][6];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_199 = _RANDOM[5'hE][7];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_200 = _RANDOM[5'hE][8];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_201 = _RANDOM[5'hE][9];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_202 = _RANDOM[5'hE][10];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_203 = _RANDOM[5'hE][11];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_204 = _RANDOM[5'hE][12];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_205 = _RANDOM[5'hE][13];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_206 = _RANDOM[5'hE][14];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_207 = _RANDOM[5'hE][15];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_208 = _RANDOM[5'hE][16];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_209 = _RANDOM[5'hE][17];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_210 = _RANDOM[5'hE][18];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_211 = _RANDOM[5'hE][19];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_212 = _RANDOM[5'hE][20];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_213 = _RANDOM[5'hE][21];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_214 = _RANDOM[5'hE][22];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_215 = _RANDOM[5'hE][23];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_216 = _RANDOM[5'hE][24];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_217 = _RANDOM[5'hE][25];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_218 = _RANDOM[5'hE][26];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_219 = _RANDOM[5'hE][27];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_220 = _RANDOM[5'hE][28];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_221 = _RANDOM[5'hE][29];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_222 = _RANDOM[5'hE][30];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_223 = _RANDOM[5'hE][31];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_224 = _RANDOM[5'hF][0];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_225 = _RANDOM[5'hF][1];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_226 = _RANDOM[5'hF][2];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_227 = _RANDOM[5'hF][3];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_228 = _RANDOM[5'hF][4];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_229 = _RANDOM[5'hF][5];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_230 = _RANDOM[5'hF][6];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_231 = _RANDOM[5'hF][7];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_232 = _RANDOM[5'hF][8];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_233 = _RANDOM[5'hF][9];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_234 = _RANDOM[5'hF][10];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_235 = _RANDOM[5'hF][11];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_236 = _RANDOM[5'hF][12];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_237 = _RANDOM[5'hF][13];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_238 = _RANDOM[5'hF][14];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_239 = _RANDOM[5'hF][15];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_240 = _RANDOM[5'hF][16];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_241 = _RANDOM[5'hF][17];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_242 = _RANDOM[5'hF][18];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_243 = _RANDOM[5'hF][19];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_244 = _RANDOM[5'hF][20];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_245 = _RANDOM[5'hF][21];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_246 = _RANDOM[5'hF][22];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_247 = _RANDOM[5'hF][23];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_248 = _RANDOM[5'hF][24];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_249 = _RANDOM[5'hF][25];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_250 = _RANDOM[5'hF][26];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_251 = _RANDOM[5'hF][27];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_252 = _RANDOM[5'hF][28];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_253 = _RANDOM[5'hF][29];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_254 = _RANDOM[5'hF][30];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        dirty_bits_it_1_255 = _RANDOM[5'hF][31];	// <stdin>:6888:3, playground/src/Cache.scala:142:52
-        state = _RANDOM[5'h10][2:0];	// <stdin>:6888:3, playground/src/Cache.scala:167:24
-        req_valid = _RANDOM[5'h10][3];	// <stdin>:6888:3, playground/src/Cache.scala:167:24, :170:35
-        req_wtype = _RANDOM[5'h10][5:4];	// <stdin>:6888:3, playground/src/Cache.scala:167:24, :172:35
-        req_uncached = _RANDOM[5'h10][6];	// <stdin>:6888:3, playground/src/Cache.scala:167:24, :173:35
-        req_wr = _RANDOM[5'h10][7];	// <stdin>:6888:3, playground/src/Cache.scala:167:24, :174:35
-        req_wdata = {_RANDOM[5'h10][31:8], _RANDOM[5'h11][7:0]};	// <stdin>:6888:3, playground/src/Cache.scala:167:24, :175:35
-        req_cacop_en = _RANDOM[5'h11][8];	// <stdin>:6888:3, playground/src/Cache.scala:175:35, :176:35
-        req_cacop_func = _RANDOM[5'h11][10:9];	// <stdin>:6888:3, playground/src/Cache.scala:175:35, :177:35
-        req_tag = _RANDOM[5'h11][30:11];	// <stdin>:6888:3, playground/src/Cache.scala:175:35, :183:36
-        req_idx = {_RANDOM[5'h11][31], _RANDOM[5'h12][6:0]};	// <stdin>:6888:3, playground/src/Cache.scala:175:35, :184:36
-        req_offset = _RANDOM[5'h12][10:7];	// <stdin>:6888:3, playground/src/Cache.scala:184:36, :185:36
-        paddr_v = _RANDOM[5'h12][12];	// <stdin>:6888:3, playground/src/Cache.scala:184:36, :215:30
-        hit_way_r = _RANDOM[5'h12][13];	// <stdin>:6888:3, playground/src/Cache.scala:184:36, :221:30
-        recv_data_0 = {_RANDOM[5'h12][31:14], _RANDOM[5'h13][13:0]};	// <stdin>:6888:3, playground/src/Cache.scala:184:36, :222:30
-        recv_data_1 = {_RANDOM[5'h13][31:14], _RANDOM[5'h14][13:0]};	// <stdin>:6888:3, playground/src/Cache.scala:222:30
-        recv_data_2 = {_RANDOM[5'h14][31:14], _RANDOM[5'h15][13:0]};	// <stdin>:6888:3, playground/src/Cache.scala:222:30
-        recv_data_3 = {_RANDOM[5'h15][31:14], _RANDOM[5'h16][13:0]};	// <stdin>:6888:3, playground/src/Cache.scala:222:30
-        recv_cnt = _RANDOM[5'h16][20:14];	// <stdin>:6888:3, playground/src/Cache.scala:222:30, :223:30
-        replace_way = _RANDOM[5'h16][21];	// <stdin>:6888:3, playground/src/Cache.scala:222:30, :228:35
-        wreq_way = _RANDOM[5'h16][22];	// <stdin>:6888:3, playground/src/Cache.scala:222:30, :238:27
-        wstate = _RANDOM[5'h16][24:23];	// <stdin>:6888:3, playground/src/Cache.scala:222:30, :381:60
-        wreq_wdata = {_RANDOM[5'h16][31:25], _RANDOM[5'h17][24:0]};	// <stdin>:6888:3, playground/src/Cache.scala:222:30, :383:38
-        wreq_addr = {_RANDOM[5'h17][31:25], _RANDOM[5'h18][24:0]};	// <stdin>:6888:3, playground/src/Cache.scala:383:38, :384:38
-        wreq_wtype = _RANDOM[5'h18][26:25];	// <stdin>:6888:3, playground/src/Cache.scala:384:38, :385:38
-        war_case_1_REG = _RANDOM[5'h18][28:27];	// <stdin>:6888:3, playground/src/Cache.scala:384:38, :393:21
-        war_case_1_REG_1 = _RANDOM[5'h18][29];	// <stdin>:6888:3, playground/src/Cache.scala:384:38, :393:66
-        war_case_1_REG_2 = _RANDOM[5'h18][31:30];	// <stdin>:6888:3, playground/src/Cache.scala:384:38, :393:106
-        dstate = _RANDOM[5'h19][1:0];	// <stdin>:6888:3, playground/src/Cache.scala:420:56
-        dreq_data_0 = {_RANDOM[5'h19][31:2], _RANDOM[5'h1A][1:0]};	// <stdin>:6888:3, playground/src/Cache.scala:420:56, :422:36
-        dreq_data_1 = {_RANDOM[5'h1A][31:2], _RANDOM[5'h1B][1:0]};	// <stdin>:6888:3, playground/src/Cache.scala:422:36
-        dreq_data_2 = {_RANDOM[5'h1B][31:2], _RANDOM[5'h1C][1:0]};	// <stdin>:6888:3, playground/src/Cache.scala:422:36
-        dreq_data_3 = {_RANDOM[5'h1C][31:2], _RANDOM[5'h1D][1:0]};	// <stdin>:6888:3, playground/src/Cache.scala:422:36
-        dreq_addr = {_RANDOM[5'h1D][31:2], _RANDOM[5'h1E][1:0]};	// <stdin>:6888:3, playground/src/Cache.scala:422:36, :423:36
-        dreq_wtype = _RANDOM[5'h1E][3:2];	// <stdin>:6888:3, playground/src/Cache.scala:423:36, :424:36
-        dreq_uncached = _RANDOM[5'h1E][4];	// <stdin>:6888:3, playground/src/Cache.scala:423:36, :425:36
-        send_cnt = _RANDOM[5'h1E][11:5];	// <stdin>:6888:3, playground/src/Cache.scala:423:36, :426:36
+          _RANDOM[i] = `RANDOM;	// <stdin>:7228:3
+        end	// <stdin>:7228:3
+        dirty_bits_it_0_0 = _RANDOM[5'h0][0];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_1 = _RANDOM[5'h0][1];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_2 = _RANDOM[5'h0][2];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_3 = _RANDOM[5'h0][3];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_4 = _RANDOM[5'h0][4];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_5 = _RANDOM[5'h0][5];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_6 = _RANDOM[5'h0][6];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_7 = _RANDOM[5'h0][7];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_8 = _RANDOM[5'h0][8];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_9 = _RANDOM[5'h0][9];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_10 = _RANDOM[5'h0][10];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_11 = _RANDOM[5'h0][11];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_12 = _RANDOM[5'h0][12];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_13 = _RANDOM[5'h0][13];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_14 = _RANDOM[5'h0][14];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_15 = _RANDOM[5'h0][15];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_16 = _RANDOM[5'h0][16];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_17 = _RANDOM[5'h0][17];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_18 = _RANDOM[5'h0][18];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_19 = _RANDOM[5'h0][19];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_20 = _RANDOM[5'h0][20];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_21 = _RANDOM[5'h0][21];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_22 = _RANDOM[5'h0][22];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_23 = _RANDOM[5'h0][23];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_24 = _RANDOM[5'h0][24];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_25 = _RANDOM[5'h0][25];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_26 = _RANDOM[5'h0][26];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_27 = _RANDOM[5'h0][27];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_28 = _RANDOM[5'h0][28];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_29 = _RANDOM[5'h0][29];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_30 = _RANDOM[5'h0][30];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_31 = _RANDOM[5'h0][31];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_32 = _RANDOM[5'h1][0];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_33 = _RANDOM[5'h1][1];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_34 = _RANDOM[5'h1][2];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_35 = _RANDOM[5'h1][3];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_36 = _RANDOM[5'h1][4];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_37 = _RANDOM[5'h1][5];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_38 = _RANDOM[5'h1][6];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_39 = _RANDOM[5'h1][7];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_40 = _RANDOM[5'h1][8];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_41 = _RANDOM[5'h1][9];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_42 = _RANDOM[5'h1][10];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_43 = _RANDOM[5'h1][11];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_44 = _RANDOM[5'h1][12];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_45 = _RANDOM[5'h1][13];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_46 = _RANDOM[5'h1][14];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_47 = _RANDOM[5'h1][15];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_48 = _RANDOM[5'h1][16];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_49 = _RANDOM[5'h1][17];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_50 = _RANDOM[5'h1][18];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_51 = _RANDOM[5'h1][19];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_52 = _RANDOM[5'h1][20];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_53 = _RANDOM[5'h1][21];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_54 = _RANDOM[5'h1][22];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_55 = _RANDOM[5'h1][23];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_56 = _RANDOM[5'h1][24];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_57 = _RANDOM[5'h1][25];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_58 = _RANDOM[5'h1][26];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_59 = _RANDOM[5'h1][27];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_60 = _RANDOM[5'h1][28];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_61 = _RANDOM[5'h1][29];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_62 = _RANDOM[5'h1][30];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_63 = _RANDOM[5'h1][31];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_64 = _RANDOM[5'h2][0];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_65 = _RANDOM[5'h2][1];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_66 = _RANDOM[5'h2][2];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_67 = _RANDOM[5'h2][3];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_68 = _RANDOM[5'h2][4];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_69 = _RANDOM[5'h2][5];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_70 = _RANDOM[5'h2][6];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_71 = _RANDOM[5'h2][7];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_72 = _RANDOM[5'h2][8];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_73 = _RANDOM[5'h2][9];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_74 = _RANDOM[5'h2][10];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_75 = _RANDOM[5'h2][11];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_76 = _RANDOM[5'h2][12];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_77 = _RANDOM[5'h2][13];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_78 = _RANDOM[5'h2][14];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_79 = _RANDOM[5'h2][15];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_80 = _RANDOM[5'h2][16];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_81 = _RANDOM[5'h2][17];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_82 = _RANDOM[5'h2][18];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_83 = _RANDOM[5'h2][19];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_84 = _RANDOM[5'h2][20];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_85 = _RANDOM[5'h2][21];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_86 = _RANDOM[5'h2][22];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_87 = _RANDOM[5'h2][23];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_88 = _RANDOM[5'h2][24];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_89 = _RANDOM[5'h2][25];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_90 = _RANDOM[5'h2][26];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_91 = _RANDOM[5'h2][27];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_92 = _RANDOM[5'h2][28];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_93 = _RANDOM[5'h2][29];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_94 = _RANDOM[5'h2][30];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_95 = _RANDOM[5'h2][31];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_96 = _RANDOM[5'h3][0];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_97 = _RANDOM[5'h3][1];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_98 = _RANDOM[5'h3][2];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_99 = _RANDOM[5'h3][3];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_100 = _RANDOM[5'h3][4];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_101 = _RANDOM[5'h3][5];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_102 = _RANDOM[5'h3][6];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_103 = _RANDOM[5'h3][7];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_104 = _RANDOM[5'h3][8];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_105 = _RANDOM[5'h3][9];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_106 = _RANDOM[5'h3][10];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_107 = _RANDOM[5'h3][11];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_108 = _RANDOM[5'h3][12];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_109 = _RANDOM[5'h3][13];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_110 = _RANDOM[5'h3][14];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_111 = _RANDOM[5'h3][15];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_112 = _RANDOM[5'h3][16];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_113 = _RANDOM[5'h3][17];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_114 = _RANDOM[5'h3][18];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_115 = _RANDOM[5'h3][19];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_116 = _RANDOM[5'h3][20];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_117 = _RANDOM[5'h3][21];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_118 = _RANDOM[5'h3][22];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_119 = _RANDOM[5'h3][23];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_120 = _RANDOM[5'h3][24];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_121 = _RANDOM[5'h3][25];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_122 = _RANDOM[5'h3][26];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_123 = _RANDOM[5'h3][27];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_124 = _RANDOM[5'h3][28];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_125 = _RANDOM[5'h3][29];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_126 = _RANDOM[5'h3][30];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_127 = _RANDOM[5'h3][31];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_128 = _RANDOM[5'h4][0];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_129 = _RANDOM[5'h4][1];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_130 = _RANDOM[5'h4][2];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_131 = _RANDOM[5'h4][3];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_132 = _RANDOM[5'h4][4];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_133 = _RANDOM[5'h4][5];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_134 = _RANDOM[5'h4][6];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_135 = _RANDOM[5'h4][7];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_136 = _RANDOM[5'h4][8];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_137 = _RANDOM[5'h4][9];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_138 = _RANDOM[5'h4][10];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_139 = _RANDOM[5'h4][11];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_140 = _RANDOM[5'h4][12];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_141 = _RANDOM[5'h4][13];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_142 = _RANDOM[5'h4][14];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_143 = _RANDOM[5'h4][15];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_144 = _RANDOM[5'h4][16];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_145 = _RANDOM[5'h4][17];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_146 = _RANDOM[5'h4][18];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_147 = _RANDOM[5'h4][19];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_148 = _RANDOM[5'h4][20];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_149 = _RANDOM[5'h4][21];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_150 = _RANDOM[5'h4][22];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_151 = _RANDOM[5'h4][23];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_152 = _RANDOM[5'h4][24];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_153 = _RANDOM[5'h4][25];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_154 = _RANDOM[5'h4][26];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_155 = _RANDOM[5'h4][27];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_156 = _RANDOM[5'h4][28];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_157 = _RANDOM[5'h4][29];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_158 = _RANDOM[5'h4][30];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_159 = _RANDOM[5'h4][31];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_160 = _RANDOM[5'h5][0];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_161 = _RANDOM[5'h5][1];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_162 = _RANDOM[5'h5][2];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_163 = _RANDOM[5'h5][3];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_164 = _RANDOM[5'h5][4];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_165 = _RANDOM[5'h5][5];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_166 = _RANDOM[5'h5][6];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_167 = _RANDOM[5'h5][7];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_168 = _RANDOM[5'h5][8];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_169 = _RANDOM[5'h5][9];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_170 = _RANDOM[5'h5][10];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_171 = _RANDOM[5'h5][11];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_172 = _RANDOM[5'h5][12];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_173 = _RANDOM[5'h5][13];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_174 = _RANDOM[5'h5][14];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_175 = _RANDOM[5'h5][15];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_176 = _RANDOM[5'h5][16];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_177 = _RANDOM[5'h5][17];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_178 = _RANDOM[5'h5][18];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_179 = _RANDOM[5'h5][19];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_180 = _RANDOM[5'h5][20];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_181 = _RANDOM[5'h5][21];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_182 = _RANDOM[5'h5][22];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_183 = _RANDOM[5'h5][23];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_184 = _RANDOM[5'h5][24];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_185 = _RANDOM[5'h5][25];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_186 = _RANDOM[5'h5][26];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_187 = _RANDOM[5'h5][27];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_188 = _RANDOM[5'h5][28];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_189 = _RANDOM[5'h5][29];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_190 = _RANDOM[5'h5][30];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_191 = _RANDOM[5'h5][31];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_192 = _RANDOM[5'h6][0];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_193 = _RANDOM[5'h6][1];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_194 = _RANDOM[5'h6][2];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_195 = _RANDOM[5'h6][3];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_196 = _RANDOM[5'h6][4];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_197 = _RANDOM[5'h6][5];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_198 = _RANDOM[5'h6][6];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_199 = _RANDOM[5'h6][7];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_200 = _RANDOM[5'h6][8];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_201 = _RANDOM[5'h6][9];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_202 = _RANDOM[5'h6][10];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_203 = _RANDOM[5'h6][11];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_204 = _RANDOM[5'h6][12];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_205 = _RANDOM[5'h6][13];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_206 = _RANDOM[5'h6][14];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_207 = _RANDOM[5'h6][15];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_208 = _RANDOM[5'h6][16];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_209 = _RANDOM[5'h6][17];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_210 = _RANDOM[5'h6][18];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_211 = _RANDOM[5'h6][19];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_212 = _RANDOM[5'h6][20];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_213 = _RANDOM[5'h6][21];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_214 = _RANDOM[5'h6][22];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_215 = _RANDOM[5'h6][23];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_216 = _RANDOM[5'h6][24];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_217 = _RANDOM[5'h6][25];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_218 = _RANDOM[5'h6][26];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_219 = _RANDOM[5'h6][27];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_220 = _RANDOM[5'h6][28];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_221 = _RANDOM[5'h6][29];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_222 = _RANDOM[5'h6][30];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_223 = _RANDOM[5'h6][31];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_224 = _RANDOM[5'h7][0];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_225 = _RANDOM[5'h7][1];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_226 = _RANDOM[5'h7][2];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_227 = _RANDOM[5'h7][3];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_228 = _RANDOM[5'h7][4];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_229 = _RANDOM[5'h7][5];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_230 = _RANDOM[5'h7][6];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_231 = _RANDOM[5'h7][7];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_232 = _RANDOM[5'h7][8];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_233 = _RANDOM[5'h7][9];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_234 = _RANDOM[5'h7][10];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_235 = _RANDOM[5'h7][11];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_236 = _RANDOM[5'h7][12];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_237 = _RANDOM[5'h7][13];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_238 = _RANDOM[5'h7][14];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_239 = _RANDOM[5'h7][15];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_240 = _RANDOM[5'h7][16];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_241 = _RANDOM[5'h7][17];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_242 = _RANDOM[5'h7][18];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_243 = _RANDOM[5'h7][19];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_244 = _RANDOM[5'h7][20];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_245 = _RANDOM[5'h7][21];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_246 = _RANDOM[5'h7][22];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_247 = _RANDOM[5'h7][23];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_248 = _RANDOM[5'h7][24];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_249 = _RANDOM[5'h7][25];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_250 = _RANDOM[5'h7][26];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_251 = _RANDOM[5'h7][27];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_252 = _RANDOM[5'h7][28];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_253 = _RANDOM[5'h7][29];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_254 = _RANDOM[5'h7][30];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_0_255 = _RANDOM[5'h7][31];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_0 = _RANDOM[5'h8][0];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_1 = _RANDOM[5'h8][1];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_2 = _RANDOM[5'h8][2];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_3 = _RANDOM[5'h8][3];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_4 = _RANDOM[5'h8][4];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_5 = _RANDOM[5'h8][5];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_6 = _RANDOM[5'h8][6];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_7 = _RANDOM[5'h8][7];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_8 = _RANDOM[5'h8][8];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_9 = _RANDOM[5'h8][9];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_10 = _RANDOM[5'h8][10];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_11 = _RANDOM[5'h8][11];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_12 = _RANDOM[5'h8][12];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_13 = _RANDOM[5'h8][13];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_14 = _RANDOM[5'h8][14];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_15 = _RANDOM[5'h8][15];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_16 = _RANDOM[5'h8][16];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_17 = _RANDOM[5'h8][17];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_18 = _RANDOM[5'h8][18];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_19 = _RANDOM[5'h8][19];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_20 = _RANDOM[5'h8][20];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_21 = _RANDOM[5'h8][21];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_22 = _RANDOM[5'h8][22];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_23 = _RANDOM[5'h8][23];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_24 = _RANDOM[5'h8][24];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_25 = _RANDOM[5'h8][25];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_26 = _RANDOM[5'h8][26];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_27 = _RANDOM[5'h8][27];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_28 = _RANDOM[5'h8][28];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_29 = _RANDOM[5'h8][29];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_30 = _RANDOM[5'h8][30];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_31 = _RANDOM[5'h8][31];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_32 = _RANDOM[5'h9][0];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_33 = _RANDOM[5'h9][1];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_34 = _RANDOM[5'h9][2];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_35 = _RANDOM[5'h9][3];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_36 = _RANDOM[5'h9][4];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_37 = _RANDOM[5'h9][5];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_38 = _RANDOM[5'h9][6];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_39 = _RANDOM[5'h9][7];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_40 = _RANDOM[5'h9][8];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_41 = _RANDOM[5'h9][9];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_42 = _RANDOM[5'h9][10];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_43 = _RANDOM[5'h9][11];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_44 = _RANDOM[5'h9][12];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_45 = _RANDOM[5'h9][13];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_46 = _RANDOM[5'h9][14];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_47 = _RANDOM[5'h9][15];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_48 = _RANDOM[5'h9][16];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_49 = _RANDOM[5'h9][17];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_50 = _RANDOM[5'h9][18];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_51 = _RANDOM[5'h9][19];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_52 = _RANDOM[5'h9][20];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_53 = _RANDOM[5'h9][21];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_54 = _RANDOM[5'h9][22];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_55 = _RANDOM[5'h9][23];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_56 = _RANDOM[5'h9][24];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_57 = _RANDOM[5'h9][25];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_58 = _RANDOM[5'h9][26];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_59 = _RANDOM[5'h9][27];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_60 = _RANDOM[5'h9][28];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_61 = _RANDOM[5'h9][29];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_62 = _RANDOM[5'h9][30];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_63 = _RANDOM[5'h9][31];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_64 = _RANDOM[5'hA][0];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_65 = _RANDOM[5'hA][1];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_66 = _RANDOM[5'hA][2];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_67 = _RANDOM[5'hA][3];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_68 = _RANDOM[5'hA][4];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_69 = _RANDOM[5'hA][5];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_70 = _RANDOM[5'hA][6];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_71 = _RANDOM[5'hA][7];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_72 = _RANDOM[5'hA][8];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_73 = _RANDOM[5'hA][9];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_74 = _RANDOM[5'hA][10];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_75 = _RANDOM[5'hA][11];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_76 = _RANDOM[5'hA][12];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_77 = _RANDOM[5'hA][13];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_78 = _RANDOM[5'hA][14];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_79 = _RANDOM[5'hA][15];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_80 = _RANDOM[5'hA][16];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_81 = _RANDOM[5'hA][17];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_82 = _RANDOM[5'hA][18];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_83 = _RANDOM[5'hA][19];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_84 = _RANDOM[5'hA][20];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_85 = _RANDOM[5'hA][21];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_86 = _RANDOM[5'hA][22];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_87 = _RANDOM[5'hA][23];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_88 = _RANDOM[5'hA][24];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_89 = _RANDOM[5'hA][25];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_90 = _RANDOM[5'hA][26];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_91 = _RANDOM[5'hA][27];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_92 = _RANDOM[5'hA][28];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_93 = _RANDOM[5'hA][29];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_94 = _RANDOM[5'hA][30];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_95 = _RANDOM[5'hA][31];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_96 = _RANDOM[5'hB][0];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_97 = _RANDOM[5'hB][1];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_98 = _RANDOM[5'hB][2];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_99 = _RANDOM[5'hB][3];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_100 = _RANDOM[5'hB][4];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_101 = _RANDOM[5'hB][5];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_102 = _RANDOM[5'hB][6];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_103 = _RANDOM[5'hB][7];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_104 = _RANDOM[5'hB][8];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_105 = _RANDOM[5'hB][9];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_106 = _RANDOM[5'hB][10];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_107 = _RANDOM[5'hB][11];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_108 = _RANDOM[5'hB][12];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_109 = _RANDOM[5'hB][13];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_110 = _RANDOM[5'hB][14];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_111 = _RANDOM[5'hB][15];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_112 = _RANDOM[5'hB][16];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_113 = _RANDOM[5'hB][17];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_114 = _RANDOM[5'hB][18];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_115 = _RANDOM[5'hB][19];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_116 = _RANDOM[5'hB][20];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_117 = _RANDOM[5'hB][21];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_118 = _RANDOM[5'hB][22];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_119 = _RANDOM[5'hB][23];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_120 = _RANDOM[5'hB][24];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_121 = _RANDOM[5'hB][25];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_122 = _RANDOM[5'hB][26];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_123 = _RANDOM[5'hB][27];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_124 = _RANDOM[5'hB][28];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_125 = _RANDOM[5'hB][29];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_126 = _RANDOM[5'hB][30];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_127 = _RANDOM[5'hB][31];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_128 = _RANDOM[5'hC][0];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_129 = _RANDOM[5'hC][1];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_130 = _RANDOM[5'hC][2];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_131 = _RANDOM[5'hC][3];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_132 = _RANDOM[5'hC][4];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_133 = _RANDOM[5'hC][5];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_134 = _RANDOM[5'hC][6];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_135 = _RANDOM[5'hC][7];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_136 = _RANDOM[5'hC][8];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_137 = _RANDOM[5'hC][9];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_138 = _RANDOM[5'hC][10];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_139 = _RANDOM[5'hC][11];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_140 = _RANDOM[5'hC][12];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_141 = _RANDOM[5'hC][13];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_142 = _RANDOM[5'hC][14];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_143 = _RANDOM[5'hC][15];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_144 = _RANDOM[5'hC][16];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_145 = _RANDOM[5'hC][17];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_146 = _RANDOM[5'hC][18];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_147 = _RANDOM[5'hC][19];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_148 = _RANDOM[5'hC][20];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_149 = _RANDOM[5'hC][21];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_150 = _RANDOM[5'hC][22];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_151 = _RANDOM[5'hC][23];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_152 = _RANDOM[5'hC][24];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_153 = _RANDOM[5'hC][25];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_154 = _RANDOM[5'hC][26];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_155 = _RANDOM[5'hC][27];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_156 = _RANDOM[5'hC][28];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_157 = _RANDOM[5'hC][29];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_158 = _RANDOM[5'hC][30];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_159 = _RANDOM[5'hC][31];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_160 = _RANDOM[5'hD][0];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_161 = _RANDOM[5'hD][1];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_162 = _RANDOM[5'hD][2];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_163 = _RANDOM[5'hD][3];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_164 = _RANDOM[5'hD][4];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_165 = _RANDOM[5'hD][5];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_166 = _RANDOM[5'hD][6];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_167 = _RANDOM[5'hD][7];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_168 = _RANDOM[5'hD][8];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_169 = _RANDOM[5'hD][9];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_170 = _RANDOM[5'hD][10];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_171 = _RANDOM[5'hD][11];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_172 = _RANDOM[5'hD][12];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_173 = _RANDOM[5'hD][13];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_174 = _RANDOM[5'hD][14];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_175 = _RANDOM[5'hD][15];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_176 = _RANDOM[5'hD][16];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_177 = _RANDOM[5'hD][17];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_178 = _RANDOM[5'hD][18];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_179 = _RANDOM[5'hD][19];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_180 = _RANDOM[5'hD][20];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_181 = _RANDOM[5'hD][21];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_182 = _RANDOM[5'hD][22];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_183 = _RANDOM[5'hD][23];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_184 = _RANDOM[5'hD][24];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_185 = _RANDOM[5'hD][25];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_186 = _RANDOM[5'hD][26];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_187 = _RANDOM[5'hD][27];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_188 = _RANDOM[5'hD][28];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_189 = _RANDOM[5'hD][29];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_190 = _RANDOM[5'hD][30];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_191 = _RANDOM[5'hD][31];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_192 = _RANDOM[5'hE][0];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_193 = _RANDOM[5'hE][1];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_194 = _RANDOM[5'hE][2];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_195 = _RANDOM[5'hE][3];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_196 = _RANDOM[5'hE][4];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_197 = _RANDOM[5'hE][5];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_198 = _RANDOM[5'hE][6];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_199 = _RANDOM[5'hE][7];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_200 = _RANDOM[5'hE][8];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_201 = _RANDOM[5'hE][9];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_202 = _RANDOM[5'hE][10];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_203 = _RANDOM[5'hE][11];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_204 = _RANDOM[5'hE][12];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_205 = _RANDOM[5'hE][13];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_206 = _RANDOM[5'hE][14];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_207 = _RANDOM[5'hE][15];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_208 = _RANDOM[5'hE][16];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_209 = _RANDOM[5'hE][17];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_210 = _RANDOM[5'hE][18];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_211 = _RANDOM[5'hE][19];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_212 = _RANDOM[5'hE][20];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_213 = _RANDOM[5'hE][21];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_214 = _RANDOM[5'hE][22];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_215 = _RANDOM[5'hE][23];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_216 = _RANDOM[5'hE][24];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_217 = _RANDOM[5'hE][25];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_218 = _RANDOM[5'hE][26];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_219 = _RANDOM[5'hE][27];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_220 = _RANDOM[5'hE][28];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_221 = _RANDOM[5'hE][29];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_222 = _RANDOM[5'hE][30];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_223 = _RANDOM[5'hE][31];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_224 = _RANDOM[5'hF][0];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_225 = _RANDOM[5'hF][1];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_226 = _RANDOM[5'hF][2];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_227 = _RANDOM[5'hF][3];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_228 = _RANDOM[5'hF][4];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_229 = _RANDOM[5'hF][5];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_230 = _RANDOM[5'hF][6];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_231 = _RANDOM[5'hF][7];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_232 = _RANDOM[5'hF][8];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_233 = _RANDOM[5'hF][9];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_234 = _RANDOM[5'hF][10];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_235 = _RANDOM[5'hF][11];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_236 = _RANDOM[5'hF][12];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_237 = _RANDOM[5'hF][13];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_238 = _RANDOM[5'hF][14];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_239 = _RANDOM[5'hF][15];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_240 = _RANDOM[5'hF][16];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_241 = _RANDOM[5'hF][17];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_242 = _RANDOM[5'hF][18];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_243 = _RANDOM[5'hF][19];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_244 = _RANDOM[5'hF][20];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_245 = _RANDOM[5'hF][21];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_246 = _RANDOM[5'hF][22];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_247 = _RANDOM[5'hF][23];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_248 = _RANDOM[5'hF][24];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_249 = _RANDOM[5'hF][25];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_250 = _RANDOM[5'hF][26];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_251 = _RANDOM[5'hF][27];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_252 = _RANDOM[5'hF][28];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_253 = _RANDOM[5'hF][29];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_254 = _RANDOM[5'hF][30];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        dirty_bits_it_1_255 = _RANDOM[5'hF][31];	// <stdin>:7228:3, playground/src/Cache.scala:142:52
+        state = _RANDOM[5'h10][2:0];	// <stdin>:7228:3, playground/src/Cache.scala:167:24
+        req_valid = _RANDOM[5'h10][3];	// <stdin>:7228:3, playground/src/Cache.scala:167:24, :170:35
+        req_wtype = _RANDOM[5'h10][5:4];	// <stdin>:7228:3, playground/src/Cache.scala:167:24, :172:35
+        req_uncached = _RANDOM[5'h10][6];	// <stdin>:7228:3, playground/src/Cache.scala:167:24, :173:35
+        req_wr = _RANDOM[5'h10][7];	// <stdin>:7228:3, playground/src/Cache.scala:167:24, :174:35
+        req_wdata = {_RANDOM[5'h10][31:8], _RANDOM[5'h11][7:0]};	// <stdin>:7228:3, playground/src/Cache.scala:167:24, :175:35
+        req_cacop_en = _RANDOM[5'h11][8];	// <stdin>:7228:3, playground/src/Cache.scala:175:35, :176:35
+        req_cacop_func = _RANDOM[5'h11][10:9];	// <stdin>:7228:3, playground/src/Cache.scala:175:35, :177:35
+        req_tag = _RANDOM[5'h11][30:11];	// <stdin>:7228:3, playground/src/Cache.scala:175:35, :183:36
+        req_idx = {_RANDOM[5'h11][31], _RANDOM[5'h12][6:0]};	// <stdin>:7228:3, playground/src/Cache.scala:175:35, :184:36
+        req_offset = _RANDOM[5'h12][10:7];	// <stdin>:7228:3, playground/src/Cache.scala:184:36, :185:36
+        paddr_v = _RANDOM[5'h12][12];	// <stdin>:7228:3, playground/src/Cache.scala:184:36, :215:30
+        hit_way_r = _RANDOM[5'h12][13];	// <stdin>:7228:3, playground/src/Cache.scala:184:36, :221:30
+        recv_data_0 = {_RANDOM[5'h12][31:14], _RANDOM[5'h13][13:0]};	// <stdin>:7228:3, playground/src/Cache.scala:184:36, :222:30
+        recv_data_1 = {_RANDOM[5'h13][31:14], _RANDOM[5'h14][13:0]};	// <stdin>:7228:3, playground/src/Cache.scala:222:30
+        recv_data_2 = {_RANDOM[5'h14][31:14], _RANDOM[5'h15][13:0]};	// <stdin>:7228:3, playground/src/Cache.scala:222:30
+        recv_data_3 = {_RANDOM[5'h15][31:14], _RANDOM[5'h16][13:0]};	// <stdin>:7228:3, playground/src/Cache.scala:222:30
+        recv_cnt = _RANDOM[5'h16][20:14];	// <stdin>:7228:3, playground/src/Cache.scala:222:30, :223:30
+        replace_way = _RANDOM[5'h16][21];	// <stdin>:7228:3, playground/src/Cache.scala:222:30, :228:35
+        wreq_way = _RANDOM[5'h16][22];	// <stdin>:7228:3, playground/src/Cache.scala:222:30, :238:27
+        wstate = _RANDOM[5'h16][24:23];	// <stdin>:7228:3, playground/src/Cache.scala:222:30, :381:60
+        wreq_wdata = {_RANDOM[5'h16][31:25], _RANDOM[5'h17][24:0]};	// <stdin>:7228:3, playground/src/Cache.scala:222:30, :383:38
+        wreq_addr = {_RANDOM[5'h17][31:25], _RANDOM[5'h18][24:0]};	// <stdin>:7228:3, playground/src/Cache.scala:383:38, :384:38
+        wreq_wtype = _RANDOM[5'h18][26:25];	// <stdin>:7228:3, playground/src/Cache.scala:384:38, :385:38
+        war_case_1_REG = _RANDOM[5'h18][28:27];	// <stdin>:7228:3, playground/src/Cache.scala:384:38, :393:21
+        war_case_1_REG_1 = _RANDOM[5'h18][29];	// <stdin>:7228:3, playground/src/Cache.scala:384:38, :393:66
+        war_case_1_REG_2 = _RANDOM[5'h18][31:30];	// <stdin>:7228:3, playground/src/Cache.scala:384:38, :393:106
+        dstate = _RANDOM[5'h19][1:0];	// <stdin>:7228:3, playground/src/Cache.scala:420:56
+        dreq_data_0 = {_RANDOM[5'h19][31:2], _RANDOM[5'h1A][1:0]};	// <stdin>:7228:3, playground/src/Cache.scala:420:56, :422:36
+        dreq_data_1 = {_RANDOM[5'h1A][31:2], _RANDOM[5'h1B][1:0]};	// <stdin>:7228:3, playground/src/Cache.scala:422:36
+        dreq_data_2 = {_RANDOM[5'h1B][31:2], _RANDOM[5'h1C][1:0]};	// <stdin>:7228:3, playground/src/Cache.scala:422:36
+        dreq_data_3 = {_RANDOM[5'h1C][31:2], _RANDOM[5'h1D][1:0]};	// <stdin>:7228:3, playground/src/Cache.scala:422:36
+        dreq_addr = {_RANDOM[5'h1D][31:2], _RANDOM[5'h1E][1:0]};	// <stdin>:7228:3, playground/src/Cache.scala:422:36, :423:36
+        dreq_wtype = _RANDOM[5'h1E][3:2];	// <stdin>:7228:3, playground/src/Cache.scala:423:36, :424:36
+        dreq_uncached = _RANDOM[5'h1E][4];	// <stdin>:7228:3, playground/src/Cache.scala:423:36, :425:36
+        send_cnt = _RANDOM[5'h1E][11:5];	// <stdin>:7228:3, playground/src/Cache.scala:423:36, :426:36
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:6888:3
-      `FIRRTL_AFTER_INITIAL	// <stdin>:6888:3
+    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:7228:3
+      `FIRRTL_AFTER_INITIAL	// <stdin>:7228:3
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
   SRAMTemplate SRAMTemplate (	// playground/src/Cache.scala:139:52
@@ -12461,11 +13113,11 @@ module MkCache_1(	// <stdin>:6888:3
     .io_out_2 (/* unused */),
     .io_out_3 (/* unused */)
   );
-  assign io_req_ready = _io_req_ready_output;	// <stdin>:6888:3, playground/src/Cache.scala:240:38
+  assign io_req_ready = _io_req_ready_output;	// <stdin>:7228:3, playground/src/Cache.scala:240:38
   assign io_resp_valid =
-    (|state) & (_GEN ? hit & ~war_stall & ~req_uncached & ~req_cacop_en : _GEN_10);	// <stdin>:6888:3, playground/src/Cache.scala:167:24, :173:35, :176:35, :207:24, :219:{75,89,91}, :240:{27,72}, :242:19, :256:{32,68}, :286:42, :397:70
+    (|state) & (_GEN ? hit & ~war_stall & ~req_uncached & ~req_cacop_en : _GEN_10);	// <stdin>:7228:3, playground/src/Cache.scala:167:24, :173:35, :176:35, :207:24, :219:{75,89,91}, :240:{27,72}, :242:19, :256:{32,68}, :286:42, :397:70
   assign io_resp_bits_done =
-    (|state) & (_GEN ? hit & ~war_stall & ~req_uncached & ~req_cacop_en : _GEN_10);	// <stdin>:6888:3, playground/src/Cache.scala:167:24, :173:35, :176:35, :208:24, :219:{75,89,91}, :240:{27,72}, :242:19, :257:{32,68}, :286:42, :397:70
+    (|state) & (_GEN ? hit & ~war_stall & ~req_uncached & ~req_cacop_en : _GEN_10);	// <stdin>:7228:3, playground/src/Cache.scala:167:24, :173:35, :176:35, :208:24, :219:{75,89,91}, :240:{27,72}, :242:19, :257:{32,68}, :286:42, :397:70
   assign io_resp_bits_rdata =
     (|state)
       ? (_GEN
@@ -12473,30 +13125,30 @@ module MkCache_1(	// <stdin>:6888:3
            : _GEN_1 | ~_GEN_7 | req_cacop_en | ~_GEN_9
                ? 32'h7777
                : io_axi_readData_bits_data)
-      : 32'h7777;	// <stdin>:6888:3, playground/src/Cache.scala:167:24, :176:35, :185:36, :209:24, :222:30, :236:34, :240:27, :242:19, :255:32, :317:32, :327:{35,46}
-  assign io_axi_writeAddr_valid = _io_axi_writeAddr_valid_output;	// <stdin>:6888:3, playground/src/Cache.scala:52:34, :458:24
+      : 32'h7777;	// <stdin>:7228:3, playground/src/Cache.scala:167:24, :176:35, :185:36, :209:24, :222:30, :236:34, :240:27, :242:19, :255:32, :317:32, :327:{35,46}
+  assign io_axi_writeAddr_valid = _io_axi_writeAddr_valid_output;	// <stdin>:7228:3, playground/src/Cache.scala:52:34, :458:24
   assign io_axi_writeAddr_bits_addr =
-    _GEN_30 ? (dreq_uncached ? dreq_addr : {dreq_addr[31:4], 4'h0}) : 32'h0;	// <stdin>:6888:3, playground/src/Cache.scala:53:34, :161:9, :222:38, :423:36, :425:36, :458:24, :465:36, :468:{30,61}
+    _GEN_30 ? (dreq_uncached ? dreq_addr : {dreq_addr[31:4], 4'h0}) : 32'h0;	// <stdin>:7228:3, playground/src/Cache.scala:53:34, :161:9, :222:38, :423:36, :425:36, :458:24, :465:36, :468:{30,61}
   assign io_axi_writeAddr_bits_size =
-    _GEN_30 ? {1'h0, dreq_uncached ? dreq_wtype : 2'h2} : 3'h0;	// <stdin>:6888:3, playground/src/Cache.scala:53:34, :60:34, :93:34, :132:24, :167:24, :189:43, :424:36, :425:36, :458:24, :470:36, src/main/scala/chisel3/util/random/PRNG.scala:91:22
-  assign io_axi_writeAddr_bits_len = _GEN_30 ? {6'h0, dreq_uncached ? 2'h0 : 2'h3} : 8'h0;	// <stdin>:6888:3, :7932:35, playground/src/Cache.scala:53:34, :56:34, :77:33, :92:34, :132:24, :156:16, :425:36, :458:24, :471:36
-  assign io_axi_writeAddr_bits_burst = (|dstate) ? {1'h0, _GEN_29} : 2'h0;	// <stdin>:6888:3, playground/src/Cache.scala:54:34, :94:34, :132:24, :420:56, :440:32, :458:24, src/main/scala/chisel3/util/random/PRNG.scala:91:22
-  assign io_axi_writeData_valid = _io_axi_writeData_valid_output;	// <stdin>:6888:3, playground/src/Cache.scala:62:33, :458:24
-  assign io_axi_writeData_bits_data = _GEN_34 ? 32'h0 : _GEN_33[send_cnt[1:0]];	// <stdin>:6888:3, :8035:27, playground/src/Cache.scala:63:33, :114:33, :222:38, :426:36, :458:24
-  assign io_axi_writeData_bits_strb = _GEN_34 ? 4'h0 : wstrb[3:0];	// <stdin>:6888:3, playground/src/Cache.scala:63:33, :66:33, :115:33, :161:{9,45}, :458:24
-  assign io_axi_writeData_bits_last = ~_GEN_32 & _GEN_31 & wlast;	// <stdin>:6888:3, playground/src/Cache.scala:62:33, :65:33, :458:24, :479:36
-  assign io_axi_readAddr_valid = _io_axi_readAddr_valid_output;	// <stdin>:6888:3, playground/src/Cache.scala:40:33, :242:19
+    _GEN_30 ? {1'h0, dreq_uncached ? dreq_wtype : 2'h2} : 3'h0;	// <stdin>:7228:3, playground/src/Cache.scala:53:34, :60:34, :93:34, :132:24, :167:24, :189:43, :424:36, :425:36, :458:24, :470:36, src/main/scala/chisel3/util/random/PRNG.scala:91:22
+  assign io_axi_writeAddr_bits_len = _GEN_30 ? {6'h0, dreq_uncached ? 2'h0 : 2'h3} : 8'h0;	// <stdin>:7228:3, :8272:35, playground/src/Cache.scala:53:34, :56:34, :77:33, :92:34, :132:24, :156:16, :425:36, :458:24, :471:36
+  assign io_axi_writeAddr_bits_burst = (|dstate) ? {1'h0, _GEN_29} : 2'h0;	// <stdin>:7228:3, playground/src/Cache.scala:54:34, :94:34, :132:24, :420:56, :440:32, :458:24, src/main/scala/chisel3/util/random/PRNG.scala:91:22
+  assign io_axi_writeData_valid = _io_axi_writeData_valid_output;	// <stdin>:7228:3, playground/src/Cache.scala:62:33, :458:24
+  assign io_axi_writeData_bits_data = _GEN_34 ? 32'h0 : _GEN_33[send_cnt[1:0]];	// <stdin>:7228:3, :8375:27, playground/src/Cache.scala:63:33, :114:33, :222:38, :426:36, :458:24
+  assign io_axi_writeData_bits_strb = _GEN_34 ? 4'h0 : wstrb[3:0];	// <stdin>:7228:3, playground/src/Cache.scala:63:33, :66:33, :115:33, :161:{9,45}, :458:24
+  assign io_axi_writeData_bits_last = ~_GEN_32 & _GEN_31 & wlast;	// <stdin>:7228:3, playground/src/Cache.scala:62:33, :65:33, :458:24, :479:36
+  assign io_axi_readAddr_valid = _io_axi_readAddr_valid_output;	// <stdin>:7228:3, playground/src/Cache.scala:40:33, :242:19
   assign io_axi_readAddr_bits_addr =
-    _GEN_5 ? 32'h0 : {req_tag, req_idx, req_uncached ? {req_offset[3:2], 2'h0} : 4'h0};	// <stdin>:6888:3, playground/src/Cache.scala:41:33, :132:24, :161:9, :173:35, :183:36, :184:36, :185:36, :222:38, :242:19, :295:40, :297:{33,54}
-  assign io_axi_readAddr_bits_size = _GEN_6 ? 3'h0 : {1'h0, ~_GEN_4, 1'h0};	// <stdin>:6888:3, playground/src/Cache.scala:41:33, :48:33, :76:33, :78:33, :132:24, :167:24, :242:19, :286:42, :292:36, src/main/scala/chisel3/util/random/PRNG.scala:91:22
-  assign io_axi_readAddr_bits_len = _GEN_5 ? 8'h0 : {6'h0, req_uncached ? 2'h0 : 2'h3};	// <stdin>:6888:3, :7932:35, playground/src/Cache.scala:41:33, :44:33, :77:33, :132:24, :156:16, :173:35, :242:19, :300:40
-  assign io_axi_readAddr_bits_burst = _GEN_6 ? 2'h0 : {1'h0, ~_GEN_4};	// <stdin>:6888:3, playground/src/Cache.scala:41:33, :42:33, :48:33, :76:33, :78:33, :79:33, :132:24, :242:19, :286:42, :292:36, src/main/scala/chisel3/util/random/PRNG.scala:91:22
-  assign io_axi_readData_ready = ~_GEN_8 & _GEN_7 & ~req_cacop_en;	// <stdin>:6888:3, playground/src/Cache.scala:40:33, :50:28, :74:33, :142:81, :176:35, :188:43, :242:19, :292:36
+    _GEN_5 ? 32'h0 : {req_tag, req_idx, req_uncached ? {req_offset[3:2], 2'h0} : 4'h0};	// <stdin>:7228:3, playground/src/Cache.scala:41:33, :132:24, :161:9, :173:35, :183:36, :184:36, :185:36, :222:38, :242:19, :295:40, :297:{33,54}
+  assign io_axi_readAddr_bits_size = _GEN_6 ? 3'h0 : {1'h0, ~_GEN_4, 1'h0};	// <stdin>:7228:3, playground/src/Cache.scala:41:33, :48:33, :76:33, :78:33, :132:24, :167:24, :242:19, :286:42, :292:36, src/main/scala/chisel3/util/random/PRNG.scala:91:22
+  assign io_axi_readAddr_bits_len = _GEN_5 ? 8'h0 : {6'h0, req_uncached ? 2'h0 : 2'h3};	// <stdin>:7228:3, :8272:35, playground/src/Cache.scala:41:33, :44:33, :77:33, :132:24, :156:16, :173:35, :242:19, :300:40
+  assign io_axi_readAddr_bits_burst = _GEN_6 ? 2'h0 : {1'h0, ~_GEN_4};	// <stdin>:7228:3, playground/src/Cache.scala:41:33, :42:33, :48:33, :76:33, :78:33, :79:33, :132:24, :242:19, :286:42, :292:36, src/main/scala/chisel3/util/random/PRNG.scala:91:22
+  assign io_axi_readData_ready = ~_GEN_8 & _GEN_7 & ~req_cacop_en;	// <stdin>:7228:3, playground/src/Cache.scala:40:33, :50:28, :74:33, :142:81, :176:35, :188:43, :242:19, :292:36
 endmodule
 
-module PriorityAXIArbiter(	// <stdin>:8050:3
-  input         clock,	// <stdin>:8051:11
-                reset,	// <stdin>:8052:11
+module PriorityAXIArbiter(	// <stdin>:8390:3
+  input         clock,	// <stdin>:8391:11
+                reset,	// <stdin>:8392:11
                 io_in_0_writeAddr_valid,	// playground/src/utils/CPUAXIBridge.scala:13:16
   input  [31:0] io_in_0_writeAddr_bits_addr,	// playground/src/utils/CPUAXIBridge.scala:13:16
   input  [2:0]  io_in_0_writeAddr_bits_size,	// playground/src/utils/CPUAXIBridge.scala:13:16
@@ -12573,16 +13225,16 @@ module PriorityAXIArbiter(	// <stdin>:8050:3
   wire        _io_out_writeData_bits_last_output =
     ~selected_wreq_idx & io_in_0_writeData_bits_last;	// playground/src/utils/CPUAXIBridge.scala:48:32, :72:22
   wire        _io_out_readAddr_valid_output = ~raw_hazard & _GEN;	// playground/src/utils/CPUAXIBridge.scala:52:62, :53:59, :70:22, :76:22, :77:49, :78:49
-  always @(posedge clock) begin	// <stdin>:8051:11
+  always @(posedge clock) begin	// <stdin>:8391:11
     automatic logic _rreq_idx_src2_T;	// playground/src/utils/CPUAXIBridge.scala:26:32
     automatic logic _wreq_idx_src2_T;	// playground/src/utils/CPUAXIBridge.scala:33:33
     _rreq_idx_src2_T = _io_out_readAddr_valid_output & io_out_readAddr_ready;	// playground/src/utils/CPUAXIBridge.scala:26:32, :70:22, :76:22, :78:49
     _wreq_idx_src2_T = _io_out_writeAddr_valid_output & io_out_writeAddr_ready;	// playground/src/utils/CPUAXIBridge.scala:33:33, :72:22
-    if (reset) begin	// <stdin>:8051:11
-      rreq_ongoing <= 1'h0;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:25:31
-      wreq_ongoing <= 1'h0;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:32:31
+    if (reset) begin	// <stdin>:8391:11
+      rreq_ongoing <= 1'h0;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:25:31
+      wreq_ongoing <= 1'h0;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:32:31
     end
-    else begin	// <stdin>:8051:11
+    else begin	// <stdin>:8391:11
       rreq_ongoing <=
         _rreq_idx_src2_T
         | ~(io_out_readData_valid & _io_out_readData_ready_output
@@ -12604,73 +13256,73 @@ module PriorityAXIArbiter(	// <stdin>:8050:3
       wreq_idx_src2 <= ~io_in_0_writeAddr_valid;	// playground/src/utils/CPUAXIBridge.scala:47:38, src/main/scala/chisel3/util/Mux.scala:50:70, :141:16
     raw_hazard_REG <= _io_out_writeAddr_valid_output;	// playground/src/utils/CPUAXIBridge.scala:53:33, :72:22
   end // always @(posedge)
-  `ifdef ENABLE_INITIAL_REG_	// <stdin>:8050:3
-    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:8050:3
-      `FIRRTL_BEFORE_INITIAL	// <stdin>:8050:3
+  `ifdef ENABLE_INITIAL_REG_	// <stdin>:8390:3
+    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:8390:3
+      `FIRRTL_BEFORE_INITIAL	// <stdin>:8390:3
     `endif // FIRRTL_BEFORE_INITIAL
-    initial begin	// <stdin>:8050:3
-      automatic logic [31:0] _RANDOM[0:1];	// <stdin>:8050:3
-      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:8050:3
-        `INIT_RANDOM_PROLOG_	// <stdin>:8050:3
+    initial begin	// <stdin>:8390:3
+      automatic logic [31:0] _RANDOM[0:1];	// <stdin>:8390:3
+      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:8390:3
+        `INIT_RANDOM_PROLOG_	// <stdin>:8390:3
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// <stdin>:8050:3
+      `ifdef RANDOMIZE_REG_INIT	// <stdin>:8390:3
         for (logic [1:0] i = 2'h0; i < 2'h2; i += 2'h1) begin
-          _RANDOM[i[0]] = `RANDOM;	// <stdin>:8050:3
-        end	// <stdin>:8050:3
-        rreq_ongoing = _RANDOM[1'h0][0];	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:25:31
-        wreq_ongoing = _RANDOM[1'h0][1];	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:25:31, :32:31
-        wreq_addr = {_RANDOM[1'h0][31:2], _RANDOM[1'h1][1:0]};	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:25:31, :38:30
-        rreq_idx_src2 = _RANDOM[1'h1][2];	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:38:30, :43:38
-        wreq_idx_src2 = _RANDOM[1'h1][3];	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:38:30, :47:38
-        raw_hazard_REG = _RANDOM[1'h1][4];	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:38:30, :53:33
+          _RANDOM[i[0]] = `RANDOM;	// <stdin>:8390:3
+        end	// <stdin>:8390:3
+        rreq_ongoing = _RANDOM[1'h0][0];	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:25:31
+        wreq_ongoing = _RANDOM[1'h0][1];	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:25:31, :32:31
+        wreq_addr = {_RANDOM[1'h0][31:2], _RANDOM[1'h1][1:0]};	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:25:31, :38:30
+        rreq_idx_src2 = _RANDOM[1'h1][2];	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:38:30, :43:38
+        wreq_idx_src2 = _RANDOM[1'h1][3];	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:38:30, :47:38
+        raw_hazard_REG = _RANDOM[1'h1][4];	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:38:30, :53:33
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:8050:3
-      `FIRRTL_AFTER_INITIAL	// <stdin>:8050:3
+    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:8390:3
+      `FIRRTL_AFTER_INITIAL	// <stdin>:8390:3
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  assign io_in_0_writeAddr_ready = ~selected_wreq_idx & io_out_writeAddr_ready;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:48:32, :63:38, :72:22
-  assign io_in_0_writeData_ready = ~selected_wreq_idx & io_out_writeData_ready;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:48:32, :64:38, :72:22, :73:22
+  assign io_in_0_writeAddr_ready = ~selected_wreq_idx & io_out_writeAddr_ready;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:48:32, :63:38, :72:22
+  assign io_in_0_writeData_ready = ~selected_wreq_idx & io_out_writeData_ready;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:48:32, :64:38, :72:22, :73:22
   assign io_in_0_readAddr_ready =
-    ~(raw_hazard & ~selected_rreq_idx) & ~selected_rreq_idx & io_out_readAddr_ready;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:44:32, :53:59, :70:22, :76:22, :77:49
-  assign io_in_0_readData_valid = ~selected_rreq_idx & io_out_readData_valid;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:44:32, :58:38, :70:22, :71:22
+    ~(raw_hazard & ~selected_rreq_idx) & ~selected_rreq_idx & io_out_readAddr_ready;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:44:32, :53:59, :70:22, :76:22, :77:49
+  assign io_in_0_readData_valid = ~selected_rreq_idx & io_out_readData_valid;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:44:32, :58:38, :70:22, :71:22
   assign io_in_0_readData_bits_data =
-    selected_rreq_idx ? 32'h7777 : io_out_readData_bits_data;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:44:32, :61:38, :71:22
-  assign io_in_0_readData_bits_last = ~selected_rreq_idx & io_out_readData_bits_last;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:44:32, :60:38, :70:22, :71:22
-  assign io_in_1_readAddr_ready = ~raw_hazard & selected_rreq_idx & io_out_readAddr_ready;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:44:32, :53:59, :70:22, :76:22, :77:49
-  assign io_in_1_readData_valid = selected_rreq_idx & io_out_readData_valid;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:44:32, :58:38, :71:22
+    selected_rreq_idx ? 32'h7777 : io_out_readData_bits_data;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:44:32, :61:38, :71:22
+  assign io_in_0_readData_bits_last = ~selected_rreq_idx & io_out_readData_bits_last;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:44:32, :60:38, :70:22, :71:22
+  assign io_in_1_readAddr_ready = ~raw_hazard & selected_rreq_idx & io_out_readAddr_ready;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:44:32, :53:59, :70:22, :76:22, :77:49
+  assign io_in_1_readData_valid = selected_rreq_idx & io_out_readData_valid;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:44:32, :58:38, :71:22
   assign io_in_1_readData_bits_data =
-    selected_rreq_idx ? io_out_readData_bits_data : 32'h7777;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:44:32, :61:38, :71:22
-  assign io_in_1_readData_bits_last = selected_rreq_idx & io_out_readData_bits_last;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:44:32, :60:38, :71:22
-  assign io_out_writeAddr_valid = _io_out_writeAddr_valid_output;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:72:22
+    selected_rreq_idx ? io_out_readData_bits_data : 32'h7777;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:44:32, :61:38, :71:22
+  assign io_in_1_readData_bits_last = selected_rreq_idx & io_out_readData_bits_last;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:44:32, :60:38, :71:22
+  assign io_out_writeAddr_valid = _io_out_writeAddr_valid_output;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:72:22
   assign io_out_writeAddr_bits_addr =
-    selected_wreq_idx ? 32'h0 : io_in_0_writeAddr_bits_addr;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:13:16, :48:32, :72:22
+    selected_wreq_idx ? 32'h0 : io_in_0_writeAddr_bits_addr;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:13:16, :48:32, :72:22
   assign io_out_writeAddr_bits_size =
-    selected_wreq_idx ? 3'h0 : io_in_0_writeAddr_bits_size;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:13:16, :48:32, :52:62, :72:22
+    selected_wreq_idx ? 3'h0 : io_in_0_writeAddr_bits_size;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:13:16, :48:32, :52:62, :72:22
   assign io_out_writeAddr_bits_len =
-    selected_wreq_idx ? 8'h0 : io_in_0_writeAddr_bits_len;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:13:16, :48:32, :72:22
+    selected_wreq_idx ? 8'h0 : io_in_0_writeAddr_bits_len;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:13:16, :48:32, :72:22
   assign io_out_writeAddr_bits_burst =
-    selected_wreq_idx ? 2'h0 : io_in_0_writeAddr_bits_burst;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:48:32, :72:22
-  assign io_out_writeData_valid = _io_out_writeData_valid_output;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:72:22
+    selected_wreq_idx ? 2'h0 : io_in_0_writeAddr_bits_burst;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:48:32, :72:22
+  assign io_out_writeData_valid = _io_out_writeData_valid_output;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:72:22
   assign io_out_writeData_bits_data =
-    selected_wreq_idx ? 32'h0 : io_in_0_writeData_bits_data;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:13:16, :48:32, :72:22
+    selected_wreq_idx ? 32'h0 : io_in_0_writeData_bits_data;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:13:16, :48:32, :72:22
   assign io_out_writeData_bits_strb =
-    selected_wreq_idx ? 4'h0 : io_in_0_writeData_bits_strb;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:13:16, :48:32, :52:62, :72:22
-  assign io_out_writeData_bits_last = _io_out_writeData_bits_last_output;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:72:22
-  assign io_out_readAddr_valid = _io_out_readAddr_valid_output;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:70:22, :76:22, :78:49
-  assign io_out_readAddr_bits_addr = _GEN_0;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:52:62
+    selected_wreq_idx ? 4'h0 : io_in_0_writeData_bits_strb;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:13:16, :48:32, :52:62, :72:22
+  assign io_out_writeData_bits_last = _io_out_writeData_bits_last_output;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:72:22
+  assign io_out_readAddr_valid = _io_out_readAddr_valid_output;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:70:22, :76:22, :78:49
+  assign io_out_readAddr_bits_addr = _GEN_0;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:52:62
   assign io_out_readAddr_bits_size =
-    selected_rreq_idx ? io_in_1_readAddr_bits_size : io_in_0_readAddr_bits_size;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:44:32, :52:62
+    selected_rreq_idx ? io_in_1_readAddr_bits_size : io_in_0_readAddr_bits_size;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:44:32, :52:62
   assign io_out_readAddr_bits_len =
-    selected_rreq_idx ? io_in_1_readAddr_bits_len : io_in_0_readAddr_bits_len;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:44:32, :52:62
+    selected_rreq_idx ? io_in_1_readAddr_bits_len : io_in_0_readAddr_bits_len;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:44:32, :52:62
   assign io_out_readAddr_bits_burst =
-    selected_rreq_idx ? io_in_1_readAddr_bits_burst : io_in_0_readAddr_bits_burst;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:44:32, :52:62
-  assign io_out_readData_ready = _io_out_readData_ready_output;	// <stdin>:8050:3, playground/src/utils/CPUAXIBridge.scala:52:62
+    selected_rreq_idx ? io_in_1_readAddr_bits_burst : io_in_0_readAddr_bits_burst;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:44:32, :52:62
+  assign io_out_readData_ready = _io_out_readData_ready_output;	// <stdin>:8390:3, playground/src/utils/CPUAXIBridge.scala:52:62
 endmodule
 
-module MkRV32Top(	// <stdin>:8144:3
-  input         clock,	// <stdin>:8145:11
-                reset,	// <stdin>:8146:11
+module MkRV32Top(	// <stdin>:8484:3
+  input         clock,	// <stdin>:8485:11
+                reset,	// <stdin>:8486:11
                 io_axi_writeAddr_ready,	// playground/src/Top.scala:19:16
                 io_axi_writeData_ready,	// playground/src/Top.scala:19:16
                 io_axi_readAddr_ready,	// playground/src/Top.scala:19:16
@@ -12726,8 +13378,13 @@ module MkRV32Top(	// <stdin>:8144:3
                 diff_gpr_31,	// playground/src/ISA/riscv32/RV32Top.scala:10:42
   output        diff_commit_inst_valid,	// playground/src/ISA/riscv32/RV32Top.scala:10:42
                 diff_commit_inst_bits_sbe_decoded_inst_regwen,	// playground/src/ISA/riscv32/RV32Top.scala:10:42
-                diff_commit_inst_bits_sbe_decoded_inst_dest_rs1,	// playground/src/ISA/riscv32/RV32Top.scala:10:42
+  output [4:0]  diff_commit_inst_bits_sbe_decoded_inst_futype,	// playground/src/ISA/riscv32/RV32Top.scala:10:42
+  output [3:0]  diff_commit_inst_bits_sbe_decoded_inst_fuoptype,	// playground/src/ISA/riscv32/RV32Top.scala:10:42
+  output        diff_commit_inst_bits_sbe_decoded_inst_dest_rs1,	// playground/src/ISA/riscv32/RV32Top.scala:10:42
   output [31:0] diff_commit_inst_bits_sbe_raw_inst,	// playground/src/ISA/riscv32/RV32Top.scala:10:42
+                diff_commit_inst_bits_sbe_lsu_diff_paddr,	// playground/src/ISA/riscv32/RV32Top.scala:10:42
+                diff_commit_inst_bits_sbe_lsu_diff_vaddr,	// playground/src/ISA/riscv32/RV32Top.scala:10:42
+                diff_commit_inst_bits_sbe_lsu_diff_wdata,	// playground/src/ISA/riscv32/RV32Top.scala:10:42
   output [4:0]  diff_commit_inst_bits_sbe_rs1,	// playground/src/ISA/riscv32/RV32Top.scala:10:42
                 diff_commit_inst_bits_sbe_rd,	// playground/src/ISA/riscv32/RV32Top.scala:10:42
   output [31:0] diff_commit_inst_bits_sbe_result,	// playground/src/ISA/riscv32/RV32Top.scala:10:42
@@ -12795,6 +13452,9 @@ module MkRV32Top(	// <stdin>:8144:3
   wire        _excute_lsu_io_cache_req_bits_uncached;	// playground/src/Top.scala:27:24
   wire        _excute_lsu_io_store_commit_ready;	// playground/src/Top.scala:27:24
   wire [31:0] _excute_lsu_io_data_trans_req_vaddr;	// playground/src/Top.scala:27:24
+  wire [31:0] _excute_lsu_io_lsu_diff_paddr;	// playground/src/Top.scala:27:24
+  wire [31:0] _excute_lsu_io_lsu_diff_vaddr;	// playground/src/Top.scala:27:24
+  wire [31:0] _excute_lsu_io_lsu_diff_wdata;	// playground/src/Top.scala:27:24
   wire        _issue_io_from_decoder_ready;	// playground/src/Top.scala:26:24
   wire        _issue_io_trans_valid;	// playground/src/Top.scala:26:24
   wire [2:0]  _issue_io_trans_bits_fuinput_id;	// playground/src/Top.scala:26:24
@@ -12836,29 +13496,29 @@ module MkRV32Top(	// <stdin>:8144:3
   wire [31:0] _frontend_io_inst_trans_req_vaddr;	// playground/src/Top.scala:22:26
   reg  [31:0] frontend_io_inst_trans_resp_paddr_REG;	// playground/src/ISA/riscv32/RV32Top.scala:13:51
   reg  [31:0] excute_lsu_io_data_trans_resp_paddr_REG;	// playground/src/ISA/riscv32/RV32Top.scala:16:51
-  always @(posedge clock) begin	// <stdin>:8145:11
+  always @(posedge clock) begin	// <stdin>:8485:11
     frontend_io_inst_trans_resp_paddr_REG <= _frontend_io_inst_trans_req_vaddr;	// playground/src/ISA/riscv32/RV32Top.scala:13:51, playground/src/Top.scala:22:26
     excute_lsu_io_data_trans_resp_paddr_REG <= _excute_lsu_io_data_trans_req_vaddr;	// playground/src/ISA/riscv32/RV32Top.scala:16:51, playground/src/Top.scala:27:24
   end // always @(posedge)
-  `ifdef ENABLE_INITIAL_REG_	// <stdin>:8144:3
-    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:8144:3
-      `FIRRTL_BEFORE_INITIAL	// <stdin>:8144:3
+  `ifdef ENABLE_INITIAL_REG_	// <stdin>:8484:3
+    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:8484:3
+      `FIRRTL_BEFORE_INITIAL	// <stdin>:8484:3
     `endif // FIRRTL_BEFORE_INITIAL
-    initial begin	// <stdin>:8144:3
-      automatic logic [31:0] _RANDOM[0:1];	// <stdin>:8144:3
-      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:8144:3
-        `INIT_RANDOM_PROLOG_	// <stdin>:8144:3
+    initial begin	// <stdin>:8484:3
+      automatic logic [31:0] _RANDOM[0:1];	// <stdin>:8484:3
+      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:8484:3
+        `INIT_RANDOM_PROLOG_	// <stdin>:8484:3
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// <stdin>:8144:3
+      `ifdef RANDOMIZE_REG_INIT	// <stdin>:8484:3
         for (logic [1:0] i = 2'h0; i < 2'h2; i += 2'h1) begin
-          _RANDOM[i[0]] = `RANDOM;	// <stdin>:8144:3
-        end	// <stdin>:8144:3
-        frontend_io_inst_trans_resp_paddr_REG = _RANDOM[1'h0];	// <stdin>:8144:3, playground/src/ISA/riscv32/RV32Top.scala:13:51
-        excute_lsu_io_data_trans_resp_paddr_REG = _RANDOM[1'h1];	// <stdin>:8144:3, playground/src/ISA/riscv32/RV32Top.scala:16:51
+          _RANDOM[i[0]] = `RANDOM;	// <stdin>:8484:3
+        end	// <stdin>:8484:3
+        frontend_io_inst_trans_resp_paddr_REG = _RANDOM[1'h0];	// <stdin>:8484:3, playground/src/ISA/riscv32/RV32Top.scala:13:51
+        excute_lsu_io_data_trans_resp_paddr_REG = _RANDOM[1'h1];	// <stdin>:8484:3, playground/src/ISA/riscv32/RV32Top.scala:16:51
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:8144:3
-      `FIRRTL_AFTER_INITIAL	// <stdin>:8144:3
+    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:8484:3
+      `FIRRTL_AFTER_INITIAL	// <stdin>:8484:3
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
   MkFrontend frontend (	// playground/src/Top.scala:22:26
@@ -12962,6 +13622,9 @@ module MkRV32Top(	// <stdin>:8144:3
     .io_trans_ready                                     (_excute_io_in_ready),	// playground/src/Top.scala:27:24
     .io_store_commit_ready
       (_excute_lsu_io_store_commit_ready),	// playground/src/Top.scala:27:24
+    .io_lsu_diff_paddr                                  (_excute_lsu_io_lsu_diff_paddr),	// playground/src/Top.scala:27:24
+    .io_lsu_diff_vaddr                                  (_excute_lsu_io_lsu_diff_vaddr),	// playground/src/Top.scala:27:24
+    .io_lsu_diff_wdata                                  (_excute_lsu_io_lsu_diff_wdata),	// playground/src/Top.scala:27:24
     .io_from_decoder_ready                              (_issue_io_from_decoder_ready),
     .io_trans_valid                                     (_issue_io_trans_valid),
     .io_trans_bits_fuinput_id                           (_issue_io_trans_bits_fuinput_id),
@@ -13019,10 +13682,20 @@ module MkRV32Top(	// <stdin>:8144:3
     .io_diff_commit_inst_valid                          (diff_commit_inst_valid),
     .io_diff_commit_inst_bits_sbe_decoded_inst_regwen
       (diff_commit_inst_bits_sbe_decoded_inst_regwen),
+    .io_diff_commit_inst_bits_sbe_decoded_inst_futype
+      (diff_commit_inst_bits_sbe_decoded_inst_futype),
+    .io_diff_commit_inst_bits_sbe_decoded_inst_fuoptype
+      (diff_commit_inst_bits_sbe_decoded_inst_fuoptype),
     .io_diff_commit_inst_bits_sbe_decoded_inst_dest_rs1
       (diff_commit_inst_bits_sbe_decoded_inst_dest_rs1),
     .io_diff_commit_inst_bits_sbe_raw_inst
       (diff_commit_inst_bits_sbe_raw_inst),
+    .io_diff_commit_inst_bits_sbe_lsu_diff_paddr
+      (diff_commit_inst_bits_sbe_lsu_diff_paddr),
+    .io_diff_commit_inst_bits_sbe_lsu_diff_vaddr
+      (diff_commit_inst_bits_sbe_lsu_diff_vaddr),
+    .io_diff_commit_inst_bits_sbe_lsu_diff_wdata
+      (diff_commit_inst_bits_sbe_lsu_diff_wdata),
     .io_diff_commit_inst_bits_sbe_rs1                   (diff_commit_inst_bits_sbe_rs1),
     .io_diff_commit_inst_bits_sbe_rd                    (diff_commit_inst_bits_sbe_rd),
     .io_diff_commit_inst_bits_sbe_result
@@ -13073,7 +13746,10 @@ module MkRV32Top(	// <stdin>:8144:3
     .lsu_io_cache_req_bits_wdata    (_excute_lsu_io_cache_req_bits_wdata),
     .lsu_io_cache_req_bits_uncached (_excute_lsu_io_cache_req_bits_uncached),
     .lsu_io_store_commit_ready      (_excute_lsu_io_store_commit_ready),
-    .lsu_io_data_trans_req_vaddr    (_excute_lsu_io_data_trans_req_vaddr)
+    .lsu_io_data_trans_req_vaddr    (_excute_lsu_io_data_trans_req_vaddr),
+    .lsu_io_lsu_diff_paddr          (_excute_lsu_io_lsu_diff_paddr),
+    .lsu_io_lsu_diff_vaddr          (_excute_lsu_io_lsu_diff_vaddr),
+    .lsu_io_lsu_diff_wdata          (_excute_lsu_io_lsu_diff_wdata)
   );
   MkCache icache (	// playground/src/Top.scala:31:24
     .clock                      (clock),
@@ -13192,39 +13868,73 @@ endmodule
 
 // external module DifftestInstrCommit
 
-module DelayN_14(	// <stdin>:8369:3
-  input        clock,	// <stdin>:8370:11
+module DelayN_15(	// <stdin>:8712:3
+  input        clock,	// <stdin>:8713:11
   input  [4:0] io_in,	// playground/src/utils/utils.scala:36:17
   output [4:0] io_out	// playground/src/utils/utils.scala:36:17
 );
 
   reg [4:0] REG;	// playground/src/utils/utils.scala:42:22
-  always @(posedge clock)	// <stdin>:8370:11
+  always @(posedge clock)	// <stdin>:8713:11
     REG <= io_in;	// playground/src/utils/utils.scala:42:22
-  `ifdef ENABLE_INITIAL_REG_	// <stdin>:8369:3
-    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:8369:3
-      `FIRRTL_BEFORE_INITIAL	// <stdin>:8369:3
+  `ifdef ENABLE_INITIAL_REG_	// <stdin>:8712:3
+    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:8712:3
+      `FIRRTL_BEFORE_INITIAL	// <stdin>:8712:3
     `endif // FIRRTL_BEFORE_INITIAL
-    initial begin	// <stdin>:8369:3
-      automatic logic [31:0] _RANDOM[0:0];	// <stdin>:8369:3
-      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:8369:3
-        `INIT_RANDOM_PROLOG_	// <stdin>:8369:3
+    initial begin	// <stdin>:8712:3
+      automatic logic [31:0] _RANDOM[0:0];	// <stdin>:8712:3
+      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:8712:3
+        `INIT_RANDOM_PROLOG_	// <stdin>:8712:3
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// <stdin>:8369:3
-        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// <stdin>:8369:3
-        REG = _RANDOM[/*Zero width*/ 1'b0][4:0];	// <stdin>:8369:3, playground/src/utils/utils.scala:42:22
+      `ifdef RANDOMIZE_REG_INIT	// <stdin>:8712:3
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// <stdin>:8712:3
+        REG = _RANDOM[/*Zero width*/ 1'b0][4:0];	// <stdin>:8712:3, playground/src/utils/utils.scala:42:22
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:8369:3
-      `FIRRTL_AFTER_INITIAL	// <stdin>:8369:3
+    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:8712:3
+      `FIRRTL_AFTER_INITIAL	// <stdin>:8712:3
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  assign io_out = REG;	// <stdin>:8369:3, playground/src/utils/utils.scala:42:22
+  assign io_out = REG;	// <stdin>:8712:3, playground/src/utils/utils.scala:42:22
 endmodule
 
 // external module DifftestGRegState
 
-module npc_core(	// <stdin>:8425:3
+// external module DifftestStoreEvent
+
+module DelayN_17(	// <stdin>:8777:3, :8825:3
+  input        clock,	// <stdin>:8778:11, :8826:11
+  input  [6:0] io_in,	// playground/src/utils/utils.scala:36:17
+  output [6:0] io_out	// playground/src/utils/utils.scala:36:17
+);
+
+  reg [6:0] REG;	// playground/src/utils/utils.scala:42:22
+  always @(posedge clock)	// <stdin>:8778:11, :8826:11
+    REG <= io_in;	// playground/src/utils/utils.scala:42:22
+  `ifdef ENABLE_INITIAL_REG_	// <stdin>:8777:3, :8825:3
+    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:8777:3, :8825:3
+      `FIRRTL_BEFORE_INITIAL	// <stdin>:8777:3, :8825:3
+    `endif // FIRRTL_BEFORE_INITIAL
+    initial begin	// <stdin>:8777:3, :8825:3
+      automatic logic [31:0] _RANDOM[0:0];	// <stdin>:8777:3, :8825:3
+      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:8777:3, :8825:3
+        `INIT_RANDOM_PROLOG_	// <stdin>:8777:3, :8825:3
+      `endif // INIT_RANDOM_PROLOG_
+      `ifdef RANDOMIZE_REG_INIT	// <stdin>:8777:3, :8825:3
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// <stdin>:8777:3, :8825:3
+        REG = _RANDOM[/*Zero width*/ 1'b0][6:0];	// <stdin>:8777:3, :8825:3, playground/src/utils/utils.scala:42:22
+      `endif // RANDOMIZE_REG_INIT
+    end // initial
+    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:8777:3, :8825:3
+      `FIRRTL_AFTER_INITIAL	// <stdin>:8777:3, :8825:3
+    `endif // FIRRTL_AFTER_INITIAL
+  `endif // ENABLE_INITIAL_REG_
+  assign io_out = REG;	// <stdin>:8777:3, :8825:3, playground/src/utils/utils.scala:42:22
+endmodule
+
+// external module DifftestLoadEvent
+
+module npc_core(	// <stdin>:8855:3
   input         aclk,	// playground/src/npc_core.scala:22:21
                 aresetn,	// playground/src/npc_core.scala:23:21
   input  [7:0]  intrpt,	// playground/src/npc_core.scala:24:21
@@ -13267,6 +13977,13 @@ module npc_core(	// <stdin>:8425:3
                 bready	// playground/src/npc_core.scala:65:21
 );
 
+  wire [31:0] _DifftestLoadEvent_io_paddr_delay_io_out;	// playground/src/utils/utils.scala:49:27
+  wire [31:0] _DifftestLoadEvent_io_vaddr_delay_io_out;	// playground/src/utils/utils.scala:49:27
+  wire [6:0]  _DifftestLoadEvent_io_valid_delay_io_out;	// playground/src/utils/utils.scala:49:27
+  wire [31:0] _DifftestStoreEvent_io_storeData_delay_io_out;	// playground/src/utils/utils.scala:49:27
+  wire [31:0] _DifftestStoreEvent_io_storeVAddr_delay_io_out;	// playground/src/utils/utils.scala:49:27
+  wire [31:0] _DifftestStoreEvent_io_storePAddr_delay_io_out;	// playground/src/utils/utils.scala:49:27
+  wire [6:0]  _DifftestStoreEvent_io_valid_delay_io_out;	// playground/src/utils/utils.scala:49:27
   wire [31:0] _DifftestInstrCommit_io_wdata_delay_io_out;	// playground/src/utils/utils.scala:49:27
   wire [4:0]  _DifftestInstrCommit_io_wdest_delay_io_out;	// playground/src/utils/utils.scala:49:27
   wire        _DifftestInstrCommit_io_wen_delay_io_out;	// playground/src/utils/utils.scala:49:27
@@ -13309,12 +14026,24 @@ module npc_core(	// <stdin>:8425:3
   wire [31:0] _mkcpu_diff_gpr_31;	// playground/src/npc_core.scala:68:15
   wire        _mkcpu_diff_commit_inst_valid;	// playground/src/npc_core.scala:68:15
   wire        _mkcpu_diff_commit_inst_bits_sbe_decoded_inst_regwen;	// playground/src/npc_core.scala:68:15
+  wire [4:0]  _mkcpu_diff_commit_inst_bits_sbe_decoded_inst_futype;	// playground/src/npc_core.scala:68:15
+  wire [3:0]  _mkcpu_diff_commit_inst_bits_sbe_decoded_inst_fuoptype;	// playground/src/npc_core.scala:68:15
   wire        _mkcpu_diff_commit_inst_bits_sbe_decoded_inst_dest_rs1;	// playground/src/npc_core.scala:68:15
   wire [31:0] _mkcpu_diff_commit_inst_bits_sbe_raw_inst;	// playground/src/npc_core.scala:68:15
+  wire [31:0] _mkcpu_diff_commit_inst_bits_sbe_lsu_diff_paddr;	// playground/src/npc_core.scala:68:15
+  wire [31:0] _mkcpu_diff_commit_inst_bits_sbe_lsu_diff_vaddr;	// playground/src/npc_core.scala:68:15
+  wire [31:0] _mkcpu_diff_commit_inst_bits_sbe_lsu_diff_wdata;	// playground/src/npc_core.scala:68:15
   wire [4:0]  _mkcpu_diff_commit_inst_bits_sbe_rs1;	// playground/src/npc_core.scala:68:15
   wire [4:0]  _mkcpu_diff_commit_inst_bits_sbe_rd;	// playground/src/npc_core.scala:68:15
   wire [31:0] _mkcpu_diff_commit_inst_bits_sbe_result;	// playground/src/npc_core.scala:68:15
   wire [31:0] _mkcpu_diff_commit_inst_bits_sbe_br_info_bits_pc;	// playground/src/npc_core.scala:68:15
+  wire        _cmt_ld_T = _mkcpu_diff_commit_inst_bits_sbe_decoded_inst_futype == 5'h2;	// playground/src/npc_core.scala:68:15, :152:74
+  wire        cmt_st =
+    _mkcpu_diff_commit_inst_valid & _cmt_ld_T
+    & _mkcpu_diff_commit_inst_bits_sbe_decoded_inst_fuoptype < 4'h4;	// playground/src/ISA/ISAFactory.scala:126:50, playground/src/npc_core.scala:68:15, :152:{74,90}
+  wire        cmt_ld =
+    _mkcpu_diff_commit_inst_valid & _cmt_ld_T
+    & _mkcpu_diff_commit_inst_bits_sbe_decoded_inst_fuoptype[3];	// playground/src/ISA/ISAFactory.scala:125:50, playground/src/npc_core.scala:68:15, :152:74, :155:90
   MkRV32Top mkcpu (	// playground/src/npc_core.scala:68:15
     .clock                                           (aclk),
     .reset                                           (~aresetn),	// playground/src/npc_core.scala:67:41
@@ -13374,10 +14103,20 @@ module npc_core(	// <stdin>:8425:3
     .diff_commit_inst_valid                          (_mkcpu_diff_commit_inst_valid),
     .diff_commit_inst_bits_sbe_decoded_inst_regwen
       (_mkcpu_diff_commit_inst_bits_sbe_decoded_inst_regwen),
+    .diff_commit_inst_bits_sbe_decoded_inst_futype
+      (_mkcpu_diff_commit_inst_bits_sbe_decoded_inst_futype),
+    .diff_commit_inst_bits_sbe_decoded_inst_fuoptype
+      (_mkcpu_diff_commit_inst_bits_sbe_decoded_inst_fuoptype),
     .diff_commit_inst_bits_sbe_decoded_inst_dest_rs1
       (_mkcpu_diff_commit_inst_bits_sbe_decoded_inst_dest_rs1),
     .diff_commit_inst_bits_sbe_raw_inst
       (_mkcpu_diff_commit_inst_bits_sbe_raw_inst),
+    .diff_commit_inst_bits_sbe_lsu_diff_paddr
+      (_mkcpu_diff_commit_inst_bits_sbe_lsu_diff_paddr),
+    .diff_commit_inst_bits_sbe_lsu_diff_vaddr
+      (_mkcpu_diff_commit_inst_bits_sbe_lsu_diff_vaddr),
+    .diff_commit_inst_bits_sbe_lsu_diff_wdata
+      (_mkcpu_diff_commit_inst_bits_sbe_lsu_diff_wdata),
     .diff_commit_inst_bits_sbe_rs1
       (_mkcpu_diff_commit_inst_bits_sbe_rs1),
     .diff_commit_inst_bits_sbe_rd
@@ -13418,7 +14157,7 @@ module npc_core(	// <stdin>:8425:3
     .io_in  (_mkcpu_diff_commit_inst_bits_sbe_decoded_inst_regwen),	// playground/src/npc_core.scala:68:15
     .io_out (_DifftestInstrCommit_io_wen_delay_io_out)
   );
-  DelayN_14 DifftestInstrCommit_io_wdest_delay (	// playground/src/utils/utils.scala:49:27
+  DelayN_15 DifftestInstrCommit_io_wdest_delay (	// playground/src/utils/utils.scala:49:27
     .clock  (aclk),
     .io_in
       (_mkcpu_diff_commit_inst_bits_sbe_decoded_inst_dest_rs1
@@ -13433,51 +14172,111 @@ module npc_core(	// <stdin>:8425:3
   );
   DifftestGRegState DifftestGRegState (	// playground/src/npc_core.scala:146:35
     .clock  (aclk),
-    .gpr_0  ({32'h0, _mkcpu_diff_gpr_0}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_1  ({32'h0, _mkcpu_diff_gpr_1}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_2  ({32'h0, _mkcpu_diff_gpr_2}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_3  ({32'h0, _mkcpu_diff_gpr_3}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_4  ({32'h0, _mkcpu_diff_gpr_4}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_5  ({32'h0, _mkcpu_diff_gpr_5}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_6  ({32'h0, _mkcpu_diff_gpr_6}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_7  ({32'h0, _mkcpu_diff_gpr_7}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_8  ({32'h0, _mkcpu_diff_gpr_8}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_9  ({32'h0, _mkcpu_diff_gpr_9}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_10 ({32'h0, _mkcpu_diff_gpr_10}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_11 ({32'h0, _mkcpu_diff_gpr_11}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_12 ({32'h0, _mkcpu_diff_gpr_12}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_13 ({32'h0, _mkcpu_diff_gpr_13}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_14 ({32'h0, _mkcpu_diff_gpr_14}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_15 ({32'h0, _mkcpu_diff_gpr_15}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_16 ({32'h0, _mkcpu_diff_gpr_16}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_17 ({32'h0, _mkcpu_diff_gpr_17}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_18 ({32'h0, _mkcpu_diff_gpr_18}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_19 ({32'h0, _mkcpu_diff_gpr_19}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_20 ({32'h0, _mkcpu_diff_gpr_20}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_21 ({32'h0, _mkcpu_diff_gpr_21}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_22 ({32'h0, _mkcpu_diff_gpr_22}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_23 ({32'h0, _mkcpu_diff_gpr_23}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_24 ({32'h0, _mkcpu_diff_gpr_24}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_25 ({32'h0, _mkcpu_diff_gpr_25}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_26 ({32'h0, _mkcpu_diff_gpr_26}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_27 ({32'h0, _mkcpu_diff_gpr_27}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_28 ({32'h0, _mkcpu_diff_gpr_28}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_29 ({32'h0, _mkcpu_diff_gpr_29}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_30 ({32'h0, _mkcpu_diff_gpr_30}),	// playground/src/npc_core.scala:68:15, :105:34, :239:49
-    .gpr_31 ({32'h0, _mkcpu_diff_gpr_31})	// playground/src/npc_core.scala:68:15, :105:34, :239:49
+    .gpr_0  ({32'h0, _mkcpu_diff_gpr_0}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_1  ({32'h0, _mkcpu_diff_gpr_1}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_2  ({32'h0, _mkcpu_diff_gpr_2}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_3  ({32'h0, _mkcpu_diff_gpr_3}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_4  ({32'h0, _mkcpu_diff_gpr_4}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_5  ({32'h0, _mkcpu_diff_gpr_5}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_6  ({32'h0, _mkcpu_diff_gpr_6}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_7  ({32'h0, _mkcpu_diff_gpr_7}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_8  ({32'h0, _mkcpu_diff_gpr_8}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_9  ({32'h0, _mkcpu_diff_gpr_9}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_10 ({32'h0, _mkcpu_diff_gpr_10}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_11 ({32'h0, _mkcpu_diff_gpr_11}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_12 ({32'h0, _mkcpu_diff_gpr_12}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_13 ({32'h0, _mkcpu_diff_gpr_13}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_14 ({32'h0, _mkcpu_diff_gpr_14}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_15 ({32'h0, _mkcpu_diff_gpr_15}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_16 ({32'h0, _mkcpu_diff_gpr_16}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_17 ({32'h0, _mkcpu_diff_gpr_17}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_18 ({32'h0, _mkcpu_diff_gpr_18}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_19 ({32'h0, _mkcpu_diff_gpr_19}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_20 ({32'h0, _mkcpu_diff_gpr_20}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_21 ({32'h0, _mkcpu_diff_gpr_21}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_22 ({32'h0, _mkcpu_diff_gpr_22}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_23 ({32'h0, _mkcpu_diff_gpr_23}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_24 ({32'h0, _mkcpu_diff_gpr_24}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_25 ({32'h0, _mkcpu_diff_gpr_25}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_26 ({32'h0, _mkcpu_diff_gpr_26}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_27 ({32'h0, _mkcpu_diff_gpr_27}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_28 ({32'h0, _mkcpu_diff_gpr_28}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_29 ({32'h0, _mkcpu_diff_gpr_29}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_30 ({32'h0, _mkcpu_diff_gpr_30}),	// playground/src/npc_core.scala:68:15, :105:34, :313:49
+    .gpr_31 ({32'h0, _mkcpu_diff_gpr_31})	// playground/src/npc_core.scala:68:15, :105:34, :313:49
   );
-  assign pc = {32'h0, _mkcpu_diff_commit_inst_bits_sbe_br_info_bits_pc};	// <stdin>:8425:3, playground/src/npc_core.scala:68:15, :105:34, :124:8
-  assign arid = 4'h0;	// <stdin>:8425:3, playground/src/npc_core.scala:68:15, :104:34
-  assign arlock = 2'h0;	// <stdin>:8425:3, playground/src/npc_core.scala:77:33, :97:34
-  assign arcache = 4'h0;	// <stdin>:8425:3, playground/src/npc_core.scala:68:15, :104:34
-  assign arprot = 3'h0;	// <stdin>:8425:3, playground/src/npc_core.scala:68:15
-  assign awid = 4'h0;	// <stdin>:8425:3, playground/src/npc_core.scala:68:15, :104:34
-  assign awlock = 2'h0;	// <stdin>:8425:3, playground/src/npc_core.scala:77:33, :97:34
-  assign awcache = 4'h0;	// <stdin>:8425:3, playground/src/npc_core.scala:68:15, :104:34
-  assign awprot = 3'h0;	// <stdin>:8425:3, playground/src/npc_core.scala:68:15
-  assign wid = 4'h0;	// <stdin>:8425:3, playground/src/npc_core.scala:68:15, :104:34
-  assign wdata = {32'h0, _mkcpu_io_axi_writeData_bits_data};	// <stdin>:8425:3, playground/src/npc_core.scala:68:15, :105:34
-  assign wstrb = {4'h0, _mkcpu_io_axi_writeData_bits_strb};	// <stdin>:8425:3, playground/src/npc_core.scala:68:15, :104:34, :106:34
-  assign bready = 1'h1;	// <stdin>:8425:3, playground/src/npc_core.scala:68:15
+  DifftestStoreEvent DifftestStoreEvent (	// playground/src/npc_core.scala:182:36
+    .clock      (aclk),
+    .index      (8'h0),	// playground/src/npc_core.scala:136:38
+    .valid      ({1'h0, _DifftestStoreEvent_io_valid_delay_io_out}),	// playground/src/npc_core.scala:67:41, :187:42, playground/src/utils/utils.scala:49:27
+    .storePAddr ({32'h0, _DifftestStoreEvent_io_storePAddr_delay_io_out}),	// playground/src/npc_core.scala:105:34, :188:42, playground/src/utils/utils.scala:49:27
+    .storeVAddr ({32'h0, _DifftestStoreEvent_io_storeVAddr_delay_io_out}),	// playground/src/npc_core.scala:105:34, :189:42, playground/src/utils/utils.scala:49:27
+    .storeData  ({32'h0, _DifftestStoreEvent_io_storeData_delay_io_out})	// playground/src/npc_core.scala:105:34, :190:42, playground/src/utils/utils.scala:49:27
+  );
+  DelayN_17 DifftestStoreEvent_io_valid_delay (	// playground/src/utils/utils.scala:49:27
+    .clock  (aclk),
+    .io_in
+      ({4'h0,
+        cmt_st & _mkcpu_diff_commit_inst_bits_sbe_decoded_inst_fuoptype == 4'h2,
+        cmt_st & _mkcpu_diff_commit_inst_bits_sbe_decoded_inst_fuoptype == 4'h1,
+        cmt_st & _mkcpu_diff_commit_inst_bits_sbe_decoded_inst_fuoptype == 4'h0}),	// playground/src/npc_core.scala:68:15, :104:34, :152:90, :168:24, :172:{20,31}, :173:{20,31}, :174:{20,31}
+    .io_out (_DifftestStoreEvent_io_valid_delay_io_out)
+  );
+  DelayN_3 DifftestStoreEvent_io_storePAddr_delay (	// playground/src/utils/utils.scala:49:27
+    .clock  (aclk),
+    .io_in  (_mkcpu_diff_commit_inst_bits_sbe_lsu_diff_paddr),	// playground/src/npc_core.scala:68:15
+    .io_out (_DifftestStoreEvent_io_storePAddr_delay_io_out)
+  );
+  DelayN_3 DifftestStoreEvent_io_storeVAddr_delay (	// playground/src/utils/utils.scala:49:27
+    .clock  (aclk),
+    .io_in  (_mkcpu_diff_commit_inst_bits_sbe_lsu_diff_vaddr),	// playground/src/npc_core.scala:68:15
+    .io_out (_DifftestStoreEvent_io_storeVAddr_delay_io_out)
+  );
+  DelayN_3 DifftestStoreEvent_io_storeData_delay (	// playground/src/utils/utils.scala:49:27
+    .clock  (aclk),
+    .io_in  (_mkcpu_diff_commit_inst_bits_sbe_lsu_diff_wdata),	// playground/src/npc_core.scala:68:15
+    .io_out (_DifftestStoreEvent_io_storeData_delay_io_out)
+  );
+  DifftestLoadEvent DifftestLoadEvent (	// playground/src/npc_core.scala:193:35
+    .clock (aclk),
+    .index (8'h0),	// playground/src/npc_core.scala:136:38
+    .valid ({1'h0, _DifftestLoadEvent_io_valid_delay_io_out}),	// playground/src/npc_core.scala:67:41, :198:36, playground/src/utils/utils.scala:49:27
+    .paddr ({32'h0, _DifftestLoadEvent_io_paddr_delay_io_out}),	// playground/src/npc_core.scala:105:34, :200:36, playground/src/utils/utils.scala:49:27
+    .vaddr ({32'h0, _DifftestLoadEvent_io_vaddr_delay_io_out})	// playground/src/npc_core.scala:105:34, :199:36, playground/src/utils/utils.scala:49:27
+  );
+  DelayN_17 DifftestLoadEvent_io_valid_delay (	// playground/src/utils/utils.scala:49:27
+    .clock  (aclk),
+    .io_in
+      ({2'h0,
+        cmt_ld & _mkcpu_diff_commit_inst_bits_sbe_decoded_inst_fuoptype == 4'hA,
+        cmt_ld & _mkcpu_diff_commit_inst_bits_sbe_decoded_inst_fuoptype == 4'hC,
+        cmt_ld & _mkcpu_diff_commit_inst_bits_sbe_decoded_inst_fuoptype == 4'h9,
+        cmt_ld & _mkcpu_diff_commit_inst_bits_sbe_decoded_inst_fuoptype == 4'hB,
+        cmt_ld & _mkcpu_diff_commit_inst_bits_sbe_decoded_inst_fuoptype == 4'h8}),	// playground/src/ISA/ISAFactory.scala:125:50, playground/src/npc_core.scala:68:15, :77:33, :97:34, :155:90, :157:24, :161:{20,31}, :162:{20,31}, :163:{20,31}, :164:{20,31}, :165:{20,31}
+    .io_out (_DifftestLoadEvent_io_valid_delay_io_out)
+  );
+  DelayN_3 DifftestLoadEvent_io_vaddr_delay (	// playground/src/utils/utils.scala:49:27
+    .clock  (aclk),
+    .io_in  (_mkcpu_diff_commit_inst_bits_sbe_lsu_diff_vaddr),	// playground/src/npc_core.scala:68:15
+    .io_out (_DifftestLoadEvent_io_vaddr_delay_io_out)
+  );
+  DelayN_3 DifftestLoadEvent_io_paddr_delay (	// playground/src/utils/utils.scala:49:27
+    .clock  (aclk),
+    .io_in  (_mkcpu_diff_commit_inst_bits_sbe_lsu_diff_paddr),	// playground/src/npc_core.scala:68:15
+    .io_out (_DifftestLoadEvent_io_paddr_delay_io_out)
+  );
+  assign pc = {32'h0, _mkcpu_diff_commit_inst_bits_sbe_br_info_bits_pc};	// <stdin>:8855:3, playground/src/npc_core.scala:68:15, :105:34, :124:8
+  assign arid = 4'h0;	// <stdin>:8855:3, playground/src/npc_core.scala:68:15, :104:34
+  assign arlock = 2'h0;	// <stdin>:8855:3, playground/src/npc_core.scala:77:33, :97:34
+  assign arcache = 4'h0;	// <stdin>:8855:3, playground/src/npc_core.scala:68:15, :104:34
+  assign arprot = 3'h0;	// <stdin>:8855:3, playground/src/npc_core.scala:68:15
+  assign awid = 4'h0;	// <stdin>:8855:3, playground/src/npc_core.scala:68:15, :104:34
+  assign awlock = 2'h0;	// <stdin>:8855:3, playground/src/npc_core.scala:77:33, :97:34
+  assign awcache = 4'h0;	// <stdin>:8855:3, playground/src/npc_core.scala:68:15, :104:34
+  assign awprot = 3'h0;	// <stdin>:8855:3, playground/src/npc_core.scala:68:15
+  assign wid = 4'h0;	// <stdin>:8855:3, playground/src/npc_core.scala:68:15, :104:34
+  assign wdata = {32'h0, _mkcpu_io_axi_writeData_bits_data};	// <stdin>:8855:3, playground/src/npc_core.scala:68:15, :105:34
+  assign wstrb = {4'h0, _mkcpu_io_axi_writeData_bits_strb};	// <stdin>:8855:3, playground/src/npc_core.scala:68:15, :104:34, :106:34
+  assign bready = 1'h1;	// <stdin>:8855:3, playground/src/npc_core.scala:68:15
 endmodule
 

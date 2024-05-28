@@ -73,6 +73,47 @@
         ) `DIFFTEST_MOD_DPIC_CALL_END_WITH_EN(InstrCommit)
 endmodule
 
+// DifftestStoreEvent
+`DIFFTEST_DPIC_FUNC_DECL(StoreEvent) (
+    `DPIC_ARG_BYTE index,
+    `DPIC_ARG_BYTE valid,
+    `DPIC_ARG_LONG storePAddr,
+    `DPIC_ARG_LONG storeVAddr,
+    `DPIC_ARG_LONG storeData
+);
+`DIFFTEST_MOD_DECL(StoreEvent)(
+    input        clock,
+    input [ 7:0] index,
+    input [ 7:0] valid,
+    input [63:0] storePAddr,
+    input [63:0] storeVAddr,
+    input [63:0] storeData
+);
+    `DIFFTEST_MOD_DPIC_CALL_BEGIN(StoreEvent) (
+        index, valid, storePAddr, storeVAddr, storeData
+        )
+    `DIFFTEST_MOD_DPIC_CALL_END(StoreEvent)
+endmodule
+
+// DifftestLoadEvent
+`DIFFTEST_DPIC_FUNC_DECL(LoadEvent) (
+    `DPIC_ARG_BYTE index,
+    `DPIC_ARG_BYTE valid,
+    `DPIC_ARG_LONG paddr,
+    `DPIC_ARG_LONG vaddr
+);
+`DIFFTEST_MOD_DECL(LoadEvent)(
+    input        clock,
+    input [ 7:0] index,
+    input [ 7:0] valid,
+    input [63:0] paddr,
+    input [63:0] vaddr
+);
+    `DIFFTEST_MOD_DPIC_CALL_BEGIN(LoadEvent) (
+        index, valid, paddr, vaddr
+        ) `DIFFTEST_MOD_DPIC_CALL_END(LoadEvent)
+endmodule
+
 // DifftestGRegState
 `DIFFTEST_DPIC_FUNC_DECL(GRegState) (
     `DPIC_ARG_LONG gpr_0,

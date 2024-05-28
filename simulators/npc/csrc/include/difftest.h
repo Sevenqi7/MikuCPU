@@ -21,17 +21,31 @@ typedef struct {
 } arch_greg_state_t;
 
 typedef struct {
+    uint8_t  valid = 0;
+    uint64_t paddr;
+    uint64_t vaddr;
+    uint64_t data;
+} store_event_t;
+
+typedef struct {
+    uint8_t  valid = 0;
+    uint64_t paddr;
+    uint64_t vaddr;
+} load_event_t;
+
+typedef struct {
     // trap_event_t trap;
     // excp_event_t excp;
     instr_commit_t    commit;
     arch_greg_state_t regs;
     // arch_csr_state_t csr;
-    // store_event_t store[DIFFTEST_COMMIT_WIDTH];
-    // load_event_t load[DIFFTEST_COMMIT_WIDTH];
+    store_event_t store;
+    load_event_t  load;
 } difftest_core_state_t;
 
 /* dut/ref core info */
 extern difftest_core_state_t dut;
+
 extern difftest_core_state_t ref;
 
 extern uint32_t *dut_regs_ptr;

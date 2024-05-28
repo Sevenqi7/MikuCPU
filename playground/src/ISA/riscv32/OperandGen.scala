@@ -49,7 +49,7 @@ class RV32OperandGen extends OperandGenerator {
     val imm       = MuxLookup(imm_sel, DEBUG_MAGICNUM.U)(imm_table)
     io.operand_a := Mux(needRs1, rs1_data, io.pc)
     io.operand_b := Mux(needRs2, rs2_data, imm)
-    io.operand_c := rd_data
+    io.operand_c := Mux(needRd, rd_data, imm)
 
     val opr_a_valid = !needRs1 || (needRs1 & !io.sb_forward.rs1_raw_hazard)
     val opr_b_valid = !needRs2 || (needRs2 & !io.sb_forward.rs2_raw_hazard)

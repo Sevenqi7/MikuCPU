@@ -20,7 +20,7 @@ uint64_t *pmem_addr(vaddr_t *addr) {
 
 void outofbound(paddr_t paddr) {
     if (paddr >= MEMSIZE) {
-        printf("\033[0m\033[1;31m%s addr:0x%lx\033[0m\n", "Addr out of bound, ", paddr);
+        printf("\033[0m\033[1;31m%s addr: " PADDR_FMT "\033[0m\n", "Addr out of bound, ", paddr);
         exit(-1);
     }
 }
@@ -48,7 +48,7 @@ word_t pmem_read(vaddr_t addr, int len) {
             return *(uint64_t *)(pmem + paddr);
 #endif
         default:
-            printf("\033[0m\033[1;31mInvalid read len:%d at PC:%016lx\033[0m\n", len, npc_state.pc);
+            printf("\033[0m\033[1;31mInvalid read len:%d at PC:" VADDR_FMT "\033[0m\n", len, npc_state.pc);
             npc_state.state = NPC_ABORT;
     }
     return 0;
@@ -82,7 +82,7 @@ void pmem_write(vaddr_t addr, int len, word_t data) {
             return;
 #endif
         default:
-            printf("\033[0m\033[1;31mInvalid wirte len:%d at PC:%016lx\033[0m\n", len, npc_state.pc);
+            printf("\033[0m\033[1;31mInvalid wirte len:%d at PC: " VADDR_FMT "\033[0m\n", len, npc_state.pc);
             npc_state.state = NPC_ABORT;
     }
 }
@@ -105,7 +105,7 @@ extern "C" void dci_pmem_write(long long waddr, long long wdata, char wmask) {
     // 如`wmask = 0x3`代表只写入最低2个字节, 内存中的其它字节保持不变
     int     len  = 0;
     uint8_t mask = wmask;
-    if (top->aresetn) return;
+    if (!top->aresetn) return;
     for (; mask; mask = mask >> 1, len++);
     pmem_write(waddr, len, wdata);
 #ifdef CONFIG_DEBUGMSG

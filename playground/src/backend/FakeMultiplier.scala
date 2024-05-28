@@ -12,20 +12,19 @@ import miku.isa.MulDivOpType._
 //and delay the output for 5 cycles
 
 class FakeMultiplier extends BaseFunctionUnit {
-
-    val rj = io.in.bits.operand_a
-    val rk = io.in.bits.operand_b
+    val rs1 = io.in.bits.operand_a
+    val rs2 = io.in.bits.operand_b
 
     val result_sel_table = Seq(
-        mul   -> (rj * rk),
-        mulh  -> (rj.asSInt * rk.asSInt).asUInt(63, 32),
-        mulhu -> (rj * rk)(63, 32),
-        div   -> (rj.asSInt / rk.asSInt).asUInt(31, 0),
-        divu  -> (rj / rk)(31, 0),
-        mod   -> (rj.asSInt - (rj.asSInt / rk.asSInt) * rk.asSInt).asUInt(31, 0),
-        modu  -> (rj - (rj / rk) * rk)(31, 0)
-        // modw   -> (rj.asSInt % rk.asSInt).asUInt(31, 0),
-        // modwu  -> (rj % rk)(31, 0)
+        mul   -> (rs1 * rs2),
+        mulh  -> (rs1.asSInt * rs2.asSInt).asUInt(63, 32),
+        mulhu -> (rs1 * rs2)(63, 32),
+        div   -> (rs1.asSInt / rs2.asSInt).asUInt(31, 0),
+        divu  -> (rs1 / rs2)(31, 0),
+        mod   -> (rs1.asSInt - (rs1.asSInt / rs2.asSInt) * rs2.asSInt).asUInt(31, 0),
+        modu  -> (rs1 - (rs1 / rs2) * rs2)(31, 0)
+        // modw   -> (rs1.asSInt % rs2.asSInt).asUInt(31, 0),
+        // modwu  -> (rs1 % rs2)(31, 0)
     )
 
     val result = MuxLookup(io.in.bits.optype, 0.U)(result_sel_table)

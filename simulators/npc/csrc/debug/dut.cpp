@@ -53,7 +53,6 @@ void init_difftest(const char *ref_so_file, long img_size, int port) {
 
     REF_GPR to_ref = {.pc = RESET_VECTOR};
     memcpy(to_ref.gpr, dut_regs_ptr, sizeof(to_ref.gpr));
-    printf("break\n");
     ref_difftest_init(port);
     ref_difftest_memcpy(RESET_VECTOR, guest_to_host(RESET_VECTOR), img_size, DIFFTEST_TO_REF);
     ref_difftest_regcpy(&to_ref, DIFFTEST_TO_REF);
@@ -67,25 +66,21 @@ static void checkregs() {
     }
 }
 
-bool           is_skip_ref = false;
+bool is_skip_ref = false;
+
+extern bool    check_mmio_access();
 extern vaddr_t device_io_pc;
 
 void difftest_step(vaddr_t pc) {
+    // return ;
     REF_GPR from_ref;
-    if (pc == device_io_pc) {
-        device_io_pc = 0;
-        is_skip_ref  = true;
-        return;
-    }
+    if (check_mmio_access()) { return; }
     if (is_skip_ref) {
-        // ref.pc = npc_state.pc;
-
         from_ref.pc = pc;
         memcpy(from_ref.gpr, dut_regs_ptr, sizeof(from_ref.gpr));
         ref_difftest_regcpy(&from_ref, DIFFTEST_TO_REF);
-        // Log("skip, pc:0x%lx, 0x%lx", pc, npc_state.pc);
+        // Log("skip, pc: " VADDR_FMT, npc_state.pc);
         is_skip_ref = false;
-        return;
     }
     ref_difftest_regcpy(&from_ref, DIFFTEST_TO_DUT);
     ref.commit.pc = from_ref.pc;

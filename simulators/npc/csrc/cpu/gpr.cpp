@@ -29,7 +29,7 @@ bool difftest_checkregs() {
 #endif
 
 void reg_display() {
-    for (int i = 0; i < 32; i++) { printf("%s = 0x%016lx\n", riscv_regstr[i], dut_regs_ptr[i]); }
+    for (int i = 0; i < 32; i++) { printf("%d: %s = 0x%016lx\n", i, riscv_regstr[i], dut_regs_ptr[i]); }
 }
 
 word_t reg_str2val(const char *s, bool *success) {

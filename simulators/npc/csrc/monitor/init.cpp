@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <signal.h>
 
 long img_size;
 
@@ -19,8 +20,15 @@ void init_vga();
 void init_difftest(const char *ref_so_file, long img_size, int port);
 #endif
 
+void sigint_handler(int sig){
+    if(sig == SIGINT){
+        npc_state.state = NPC_STOP;
+    }
+}
+
 void init_npc(int argc, char **argv) {
     Log("npc initialize...");
+    signal(SIGINT, sigint_handler);
     
     tfp = new VerilatedVcdC;
     Verilated::mkdir("logs");
