@@ -144,6 +144,7 @@ object LSUOpType {
 object CSROpType {
     def num = 7
 
+    // la32
     def csrrd   = "b000".U(log2Ceil(MaxOpNum).W)
     def csrwr   = "b001".U(log2Ceil(MaxOpNum).W)
     def csrxchg = "b010".U(log2Ceil(MaxOpNum).W)
@@ -152,22 +153,38 @@ object CSROpType {
     def tlbwr   = "b101".U(log2Ceil(MaxOpNum).W)
     def tlbfill = "b110".U(log2Ceil(MaxOpNum).W)
     def invtlb  = "b111".U(log2Ceil(MaxOpNum).W)
+
+    // rv32
+    def csrrw = "b000".U(log2Ceil(MaxOpNum).W)
+    def csrrs = "b001".U(log2Ceil(MaxOpNum).W)
+    def csrrc = "b010".U(log2Ceil(MaxOpNum).W)
+    // def csrrwi = "b011".U(log2Ceil(MaxOpNum).W)
+    // def csrrsi = "b100".U(log2Ceil(MaxOpNum).W)
+    // def csrrci = "b101".U(log2Ceil(MaxOpNum).W)
+
     def apply() = UInt(log2Ceil(num).W)
 }
 
 object MiscOpType {
-    def num = 10
+    def num      = 10
+    def excp_ret = "b0111".U(log2Ceil(MaxOpNum).W)
 
-    def none    = "b0000".U(log2Ceil(MaxOpNum).W)
+    def none = "b0000".U(log2Ceil(MaxOpNum).W)
+
+    // la32
     def rdcntid = "b0001".U(log2Ceil(MaxOpNum).W)
     def rdcntvl = "b0010".U(log2Ceil(MaxOpNum).W)
     def rdcntvh = "b0011".U(log2Ceil(MaxOpNum).W)
     def cacop   = "b0100".U(log2Ceil(MaxOpNum).W)
     def syscall = "b0101".U(log2Ceil(MaxOpNum).W)
     def break   = "b0110".U(log2Ceil(MaxOpNum).W)
-    def ertn    = "b0111".U(log2Ceil(MaxOpNum).W)
+    def ertn    = excp_ret
     def idle    = "b1000".U(log2Ceil(MaxOpNum).W)
     def unknown = "b1111".U(log2Ceil(MaxOpNum).W)
+
+    // rv32
+    def ecall = "b0001".U(log2Ceil(MaxOpNum).W)
+    def mret  = excp_ret
 
     def apply() = UInt(log2Ceil(num).W)
 }
@@ -319,4 +336,5 @@ abstract class ISAFactory {
 
     val RESET_VECTOR: Int
     def CSR_ADDR_WD: Int
+    val EXCP_RET_INST: Int
 }

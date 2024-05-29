@@ -45,7 +45,6 @@ class MkFrontend extends MkModule {
     val data_ok     = from_icache.valid & from_icache.bits.done
 
     val npc_set   = 0.U.asTypeOf(new NpcSelInfo())
-    val excp_tlbr = io.excp_commit.valid & (io.excp_commit.bits.extype === LA32ExceptionDefns.TLBR.enum_no)
     npc_set.pred_result          := bpu.io.resp
     npc_set.pred_check.bits      := io.update.bits
     npc_set.pred_check.valid     := io.update.valid

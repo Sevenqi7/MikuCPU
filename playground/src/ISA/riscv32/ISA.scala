@@ -33,8 +33,9 @@ object MkRV32Factory extends ISAFactory {
     def getCSRBuffer():     CSRBuffer        = new RV32CSRBuffer
     def getCSRRegfiles():   CSRRegfiles      = new RV32CSRRegfiles
 
-    val RESET_VECTOR: Int = 0x80000000 - 4
-    val CSR_ADDR_WD = 13
+    val RESET_VECTOR  = 0x80000000 - 4
+    val CSR_ADDR_WD   = 12
+    val EXCP_RET_INST = MiscOpType.ertn.litValue.toInt
 }
 
 class RV32DecodedInst extends DecodedInst {
@@ -85,6 +86,8 @@ object RV32Instructions {
     def FENCE  = BitPat("b??????? ????? ????? 000 ????? 00011 11")
     def ECALL  = BitPat("b0000000 00000 00000 000 00000 11100 11")
     def EBREAk = BitPat("b0000000 00001 00000 000 00000 11100 11")
+
+    def MRET = BitPat("b0011000 00010 00000 000 00000 11100 11")
 
     // rv32m
     def MUL    = BitPat("b0000001 ????? ????? 000 ????? 01100 11")

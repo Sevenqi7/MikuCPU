@@ -33,6 +33,17 @@ INTERFACE_INSTR_COMMIT {
     }
 }
 
+INTERFACE_EXCP_EVENT {
+    RETURN_NO_NULL
+    auto packet          = &dut.excp;
+    packet->excp_valid   = excp_valid;
+    packet->eret         = eret;
+    packet->interrupt    = intrNo;
+    packet->exception    = cause;
+    packet->exceptionPC  = exceptionPC;
+    packet->exceptionIst = exceptionInst;
+}
+
 INTERFACE_GREG_STATE {
     RETURN_NO_NULL
     auto packet     = &dut.regs;
@@ -68,6 +79,15 @@ INTERFACE_GREG_STATE {
     packet->gpr[29] = gpr_29;
     packet->gpr[30] = gpr_30;
     packet->gpr[31] = gpr_31;
+}
+
+INTERFACE_CSRREG_STATE {
+    RETURN_NO_NULL
+    auto packet     = &dut.csr;
+    packet->mstatus = mstatus;
+    packet->mtvec   = mtvec;
+    packet->mepc    = mepc;
+    packet->mcause  = mcause;
 }
 
 INTERFACE_STORE_EVENT {

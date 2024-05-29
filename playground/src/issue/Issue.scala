@@ -133,7 +133,7 @@ class IssueStage extends MkModule {
             LSUOpType.isStoreType(commit_inst_sbe.decoded_inst.fuoptype)
     val is_commit_csr   = (commit_inst_sbe.decoded_inst.futype === FuType.csr)
     val is_commit_ertn  =
-        (commit_inst_sbe.decoded_inst.futype === FuType.misc) && (commit_inst_sbe.decoded_inst.fuoptype === MiscOpType.ertn)
+        (commit_inst_sbe.decoded_inst.futype === FuType.misc) && (commit_inst_sbe.decoded_inst.fuoptype === EXCP_RET_INST.U)
     val is_commit_idle  =
         (commit_inst_sbe.decoded_inst.futype === FuType.misc) && (commit_inst_sbe.decoded_inst.fuoptype === MiscOpType.idle)
     val is_commit_ll    =

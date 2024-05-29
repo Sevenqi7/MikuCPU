@@ -79,8 +79,9 @@ trait HasMkParams {
     val DEBUG_MAGICNUM = mkParams.DEBUG_MAGICNUM
     val NR_WB_PORTS    = mkParams.NR_WB_PORTS
 
-    val RESET_VECTOR        = isaFactory.RESET_VECTOR
-    val CSR_ADDR_WD         = isaFactory.CSR_ADDR_WD
+    val RESET_VECTOR:  Int = isaFactory.RESET_VECTOR
+    val CSR_ADDR_WD:   Int = isaFactory.CSR_ADDR_WD
+    val EXCP_RET_INST: Int = isaFactory.EXCP_RET_INST
     def ArchExceptionType   = isaFactory.getExcepDefns()
     def ArchExceptionInfo() = isaFactory.getExcepInfo()
     def ArchFetchUnit()     = isaFactory.getFetchUnit()

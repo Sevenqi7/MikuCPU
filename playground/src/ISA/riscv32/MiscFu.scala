@@ -13,8 +13,15 @@ import miku.backend.MiscFunctionUnit
 class RV32MiscFu extends MiscFunctionUnit {
     val misc_io = IO(new Bundle {})
 
+    val ecall_valid = io.in.valid && (io.in.bits.optype === ecall)
+
     io.out.bits.id        := io.in.bits.id
-    io.out.bits.exception := io.in.bits.exception
+    io.out.bits.exception := MuxCase(
+        io.in.bits.exception,
+        Seq(
+            ecall_valid -> RV32ExceptionDefns.MECALL.enum_no
+        )
+    )
     io.out.bits.result    := DEBUG_MAGICNUM.U
     io.out.valid          := io.in.valid
     io.out.bits.mispred   := false.B

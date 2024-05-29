@@ -181,7 +181,7 @@ class Scoreboard extends MkModule {
         // Since fetch stage also may casue tlb-exception, we use a bit "frontend_excp" in scoreboard
         // to record whether current committed exception is occured in frontend or backend.
         ex_valid   := Mux(!is_commit_sc, inst_excp, inst_excp & !is_frontend_excp & io.llbit) | int_flag
-        ertn_valid := (sb_mem(commit_ptr).bits.decoded_inst.fuoptype === MiscOpType.ertn) &&
+        ertn_valid := (sb_mem(commit_ptr).bits.decoded_inst.fuoptype === EXCP_RET_INST.U) &&
             (sb_mem(commit_ptr).bits.decoded_inst.futype === FuType.misc)
 
         when(ex_valid || ertn_valid) {

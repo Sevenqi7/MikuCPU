@@ -9,12 +9,10 @@ import miku.issue._
 import miku.isa.riscv32._
 
 class RV32DifftestIO extends MkBundle {
-    val gpr         = Vec(32, UInt(WORD_WIDTH.W))
-    // val csr         = Vec(LA32CSRRegisters.csr_defns.length, UInt(32.W))
-    // val csr         = new CSRVecBundle
-    val commit_inst = ValidIO(new IssuedInst)
-    // val is_commit_excp    = Bool()
-    // val is_commit_tlbfill = Bool()
+    val gpr            = Vec(32, UInt(WORD_WIDTH.W))
+    val csr            = new CSRVecBundle
+    val commit_inst    = ValidIO(new IssuedInst)
+    val is_commit_excp = Bool()
 }
 
 class npc_core extends RawModule with HasMkParams {
@@ -130,6 +128,23 @@ class npc_core extends RawModule with HasMkParams {
         diff_info.commit_inst.bits.sbe.rd
     )
 
+    val excp_valid        = diff_info.is_commit_excp
+    val eret_valid        = (diff_info.commit_inst.bits.sbe.decoded_inst.futype === FuType.misc) &&
+        (diff_info.commit_inst.bits.sbe.decoded_inst.fuoptype === MiscOpType.ertn) &&
+        diff_info.commit_inst.valid
+    val mcause            = diff_info.csr.getTargetCSR(RV32CSRRegisters.MCAUSE)
+    val DifftestExcpEvent = Module(new DifftestExcpEvent)
+    withClockAndReset(aclk, !aresetn) {
+        val delay_cycles = 1
+        DifftestExcpEvent.io.clock         := aclk
+        DifftestExcpEvent.io.excp_valid    := DelayN(excp_valid, delay_cycles)
+        DifftestExcpEvent.io.eret          := DelayN(eret_valid, delay_cycles)
+        DifftestExcpEvent.io.intrNo        := 0.U
+        DifftestExcpEvent.io.cause         := mcause.code
+        DifftestExcpEvent.io.exceptionPC   := DelayN(diff_info.commit_inst.bits.sbe.br_info.bits.pc, delay_cycles)
+        DifftestExcpEvent.io.exceptionInst := DelayN(diff_info.commit_inst.bits.sbe.raw_inst.get, delay_cycles)
+    }
+
     withClockAndReset(aclk, !aresetn) {
         val delay_cycles = 1
         DifftestInstrCommit.io.clock := aclk
@@ -200,6 +215,11 @@ class npc_core extends RawModule with HasMkParams {
         DifftestLoadEvent.io.paddr := DelayN(ls_paddr, delay_cycles)
     }
 
+    val csr_rdata_vec       = VecInit(RV32CSRRegisters.csr_defns.map(diff_info.csr.getTargetCSR(_).rdata))
+    val DifftestCSRRegState = Module(new DifftestCSRRegState)
+    DifftestCSRRegState.io.clock := aclk
+    DifftestCSRRegState.connect_csr_vec(csr_rdata_vec)
+
 }
 
 class DifftestInstrCommit extends BlackBox {
@@ -213,6 +233,18 @@ class DifftestInstrCommit extends BlackBox {
         val wen   = Input(Bool())
         val wdest = Input(UInt(8.W))
         val wdata = Input(UInt(64.W))
+    })
+}
+
+class DifftestExcpEvent extends BlackBox {
+    val io = IO(new Bundle {
+        val clock         = Input(Clock())
+        val excp_valid    = Input(Bool())
+        val eret          = Input(Bool())
+        val intrNo        = Input(UInt(32.W))
+        val cause         = Input(UInt(32.W))
+        val exceptionPC   = Input(UInt(64.W))
+        val exceptionInst = Input(UInt(32.W))
     })
 }
 
@@ -311,5 +343,27 @@ class DifftestGRegState extends BlackBox {
                 io.gpr_31
             )
         port_seq.zip(gpr_vec).foreach(i => i._1 := i._2)
+    }
+}
+
+class DifftestCSRRegState extends BlackBox {
+    val io = IO(new Bundle {
+        val clock   = Input(Clock())
+        val mstatus = Input(UInt(64.W))
+        val mtvec   = Input(UInt(64.W))
+        val mepc    = Input(UInt(64.W))
+        val mcause  = Input(UInt(64.W))
+    })
+    def connect_csr_vec(csrs: Vec[UInt]): Unit = {
+        val port_seq = Seq(
+            io.mstatus,
+            io.mtvec,
+            io.mepc,
+            io.mcause
+        )
+
+        require(csrs.length == port_seq.length)
+        require(csrs.length == RV32CSRRegisters.csr_defns.length)
+        port_seq.zip(csrs).foreach(i => i._1 := i._2)
     }
 }

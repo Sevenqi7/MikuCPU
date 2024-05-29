@@ -6,6 +6,15 @@
 #include <verilator.h>
 
 typedef struct {
+    uint8_t  excp_valid   = 0;
+    uint8_t  eret         = 0;
+    uint32_t interrupt    = 0;
+    uint32_t exception    = 0;
+    uint32_t exceptionPC  = 0;
+    uint32_t exceptionIst = 0;
+} excp_event_t;
+
+typedef struct {
     uint8_t  valid = 0;
     uint32_t pc;
     uint32_t inst;
@@ -17,7 +26,7 @@ typedef struct {
 } instr_commit_t;
 
 typedef struct {
-    uint32_t gpr[32];
+    word_t gpr[32];
 } arch_greg_state_t;
 
 typedef struct {
@@ -34,13 +43,20 @@ typedef struct {
 } load_event_t;
 
 typedef struct {
+    word_t mstatus;
+    word_t mtvec;
+    word_t mepc;
+    word_t mcause;
+} arch_csr_state_t;
+
+typedef struct {
     // trap_event_t trap;
-    // excp_event_t excp;
+    excp_event_t      excp;
     instr_commit_t    commit;
     arch_greg_state_t regs;
-    // arch_csr_state_t csr;
-    store_event_t store;
-    load_event_t  load;
+    arch_csr_state_t  csr;
+    store_event_t     store;
+    load_event_t      load;
 } difftest_core_state_t;
 
 /* dut/ref core info */
@@ -55,5 +71,12 @@ typedef struct {
     word_t  gpr[32];
     vaddr_t pc;
 } REF_GPR;
+
+typedef struct {
+    word_t mstatus;
+    word_t mtvec;
+    word_t mepc;
+    word_t mcause;
+} REF_CSR;
 
 #endif

@@ -73,6 +73,29 @@
         ) `DIFFTEST_MOD_DPIC_CALL_END_WITH_EN(InstrCommit)
 endmodule
 
+// DifftestExcpEvent
+`DIFFTEST_DPIC_FUNC_DECL(ExcpEvent) (
+    `DPIC_ARG_BYTE excp_valid,
+    `DPIC_ARG_BIT  eret,
+    `DPIC_ARG_INT  intrNo,
+    `DPIC_ARG_INT  cause,
+    `DPIC_ARG_LONG exceptionPC,
+    `DPIC_ARG_INT exceptionInst
+);
+`DIFFTEST_MOD_DECL(ExcpEvent) (
+    input        clock,
+    input        excp_valid,
+    input        eret,
+    input [31:0] intrNo,
+    input [31:0] cause,
+    input [63:0] exceptionPC,
+    input [31:0] exceptionInst
+);
+    `DIFFTEST_MOD_DPIC_CALL_BEGIN(ExcpEvent) (
+        excp_valid, eret, intrNo, cause, exceptionPC, exceptionInst
+        ) `DIFFTEST_MOD_DPIC_CALL_END(ExcpEvent)
+endmodule
+
 // DifftestStoreEvent
 `DIFFTEST_DPIC_FUNC_DECL(StoreEvent) (
     `DPIC_ARG_BYTE index,
@@ -190,4 +213,23 @@ endmodule
         gpr_16, gpr_17, gpr_18, gpr_19, gpr_20, gpr_21, gpr_22, gpr_23,
         gpr_24, gpr_25, gpr_26, gpr_27, gpr_28, gpr_29, gpr_30, gpr_31
         ) `DIFFTEST_MOD_DPIC_CALL_END(GRegState)
+endmodule
+
+// DifftestCSRRegState
+`DIFFTEST_DPIC_FUNC_DECL(CSRRegState) (
+    `DPIC_ARG_LONG mstatus,
+    `DPIC_ARG_LONG mtvec,
+    `DPIC_ARG_LONG mepc,
+    `DPIC_ARG_LONG mcause
+);
+`DIFFTEST_MOD_DECL(CSRRegState)(
+    input        clock,
+    input [63:0] mstatus,
+    input [63:0] mtvec,
+    input [63:0] mepc,
+    input [63:0] mcause
+);
+    `DIFFTEST_MOD_DPIC_CALL_BEGIN(CSRRegState) (
+      mstatus, mtvec, mepc, mcause
+        ) `DIFFTEST_MOD_DPIC_CALL_END(CSRRegState)
 endmodule

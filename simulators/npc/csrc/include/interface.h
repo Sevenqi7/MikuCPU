@@ -65,6 +65,21 @@
      DPIC_ARG_LONG gpr_30,             \
      DPIC_ARG_LONG gpr_31)
 
+// v_difftest_CSRState
+#define INTERFACE_CSRREG_STATE           \
+    DIFFTEST_DPIC_FUNC_DECL(CSRRegState) \
+    (DPIC_ARG_LONG mstatus, DPIC_ARG_LONG mtvec, DPIC_ARG_LONG mepc, DPIC_ARG_LONG mcause)
+
+// v_difftest_ExcpEvent
+#define INTERFACE_EXCP_EVENT           \
+    DIFFTEST_DPIC_FUNC_DECL(ExcpEvent) \
+    (DPIC_ARG_BYTE excp_valid,         \
+     DPIC_ARG_BIT  eret,               \
+     DPIC_ARG_INT  intrNo,             \
+     DPIC_ARG_INT  cause,              \
+     DPIC_ARG_LONG exceptionPC,        \
+     DPIC_ARG_INT  exceptionInst)
+
 // v_difftest_StoreEvent
 #define INTERFACE_STORE_EVENT           \
     DIFFTEST_DPIC_FUNC_DECL(StoreEvent) \

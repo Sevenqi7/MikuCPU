@@ -59,10 +59,11 @@ void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
 
 void exec_once() {
     instr_commit_t *cmt_inst = &dut.commit;
+    excp_event_t   *excp     = &dut.excp;
 
     clock_step();
     int bubble_cnt = 0;
-    while (!cmt_inst->valid) {
+    while (!cmt_inst->valid & !excp->excp_valid) {
         clock_step();
         bubble_cnt++;
         if (bubble_cnt > 10000) { // deadlock
@@ -75,9 +76,8 @@ void exec_once() {
     // printf("cmt_valid:0x%x\n", cmt_inst->valid);
     // printf("cmt_inst:0x%x\n", cmt_inst->inst);
     // printf("cmt_pc:0x%x\n", cmt_inst->pc);
-    cmt_inst->valid = false;
-    npc_state.inst  = cmt_inst->inst;
-    npc_state.pc    = cmt_inst->pc;
+    npc_state.inst = cmt_inst->inst;
+    npc_state.pc   = cmt_inst->pc;
     nr_total_inst++;
     if (cmt_inst->inst == EBREAK) {
         ebreak(dut_regs_ptr[10]);
@@ -103,6 +103,8 @@ trace:
 #endif
 
     trace_and_difftest(logbuf);
+    cmt_inst->valid  = false;
+    excp->excp_valid = false;
 }
 
 void execute(uint64_t n) {
