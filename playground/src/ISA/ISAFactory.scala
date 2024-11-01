@@ -120,21 +120,31 @@ object JumpOpType {
 }
 
 object LSUOpType {
-    def num = 10
+    def num = 20
 
     def isLoadType(optype: UInt)  = optype(3, 0) >= ldb
     def isStoreType(optype: UInt) = optype(3, 0) <= scw
+    def isAtomType(optype: UInt)  = optype(4)
 
-    def ldb  = "b1000".U(log2Ceil(MaxOpNum).W)
-    def ldh  = "b1001".U(log2Ceil(MaxOpNum).W)
-    def ldw  = "b1010".U(log2Ceil(MaxOpNum).W)
-    def ldbu = "b1011".U(log2Ceil(MaxOpNum).W)
-    def ldhu = "b1100".U(log2Ceil(MaxOpNum).W)
-    def llw  = "b1101".U(log2Ceil(MaxOpNum).W)
-    def stb  = "b0000".U(log2Ceil(MaxOpNum).W)
-    def sth  = "b0001".U(log2Ceil(MaxOpNum).W)
-    def stw  = "b0010".U(log2Ceil(MaxOpNum).W)
-    def scw  = "b0011".U(log2Ceil(MaxOpNum).W)
+    def ldb     = "b01000".U(log2Ceil(MaxOpNum).W)
+    def ldh     = "b01001".U(log2Ceil(MaxOpNum).W)
+    def ldw     = "b01010".U(log2Ceil(MaxOpNum).W)
+    def ldbu    = "b01011".U(log2Ceil(MaxOpNum).W)
+    def ldhu    = "b01100".U(log2Ceil(MaxOpNum).W)
+    def llw     = "b01101".U(log2Ceil(MaxOpNum).W)
+    def amoswap = "b10000".U(log2Ceil(MaxOpNum).W)
+    def amoadd  = "b10001".U(log2Ceil(MaxOpNum).W)
+    def amoxor  = "b10010".U(log2Ceil(MaxOpNum).W)
+    def amoand  = "b10011".U(log2Ceil(MaxOpNum).W)
+    def amoor   = "b10100".U(log2Ceil(MaxOpNum).W)
+    def amomin  = "b10101".U(log2Ceil(MaxOpNum).W)
+    def amomax  = "b10110".U(log2Ceil(MaxOpNum).W)
+    def amominu = "b10111".U(log2Ceil(MaxOpNum).W)
+    def amomaxu = "b11000".U(log2Ceil(MaxOpNum).W)
+    def stb     = "b00000".U(log2Ceil(MaxOpNum).W)
+    def sth     = "b00001".U(log2Ceil(MaxOpNum).W)
+    def stw     = "b00010".U(log2Ceil(MaxOpNum).W)
+    def scw     = "b00011".U(log2Ceil(MaxOpNum).W)
 
     def X = BitPat("b????")
 
@@ -158,9 +168,6 @@ object CSROpType {
     def csrrw = "b000".U(log2Ceil(MaxOpNum).W)
     def csrrs = "b001".U(log2Ceil(MaxOpNum).W)
     def csrrc = "b010".U(log2Ceil(MaxOpNum).W)
-    // def csrrwi = "b011".U(log2Ceil(MaxOpNum).W)
-    // def csrrsi = "b100".U(log2Ceil(MaxOpNum).W)
-    // def csrrci = "b101".U(log2Ceil(MaxOpNum).W)
 
     def apply() = UInt(log2Ceil(num).W)
 }

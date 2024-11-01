@@ -348,20 +348,28 @@ class DifftestGRegState extends BlackBox {
 
 class DifftestCSRRegState extends BlackBox {
     val io = IO(new Bundle {
-        val clock   = Input(Clock())
-        val mstatus = Input(UInt(64.W))
-        val mtvec   = Input(UInt(64.W))
-        val mepc    = Input(UInt(64.W))
-        val mcause  = Input(UInt(64.W))
+        val clock    = Input(Clock())
+        val mstatus  = Input(UInt(64.W))
+        val mie      = Input(UInt(64.W))
+        val mtvec    = Input(UInt(64.W))
+        val mscratch = Input(UInt(64.W))
+        val mepc     = Input(UInt(64.W))
+        val mcause   = Input(UInt(64.W))
+        val mtval    = Input(UInt(64.W))
+        val mip      = Input(UInt(64.W))
     })
+    
     def connect_csr_vec(csrs: Vec[UInt]): Unit = {
         val port_seq = Seq(
             io.mstatus,
+            io.mie,
             io.mtvec,
+            io.mscratch,
             io.mepc,
-            io.mcause
+            io.mcause,
+            io.mtval,
+            io.mip
         )
-
         require(csrs.length == port_seq.length)
         require(csrs.length == RV32CSRRegisters.csr_defns.length)
         port_seq.zip(csrs).foreach(i => i._1 := i._2)

@@ -14,7 +14,7 @@ extern uint8_t *guest_to_host(paddr_t paddr) {
 void   device_write(vaddr_t addr, word_t data, int len);
 word_t device_read(vaddr_t addr);
 
-uint64_t *pmem_addr(vaddr_t *addr) {
+uint64_t *pmem_addr(vaddr_t addr) {
     return (uint64_t *)(pmem + ((uint64_t)addr & 0xFFFFFF));
 }
 

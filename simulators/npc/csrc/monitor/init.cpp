@@ -1,9 +1,11 @@
 #include "Vsimu_top.h"
+#include "macro.h"
 #include "verilated.h"
 #include "verilator.h"
 #include "npc.h"
 #include "memory.h"
 #include "cmdline.h"
+#include "default64mbdtc.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -74,6 +76,11 @@ long init_img(const char *img_path) {
     fseek(fp, 0, SEEK_END);
     long size = ftell(fp);
     printf("\033[0m\033[1;36mThe image is %s, size=%ld\033[0m\n", img_path, size);
+
+    #ifdef CONFIG_NOMMU_LINUX
+    memcpy(pmem_addr(MEMSIZE - sizeof(default64mbdtb)), default64mbdtb, sizeof(default64mbdtb));
+    Log("DTB addr:0x%x", RESET_VECTOR + MEMSIZE - sizeof(default64mbdtb));
+    #endif
 
     fseek(fp, 0, SEEK_SET);
     int ret = fread(pmem_addr(0), size, 1, fp);

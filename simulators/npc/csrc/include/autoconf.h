@@ -7,5 +7,6 @@
 #define CONFIG_DIFFTEST 1
 // #define CONFIG_DEBUGMSG 1
 // #define CONFIG_RV64 0
+#define CONFIG_NOMMU_LINUX
 
 #endif

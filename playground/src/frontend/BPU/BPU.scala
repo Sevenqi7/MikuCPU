@@ -49,15 +49,17 @@ class EmptyPredictor extends BranchPredictor {
 class BTFNPredictor(implicit val btb: MkBTB) extends BTBBasedPredictor {
     io.resp.taken := DontCare
 
-    override def predTaken: Bool = (btb.io.rdata.valid & (predTarget < io.s1.bits.pc))
+    // override def predTaken: Bool = (btb.io.rdata.valid & (predTarget < io.s1.bits.pc))
+    override def predTaken: Bool = (btb.io.rdata.valid & true.B)
 }
 
 class BranchPredictorWrapper extends BranchPredictor with BPUConfigs {
     override val BPUEnable: Boolean = true
-    override val BHTEnable: Boolean = false
-    override val RASEnable: Boolean = false
+    override val BHTEnable: Boolean = true
+    override val RASEnable: Boolean = true
 
     val s1_inst_br = io.s1.valid && (io.s1.bits.inst(31, 30) === "b01".U)
+    val uncond_br  = s1_inst_br & (io.s1.bits.inst(29, 27) === "b010".U)
 
     implicit val btb = Module(new MkBTB)
     btb.io.s1     := io.s1
@@ -65,7 +67,8 @@ class BranchPredictorWrapper extends BranchPredictor with BPUConfigs {
 
     val bht  = Module(if (BHTEnable) new MkBHT else new EmptyPredictor) // TODO:
     val ras  = Module(if (RASEnable) new MkRAS else new EmptyPredictor) // TODO:
-    val btfn = Module(new BTFNPredictor)
+    // val btfn = Module(new BTFNPredictor)
+    val btfn = Module(new EmptyPredictor)
 
     val priority_predictor_list = List[BranchPredictor](bht, ras, btfn)
     val priority_predtarget_list: Seq[(Bool, UInt)] = priority_predictor_list.map(i => (i.predTaken, i.predTarget))
@@ -77,6 +80,6 @@ class BranchPredictorWrapper extends BranchPredictor with BPUConfigs {
         i.io.update       := io.update
     }
 
-    io.resp.taken  := priority_predictor_list.map(_.predTaken).reduce(_ || _) & s1_inst_br
+    io.resp.taken  := (priority_predictor_list.map(_.predTaken).reduce(_ || _) | uncond_br) & s1_inst_br
     io.resp.target := PriorityMux(priority_predtarget_list)
 }

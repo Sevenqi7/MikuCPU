@@ -36,10 +36,10 @@ CSRC_OBJ := $(shell find $(abspath ./csrc) -name "*.c" -or -name "*.cc" -or -nam
 
 INCFLAGS = $(addprefix -I , $(INC_PATH))
 CFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\""
-CFLAGS += -I/usr/lib/llvm-14/include -std=c++14 -fexceptions -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -fPIE
+CFLAGS += -I/usr/lib/llvm-14/include -std=c++17 -fexceptions -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -fPIE
 LDFLAGS += -lreadline $(shell llvm-config --libs) -lSDL2
 # LDFLAGS += -$(DIFF_REF_SO)
-VERILATOR_FLAGS += -cc --exe -MMD -x-assign 0 -j 12 --trace --build -Wno-WIDTHEXPAND
+VERILATOR_FLAGS += -cc --exe -MMD -x-assign 0 -j 12 --trace --build -Wno-WIDTH
 
 $(BIN): $(VSRC_OBJ) $(CSRC_OBJ)
 	$(shell mkdir -p $(OBJ_DIR))

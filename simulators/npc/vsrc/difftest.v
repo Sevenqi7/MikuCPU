@@ -218,18 +218,26 @@ endmodule
 // DifftestCSRRegState
 `DIFFTEST_DPIC_FUNC_DECL(CSRRegState) (
     `DPIC_ARG_LONG mstatus,
+    `DPIC_ARG_LONG mie,
     `DPIC_ARG_LONG mtvec,
+    `DPIC_ARG_LONG mscratch,
     `DPIC_ARG_LONG mepc,
-    `DPIC_ARG_LONG mcause
+    `DPIC_ARG_LONG mcause,
+    `DPIC_ARG_LONG mtval,
+    `DPIC_ARG_LONG mip
 );
 `DIFFTEST_MOD_DECL(CSRRegState)(
     input        clock,
     input [63:0] mstatus,
+    input [63:0] mie,
     input [63:0] mtvec,
+    input [63:0] mscratch,
     input [63:0] mepc,
-    input [63:0] mcause
+    input [63:0] mcause,
+    input [63:0] mtval,
+    input [63:0] mip
 );
     `DIFFTEST_MOD_DPIC_CALL_BEGIN(CSRRegState) (
-      mstatus, mtvec, mepc, mcause
+      mstatus, mie, mtvec, mscratch, mepc, mcause, mtval, mip
         ) `DIFFTEST_MOD_DPIC_CALL_END(CSRRegState)
 endmodule

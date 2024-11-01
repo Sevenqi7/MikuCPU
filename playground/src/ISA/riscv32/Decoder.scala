@@ -12,7 +12,7 @@ import RV32Instructions._
 
 class RV32DecoderUnit extends DecoderUnit {
     val rv32_decode_table =
-        RV32IDecoder.decodeTable ++ RV32MDecoder.decodeTable ++ RV32ZicsrDecoder.decodeTable ++ RV32MiscDecoder.decodeTable
+        RV32IDecoder.decodeTable ++ RV32MDecoder.decodeTable ++ RV32ZicsrDecoder.decodeTable ++ RV32ADecoder.decodeTable ++ RV32MiscDecoder.decodeTable
 
     val rv32_decode_map = TruthTable(
         rv32_decode_table.map { case (instBits, decodeList) =>
@@ -72,8 +72,6 @@ object RV32IDecoder extends DecodeConstants {
         // ECALL  -> List(Y, SrcType.reg, SrcType.reg, SrcType.none, FuType.alu, MiscOpType.unknown  , N, SelImm.X),
         // EBREAk -> List(Y, SrcType.reg, SrcType.reg, SrcType.none, FuType.alu, MiscOpType.unknown  , N, SelImm.X)
     )  
-
-
 }
 
 object RV32MDecoder extends DecodeConstants {
@@ -93,7 +91,14 @@ object RV32ZicsrDecoder extends DecodeConstants {
     val decodeTable = Array[(BitPat, List[BitPat])](
         CSRRW   -> List(Y, SrcType.imm , SrcType.reg, SrcType.none, FuType.csr, CSROpType.csrrw, N, SelImm.IMM_I),
         CSRRS   -> List(Y, SrcType.imm , SrcType.reg, SrcType.none, FuType.csr, CSROpType.csrrs, N, SelImm.IMM_I),
-        // CSRRC   -> List(Y, SrcType.none, SrcType.reg, SrcType.none, FuType.csr, CSROpType.csrrc, N, SelImm.X)
+        CSRRC   -> List(Y, SrcType.imm , SrcType.reg, SrcType.none, FuType.csr, CSROpType.csrrc, N, SelImm.IMM_I)
+    )
+}
+
+object RV32ADecoder extends DecodeConstants {
+    val decodeTable = Array[(BitPat, List[BitPat])](
+        AMOOR   -> List(Y, SrcType.reg , SrcType.reg, SrcType.none, FuType.lsu, LSUOpType.amoor , N, SelImm.X),
+        AMOADD  -> List(Y, SrcType.reg , SrcType.reg, SrcType.none, FuType.lsu, LSUOpType.amoadd, N, SelImm.X),
     )
 }
 

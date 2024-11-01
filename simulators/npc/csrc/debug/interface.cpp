@@ -83,11 +83,15 @@ INTERFACE_GREG_STATE {
 
 INTERFACE_CSRREG_STATE {
     RETURN_NO_NULL
-    auto packet     = &dut.csr;
-    packet->mstatus = mstatus;
-    packet->mtvec   = mtvec;
-    packet->mepc    = mepc;
-    packet->mcause  = mcause;
+    auto packet      = &dut.csr;
+    packet->mstatus  = mstatus;
+    packet->mie      = mie;
+    packet->mtvec    = mtvec;
+    packet->mscratch = mscratch;
+    packet->mepc     = mepc;
+    packet->mcause   = mcause;
+    packet->mtval    = mtval;
+    packet->mip      = mip;
 }
 
 INTERFACE_STORE_EVENT {

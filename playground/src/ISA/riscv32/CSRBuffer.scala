@@ -15,12 +15,14 @@ class RV32CSRBuffer extends CSRBuffer {
     csr_excp := ArchExceptionType.NONE.enum_no
     csr_addr := io.in.bits.operand_b(CSR_ADDR_WD - 1, 0)
 
-    val csrrs_wdata = rs1_data | csr_rdata
+    val csrrs_wdata = csr_rdata | rs1_data
+    val csrrc_wdata = csr_rdata & ~rs1_data
 
     csr_wdata := MuxLookup(io.in.bits.optype, DEBUG_MAGICNUM.U)(
         Seq(
             csrrw -> rs1_data,
-            csrrs -> csrrs_wdata
+            csrrs -> csrrs_wdata,
+            csrrc -> csrrc_wdata
         )
     )
 

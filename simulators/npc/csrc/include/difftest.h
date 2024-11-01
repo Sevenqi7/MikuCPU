@@ -44,9 +44,13 @@ typedef struct {
 
 typedef struct {
     word_t mstatus;
+    word_t mie;
     word_t mtvec;
+    word_t mscratch;
     word_t mepc;
     word_t mcause;
+    word_t mtval;
+    word_t mip;
 } arch_csr_state_t;
 
 typedef struct {

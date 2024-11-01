@@ -11,7 +11,8 @@
  */
 #define DIFFTEST_DPIC_FUNC_NAME(name) v_difftest_##name
 
-#define DIFFTEST_DPIC_FUNC_DECL(name) extern "C" void DIFFTEST_DPIC_FUNC_NAME(name)
+#define DIFFTEST_DPIC_FUNC_DECL(name) \
+    extern "C" void DIFFTEST_DPIC_FUNC_NAME(name)
 
 #define DPIC_ARG_BIT  uint8_t
 #define DPIC_ARG_BYTE char
@@ -68,7 +69,14 @@
 // v_difftest_CSRState
 #define INTERFACE_CSRREG_STATE           \
     DIFFTEST_DPIC_FUNC_DECL(CSRRegState) \
-    (DPIC_ARG_LONG mstatus, DPIC_ARG_LONG mtvec, DPIC_ARG_LONG mepc, DPIC_ARG_LONG mcause)
+    (DPIC_ARG_LONG mstatus,              \
+     DPIC_ARG_LONG mie,                  \
+     DPIC_ARG_LONG mtvec,                \
+     DPIC_ARG_LONG mscratch,             \
+     DPIC_ARG_LONG mepc,                 \
+     DPIC_ARG_LONG mcause,               \
+     DPIC_ARG_LONG mtval,                \
+     DPIC_ARG_LONG mip)
 
 // v_difftest_ExcpEvent
 #define INTERFACE_EXCP_EVENT           \
@@ -92,6 +100,9 @@
 // v_difftest_LoadEvent
 #define INTERFACE_LOAD_EVENT           \
     DIFFTEST_DPIC_FUNC_DECL(LoadEvent) \
-    (DPIC_ARG_BYTE index, DPIC_ARG_BYTE valid, DPIC_ARG_LONG paddr, DPIC_ARG_LONG vaddr)
+    (DPIC_ARG_BYTE index,              \
+     DPIC_ARG_BYTE valid,              \
+     DPIC_ARG_LONG paddr,              \
+     DPIC_ARG_LONG vaddr)
 
 #endif
