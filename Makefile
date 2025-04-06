@@ -34,8 +34,8 @@ verilog: $(BUILD_FILE)
 LA_TOP = $(BUILD_DIR)/core_top.v
 $(LA_TOP): $(CHISEL_FILES)
 loongarch: $(LA_TOP)
-ifneq ($(CHIPLAB_HOME),)
 	mill -i __.test.runMain Elaborate la32 -td $(BUILD_DIR) 
+ifneq ($(CHIPLAB_HOME),)
 	@echo "NOTE: CHIPLAB_HOME variable is set."
 	@echo "Copy generated verilog files to chiplab..."
 	@cp $(LA_TOP) $(CHIPLAB_HOME)/IP/myCPU/core_top.v
