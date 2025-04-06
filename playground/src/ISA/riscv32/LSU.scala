@@ -12,8 +12,8 @@ import miku.backend.MkLSU
 class RV32LSU extends MkLSU {
     def in_mmio(addr: UInt): Bool = (addr >= 0x10000000L.U && addr <= 0x12000000L.U)
 
-    // val rs1 = io.in.bits.operand_a
-    // val rs2 = io.in.bits.operand_b
+    val rs1 = io.in.bits.operand_a
+    val rs2 = io.in.bits.operand_b
 
     val imm_I = io.in.bits.operand_b
     val imm_S = io.in.bits.operand_c

@@ -17045,14 +17045,14 @@ endmodule
 module RV32LSU(	// <stdin>:6306:10
   input         clock,	// <stdin>:6307:11
                 reset,	// <stdin>:6308:11
-                lsu_io_cache_req_ready,	// playground/src/backend/LSU/LSU.scala:37:31
-                lsu_io_cache_resp_valid,	// playground/src/backend/LSU/LSU.scala:37:31
-                lsu_io_cache_resp_bits_done,	// playground/src/backend/LSU/LSU.scala:37:31
-  input  [31:0] lsu_io_cache_resp_bits_rdata,	// playground/src/backend/LSU/LSU.scala:37:31
-  input         lsu_io_store_commit_valid,	// playground/src/backend/LSU/LSU.scala:37:31
-  input  [31:0] lsu_io_data_trans_resp_paddr,	// playground/src/backend/LSU/LSU.scala:37:31
-  input         lsu_io_llbit,	// playground/src/backend/LSU/LSU.scala:37:31
-  input  [31:0] lsu_io_lr_addr,	// playground/src/backend/LSU/LSU.scala:37:31
+                lsu_io_cache_req_ready,	// playground/src/backend/LSU/LSU.scala:39:31
+                lsu_io_cache_resp_valid,	// playground/src/backend/LSU/LSU.scala:39:31
+                lsu_io_cache_resp_bits_done,	// playground/src/backend/LSU/LSU.scala:39:31
+  input  [31:0] lsu_io_cache_resp_bits_rdata,	// playground/src/backend/LSU/LSU.scala:39:31
+  input         lsu_io_store_commit_valid,	// playground/src/backend/LSU/LSU.scala:39:31
+  input  [31:0] lsu_io_data_trans_resp_paddr,	// playground/src/backend/LSU/LSU.scala:39:31
+  input         lsu_io_llbit,	// playground/src/backend/LSU/LSU.scala:39:31
+  input  [31:0] lsu_io_lr_addr,	// playground/src/backend/LSU/LSU.scala:39:31
   input         wtype_io_in_valid,	// playground/src/backend/Excute.scala:31:21
   input  [2:0]  wtype_io_in_bits_id,	// playground/src/backend/Excute.scala:31:21
   input  [4:0]  wtype_io_in_bits_optype,	// playground/src/backend/Excute.scala:31:21
@@ -17061,18 +17061,18 @@ module RV32LSU(	// <stdin>:6306:10
                 wtype_io_in_bits_operand_c,	// playground/src/backend/Excute.scala:31:21
   input         wtype_io_flush_exception,	// playground/src/backend/Excute.scala:31:21
                 wtype_io_flush_ertn,	// playground/src/backend/Excute.scala:31:21
-  output        lsu_io_cache_req_valid,	// playground/src/backend/LSU/LSU.scala:37:31
-                lsu_io_cache_req_bits_wr,	// playground/src/backend/LSU/LSU.scala:37:31
-  output [31:0] lsu_io_cache_req_bits_vaddr,	// playground/src/backend/LSU/LSU.scala:37:31
-                lsu_io_cache_req_bits_paddr,	// playground/src/backend/LSU/LSU.scala:37:31
-  output [1:0]  lsu_io_cache_req_bits_wtype,	// playground/src/backend/LSU/LSU.scala:37:31
-  output [31:0] lsu_io_cache_req_bits_wdata,	// playground/src/backend/LSU/LSU.scala:37:31
-  output        lsu_io_cache_req_bits_uncached,	// playground/src/backend/LSU/LSU.scala:37:31
-                lsu_io_store_commit_ready,	// playground/src/backend/LSU/LSU.scala:37:31
-  output [31:0] lsu_io_data_trans_req_vaddr,	// playground/src/backend/LSU/LSU.scala:37:31
-                lsu_io_lsu_diff_paddr,	// playground/src/backend/LSU/LSU.scala:37:31
-                lsu_io_lsu_diff_vaddr,	// playground/src/backend/LSU/LSU.scala:37:31
-                lsu_io_lsu_diff_wdata,	// playground/src/backend/LSU/LSU.scala:37:31
+  output        lsu_io_cache_req_valid,	// playground/src/backend/LSU/LSU.scala:39:31
+                lsu_io_cache_req_bits_wr,	// playground/src/backend/LSU/LSU.scala:39:31
+  output [31:0] lsu_io_cache_req_bits_vaddr,	// playground/src/backend/LSU/LSU.scala:39:31
+                lsu_io_cache_req_bits_paddr,	// playground/src/backend/LSU/LSU.scala:39:31
+  output [1:0]  lsu_io_cache_req_bits_wtype,	// playground/src/backend/LSU/LSU.scala:39:31
+  output [31:0] lsu_io_cache_req_bits_wdata,	// playground/src/backend/LSU/LSU.scala:39:31
+  output        lsu_io_cache_req_bits_uncached,	// playground/src/backend/LSU/LSU.scala:39:31
+                lsu_io_store_commit_ready,	// playground/src/backend/LSU/LSU.scala:39:31
+  output [31:0] lsu_io_data_trans_req_vaddr,	// playground/src/backend/LSU/LSU.scala:39:31
+                lsu_io_lsu_diff_paddr,	// playground/src/backend/LSU/LSU.scala:39:31
+                lsu_io_lsu_diff_vaddr,	// playground/src/backend/LSU/LSU.scala:39:31
+                lsu_io_lsu_diff_wdata,	// playground/src/backend/LSU/LSU.scala:39:31
   output        wtype_io_in_ready,	// playground/src/backend/Excute.scala:31:21
                 wtype_io_out_valid,	// playground/src/backend/Excute.scala:31:21
   output [2:0]  wtype_io_out_bits_id,	// playground/src/backend/Excute.scala:31:21
@@ -17080,16 +17080,16 @@ module RV32LSU(	// <stdin>:6306:10
   output [1:0]  wtype_io_out_bits_exception	// playground/src/backend/Excute.scala:31:21
 );
 
-  wire [31:0] new_store_inst_wdata;	// playground/src/ISA/riscv32/LSU.scala:63:23, :70:33, playground/src/backend/LSU/LSU.scala:215:29
-  wire [1:0]  new_store_inst_wtype;	// playground/src/ISA/riscv32/LSU.scala:63:23, :69:33, playground/src/backend/LSU/LSU.scala:214:29
-  wire        _wtype_io_in_ready_output;	// playground/src/ISA/riscv32/LSU.scala:63:23, :64:33, playground/src/backend/LSU/LSU.scala:280:17
+  wire [31:0] new_store_inst_wdata;	// playground/src/ISA/riscv32/LSU.scala:63:23, :70:33, playground/src/backend/LSU/LSU.scala:217:29
+  wire [1:0]  new_store_inst_wtype;	// playground/src/ISA/riscv32/LSU.scala:63:23, :69:33, playground/src/backend/LSU/LSU.scala:216:29
+  wire        _wtype_io_in_ready_output;	// playground/src/ISA/riscv32/LSU.scala:63:23, :64:33, playground/src/backend/LSU/LSU.scala:282:17
   wire [31:0] vaddr;	// playground/src/ISA/riscv32/LSU.scala:23:17
   wire [31:0] _store_wb_bits_result_delay_1_io_out;	// playground/src/utils/utils.scala:49:27
-  wire        _wb_arb_io_in_1_ready;	// playground/src/backend/LSU/LSU.scala:260:24
+  wire        _wb_arb_io_in_1_ready;	// playground/src/backend/LSU/LSU.scala:262:24
   wire        _lsu_io_cache_req_bits_paddr_delay_io_out;	// playground/src/utils/utils.scala:49:27
-  wire        _req_arb_io_in_0_ready;	// playground/src/backend/LSU/LSU.scala:252:25
-  wire        _req_arb_io_in_1_ready;	// playground/src/backend/LSU/LSU.scala:252:25
-  wire        _req_arb_io_chosen;	// playground/src/backend/LSU/LSU.scala:252:25
+  wire        _req_arb_io_in_0_ready;	// playground/src/backend/LSU/LSU.scala:254:25
+  wire        _req_arb_io_in_1_ready;	// playground/src/backend/LSU/LSU.scala:254:25
+  wire        _req_arb_io_chosen;	// playground/src/backend/LSU/LSU.scala:254:25
   wire [31:0] _store_req_bits_paddr_delay_io_out;	// playground/src/utils/utils.scala:49:27
   wire        _store_queue_io_in_enq_valid_delay_io_out;	// playground/src/utils/utils.scala:49:27
   wire        _store_wb_valid_delay_io_out;	// playground/src/utils/utils.scala:49:27
@@ -17097,65 +17097,65 @@ module RV32LSU(	// <stdin>:6306:10
   wire [62:0] _new_store_inst_wdata_delay_io_out;	// playground/src/utils/utils.scala:49:27
   wire [1:0]  _new_store_inst_wtype_delay_io_out;	// playground/src/utils/utils.scala:49:27
   wire [2:0]  _new_store_inst_id_delay_io_out;	// playground/src/utils/utils.scala:49:27
-  wire [31:0] _store_queue_io_out_front_data_addr;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [1:0]  _store_queue_io_out_front_data_wtype;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [31:0] _store_queue_io_out_front_data_wdata;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire        _store_queue_io_out_front_data_uncached;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire        _store_queue_io_out_empty;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire        _store_queue_io_out_full;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire        _store_queue_io_out_element_vec_0_valid;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [31:0] _store_queue_io_out_element_vec_0_bits_addr;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [1:0]  _store_queue_io_out_element_vec_0_bits_wtype;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [31:0] _store_queue_io_out_element_vec_0_bits_wdata;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire        _store_queue_io_out_element_vec_1_valid;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [31:0] _store_queue_io_out_element_vec_1_bits_addr;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [1:0]  _store_queue_io_out_element_vec_1_bits_wtype;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [31:0] _store_queue_io_out_element_vec_1_bits_wdata;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire        _store_queue_io_out_element_vec_2_valid;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [31:0] _store_queue_io_out_element_vec_2_bits_addr;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [1:0]  _store_queue_io_out_element_vec_2_bits_wtype;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [31:0] _store_queue_io_out_element_vec_2_bits_wdata;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire        _store_queue_io_out_element_vec_3_valid;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [31:0] _store_queue_io_out_element_vec_3_bits_addr;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [1:0]  _store_queue_io_out_element_vec_3_bits_wtype;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [31:0] _store_queue_io_out_element_vec_3_bits_wdata;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire        _store_queue_io_out_element_vec_4_valid;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [31:0] _store_queue_io_out_element_vec_4_bits_addr;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [1:0]  _store_queue_io_out_element_vec_4_bits_wtype;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [31:0] _store_queue_io_out_element_vec_4_bits_wdata;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire        _store_queue_io_out_element_vec_5_valid;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [31:0] _store_queue_io_out_element_vec_5_bits_addr;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [1:0]  _store_queue_io_out_element_vec_5_bits_wtype;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [31:0] _store_queue_io_out_element_vec_5_bits_wdata;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire        _store_queue_io_out_element_vec_6_valid;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [31:0] _store_queue_io_out_element_vec_6_bits_addr;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [1:0]  _store_queue_io_out_element_vec_6_bits_wtype;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [31:0] _store_queue_io_out_element_vec_6_bits_wdata;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire        _store_queue_io_out_element_vec_7_valid;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [31:0] _store_queue_io_out_element_vec_7_bits_addr;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [1:0]  _store_queue_io_out_element_vec_7_bits_wtype;	// playground/src/backend/LSU/LSU.scala:49:29
-  wire [31:0] _store_queue_io_out_element_vec_7_bits_wdata;	// playground/src/backend/LSU/LSU.scala:49:29
-  reg  [1:0]  lstate;	// playground/src/backend/LSU/LSU.scala:58:62
-  reg  [2:0]  load_buf_id;	// playground/src/backend/LSU/LSU.scala:60:29
-  reg  [31:0] load_buf_addr;	// playground/src/backend/LSU/LSU.scala:60:29
-  reg  [4:0]  load_buf_ldtype;	// playground/src/backend/LSU/LSU.scala:60:29
-  reg         load_buf_uncached;	// playground/src/backend/LSU/LSU.scala:60:29
-  reg  [31:0] load_buf_rdata;	// playground/src/backend/LSU/LSU.scala:60:29
-  reg  [1:0]  load_buf_exception;	// playground/src/backend/LSU/LSU.scala:60:29
-  wire        load_ready = lstate == 2'h0;	// playground/src/backend/LSU/LSU.scala:37:31, :58:62, :72:46
-  reg  [31:0] load_vaddr;	// playground/src/backend/LSU/LSU.scala:72:31
-  wire        _load_buf_rdata_T_8 = load_buf_ldtype == 5'h9;	// playground/src/backend/LSU/LSU.scala:60:29, :95:59
-  wire        _load_buf_rdata_T_10 = load_buf_ldtype == 5'hC;	// playground/src/backend/LSU/LSU.scala:60:29, :95:59
-  wire        _load_buf_rdata_T_12 = load_buf_ldtype == 5'hA;	// playground/src/backend/LSU/LSU.scala:60:29, :95:59
-  wire        _T_8 = lstate == 2'h1;	// playground/src/backend/LSU/LSU.scala:58:62, :111:34
-  reg  [1:0]  stq_hit_en_REG;	// playground/src/backend/LSU/LSU.scala:111:55
-  reg         stq_hit;	// playground/src/backend/LSU/LSU.scala:112:35
-  reg  [31:0] stq_hit_item_bits_addr;	// playground/src/backend/LSU/LSU.scala:113:35
-  reg  [1:0]  stq_hit_item_bits_wtype;	// playground/src/backend/LSU/LSU.scala:113:35
-  reg  [31:0] stq_hit_item_bits_wdata;	// playground/src/backend/LSU/LSU.scala:113:35
+  wire [31:0] _store_queue_io_out_front_data_addr;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [1:0]  _store_queue_io_out_front_data_wtype;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [31:0] _store_queue_io_out_front_data_wdata;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire        _store_queue_io_out_front_data_uncached;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire        _store_queue_io_out_empty;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire        _store_queue_io_out_full;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire        _store_queue_io_out_element_vec_0_valid;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [31:0] _store_queue_io_out_element_vec_0_bits_addr;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [1:0]  _store_queue_io_out_element_vec_0_bits_wtype;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [31:0] _store_queue_io_out_element_vec_0_bits_wdata;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire        _store_queue_io_out_element_vec_1_valid;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [31:0] _store_queue_io_out_element_vec_1_bits_addr;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [1:0]  _store_queue_io_out_element_vec_1_bits_wtype;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [31:0] _store_queue_io_out_element_vec_1_bits_wdata;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire        _store_queue_io_out_element_vec_2_valid;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [31:0] _store_queue_io_out_element_vec_2_bits_addr;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [1:0]  _store_queue_io_out_element_vec_2_bits_wtype;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [31:0] _store_queue_io_out_element_vec_2_bits_wdata;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire        _store_queue_io_out_element_vec_3_valid;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [31:0] _store_queue_io_out_element_vec_3_bits_addr;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [1:0]  _store_queue_io_out_element_vec_3_bits_wtype;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [31:0] _store_queue_io_out_element_vec_3_bits_wdata;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire        _store_queue_io_out_element_vec_4_valid;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [31:0] _store_queue_io_out_element_vec_4_bits_addr;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [1:0]  _store_queue_io_out_element_vec_4_bits_wtype;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [31:0] _store_queue_io_out_element_vec_4_bits_wdata;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire        _store_queue_io_out_element_vec_5_valid;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [31:0] _store_queue_io_out_element_vec_5_bits_addr;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [1:0]  _store_queue_io_out_element_vec_5_bits_wtype;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [31:0] _store_queue_io_out_element_vec_5_bits_wdata;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire        _store_queue_io_out_element_vec_6_valid;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [31:0] _store_queue_io_out_element_vec_6_bits_addr;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [1:0]  _store_queue_io_out_element_vec_6_bits_wtype;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [31:0] _store_queue_io_out_element_vec_6_bits_wdata;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire        _store_queue_io_out_element_vec_7_valid;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [31:0] _store_queue_io_out_element_vec_7_bits_addr;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [1:0]  _store_queue_io_out_element_vec_7_bits_wtype;	// playground/src/backend/LSU/LSU.scala:51:29
+  wire [31:0] _store_queue_io_out_element_vec_7_bits_wdata;	// playground/src/backend/LSU/LSU.scala:51:29
+  reg  [1:0]  lstate;	// playground/src/backend/LSU/LSU.scala:60:62
+  reg  [2:0]  load_buf_id;	// playground/src/backend/LSU/LSU.scala:62:29
+  reg  [31:0] load_buf_addr;	// playground/src/backend/LSU/LSU.scala:62:29
+  reg  [4:0]  load_buf_ldtype;	// playground/src/backend/LSU/LSU.scala:62:29
+  reg         load_buf_uncached;	// playground/src/backend/LSU/LSU.scala:62:29
+  reg  [31:0] load_buf_rdata;	// playground/src/backend/LSU/LSU.scala:62:29
+  reg  [1:0]  load_buf_exception;	// playground/src/backend/LSU/LSU.scala:62:29
+  wire        load_ready = lstate == 2'h0;	// playground/src/backend/LSU/LSU.scala:39:31, :60:62, :74:46
+  reg  [31:0] load_vaddr;	// playground/src/backend/LSU/LSU.scala:74:31
+  wire        _load_buf_rdata_T_8 = load_buf_ldtype == 5'h9;	// playground/src/backend/LSU/LSU.scala:62:29, :97:59
+  wire        _load_buf_rdata_T_10 = load_buf_ldtype == 5'hC;	// playground/src/backend/LSU/LSU.scala:62:29, :97:59
+  wire        _load_buf_rdata_T_12 = load_buf_ldtype == 5'hA;	// playground/src/backend/LSU/LSU.scala:62:29, :97:59
+  wire        _T_8 = lstate == 2'h1;	// playground/src/backend/LSU/LSU.scala:60:62, :113:34
+  reg  [1:0]  stq_hit_en_REG;	// playground/src/backend/LSU/LSU.scala:113:55
+  reg         stq_hit;	// playground/src/backend/LSU/LSU.scala:114:35
+  reg  [31:0] stq_hit_item_bits_addr;	// playground/src/backend/LSU/LSU.scala:115:35
+  reg  [1:0]  stq_hit_item_bits_wtype;	// playground/src/backend/LSU/LSU.scala:115:35
+  reg  [31:0] stq_hit_item_bits_wdata;	// playground/src/backend/LSU/LSU.scala:115:35
   wire [6:0]  real_rdata_wstrb =
     {3'h0, 4'hF >> 4'h4 - (4'h1 << stq_hit_item_bits_wtype)}
-    << stq_hit_item_bits_addr[1:0];	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:41:{9,19,27,34,45}, :113:35, :117:90
+    << stq_hit_item_bits_addr[1:0];	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:43:{9,19,27,34,45}, :115:35, :119:90
   wire [31:0] _real_rdata_T_33 =
     {real_rdata_wstrb[3] ? stq_hit_item_bits_wdata[31] : lsu_io_cache_resp_bits_rdata[31],
      real_rdata_wstrb[3] ? stq_hit_item_bits_wdata[30] : lsu_io_cache_resp_bits_rdata[30],
@@ -17188,20 +17188,20 @@ module RV32LSU(	// <stdin>:6306:10
      real_rdata_wstrb[0] ? stq_hit_item_bits_wdata[3] : lsu_io_cache_resp_bits_rdata[3],
      real_rdata_wstrb[0] ? stq_hit_item_bits_wdata[2] : lsu_io_cache_resp_bits_rdata[2],
      real_rdata_wstrb[0] ? stq_hit_item_bits_wdata[1] : lsu_io_cache_resp_bits_rdata[1],
-     real_rdata_wstrb[0] ? stq_hit_item_bits_wdata[0] : lsu_io_cache_resp_bits_rdata[0]};	// playground/src/backend/LSU/LSU.scala:41:45, :113:35, :118:79, :120:{32,54}, :126:32, :127:{30,38}, :130:19
-  wire [31:0] real_rdata = stq_hit ? _real_rdata_T_33 : lsu_io_cache_resp_bits_rdata;	// playground/src/backend/LSU/LSU.scala:112:35, :114:22, :130:19
-  reg  [1:0]  paddr_v_REG;	// playground/src/backend/LSU/LSU.scala:149:35
-  wire        paddr_v = paddr_v_REG != 2'h1;	// playground/src/backend/LSU/LSU.scala:111:34, :149:{35,44}
-  wire        _T_9 = lstate == 2'h2;	// playground/src/backend/LSU/LSU.scala:58:62, :77:71, :134:20
-  wire        _GEN = load_ready | _T_8 | _T_9;	// playground/src/backend/LSU/LSU.scala:72:46, :93:25, :111:34, :134:20
-  wire        _GEN_0 = _GEN | ~(&lstate);	// playground/src/backend/LSU/LSU.scala:58:62, :92:25, :93:25, :134:20
+     real_rdata_wstrb[0] ? stq_hit_item_bits_wdata[0] : lsu_io_cache_resp_bits_rdata[0]};	// playground/src/backend/LSU/LSU.scala:43:45, :115:35, :120:79, :122:{32,54}, :128:32, :129:{30,38}, :132:19
+  wire [31:0] real_rdata = stq_hit ? _real_rdata_T_33 : lsu_io_cache_resp_bits_rdata;	// playground/src/backend/LSU/LSU.scala:114:35, :116:22, :132:19
+  reg  [1:0]  paddr_v_REG;	// playground/src/backend/LSU/LSU.scala:151:35
+  wire        paddr_v = paddr_v_REG != 2'h1;	// playground/src/backend/LSU/LSU.scala:113:34, :151:{35,44}
+  wire        _T_9 = lstate == 2'h2;	// playground/src/backend/LSU/LSU.scala:60:62, :79:71, :136:20
+  wire        _GEN = load_ready | _T_8 | _T_9;	// playground/src/backend/LSU/LSU.scala:74:46, :95:25, :113:34, :136:20
+  wire        _GEN_0 = _GEN | ~(&lstate);	// playground/src/backend/LSU/LSU.scala:60:62, :94:25, :95:25, :136:20
   wire        _imm_T = wtype_io_in_bits_optype < 5'h4;	// playground/src/ISA/ISAFactory.scala:126:44
-  wire        _store_queue_io_in_clear_T = wtype_io_flush_ertn | wtype_io_flush_exception;	// playground/src/backend/LSU/LSU.scala:220:96
+  wire        _store_queue_io_in_clear_T = wtype_io_flush_ertn | wtype_io_flush_exception;	// playground/src/backend/LSU/LSU.scala:222:96
   wire        store_en =
-    _imm_T & wtype_io_in_valid & _wtype_io_in_ready_output & ~_store_queue_io_in_clear_T;	// playground/src/ISA/ISAFactory.scala:126:44, playground/src/ISA/riscv32/LSU.scala:63:23, :64:33, playground/src/backend/LSU/LSU.scala:220:{78,80,96}, :280:17
+    _imm_T & wtype_io_in_valid & _wtype_io_in_ready_output & ~_store_queue_io_in_clear_T;	// playground/src/ISA/ISAFactory.scala:126:44, playground/src/ISA/riscv32/LSU.scala:63:23, :64:33, playground/src/backend/LSU/LSU.scala:222:{78,80,96}, :282:17
   wire        is_sc = wtype_io_in_bits_optype == 5'h3;	// playground/src/ISA/ISAFactory.scala:126:44, playground/src/ISA/riscv32/LSU.scala:22:35
   wire        _vaddr_T_2 =
-    wtype_io_in_bits_optype[4] | wtype_io_in_bits_optype == 5'hD | is_sc;	// playground/src/ISA/ISAFactory.scala:127:43, playground/src/ISA/riscv32/LSU.scala:21:35, :22:35, :23:56, playground/src/backend/LSU/LSU.scala:172:79
+    wtype_io_in_bits_optype[4] | wtype_io_in_bits_optype == 5'hD | is_sc;	// playground/src/ISA/ISAFactory.scala:127:43, playground/src/ISA/riscv32/LSU.scala:21:35, :22:35, :23:56, playground/src/backend/LSU/LSU.scala:174:79
   wire [31:0] _vaddr_T_4 =
     wtype_io_in_bits_operand_a
     + (_imm_T ? wtype_io_in_bits_operand_c : wtype_io_in_bits_operand_b);	// playground/src/ISA/ISAFactory.scala:126:44, playground/src/ISA/riscv32/LSU.scala:20:20, :23:74
@@ -17214,8 +17214,8 @@ module RV32LSU(	// <stdin>:6306:10
     & (wtype_io_in_bits_optype[4] | wtype_io_in_bits_optype[3]
        & ~(wtype_io_in_bits_optype[4])
          ? load_ready
-         : _imm_T & ~_store_queue_io_out_full);	// playground/src/ISA/ISAFactory.scala:125:{50,57,59}, :126:44, :127:43, playground/src/ISA/riscv32/LSU.scala:41:30, :63:23, :64:33, playground/src/backend/LSU/LSU.scala:49:29, :72:46, :210:28, :280:17, src/main/scala/chisel3/util/Mux.scala:141:16
-  assign new_store_inst_wtype = amo_ongoing ? 2'h2 : _new_store_inst_wtype_delay_io_out;	// playground/src/ISA/riscv32/LSU.scala:41:30, :63:23, :69:33, playground/src/backend/LSU/LSU.scala:77:71, :214:29, playground/src/utils/utils.scala:49:27
+         : _imm_T & ~_store_queue_io_out_full);	// playground/src/ISA/ISAFactory.scala:125:{50,57,59}, :126:44, :127:43, playground/src/ISA/riscv32/LSU.scala:41:30, :63:23, :64:33, playground/src/backend/LSU/LSU.scala:51:29, :74:46, :212:28, :282:17, src/main/scala/chisel3/util/Mux.scala:141:16
+  assign new_store_inst_wtype = amo_ongoing ? 2'h2 : _new_store_inst_wtype_delay_io_out;	// playground/src/ISA/riscv32/LSU.scala:41:30, :63:23, :69:33, playground/src/backend/LSU/LSU.scala:79:71, :216:29, playground/src/utils/utils.scala:49:27
   assign new_store_inst_wdata =
     amo_ongoing
       ? (amo_optype == 21'h10
@@ -17225,155 +17225,155 @@ module RV32LSU(	// <stdin>:6306:10
                : amo_optype == 21'h13
                    ? load_buf_rdata & amo_rs2
                    : amo_optype == 21'h14 ? load_buf_rdata | amo_rs2 : 32'h77777777)
-      : _new_store_inst_wdata_delay_io_out[31:0];	// playground/src/ISA/riscv32/LSU.scala:41:30, :42:30, :43:30, :54:60, :56:39, :57:39, :58:39, :63:23, :70:33, playground/src/backend/LSU/LSU.scala:60:29, :172:79, :215:29, playground/src/utils/utils.scala:49:27
-  wire        _GEN_1 = amo_ongoing & (&lstate);	// playground/src/ISA/riscv32/LSU.scala:41:30, :71:{21,37}, playground/src/backend/LSU/LSU.scala:58:62
-  wire        _GEN_2 = _GEN_1 | _store_queue_io_in_enq_valid_delay_io_out;	// playground/src/ISA/riscv32/LSU.scala:63:23, :71:37, :73:41, playground/src/backend/LSU/LSU.scala:228:33, playground/src/utils/utils.scala:49:27
+      : _new_store_inst_wdata_delay_io_out[31:0];	// playground/src/ISA/riscv32/LSU.scala:41:30, :42:30, :43:30, :54:60, :56:39, :57:39, :58:39, :63:23, :70:33, playground/src/backend/LSU/LSU.scala:62:29, :174:79, :217:29, playground/src/utils/utils.scala:49:27
+  wire        _GEN_1 = amo_ongoing & (&lstate);	// playground/src/ISA/riscv32/LSU.scala:41:30, :71:{21,37}, playground/src/backend/LSU/LSU.scala:60:62
+  wire        _GEN_2 = _GEN_1 | _store_queue_io_in_enq_valid_delay_io_out;	// playground/src/ISA/riscv32/LSU.scala:63:23, :71:37, :73:41, playground/src/backend/LSU/LSU.scala:230:33, playground/src/utils/utils.scala:49:27
   wire        is_commit_sc =
-    (&_store_queue_io_out_front_data_wtype) & lsu_io_store_commit_valid;	// playground/src/ISA/riscv32/LSU.scala:80:{47,55}, playground/src/backend/LSU/LSU.scala:49:29
+    (&_store_queue_io_out_front_data_wtype) & lsu_io_store_commit_valid;	// playground/src/ISA/riscv32/LSU.scala:80:{47,55}, playground/src/backend/LSU/LSU.scala:51:29
   always @(posedge clock) begin	// <stdin>:6307:11
     if (reset) begin	// <stdin>:6307:11
-      lstate <= 2'h0;	// playground/src/backend/LSU/LSU.scala:37:31, :58:62
-      load_buf_id <= 3'h0;	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:60:29
-      load_buf_addr <= 32'h0;	// playground/src/backend/LSU/LSU.scala:60:{29,42}
-      load_buf_ldtype <= 5'h0;	// playground/src/backend/LSU/LSU.scala:60:{29,42}
-      load_buf_uncached <= 1'h0;	// playground/src/backend/LSU/LSU.scala:37:31, :60:29
-      load_buf_rdata <= 32'h0;	// playground/src/backend/LSU/LSU.scala:60:{29,42}
-      load_buf_exception <= 2'h0;	// playground/src/backend/LSU/LSU.scala:37:31, :60:29
-      amo_ongoing <= 1'h0;	// playground/src/ISA/riscv32/LSU.scala:41:30, playground/src/backend/LSU/LSU.scala:37:31
-      amo_rs2 <= 32'h0;	// playground/src/ISA/riscv32/LSU.scala:42:30, playground/src/backend/LSU/LSU.scala:60:42
+      lstate <= 2'h0;	// playground/src/backend/LSU/LSU.scala:39:31, :60:62
+      load_buf_id <= 3'h0;	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:62:29
+      load_buf_addr <= 32'h0;	// playground/src/backend/LSU/LSU.scala:62:{29,42}
+      load_buf_ldtype <= 5'h0;	// playground/src/backend/LSU/LSU.scala:62:{29,42}
+      load_buf_uncached <= 1'h0;	// playground/src/backend/LSU/LSU.scala:39:31, :62:29
+      load_buf_rdata <= 32'h0;	// playground/src/backend/LSU/LSU.scala:62:{29,42}
+      load_buf_exception <= 2'h0;	// playground/src/backend/LSU/LSU.scala:39:31, :62:29
+      amo_ongoing <= 1'h0;	// playground/src/ISA/riscv32/LSU.scala:41:30, playground/src/backend/LSU/LSU.scala:39:31
+      amo_rs2 <= 32'h0;	// playground/src/ISA/riscv32/LSU.scala:42:30, playground/src/backend/LSU/LSU.scala:62:42
       amo_optype <= 21'h0;	// playground/src/ISA/riscv32/LSU.scala:43:30
     end
     else begin	// <stdin>:6307:11
-      automatic logic _T_7;	// playground/src/backend/LSU/LSU.scala:137:44
-      automatic logic _GEN_3;	// playground/src/backend/LSU/LSU.scala:60:29, :134:20, :137:87, :138:36
-      automatic logic _GEN_4;	// playground/src/backend/LSU/LSU.scala:60:29, :134:20, :159:27, :161:35
-      automatic logic _T_10;	// playground/src/backend/LSU/LSU.scala:171:34
+      automatic logic _T_7;	// playground/src/backend/LSU/LSU.scala:139:44
+      automatic logic _GEN_3;	// playground/src/backend/LSU/LSU.scala:62:29, :136:20, :139:87, :140:36
+      automatic logic _GEN_4;	// playground/src/backend/LSU/LSU.scala:62:29, :136:20, :161:27, :163:35
+      automatic logic _T_10;	// playground/src/backend/LSU/LSU.scala:173:34
       automatic logic _T_24 =
-        wtype_io_in_valid & _wtype_io_in_ready_output & wtype_io_in_bits_optype[4];	// playground/src/ISA/ISAFactory.scala:127:43, playground/src/ISA/riscv32/LSU.scala:29:44, :63:23, :64:33, playground/src/backend/LSU/LSU.scala:280:17
-      automatic logic _GEN_5 = load_ready & _T_24;	// playground/src/ISA/riscv32/LSU.scala:27:20, :29:{44,77}, :31:36, playground/src/backend/LSU/LSU.scala:72:46, :134:20
+        wtype_io_in_valid & _wtype_io_in_ready_output & wtype_io_in_bits_optype[4];	// playground/src/ISA/ISAFactory.scala:127:43, playground/src/ISA/riscv32/LSU.scala:29:44, :63:23, :64:33, playground/src/backend/LSU/LSU.scala:282:17
+      automatic logic _GEN_5 = load_ready & _T_24;	// playground/src/ISA/riscv32/LSU.scala:27:20, :29:{44,77}, :31:36, playground/src/backend/LSU/LSU.scala:74:46, :136:20
       automatic logic _T_26;	// playground/src/ISA/riscv32/LSU.scala:45:26
       _T_7 =
         wtype_io_in_valid & _wtype_io_in_ready_output & wtype_io_in_bits_optype[3]
-        & ~(wtype_io_in_bits_optype[4]);	// playground/src/ISA/ISAFactory.scala:125:{50,59,66}, playground/src/ISA/riscv32/LSU.scala:63:23, :64:33, playground/src/backend/LSU/LSU.scala:137:44, :280:17
-      _GEN_3 = load_ready & _T_7;	// playground/src/backend/LSU/LSU.scala:60:29, :72:46, :134:20, :137:{44,87}, :138:36
-      _GEN_4 = _T_8 & paddr_v;	// playground/src/backend/LSU/LSU.scala:60:29, :111:34, :134:20, :149:44, :159:27, :161:35
-      _T_10 = lsu_io_cache_resp_valid & lsu_io_cache_resp_bits_done;	// playground/src/backend/LSU/LSU.scala:171:34
-      _T_26 = wtype_io_in_valid & _wtype_io_in_ready_output;	// playground/src/ISA/riscv32/LSU.scala:45:26, :63:23, :64:33, playground/src/backend/LSU/LSU.scala:280:17
-      if (_GEN_5) begin	// playground/src/ISA/riscv32/LSU.scala:27:20, :29:77, :31:36, playground/src/backend/LSU/LSU.scala:134:20
-        lstate <= 2'h1;	// playground/src/backend/LSU/LSU.scala:58:62, :111:34
+        & ~(wtype_io_in_bits_optype[4]);	// playground/src/ISA/ISAFactory.scala:125:{50,59,66}, playground/src/ISA/riscv32/LSU.scala:63:23, :64:33, playground/src/backend/LSU/LSU.scala:139:44, :282:17
+      _GEN_3 = load_ready & _T_7;	// playground/src/backend/LSU/LSU.scala:62:29, :74:46, :136:20, :139:{44,87}, :140:36
+      _GEN_4 = _T_8 & paddr_v;	// playground/src/backend/LSU/LSU.scala:62:29, :113:34, :136:20, :151:44, :161:27, :163:35
+      _T_10 = lsu_io_cache_resp_valid & lsu_io_cache_resp_bits_done;	// playground/src/backend/LSU/LSU.scala:173:34
+      _T_26 = wtype_io_in_valid & _wtype_io_in_ready_output;	// playground/src/ISA/riscv32/LSU.scala:45:26, :63:23, :64:33, playground/src/backend/LSU/LSU.scala:282:17
+      if (_GEN_5) begin	// playground/src/ISA/riscv32/LSU.scala:27:20, :29:77, :31:36, playground/src/backend/LSU/LSU.scala:136:20
+        lstate <= 2'h1;	// playground/src/backend/LSU/LSU.scala:60:62, :113:34
         if (_vaddr_T_2)	// playground/src/ISA/riscv32/LSU.scala:23:56
-          load_buf_addr <= wtype_io_in_bits_operand_a;	// playground/src/backend/LSU/LSU.scala:60:29
+          load_buf_addr <= wtype_io_in_bits_operand_a;	// playground/src/backend/LSU/LSU.scala:62:29
         else	// playground/src/ISA/riscv32/LSU.scala:23:56
-          load_buf_addr <= _vaddr_T_4;	// playground/src/ISA/riscv32/LSU.scala:23:74, playground/src/backend/LSU/LSU.scala:60:29
-        load_buf_ldtype <= 5'hA;	// playground/src/backend/LSU/LSU.scala:60:29, :95:59
+          load_buf_addr <= _vaddr_T_4;	// playground/src/ISA/riscv32/LSU.scala:23:74, playground/src/backend/LSU/LSU.scala:62:29
+        load_buf_ldtype <= 5'hA;	// playground/src/backend/LSU/LSU.scala:62:29, :97:59
       end
-      else begin	// playground/src/ISA/riscv32/LSU.scala:27:20, :29:77, :31:36, playground/src/backend/LSU/LSU.scala:134:20
-        automatic logic [3:0][1:0] _GEN_6;	// playground/src/backend/LSU/LSU.scala:58:62, :72:46, :111:34, :134:20, :137:87, :159:27, :171:57, :186:36
+      else begin	// playground/src/ISA/riscv32/LSU.scala:27:20, :29:77, :31:36, playground/src/backend/LSU/LSU.scala:136:20
+        automatic logic [3:0][1:0] _GEN_6;	// playground/src/backend/LSU/LSU.scala:60:62, :74:46, :113:34, :136:20, :139:87, :161:27, :173:57, :188:36
         _GEN_6 =
           {{_wb_arb_io_in_1_ready ? 2'h0 : 2'h3},
            {_T_10 ? 2'h3 : lstate},
            {_req_arb_io_in_1_ready ? 2'h2 : lstate},
-           {_T_7 ? 2'h1 : lstate}};	// playground/src/backend/LSU/LSU.scala:37:31, :58:62, :72:46, :77:71, :111:34, :134:20, :137:{44,87}, :143:36, :156:34, :157:24, :159:27, :171:{34,57}, :182:32, :186:{36,42}, :252:25, :260:24
-        lstate <= _GEN_6[lstate];	// playground/src/backend/LSU/LSU.scala:58:62, :72:46, :111:34, :134:20, :137:87, :159:27, :171:57, :186:36
-        if (load_ready) begin	// playground/src/backend/LSU/LSU.scala:72:46
-          if (_T_7) begin	// playground/src/backend/LSU/LSU.scala:137:44
+           {_T_7 ? 2'h1 : lstate}};	// playground/src/backend/LSU/LSU.scala:39:31, :60:62, :74:46, :79:71, :113:34, :136:20, :139:{44,87}, :145:36, :158:34, :159:24, :161:27, :173:{34,57}, :184:32, :188:{36,42}, :254:25, :262:24
+        lstate <= _GEN_6[lstate];	// playground/src/backend/LSU/LSU.scala:60:62, :74:46, :113:34, :136:20, :139:87, :161:27, :173:57, :188:36
+        if (load_ready) begin	// playground/src/backend/LSU/LSU.scala:74:46
+          if (_T_7) begin	// playground/src/backend/LSU/LSU.scala:139:44
             if (_vaddr_T_2)	// playground/src/ISA/riscv32/LSU.scala:23:56
-              load_buf_addr <= wtype_io_in_bits_operand_a;	// playground/src/backend/LSU/LSU.scala:60:29
+              load_buf_addr <= wtype_io_in_bits_operand_a;	// playground/src/backend/LSU/LSU.scala:62:29
             else	// playground/src/ISA/riscv32/LSU.scala:23:56
-              load_buf_addr <= _vaddr_T_4;	// playground/src/ISA/riscv32/LSU.scala:23:74, playground/src/backend/LSU/LSU.scala:60:29
+              load_buf_addr <= _vaddr_T_4;	// playground/src/ISA/riscv32/LSU.scala:23:74, playground/src/backend/LSU/LSU.scala:62:29
           end
         end
-        else if (_GEN_4)	// playground/src/backend/LSU/LSU.scala:60:29, :134:20, :159:27, :161:35
-          load_buf_addr <= lsu_io_data_trans_resp_paddr;	// playground/src/backend/LSU/LSU.scala:60:29
-        if (_GEN_3)	// playground/src/backend/LSU/LSU.scala:60:29, :134:20, :137:87, :138:36
-          load_buf_ldtype <= wtype_io_in_bits_optype;	// playground/src/backend/LSU/LSU.scala:60:29
+        else if (_GEN_4)	// playground/src/backend/LSU/LSU.scala:62:29, :136:20, :161:27, :163:35
+          load_buf_addr <= lsu_io_data_trans_resp_paddr;	// playground/src/backend/LSU/LSU.scala:62:29
+        if (_GEN_3)	// playground/src/backend/LSU/LSU.scala:62:29, :136:20, :139:87, :140:36
+          load_buf_ldtype <= wtype_io_in_bits_optype;	// playground/src/backend/LSU/LSU.scala:62:29
       end
-      if (load_ready & _T_24 | _GEN_3) begin	// playground/src/ISA/riscv32/LSU.scala:27:20, :29:{44,77}, :30:36, playground/src/backend/LSU/LSU.scala:60:29, :72:46, :134:20, :137:87, :138:36
-        load_buf_id <= wtype_io_in_bits_id;	// playground/src/backend/LSU/LSU.scala:60:29
-        load_buf_exception <= 2'h0;	// playground/src/backend/LSU/LSU.scala:37:31, :60:29
+      if (load_ready & _T_24 | _GEN_3) begin	// playground/src/ISA/riscv32/LSU.scala:27:20, :29:{44,77}, :30:36, playground/src/backend/LSU/LSU.scala:62:29, :74:46, :136:20, :139:87, :140:36
+        load_buf_id <= wtype_io_in_bits_id;	// playground/src/backend/LSU/LSU.scala:62:29
+        load_buf_exception <= 2'h0;	// playground/src/backend/LSU/LSU.scala:39:31, :62:29
       end
-      load_buf_uncached <= _GEN_5 | ~load_ready & _GEN_4 | load_buf_uncached;	// playground/src/ISA/riscv32/LSU.scala:27:20, :29:77, :31:36, :34:36, playground/src/backend/LSU/LSU.scala:60:29, :72:46, :91:25, :134:20, :159:27, :161:35
-      if (load_ready | _T_8 | ~(_T_9 & _T_10)) begin	// playground/src/backend/LSU/LSU.scala:60:29, :72:46, :111:34, :134:20, :171:{34,57}, :172:32
+      load_buf_uncached <= _GEN_5 | ~load_ready & _GEN_4 | load_buf_uncached;	// playground/src/ISA/riscv32/LSU.scala:27:20, :29:77, :31:36, :34:36, playground/src/backend/LSU/LSU.scala:62:29, :74:46, :93:25, :136:20, :161:27, :163:35
+      if (load_ready | _T_8 | ~(_T_9 & _T_10)) begin	// playground/src/backend/LSU/LSU.scala:62:29, :74:46, :113:34, :136:20, :173:{34,57}, :174:32
       end
-      else if (load_buf_ldtype == 5'hD | _load_buf_rdata_T_12) begin	// playground/src/backend/LSU/LSU.scala:60:29, :95:59, :172:79
-        if (stq_hit)	// playground/src/backend/LSU/LSU.scala:112:35
-          load_buf_rdata <= _real_rdata_T_33;	// playground/src/backend/LSU/LSU.scala:60:29, :130:19
-        else	// playground/src/backend/LSU/LSU.scala:112:35
-          load_buf_rdata <= lsu_io_cache_resp_bits_rdata;	// playground/src/backend/LSU/LSU.scala:60:29
+      else if (load_buf_ldtype == 5'hD | _load_buf_rdata_T_12) begin	// playground/src/backend/LSU/LSU.scala:62:29, :97:59, :174:79
+        if (stq_hit)	// playground/src/backend/LSU/LSU.scala:114:35
+          load_buf_rdata <= _real_rdata_T_33;	// playground/src/backend/LSU/LSU.scala:62:29, :132:19
+        else	// playground/src/backend/LSU/LSU.scala:114:35
+          load_buf_rdata <= lsu_io_cache_resp_bits_rdata;	// playground/src/backend/LSU/LSU.scala:62:29
       end
-      else begin	// playground/src/backend/LSU/LSU.scala:172:79
-        automatic logic [15:0] ldhu_result;	// playground/src/backend/LSU/LSU.scala:85:26
-        ldhu_result = load_buf_addr[1] ? real_rdata[31:16] : real_rdata[15:0];	// playground/src/backend/LSU/LSU.scala:60:29, :85:{26,40,55,75}, :114:22
-        if (_load_buf_rdata_T_10)	// playground/src/backend/LSU/LSU.scala:95:59
-          load_buf_rdata <= {16'h0, ldhu_result};	// playground/src/backend/LSU/LSU.scala:60:29, :85:26, playground/src/utils/utils.scala:31:12
-        else if (_load_buf_rdata_T_8)	// playground/src/backend/LSU/LSU.scala:95:59
+      else begin	// playground/src/backend/LSU/LSU.scala:174:79
+        automatic logic [15:0] ldhu_result;	// playground/src/backend/LSU/LSU.scala:87:26
+        ldhu_result = load_buf_addr[1] ? real_rdata[31:16] : real_rdata[15:0];	// playground/src/backend/LSU/LSU.scala:62:29, :87:{26,40,55,75}, :116:22
+        if (_load_buf_rdata_T_10)	// playground/src/backend/LSU/LSU.scala:97:59
+          load_buf_rdata <= {16'h0, ldhu_result};	// playground/src/backend/LSU/LSU.scala:62:29, :87:26, playground/src/utils/utils.scala:31:12
+        else if (_load_buf_rdata_T_8)	// playground/src/backend/LSU/LSU.scala:97:59
           load_buf_rdata <=
             {{5{ldhu_result[15]}},
              {4{{2{ldhu_result[15]}}}},
              {3{ldhu_result[15]}},
-             ldhu_result};	// playground/src/backend/LSU/LSU.scala:60:29, :85:26, playground/src/utils/utils.scala:23:32, :24:12
-        else begin	// playground/src/backend/LSU/LSU.scala:95:59
+             ldhu_result};	// playground/src/backend/LSU/LSU.scala:62:29, :87:26, playground/src/utils/utils.scala:23:32, :24:12
+        else begin	// playground/src/backend/LSU/LSU.scala:97:59
           automatic logic [3:0][7:0] _GEN_7 =
             {{real_rdata[31:24]},
              {real_rdata[23:16]},
              {real_rdata[15:8]},
-             {real_rdata[7:0]}};	// playground/src/backend/LSU/LSU.scala:77:71, :79:34, :80:34, :81:34, :82:34, :114:22
-          automatic logic [7:0]      ldbu_result;	// playground/src/backend/LSU/LSU.scala:77:71
-          ldbu_result = _GEN_7[load_buf_addr[1:0]];	// playground/src/backend/LSU/LSU.scala:60:29, :77:{46,71}
-          if (load_buf_ldtype == 5'hB)	// playground/src/backend/LSU/LSU.scala:60:29, :172:79
-            load_buf_rdata <= {24'h0, ldbu_result};	// playground/src/backend/LSU/LSU.scala:60:29, :77:71, playground/src/utils/utils.scala:31:12
-          else if (load_buf_ldtype == 5'h8)	// playground/src/ISA/ISAFactory.scala:125:50, playground/src/backend/LSU/LSU.scala:60:29, :172:79
+             {real_rdata[7:0]}};	// playground/src/backend/LSU/LSU.scala:79:71, :81:34, :82:34, :83:34, :84:34, :116:22
+          automatic logic [7:0]      ldbu_result;	// playground/src/backend/LSU/LSU.scala:79:71
+          ldbu_result = _GEN_7[load_buf_addr[1:0]];	// playground/src/backend/LSU/LSU.scala:62:29, :79:{46,71}
+          if (load_buf_ldtype == 5'hB)	// playground/src/backend/LSU/LSU.scala:62:29, :174:79
+            load_buf_rdata <= {24'h0, ldbu_result};	// playground/src/backend/LSU/LSU.scala:62:29, :79:71, playground/src/utils/utils.scala:31:12
+          else if (load_buf_ldtype == 5'h8)	// playground/src/ISA/ISAFactory.scala:125:50, playground/src/backend/LSU/LSU.scala:62:29, :174:79
             load_buf_rdata <=
-              {{2{{2{ldbu_result[7]}}}}, {20{ldbu_result[7]}}, ldbu_result};	// playground/src/backend/LSU/LSU.scala:60:29, :77:71, playground/src/utils/utils.scala:23:32, :24:12
-          else	// playground/src/backend/LSU/LSU.scala:172:79
-            load_buf_rdata <= 32'h77777777;	// playground/src/backend/LSU/LSU.scala:60:29, :172:79
+              {{2{{2{ldbu_result[7]}}}}, {20{ldbu_result[7]}}, ldbu_result};	// playground/src/backend/LSU/LSU.scala:62:29, :79:71, playground/src/utils/utils.scala:23:32, :24:12
+          else	// playground/src/backend/LSU/LSU.scala:174:79
+            load_buf_rdata <= 32'h77777777;	// playground/src/backend/LSU/LSU.scala:62:29, :174:79
         end
       end
       if (wtype_io_in_bits_optype[4])	// playground/src/ISA/ISAFactory.scala:127:43
         amo_ongoing <= _T_26 | amo_ongoing;	// playground/src/ISA/riscv32/LSU.scala:41:30, :45:{26,41}, :46:25
       else	// playground/src/ISA/ISAFactory.scala:127:43
-        amo_ongoing <= ~(amo_ongoing & (&lstate) & _wb_arb_io_in_1_ready) & amo_ongoing;	// playground/src/ISA/riscv32/LSU.scala:41:30, :50:{39,55,73}, :51:21, playground/src/backend/LSU/LSU.scala:58:62, :260:24
+        amo_ongoing <= ~(amo_ongoing & (&lstate) & _wb_arb_io_in_1_ready) & amo_ongoing;	// playground/src/ISA/riscv32/LSU.scala:41:30, :50:{39,55,73}, :51:21, playground/src/backend/LSU/LSU.scala:60:62, :262:24
       if (wtype_io_in_bits_optype[4] & _T_26) begin	// playground/src/ISA/ISAFactory.scala:127:43, playground/src/ISA/riscv32/LSU.scala:42:30, :44:41, :45:{26,41}, :47:25
         amo_rs2 <= wtype_io_in_bits_operand_b;	// playground/src/ISA/riscv32/LSU.scala:42:30
         amo_optype <= {16'h0, wtype_io_in_bits_optype};	// playground/src/ISA/riscv32/LSU.scala:43:30, :48:25, playground/src/utils/utils.scala:31:12
       end
     end
-    if (load_ready) begin	// playground/src/backend/LSU/LSU.scala:72:46
+    if (load_ready) begin	// playground/src/backend/LSU/LSU.scala:74:46
       if (_vaddr_T_2)	// playground/src/ISA/riscv32/LSU.scala:23:56
-        load_vaddr <= wtype_io_in_bits_operand_a;	// playground/src/backend/LSU/LSU.scala:72:31
+        load_vaddr <= wtype_io_in_bits_operand_a;	// playground/src/backend/LSU/LSU.scala:74:31
       else	// playground/src/ISA/riscv32/LSU.scala:23:56
-        load_vaddr <= _vaddr_T_4;	// playground/src/ISA/riscv32/LSU.scala:23:74, playground/src/backend/LSU/LSU.scala:72:31
+        load_vaddr <= _vaddr_T_4;	// playground/src/ISA/riscv32/LSU.scala:23:74, playground/src/backend/LSU/LSU.scala:74:31
     end
-    stq_hit_en_REG <= lstate;	// playground/src/backend/LSU/LSU.scala:58:62, :111:55
-    if (_T_8 & stq_hit_en_REG != 2'h1) begin	// playground/src/backend/LSU/LSU.scala:111:{34,44,55,64}
+    stq_hit_en_REG <= lstate;	// playground/src/backend/LSU/LSU.scala:60:62, :113:55
+    if (_T_8 & stq_hit_en_REG != 2'h1) begin	// playground/src/backend/LSU/LSU.scala:113:{34,44,55,64}
       automatic logic             stq_total_hits_1 =
         _store_queue_io_out_element_vec_1_valid
-        & _store_queue_io_out_element_vec_1_bits_addr[31:2] == lsu_io_data_trans_resp_paddr[31:2];	// playground/src/backend/LSU/LSU.scala:49:29, :109:{22,37,58,90}
+        & _store_queue_io_out_element_vec_1_bits_addr[31:2] == lsu_io_data_trans_resp_paddr[31:2];	// playground/src/backend/LSU/LSU.scala:51:29, :111:{22,37,58,90}
       automatic logic             stq_total_hits_2 =
         _store_queue_io_out_element_vec_2_valid
-        & _store_queue_io_out_element_vec_2_bits_addr[31:2] == lsu_io_data_trans_resp_paddr[31:2];	// playground/src/backend/LSU/LSU.scala:49:29, :109:{22,37,58,90}
+        & _store_queue_io_out_element_vec_2_bits_addr[31:2] == lsu_io_data_trans_resp_paddr[31:2];	// playground/src/backend/LSU/LSU.scala:51:29, :111:{22,37,58,90}
       automatic logic             stq_total_hits_3 =
         _store_queue_io_out_element_vec_3_valid
-        & _store_queue_io_out_element_vec_3_bits_addr[31:2] == lsu_io_data_trans_resp_paddr[31:2];	// playground/src/backend/LSU/LSU.scala:49:29, :109:{22,37,58,90}
+        & _store_queue_io_out_element_vec_3_bits_addr[31:2] == lsu_io_data_trans_resp_paddr[31:2];	// playground/src/backend/LSU/LSU.scala:51:29, :111:{22,37,58,90}
       automatic logic             stq_total_hits_4 =
         _store_queue_io_out_element_vec_4_valid
-        & _store_queue_io_out_element_vec_4_bits_addr[31:2] == lsu_io_data_trans_resp_paddr[31:2];	// playground/src/backend/LSU/LSU.scala:49:29, :109:{22,37,58,90}
+        & _store_queue_io_out_element_vec_4_bits_addr[31:2] == lsu_io_data_trans_resp_paddr[31:2];	// playground/src/backend/LSU/LSU.scala:51:29, :111:{22,37,58,90}
       automatic logic             stq_total_hits_5 =
         _store_queue_io_out_element_vec_5_valid
-        & _store_queue_io_out_element_vec_5_bits_addr[31:2] == lsu_io_data_trans_resp_paddr[31:2];	// playground/src/backend/LSU/LSU.scala:49:29, :109:{22,37,58,90}
+        & _store_queue_io_out_element_vec_5_bits_addr[31:2] == lsu_io_data_trans_resp_paddr[31:2];	// playground/src/backend/LSU/LSU.scala:51:29, :111:{22,37,58,90}
       automatic logic             stq_total_hits_6 =
         _store_queue_io_out_element_vec_6_valid
-        & _store_queue_io_out_element_vec_6_bits_addr[31:2] == lsu_io_data_trans_resp_paddr[31:2];	// playground/src/backend/LSU/LSU.scala:49:29, :109:{22,37,58,90}
+        & _store_queue_io_out_element_vec_6_bits_addr[31:2] == lsu_io_data_trans_resp_paddr[31:2];	// playground/src/backend/LSU/LSU.scala:51:29, :111:{22,37,58,90}
       automatic logic             stq_total_hits_7 =
         _store_queue_io_out_element_vec_7_valid
-        & _store_queue_io_out_element_vec_7_bits_addr[31:2] == lsu_io_data_trans_resp_paddr[31:2];	// playground/src/backend/LSU/LSU.scala:49:29, :109:{22,37,58,90}
+        & _store_queue_io_out_element_vec_7_bits_addr[31:2] == lsu_io_data_trans_resp_paddr[31:2];	// playground/src/backend/LSU/LSU.scala:51:29, :111:{22,37,58,90}
       automatic logic [2:0]       _GEN_8 =
         {stq_total_hits_7, stq_total_hits_6, stq_total_hits_5}
-        | {stq_total_hits_3, stq_total_hits_2, stq_total_hits_1};	// playground/src/backend/LSU/LSU.scala:109:22, src/main/scala/chisel3/util/OneHot.scala:30:18, :31:18, :32:28
+        | {stq_total_hits_3, stq_total_hits_2, stq_total_hits_1};	// playground/src/backend/LSU/LSU.scala:111:22, src/main/scala/chisel3/util/OneHot.scala:30:18, :31:18, :32:28
       automatic logic [2:0]       _stq_hit_item_T_7 =
         {|{stq_total_hits_7, stq_total_hits_6, stq_total_hits_5, stq_total_hits_4},
          |(_GEN_8[2:1]),
-         _GEN_8[2] | _GEN_8[0]};	// playground/src/backend/LSU/LSU.scala:109:22, src/main/scala/chisel3/util/OneHot.scala:30:18, :31:18, :32:{10,14,28}
+         _GEN_8[2] | _GEN_8[0]};	// playground/src/backend/LSU/LSU.scala:111:22, src/main/scala/chisel3/util/OneHot.scala:30:18, :31:18, :32:{10,14,28}
       automatic logic [7:0][31:0] _GEN_9 =
         {{_store_queue_io_out_element_vec_7_bits_addr},
          {_store_queue_io_out_element_vec_6_bits_addr},
@@ -17382,7 +17382,7 @@ module RV32LSU(	// <stdin>:6306:10
          {_store_queue_io_out_element_vec_3_bits_addr},
          {_store_queue_io_out_element_vec_2_bits_addr},
          {_store_queue_io_out_element_vec_1_bits_addr},
-         {_store_queue_io_out_element_vec_0_bits_addr}};	// playground/src/backend/LSU/LSU.scala:49:29, :113:35
+         {_store_queue_io_out_element_vec_0_bits_addr}};	// playground/src/backend/LSU/LSU.scala:51:29, :115:35
       automatic logic [7:0][1:0]  _GEN_10 =
         {{_store_queue_io_out_element_vec_7_bits_wtype},
          {_store_queue_io_out_element_vec_6_bits_wtype},
@@ -17391,7 +17391,7 @@ module RV32LSU(	// <stdin>:6306:10
          {_store_queue_io_out_element_vec_3_bits_wtype},
          {_store_queue_io_out_element_vec_2_bits_wtype},
          {_store_queue_io_out_element_vec_1_bits_wtype},
-         {_store_queue_io_out_element_vec_0_bits_wtype}};	// playground/src/backend/LSU/LSU.scala:49:29, :113:35
+         {_store_queue_io_out_element_vec_0_bits_wtype}};	// playground/src/backend/LSU/LSU.scala:51:29, :115:35
       automatic logic [7:0][31:0] _GEN_11 =
         {{_store_queue_io_out_element_vec_7_bits_wdata},
          {_store_queue_io_out_element_vec_6_bits_wdata},
@@ -17400,39 +17400,39 @@ module RV32LSU(	// <stdin>:6306:10
          {_store_queue_io_out_element_vec_3_bits_wdata},
          {_store_queue_io_out_element_vec_2_bits_wdata},
          {_store_queue_io_out_element_vec_1_bits_wdata},
-         {_store_queue_io_out_element_vec_0_bits_wdata}};	// playground/src/backend/LSU/LSU.scala:49:29, :113:35
+         {_store_queue_io_out_element_vec_0_bits_wdata}};	// playground/src/backend/LSU/LSU.scala:51:29, :115:35
       stq_hit <=
         _store_queue_io_out_element_vec_0_valid
         & _store_queue_io_out_element_vec_0_bits_addr[31:2] == lsu_io_data_trans_resp_paddr[31:2]
         | stq_total_hits_1 | stq_total_hits_2 | stq_total_hits_3 | stq_total_hits_4
-        | stq_total_hits_5 | stq_total_hits_6 | stq_total_hits_7;	// playground/src/backend/LSU/LSU.scala:49:29, :109:{22,37,58,90}, :112:{35,60}
-      stq_hit_item_bits_addr <= _GEN_9[_stq_hit_item_T_7];	// playground/src/backend/LSU/LSU.scala:113:35, src/main/scala/chisel3/util/OneHot.scala:32:10
-      stq_hit_item_bits_wtype <= _GEN_10[_stq_hit_item_T_7];	// playground/src/backend/LSU/LSU.scala:113:35, src/main/scala/chisel3/util/OneHot.scala:32:10
-      stq_hit_item_bits_wdata <= _GEN_11[_stq_hit_item_T_7];	// playground/src/backend/LSU/LSU.scala:113:35, src/main/scala/chisel3/util/OneHot.scala:32:10
+        | stq_total_hits_5 | stq_total_hits_6 | stq_total_hits_7;	// playground/src/backend/LSU/LSU.scala:51:29, :111:{22,37,58,90}, :114:{35,60}
+      stq_hit_item_bits_addr <= _GEN_9[_stq_hit_item_T_7];	// playground/src/backend/LSU/LSU.scala:115:35, src/main/scala/chisel3/util/OneHot.scala:32:10
+      stq_hit_item_bits_wtype <= _GEN_10[_stq_hit_item_T_7];	// playground/src/backend/LSU/LSU.scala:115:35, src/main/scala/chisel3/util/OneHot.scala:32:10
+      stq_hit_item_bits_wdata <= _GEN_11[_stq_hit_item_T_7];	// playground/src/backend/LSU/LSU.scala:115:35, src/main/scala/chisel3/util/OneHot.scala:32:10
     end
-    paddr_v_REG <= lstate;	// playground/src/backend/LSU/LSU.scala:58:62, :149:35
+    paddr_v_REG <= lstate;	// playground/src/backend/LSU/LSU.scala:60:62, :151:35
   end // always @(posedge)
   `ifndef SYNTHESIS	// <stdin>:6306:10
-    always @(posedge clock) begin	// playground/src/backend/LSU/LSU.scala:230:11
-      if (~reset & _store_queue_io_in_clear_T & _GEN_2) begin	// playground/src/ISA/riscv32/LSU.scala:63:23, :71:37, :73:41, playground/src/backend/LSU/LSU.scala:220:96, :228:33, :230:11
-        if (`ASSERT_VERBOSE_COND_)	// playground/src/backend/LSU/LSU.scala:230:11
-          $error("Assertion failed\n    at LSU.scala:230 assert(!(store_queue.io.in.clear & store_queue.io.in.enq_valid))\n");	// playground/src/backend/LSU/LSU.scala:230:11
-        if (`STOP_COND_)	// playground/src/backend/LSU/LSU.scala:230:11
-          $fatal;	// playground/src/backend/LSU/LSU.scala:230:11
+    always @(posedge clock) begin	// playground/src/backend/LSU/LSU.scala:232:11
+      if (~reset & _store_queue_io_in_clear_T & _GEN_2) begin	// playground/src/ISA/riscv32/LSU.scala:63:23, :71:37, :73:41, playground/src/backend/LSU/LSU.scala:222:96, :230:33, :232:11
+        if (`ASSERT_VERBOSE_COND_)	// playground/src/backend/LSU/LSU.scala:232:11
+          $error("Assertion failed\n    at LSU.scala:232 assert(!(store_queue.io.in.clear & store_queue.io.in.enq_valid))\n");	// playground/src/backend/LSU/LSU.scala:232:11
+        if (`STOP_COND_)	// playground/src/backend/LSU/LSU.scala:232:11
+          $fatal;	// playground/src/backend/LSU/LSU.scala:232:11
       end
-      if (lsu_io_store_commit_valid & ~reset & _store_queue_io_out_empty) begin	// playground/src/backend/LSU/LSU.scala:49:29, :240:15
-        if (`ASSERT_VERBOSE_COND_)	// playground/src/backend/LSU/LSU.scala:240:15
-          $error("Assertion failed\n    at LSU.scala:240 assert(!store_queue.io.out.empty)\n");	// playground/src/backend/LSU/LSU.scala:240:15
-        if (`STOP_COND_)	// playground/src/backend/LSU/LSU.scala:240:15
-          $fatal;	// playground/src/backend/LSU/LSU.scala:240:15
+      if (lsu_io_store_commit_valid & ~reset & _store_queue_io_out_empty) begin	// playground/src/backend/LSU/LSU.scala:51:29, :242:15
+        if (`ASSERT_VERBOSE_COND_)	// playground/src/backend/LSU/LSU.scala:242:15
+          $error("Assertion failed\n    at LSU.scala:242 assert(!store_queue.io.out.empty)\n");	// playground/src/backend/LSU/LSU.scala:242:15
+        if (`STOP_COND_)	// playground/src/backend/LSU/LSU.scala:242:15
+          $fatal;	// playground/src/backend/LSU/LSU.scala:242:15
       end
-      if (_GEN_1 & ~reset & _store_queue_io_out_full) begin	// playground/src/ISA/riscv32/LSU.scala:71:37, :72:19, playground/src/backend/LSU/LSU.scala:49:29
+      if (_GEN_1 & ~reset & _store_queue_io_out_full) begin	// playground/src/ISA/riscv32/LSU.scala:71:37, :72:19, playground/src/backend/LSU/LSU.scala:51:29
         if (`ASSERT_VERBOSE_COND_)	// playground/src/ISA/riscv32/LSU.scala:72:19
           $error("Assertion failed\n    at LSU.scala:72 assert(!store_queue.io.out.full)\n");	// playground/src/ISA/riscv32/LSU.scala:72:19
         if (`STOP_COND_)	// playground/src/ISA/riscv32/LSU.scala:72:19
           $fatal;	// playground/src/ISA/riscv32/LSU.scala:72:19
       end
-      if (lsu_io_store_commit_valid & ~reset & _store_queue_io_out_empty) begin	// playground/src/ISA/riscv32/LSU.scala:85:15, playground/src/backend/LSU/LSU.scala:49:29
+      if (lsu_io_store_commit_valid & ~reset & _store_queue_io_out_empty) begin	// playground/src/ISA/riscv32/LSU.scala:85:15, playground/src/backend/LSU/LSU.scala:51:29
         if (`ASSERT_VERBOSE_COND_)	// playground/src/ISA/riscv32/LSU.scala:85:15
           $error("Assertion failed\n    at LSU.scala:85 assert(!store_queue.io.out.empty)\n");	// playground/src/ISA/riscv32/LSU.scala:85:15
         if (`STOP_COND_)	// playground/src/ISA/riscv32/LSU.scala:85:15
@@ -17451,22 +17451,22 @@ module RV32LSU(	// <stdin>:6306:10
         for (logic [3:0] i = 4'h0; i < 4'h8; i += 4'h1) begin
           _RANDOM[i[2:0]] = `RANDOM;	// <stdin>:6306:10
         end	// <stdin>:6306:10
-        lstate = _RANDOM[3'h0][1:0];	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:58:62
-        load_buf_id = _RANDOM[3'h0][4:2];	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:58:62, :60:29
-        load_buf_addr = {_RANDOM[3'h0][31:5], _RANDOM[3'h1][4:0]};	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:58:62, :60:29
-        load_buf_ldtype = _RANDOM[3'h1][9:5];	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:60:29
-        load_buf_uncached = _RANDOM[3'h1][10];	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:60:29
-        load_buf_rdata = {_RANDOM[3'h1][31:11], _RANDOM[3'h2][10:0]};	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:60:29
-        load_buf_exception = _RANDOM[3'h2][12:11];	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:60:29
-        load_vaddr = {_RANDOM[3'h2][31:14], _RANDOM[3'h3][13:0]};	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:60:29, :72:31
-        stq_hit_en_REG = _RANDOM[3'h3][15:14];	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:72:31, :111:55
-        stq_hit = _RANDOM[3'h3][16];	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:72:31, :112:35
-        stq_hit_item_bits_addr = {_RANDOM[3'h3][31:21], _RANDOM[3'h4][20:0]};	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:72:31, :113:35
-        stq_hit_item_bits_wtype = _RANDOM[3'h4][22:21];	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:113:35
-        stq_hit_item_bits_wdata = {_RANDOM[3'h4][31:23], _RANDOM[3'h5][22:0]};	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:113:35
-        paddr_v_REG = _RANDOM[3'h5][25:24];	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:113:35, :149:35
-        amo_ongoing = _RANDOM[3'h5][27];	// <stdin>:6306:10, playground/src/ISA/riscv32/LSU.scala:41:30, playground/src/backend/LSU/LSU.scala:113:35
-        amo_rs2 = {_RANDOM[3'h5][31:28], _RANDOM[3'h6][27:0]};	// <stdin>:6306:10, playground/src/ISA/riscv32/LSU.scala:42:30, playground/src/backend/LSU/LSU.scala:113:35
+        lstate = _RANDOM[3'h0][1:0];	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:60:62
+        load_buf_id = _RANDOM[3'h0][4:2];	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:60:62, :62:29
+        load_buf_addr = {_RANDOM[3'h0][31:5], _RANDOM[3'h1][4:0]};	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:60:62, :62:29
+        load_buf_ldtype = _RANDOM[3'h1][9:5];	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:62:29
+        load_buf_uncached = _RANDOM[3'h1][10];	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:62:29
+        load_buf_rdata = {_RANDOM[3'h1][31:11], _RANDOM[3'h2][10:0]};	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:62:29
+        load_buf_exception = _RANDOM[3'h2][12:11];	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:62:29
+        load_vaddr = {_RANDOM[3'h2][31:14], _RANDOM[3'h3][13:0]};	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:62:29, :74:31
+        stq_hit_en_REG = _RANDOM[3'h3][15:14];	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:74:31, :113:55
+        stq_hit = _RANDOM[3'h3][16];	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:74:31, :114:35
+        stq_hit_item_bits_addr = {_RANDOM[3'h3][31:21], _RANDOM[3'h4][20:0]};	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:74:31, :115:35
+        stq_hit_item_bits_wtype = _RANDOM[3'h4][22:21];	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:115:35
+        stq_hit_item_bits_wdata = {_RANDOM[3'h4][31:23], _RANDOM[3'h5][22:0]};	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:115:35
+        paddr_v_REG = _RANDOM[3'h5][25:24];	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:115:35, :151:35
+        amo_ongoing = _RANDOM[3'h5][27];	// <stdin>:6306:10, playground/src/ISA/riscv32/LSU.scala:41:30, playground/src/backend/LSU/LSU.scala:115:35
+        amo_rs2 = {_RANDOM[3'h5][31:28], _RANDOM[3'h6][27:0]};	// <stdin>:6306:10, playground/src/ISA/riscv32/LSU.scala:42:30, playground/src/backend/LSU/LSU.scala:115:35
         amo_optype = {_RANDOM[3'h6][31:28], _RANDOM[3'h7][16:0]};	// <stdin>:6306:10, playground/src/ISA/riscv32/LSU.scala:42:30, :43:30
       `endif // RANDOMIZE_REG_INIT
     end // initial
@@ -17474,18 +17474,18 @@ module RV32LSU(	// <stdin>:6306:10
       `FIRRTL_AFTER_INITIAL	// <stdin>:6306:10
     `endif // FIRRTL_AFTER_INITIAL
   `endif // not def SYNTHESIS
-  CircularQueue_2 store_queue (	// playground/src/backend/LSU/LSU.scala:49:29
+  CircularQueue_2 store_queue (	// playground/src/backend/LSU/LSU.scala:51:29
     .clock                           (clock),
     .reset                           (reset),
-    .io_in_clear                     (_store_queue_io_in_clear_T),	// playground/src/backend/LSU/LSU.scala:220:96
+    .io_in_clear                     (_store_queue_io_in_clear_T),	// playground/src/backend/LSU/LSU.scala:222:96
     .io_in_enq_data_id
-      (amo_ongoing ? wtype_io_in_bits_id : _new_store_inst_id_delay_io_out),	// playground/src/ISA/riscv32/LSU.scala:41:30, :63:23, :65:33, playground/src/backend/LSU/LSU.scala:211:29, playground/src/utils/utils.scala:49:27
+      (amo_ongoing ? wtype_io_in_bits_id : _new_store_inst_id_delay_io_out),	// playground/src/ISA/riscv32/LSU.scala:41:30, :63:23, :65:33, playground/src/backend/LSU/LSU.scala:213:29, playground/src/utils/utils.scala:49:27
     .io_in_enq_data_addr
-      (amo_ongoing ? load_buf_addr : lsu_io_data_trans_resp_paddr),	// playground/src/ISA/riscv32/LSU.scala:41:30, :63:23, :66:33, playground/src/backend/LSU/LSU.scala:60:29, :212:29
-    .io_in_enq_data_wtype            (new_store_inst_wtype),	// playground/src/ISA/riscv32/LSU.scala:63:23, :69:33, playground/src/backend/LSU/LSU.scala:214:29
-    .io_in_enq_data_wdata            (new_store_inst_wdata),	// playground/src/ISA/riscv32/LSU.scala:63:23, :70:33, playground/src/backend/LSU/LSU.scala:215:29
-    .io_in_enq_valid                 (_GEN_2),	// playground/src/ISA/riscv32/LSU.scala:63:23, :71:37, :73:41, playground/src/backend/LSU/LSU.scala:228:33
-    .io_in_deq_valid                 (lsu_io_store_commit_valid & _req_arb_io_in_0_ready),	// playground/src/backend/LSU/LSU.scala:229:62, :252:25
+      (amo_ongoing ? load_buf_addr : lsu_io_data_trans_resp_paddr),	// playground/src/ISA/riscv32/LSU.scala:41:30, :63:23, :66:33, playground/src/backend/LSU/LSU.scala:62:29, :214:29
+    .io_in_enq_data_wtype            (new_store_inst_wtype),	// playground/src/ISA/riscv32/LSU.scala:63:23, :69:33, playground/src/backend/LSU/LSU.scala:216:29
+    .io_in_enq_data_wdata            (new_store_inst_wdata),	// playground/src/ISA/riscv32/LSU.scala:63:23, :70:33, playground/src/backend/LSU/LSU.scala:217:29
+    .io_in_enq_valid                 (_GEN_2),	// playground/src/ISA/riscv32/LSU.scala:63:23, :71:37, :73:41, playground/src/backend/LSU/LSU.scala:230:33
+    .io_in_deq_valid                 (lsu_io_store_commit_valid & _req_arb_io_in_0_ready),	// playground/src/backend/LSU/LSU.scala:231:62, :254:25
     .io_out_front_data_addr          (_store_queue_io_out_front_data_addr),
     .io_out_front_data_wtype         (_store_queue_io_out_front_data_wtype),
     .io_out_front_data_wdata         (_store_queue_io_out_front_data_wdata),
@@ -17532,12 +17532,12 @@ module RV32LSU(	// <stdin>:6306:10
   );
   DelayN_1 new_store_inst_wtype_delay (	// playground/src/utils/utils.scala:49:27
     .clock  (clock),
-    .io_in  (wtype_io_in_bits_optype[1:0]),	// playground/src/backend/LSU/LSU.scala:46:37
+    .io_in  (wtype_io_in_bits_optype[1:0]),	// playground/src/backend/LSU/LSU.scala:48:37
     .io_out (_new_store_inst_wtype_delay_io_out)
   );
   DelayN_2 new_store_inst_wdata_delay (	// playground/src/utils/utils.scala:49:27
     .clock  (clock),
-    .io_in  ({31'h0, wtype_io_in_bits_operand_b} << {58'h0, vaddr[1:0], 3'h0}),	// <stdin>:6306:10, playground/src/ISA/riscv32/LSU.scala:23:17, playground/src/backend/LSU/LSU.scala:215:{45,54}
+    .io_in  ({31'h0, wtype_io_in_bits_operand_b} << {58'h0, vaddr[1:0], 3'h0}),	// <stdin>:6306:10, playground/src/ISA/riscv32/LSU.scala:23:17, playground/src/backend/LSU/LSU.scala:217:{45,54}
     .io_out (_new_store_inst_wdata_delay_io_out)
   );
   DelayN store_wb_bits_id_delay (	// playground/src/utils/utils.scala:49:27
@@ -17547,36 +17547,36 @@ module RV32LSU(	// <stdin>:6306:10
   );
   DelayN_5 store_wb_valid_delay (	// playground/src/utils/utils.scala:49:27
     .clock  (clock),
-    .io_in  (store_en),	// playground/src/backend/LSU/LSU.scala:220:78
+    .io_in  (store_en),	// playground/src/backend/LSU/LSU.scala:222:78
     .io_out (_store_wb_valid_delay_io_out)
   );
   DelayN_5 store_queue_io_in_enq_valid_delay (	// playground/src/utils/utils.scala:49:27
     .clock  (clock),
-    .io_in  (store_en),	// playground/src/backend/LSU/LSU.scala:220:78
+    .io_in  (store_en),	// playground/src/backend/LSU/LSU.scala:222:78
     .io_out (_store_queue_io_in_enq_valid_delay_io_out)
   );
   DelayN_3 store_req_bits_paddr_delay (	// playground/src/utils/utils.scala:49:27
     .clock  (clock),
-    .io_in  (_store_queue_io_out_front_data_addr),	// playground/src/backend/LSU/LSU.scala:49:29
+    .io_in  (_store_queue_io_out_front_data_addr),	// playground/src/backend/LSU/LSU.scala:51:29
     .io_out (_store_req_bits_paddr_delay_io_out)
   );
-  Arbiter2_CacheReqIO req_arb (	// playground/src/backend/LSU/LSU.scala:252:25
+  Arbiter2_CacheReqIO req_arb (	// playground/src/backend/LSU/LSU.scala:254:25
     .io_in_0_valid
       (lsu_io_store_commit_valid
          ? ~is_commit_sc | _store_queue_io_out_front_data_addr == lsu_io_lr_addr
            & lsu_io_llbit
-         : lsu_io_store_commit_valid),	// playground/src/ISA/riscv32/LSU.scala:80:55, :82:37, :84:{62,81}, :86:{25,31,32}, playground/src/backend/LSU/LSU.scala:49:29, :239:37
-    .io_in_0_bits_vaddr    (_store_queue_io_out_front_data_addr),	// playground/src/backend/LSU/LSU.scala:49:29
-    .io_in_0_bits_wtype    (is_commit_sc ? 2'h2 : _store_queue_io_out_front_data_wtype),	// playground/src/ISA/riscv32/LSU.scala:80:55, :88:32, playground/src/backend/LSU/LSU.scala:49:29, :77:71
-    .io_in_0_bits_wdata    (_store_queue_io_out_front_data_wdata),	// playground/src/backend/LSU/LSU.scala:49:29
-    .io_in_0_bits_uncached (_store_queue_io_out_front_data_uncached),	// playground/src/backend/LSU/LSU.scala:49:29
+         : lsu_io_store_commit_valid),	// playground/src/ISA/riscv32/LSU.scala:80:55, :82:37, :84:{62,81}, :86:{25,31,32}, playground/src/backend/LSU/LSU.scala:51:29, :241:37
+    .io_in_0_bits_vaddr    (_store_queue_io_out_front_data_addr),	// playground/src/backend/LSU/LSU.scala:51:29
+    .io_in_0_bits_wtype    (is_commit_sc ? 2'h2 : _store_queue_io_out_front_data_wtype),	// playground/src/ISA/riscv32/LSU.scala:80:55, :88:32, playground/src/backend/LSU/LSU.scala:51:29, :79:71
+    .io_in_0_bits_wdata    (_store_queue_io_out_front_data_wdata),	// playground/src/backend/LSU/LSU.scala:51:29
+    .io_in_0_bits_uncached (_store_queue_io_out_front_data_uncached),	// playground/src/backend/LSU/LSU.scala:51:29
     .io_in_1_valid
       (~load_ready & _T_8
        & ~(_load_buf_rdata_T_12
              ? load_buf_addr[0] | load_buf_addr[1]
-             : (_load_buf_rdata_T_10 | _load_buf_rdata_T_8) & load_buf_addr[0])),	// playground/src/backend/LSU/LSU.scala:60:29, :72:46, :85:40, :91:25, :95:59, :97:34, :99:39, :111:34, :134:20, :150:39
-    .io_in_1_bits_vaddr    (load_ready | ~_T_8 ? 32'h0 : load_buf_addr),	// playground/src/backend/LSU/LSU.scala:60:{29,42}, :72:46, :90:25, :111:34, :134:20
-    .io_in_1_bits_uncached (~load_ready & _T_8 & (paddr_v | load_buf_uncached)),	// playground/src/backend/LSU/LSU.scala:60:29, :72:46, :90:25, :91:25, :111:34, :134:20, :149:44, :155:42
+             : (_load_buf_rdata_T_10 | _load_buf_rdata_T_8) & load_buf_addr[0])),	// playground/src/backend/LSU/LSU.scala:62:29, :74:46, :87:40, :93:25, :97:59, :99:34, :101:39, :113:34, :136:20, :152:39
+    .io_in_1_bits_vaddr    (load_ready | ~_T_8 ? 32'h0 : load_buf_addr),	// playground/src/backend/LSU/LSU.scala:62:{29,42}, :74:46, :92:25, :113:34, :136:20
+    .io_in_1_bits_uncached (~load_ready & _T_8 & (paddr_v | load_buf_uncached)),	// playground/src/backend/LSU/LSU.scala:62:29, :74:46, :92:25, :93:25, :113:34, :136:20, :151:44, :157:42
     .io_out_ready          (lsu_io_cache_req_ready),
     .io_in_0_ready         (_req_arb_io_in_0_ready),
     .io_in_1_ready         (_req_arb_io_in_1_ready),
@@ -17590,17 +17590,17 @@ module RV32LSU(	// <stdin>:6306:10
   );
   DelayN_8 lsu_io_cache_req_bits_paddr_delay (	// playground/src/utils/utils.scala:49:27
     .clock  (clock),
-    .io_in  (_req_arb_io_chosen),	// playground/src/backend/LSU/LSU.scala:252:25
+    .io_in  (_req_arb_io_chosen),	// playground/src/backend/LSU/LSU.scala:254:25
     .io_out (_lsu_io_cache_req_bits_paddr_delay_io_out)
   );
-  Arbiter2_BaseFuOutput wb_arb (	// playground/src/backend/LSU/LSU.scala:260:24
+  Arbiter2_BaseFuOutput wb_arb (	// playground/src/backend/LSU/LSU.scala:262:24
     .io_in_0_valid          (_store_wb_valid_delay_io_out),	// playground/src/utils/utils.scala:49:27
     .io_in_0_bits_id        (_store_wb_bits_id_delay_io_out),	// playground/src/utils/utils.scala:49:27
     .io_in_0_bits_result    (_store_wb_bits_result_delay_1_io_out),	// playground/src/utils/utils.scala:49:27
-    .io_in_1_valid          (~_GEN & (&lstate)),	// playground/src/backend/LSU/LSU.scala:58:62, :93:25, :134:20
-    .io_in_1_bits_id        (_GEN_0 ? 3'h0 : load_buf_id),	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:60:29, :92:25, :134:20
-    .io_in_1_bits_result    (_GEN_0 ? 32'h0 : load_buf_rdata),	// playground/src/backend/LSU/LSU.scala:60:{29,42}, :92:25, :134:20
-    .io_in_1_bits_exception (_GEN_0 ? 2'h0 : load_buf_exception),	// playground/src/backend/LSU/LSU.scala:37:31, :60:29, :92:25, :134:20
+    .io_in_1_valid          (~_GEN & (&lstate)),	// playground/src/backend/LSU/LSU.scala:60:62, :95:25, :136:20
+    .io_in_1_bits_id        (_GEN_0 ? 3'h0 : load_buf_id),	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:62:29, :94:25, :136:20
+    .io_in_1_bits_result    (_GEN_0 ? 32'h0 : load_buf_rdata),	// playground/src/backend/LSU/LSU.scala:62:{29,42}, :94:25, :136:20
+    .io_in_1_bits_exception (_GEN_0 ? 2'h0 : load_buf_exception),	// playground/src/backend/LSU/LSU.scala:39:31, :62:29, :94:25, :136:20
     .io_in_1_ready          (_wb_arb_io_in_1_ready),
     .io_out_valid           (wtype_io_out_valid),
     .io_out_bits_id         (wtype_io_out_bits_id),
@@ -17609,27 +17609,27 @@ module RV32LSU(	// <stdin>:6306:10
   );
   DelayN_3 store_wb_bits_result_delay_1 (	// playground/src/utils/utils.scala:49:27
     .clock  (clock),
-    .io_in  (is_sc ? {31'h0, ~(lsu_io_lr_addr == vaddr & lsu_io_llbit)} : vaddr),	// playground/src/ISA/riscv32/LSU.scala:22:35, :23:17, :78:{39,47,64,74}, playground/src/backend/LSU/LSU.scala:215:45
+    .io_in  (is_sc ? {31'h0, ~(lsu_io_lr_addr == vaddr & lsu_io_llbit)} : vaddr),	// playground/src/ISA/riscv32/LSU.scala:22:35, :23:17, :78:{39,47,64,74}, playground/src/backend/LSU/LSU.scala:217:45
     .io_out (_store_wb_bits_result_delay_1_io_out)
   );
   assign lsu_io_cache_req_bits_paddr =
     _lsu_io_cache_req_bits_paddr_delay_io_out
       ? load_buf_addr
-      : _store_req_bits_paddr_delay_io_out;	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:60:29, :258:33, playground/src/utils/utils.scala:49:27
-  assign lsu_io_store_commit_ready = _req_arb_io_in_0_ready;	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:252:25
+      : _store_req_bits_paddr_delay_io_out;	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:62:29, :260:33, playground/src/utils/utils.scala:49:27
+  assign lsu_io_store_commit_ready = _req_arb_io_in_0_ready;	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:254:25
   assign lsu_io_data_trans_req_vaddr = vaddr;	// <stdin>:6306:10, playground/src/ISA/riscv32/LSU.scala:23:17
   assign lsu_io_lsu_diff_paddr =
-    _store_wb_valid_delay_io_out ? lsu_io_data_trans_resp_paddr : load_buf_addr;	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:60:29, :266:41, playground/src/utils/utils.scala:49:27
+    _store_wb_valid_delay_io_out ? lsu_io_data_trans_resp_paddr : load_buf_addr;	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:62:29, :268:41, playground/src/utils/utils.scala:49:27
   assign lsu_io_lsu_diff_vaddr =
-    _store_wb_valid_delay_io_out ? _store_wb_bits_result_delay_1_io_out : load_vaddr;	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:72:31, :267:41, playground/src/utils/utils.scala:49:27
+    _store_wb_valid_delay_io_out ? _store_wb_bits_result_delay_1_io_out : load_vaddr;	// <stdin>:6306:10, playground/src/backend/LSU/LSU.scala:74:31, :269:41, playground/src/utils/utils.scala:49:27
   assign lsu_io_lsu_diff_wdata =
     new_store_inst_wtype == 2'h0
       ? new_store_inst_wdata & 32'hFFFFFFFF
         >> {27'h0, 2'h3 - _store_wb_bits_result_delay_1_io_out[1:0], 3'h0}
       : new_store_inst_wtype != 2'h1 | _store_wb_bits_result_delay_1_io_out[1]
           ? new_store_inst_wdata
-          : {16'h0, new_store_inst_wdata[15:0]};	// <stdin>:6306:10, playground/src/ISA/riscv32/LSU.scala:63:23, :69:33, :70:33, playground/src/backend/LSU/LSU.scala:37:31, :77:71, :111:34, :214:29, :215:29, :268:87, :272:{28,40,87}, :273:{46,63,72,85}, playground/src/utils/utils.scala:31:12, :49:27
-  assign wtype_io_in_ready = _wtype_io_in_ready_output;	// <stdin>:6306:10, playground/src/ISA/riscv32/LSU.scala:63:23, :64:33, playground/src/backend/LSU/LSU.scala:280:17
+          : {16'h0, new_store_inst_wdata[15:0]};	// <stdin>:6306:10, playground/src/ISA/riscv32/LSU.scala:63:23, :69:33, :70:33, playground/src/backend/LSU/LSU.scala:39:31, :79:71, :113:34, :216:29, :217:29, :270:87, :274:{28,40,87}, :275:{46,63,72,85}, playground/src/utils/utils.scala:31:12, :49:27
+  assign wtype_io_in_ready = _wtype_io_in_ready_output;	// <stdin>:6306:10, playground/src/ISA/riscv32/LSU.scala:63:23, :64:33, playground/src/backend/LSU/LSU.scala:282:17
 endmodule
 
 module FakeMultiplier(	// <stdin>:7170:10

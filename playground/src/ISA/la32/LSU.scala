@@ -24,22 +24,28 @@ class LA32LSU extends MkLSU {
     val load_page_inv = Wire(Bool())
     load_excp := load_unalign | load_unmatch | load_page_inv | load_page_pi
 
-    when(load_stage_valid(0) & load_stage_ready(1)) {
-        when(load_excp) {
-            load_buf(1).exception := MuxCase(
-                LA32ExceptionDefns.INT.enum_no, // error
-                Seq(
-                    load_unalign  -> LA32ExceptionDefns.ALE.enum_no,
-                    load_unmatch  -> LA32ExceptionDefns.TLBR.enum_no,
-                    load_page_inv -> LA32ExceptionDefns.PIL.enum_no,
-                    load_page_pi  -> LA32ExceptionDefns.PPI.enum_no
-                )
-            )
+    switch(lstate) {
+        is(lReq) {
+            val paddr_v = (RegNext(lstate) =/= lReq)
+            when(paddr_v) {
+                when(load_excp) {
+                    load_buf.exception := MuxCase(
+                        LA32ExceptionDefns.INT.enum_no, // error
+                        Seq(
+                            load_unalign  -> LA32ExceptionDefns.ALE.enum_no,
+                            load_unmatch  -> LA32ExceptionDefns.TLBR.enum_no,
+                            load_page_inv -> LA32ExceptionDefns.PIL.enum_no,
+                            load_page_pi  -> LA32ExceptionDefns.PPI.enum_no
+                        )
+                    )
+                }
+            }
+        }
+        is(lWriteback) {
+            val badv_cond = RegNext(load_excp)
+            load_wb.bits.result := Mux(badv_cond, load_buf.addr, load_buf.rdata)
         }
     }
-
-    val badv_cond = load_buf(2).valid && (load_buf(2).exception =/= LA32ExceptionDefns.NONE.enum_no)
-    load_wb.bits.result := Mux(badv_cond, load_buf(2).vaddr, load_rdata)
 
     val store_unmatch    = Wire(Bool())
     val store_page_inv   = Wire(Bool())
@@ -80,11 +86,9 @@ class LA32LSU extends MkLSU {
     val tlb_resp       = lsu_io.data_trans.resp.tlb_resp
     val crmd_plv       = crmd.PLV
 
-    load_unmatch   := pg_mode && load_buf(0).valid && !dmw_hit && !tlb_resp.found
-    load_page_inv  := pg_mode && load_buf(0).valid && !dmw_hit && tlb_resp.found && !tlb_resp.result.v
-    load_page_pi   := pg_mode && load_buf(
-        0
-    ).valid && !dmw_hit && tlb_resp.found && tlb_resp.result.v && (crmd_plv > tlb_resp.result.plv)
+    load_unmatch  := pg_mode && (lstate === lReq) && !dmw_hit && !tlb_resp.found
+    load_page_inv := pg_mode && (lstate === lReq) && !dmw_hit && tlb_resp.found && !tlb_resp.result.v
+    load_page_pi := pg_mode && (lstate === lReq) && !dmw_hit && tlb_resp.found && tlb_resp.result.v && (crmd_plv > tlb_resp.result.plv)
     store_unmatch  := pg_mode && store_wb.valid && !dmw_hit && !tlb_resp.found
     store_page_inv := pg_mode && store_wb.valid && !dmw_hit && tlb_resp.found && !tlb_resp.result.v
     store_page_pi := pg_mode && store_wb.valid && !dmw_hit && tlb_resp.found && tlb_resp.result.v && (crmd_plv > tlb_resp.result.plv)
