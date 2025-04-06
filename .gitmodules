@@ -1,0 +1,3 @@
+[submodule "simulators/chiplab"]
+	path = simulators/chiplab
+	url = https://github.com/Sevenqi7/chiplab.git
