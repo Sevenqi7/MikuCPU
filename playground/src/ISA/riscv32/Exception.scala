@@ -44,6 +44,7 @@ object RV32ExceptionDefns extends ExceptionDefns {
     }
     val NONE = new RV32ExceptionType(false.B, 0xffffff.U)
     val INT    = new RV32ExceptionType(true.B, 7.U)
+    val UECALL = new RV32ExceptionType(false.B, 8.U)
     val MECALL = new RV32ExceptionType(false.B, 11.U)
 
     def num     = extype_map.size

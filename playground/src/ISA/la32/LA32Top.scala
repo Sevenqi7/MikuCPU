@@ -7,6 +7,7 @@ import miku._
 import miku.utils._
 import miku.frontend._
 import miku.backend._
+import miku.isa.FuType.lsu
 
 class MkLA32Top extends MkTop {
     val diff = if (DIFFTEST_MODE) Some(IO(new LA32DifftestIO)) else None
@@ -34,7 +35,10 @@ class MkLA32Top extends MkTop {
     }
     icache.io.req.bits.paddr := frontend.io.icache_inter.req.bits.paddr //
 
-    issue.io.llbit := csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.LLBCTL).ROLLB
+    val llbit = csr.io.raw_datas.getTargetCSR(LA32CSRRegisters.LLBCTL).ROLLB
+    issue.io.llbit        := llbit
+    excute.lsu_io.llbit   := llbit
+    excute.lsu_io.lr_addr := DontCare
 
     mmu.io.inst_trans     <> frontend.io.inst_trans
     mmu.io.data_trans     <> csr_io.tlbsrch

@@ -187,9 +187,7 @@ class Scoreboard extends MkModule {
         when(ex_valid || ertn_valid) {
             issue_ptr := commit_ptr + 1.U
             for (i <- 0 until NR_ENTRIES) {
-                for (i <- 0 until NR_ENTRIES) {
-                    sb_mem(i) := init_sbe
-                }
+                sb_mem(i) := init_sbe
             }
         }
     }
@@ -201,8 +199,9 @@ class Scoreboard extends MkModule {
 
     // write-back from exu
     for (wb <- io.wb_data) {
-        val wb_id  = wb.bits.id
+        val wb_id  = Wire(UInt(log2Ceil(NR_ENTRIES).W))
         val wb_sbe = sb_mem(wb_id)
+        wb_id    := wb.bits.id
         when(wb.valid & wb_sbe.valid & !ex_valid & !ertn_valid) {
             wb_sbe.bits.br_info.bits.mispred := wb.bits.mispred
             wb_sbe.bits.result               := wb.bits.result
@@ -218,10 +217,15 @@ class Scoreboard extends MkModule {
                 wb_sbe.bits.lsu_diff.get    := io.lsu_diff.get
             }
             // misprediction flush
-            when(wb_sbe.bits.br_info.valid & wb_sbe.bits.br_info.bits.mispred) {
-                issue_ptr := commit_ptr + 1.U
+            when(wb_sbe.bits.br_info.valid & wb.bits.mispred) {
+                io.issue_inst.valid := false.B
+                issue_ptr := wb_id + 1.U
                 for (i <- 0 until NR_ENTRIES) {
-                    sb_mem(i) := init_sbe
+                    when(
+                        (i.U > wb_id && i.U <= issue_ptr) || (wb_id > issue_ptr && (i.U <= issue_ptr || i.U > wb_id))
+                    ) {
+                        sb_mem(i.U) := init_sbe
+                    }
                 }
             }
         }

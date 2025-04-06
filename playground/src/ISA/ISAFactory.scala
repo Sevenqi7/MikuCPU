@@ -120,10 +120,10 @@ object JumpOpType {
 }
 
 object LSUOpType {
-    def num = 20
+    def num = 21
 
-    def isLoadType(optype: UInt)  = optype(3, 0) >= ldb
-    def isStoreType(optype: UInt) = optype(3, 0) <= scw
+    def isLoadType(optype: UInt)  = optype(3, 0) >= ldb & !optype(4)
+    def isStoreType(optype: UInt) = optype <= scw
     def isAtomType(optype: UInt)  = optype(4)
 
     def ldb     = "b01000".U(log2Ceil(MaxOpNum).W)
@@ -340,6 +340,9 @@ abstract class ISAFactory {
     def getCSRDefns():      CSRDefns
     def getCSRBuffer():     CSRBuffer
     def getCSRRegfiles():   CSRRegfiles
+
+    def isBr(inst: UInt) : Bool 
+    def isUncondBr(inst: UInt) : Bool 
 
     val RESET_VECTOR: Int
     def CSR_ADDR_WD: Int

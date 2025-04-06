@@ -58,8 +58,10 @@ class BranchPredictorWrapper extends BranchPredictor with BPUConfigs {
     override val BHTEnable: Boolean = true
     override val RASEnable: Boolean = true
 
-    val s1_inst_br = io.s1.valid && (io.s1.bits.inst(31, 30) === "b01".U)
-    val uncond_br  = s1_inst_br & (io.s1.bits.inst(29, 27) === "b010".U)
+    val s1_inst_br = io.s1.valid & isaFactory.isBr(io.s1.bits.inst)
+    val uncond_br  = io.s1.valid & isaFactory.isUncondBr(io.s1.bits.inst)
+    // val s1_inst_br = io.s1.valid && (io.s1.bits.inst(31, 30) === "b01".U)
+    // val uncond_br  = s1_inst_br & (io.s1.bits.inst(29, 27) === "b010".U)
 
     implicit val btb = Module(new MkBTB)
     btb.io.s1     := io.s1

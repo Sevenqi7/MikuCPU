@@ -26,20 +26,26 @@ CHISEL_FILES = $(shell find $(abspath ./playground/src) -name "*.scala")
 $(BUILD_FILE): $(CHISEL_FILES)
 # 	$(call git_commit, "generate verilog")
 	mkdir -p $(BUILD_DIR)
-	mill -i __.test.runMain Elaborate -td $(BUILD_DIR)
+	mill -i __.test.runMain Elaborate rv32 -td $(BUILD_DIR) 
 
 verilog: $(BUILD_FILE)
 	@echo "The Verilog file is generated successfully."
+
+LA_TOP = $(BUILD_DIR)/core_top.v
+$(LA_TOP): $(CHISEL_FILES)
+loongarch: $(LA_TOP)
 ifneq ($(CHIPLAB_HOME),)
+	mill -i __.test.runMain Elaborate la32 -td $(BUILD_DIR) 
 	@echo "NOTE: CHIPLAB_HOME variable is set."
 	@echo "Copy generated verilog files to chiplab..."
-	@cp $(BUILD_FILE) $(CHIPLAB_HOME)/IP/myCPU/core_top.v
+	@cp $(LA_TOP) $(CHIPLAB_HOME)/IP/myCPU/core_top.v
 	@echo "Done."
 endif
 
 RISCV_TOP = $(BUILD_DIR)/npc_core.v
-$(RISCV_TOP): $(BUILD_FILE)
+$(RISCV_TOP): $(CHISEL_FILES)
 riscv: $(RISCV_TOP)
+	mill -i __.test.runMain Elaborate rv32 -td $(BUILD_DIR) 
 	@echo "The Verilog file is generated successfully."
 	@cp $(RISCV_TOP) ./simulators/npc/vsrc
 

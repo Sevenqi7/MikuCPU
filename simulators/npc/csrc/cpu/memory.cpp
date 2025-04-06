@@ -12,10 +12,10 @@ extern uint8_t *guest_to_host(paddr_t paddr) {
 }
 
 void   device_write(vaddr_t addr, word_t data, int len);
-word_t device_read(vaddr_t addr);
+word_t device_read(vaddr_t addr, int len);
 
 uint64_t *pmem_addr(vaddr_t addr) {
-    return (uint64_t *)(pmem + ((uint64_t)addr & 0xFFFFFF));
+    return (uint64_t *)(pmem + ((uint64_t)addr & MEMMASK));
 }
 
 void outofbound(paddr_t paddr) {
@@ -30,7 +30,7 @@ uint64_t get_time();
 word_t pmem_read(vaddr_t addr, int len) {
     paddr_t paddr = addr & MEMMASK;
     // Log("paddr:%lx", paddr);
-    if (addr > MMIO_BASE && addr < MMIO_END) return device_read(addr);
+    // assert(addr != 0x11000000);
     outofbound(paddr);
     assert(paddr < MEMSIZE);
     int ret = 0;
@@ -56,14 +56,6 @@ word_t pmem_read(vaddr_t addr, int len) {
 
 void pmem_write(vaddr_t addr, int len, word_t data) {
     vaddr_t paddr = addr & MEMMASK;
-    if (addr == 0x87fffffe) {
-        putchar((char)data);
-        return;
-    }
-    if (addr > MMIO_BASE && addr < MMIO_END) {
-        device_write(addr, data, len);
-        return;
-    }
     outofbound(paddr);
     int ret = 0;
     switch (len) {
@@ -92,8 +84,15 @@ extern "C" void dci_pmem_read(long long raddr, long long *rdata, char rmask) {
     int     len  = 0;
     uint8_t mask = rmask;
     if (!top->aresetn) return;
-    for (; mask; mask = mask >> 1, len++);
-    *rdata = pmem_read(raddr, len);
+    // for (; mask; mask = mask >> 1, len++);
+    for(int i=0;i < sizeof(word_t);i++) {
+        if(mask & 0x1) len++;
+        mask >>= 1;
+    }
+    if (raddr >= MMIO_BASE && raddr < MMIO_END) 
+        *rdata = device_read(raddr, len);
+    else    
+        *rdata = pmem_read(raddr & ~0x3, len);
 #ifdef CONFIG_DEBUGMSG
     Log("raddr:0x%lx value:0x%lx len:%d", raddr, *rdata, len);
 #endif
@@ -106,8 +105,31 @@ extern "C" void dci_pmem_write(long long waddr, long long wdata, char wmask) {
     int     len  = 0;
     uint8_t mask = wmask;
     if (!top->aresetn) return;
-    for (; mask; mask = mask >> 1, len++);
-    pmem_write(waddr, len, wdata);
+    // for(int i=0;i < sizeof(word_t);i++) {
+    //     if(mask & 0x1) len++;
+    //     mask >>= 1;
+    // }
+    #ifdef CONFIG_RV64
+    word_t prev_data = pmem_read(waddr & ~0x3, 8);
+    #else 
+    word_t prev_data = pmem_read(waddr & ~0x3, 4);
+    #endif
+    for (int byte = 0; mask > 0; mask = mask >> 1, byte++) {
+        if(mask & 0x1) {
+            len++;
+            prev_data = REPLACE_BYTE(prev_data, wdata, byte); 
+        }
+    }
+    if (waddr >= MMIO_BASE && waddr < MMIO_END) {
+        device_write(waddr, wdata, len);
+        return;
+    }
+
+    #ifdef CONFIG_RV64
+    pmem_write(waddr & ~0x3, 8, prev_data);
+    #else 
+    pmem_write(waddr & ~0x3, 4, prev_data);
+    #endif
 #ifdef CONFIG_DEBUGMSG
     Log("waddr:0x%lx value:0x%lx len:%d", waddr, wdata, len);
 #endif

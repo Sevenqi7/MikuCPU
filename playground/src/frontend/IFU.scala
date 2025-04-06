@@ -65,11 +65,11 @@ abstract class MkIFU extends MkModule {
 
     val flush_slot = Module(new CircularQueue(UInt(VADDR_WIDTH.W), 1))
     val npc_flush: Seq[(Bool, UInt)] = Seq(
-        (npc_src.exception.valid   -> npc_src.exception.bits.entry),
-        (npc_src.ertn_target.valid -> npc_src.ertn_target.bits.era),
-        (mispred                   -> npc_src.pred_check.bits.target),
-        (npc_src.pred_result.taken -> npc_src.pred_result.target),
-        (io.inst_queue_full        -> s1_pc)
+        (npc_src.exception.valid                               -> npc_src.exception.bits.entry),
+        (npc_src.ertn_target.valid                             -> npc_src.ertn_target.bits.era),
+        (mispred                                               -> npc_src.pred_check.bits.target),
+        ((npc_src.pred_result.taken & flush_slot.io.out.empty) -> npc_src.pred_result.target),
+        (io.inst_queue_full                                    -> s1_pc)
     )
     flush_slot.io.in.clear := false.B
     flush_slot.io.in.enq_data  := MuxCase(DontCare, npc_flush)

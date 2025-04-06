@@ -3,6 +3,13 @@ module simu_top(
     input                       aresetn
 );
 
+    // import "DPI-C" context function void dpic_set_mtimer_irq(input int value);
+    export "DPI-C" function dpic_set_mtimer_irq;
+    reg mtimer_irq;
+    function void dpic_set_mtimer_irq(input int value) ;
+        mtimer_irq = (value > 0);
+    endfunction
+
     wire [63: 0] pc      ;
     wire [ 3: 0] arid    ;
     wire [31: 0] araddr  ;
@@ -50,7 +57,7 @@ module simu_top(
         .pc          (pc          ),   
         .aclk        (aclk        ),
         .aresetn     (aresetn     ), 
-        .intrpt      (0           ),
+        .intrpt      ({mtimer_irq, 7'b0}),
 
         .arid        (arid        ),
         .araddr      (araddr      ),

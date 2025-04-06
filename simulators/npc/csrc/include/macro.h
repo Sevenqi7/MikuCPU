@@ -30,4 +30,9 @@
 #define BITS(x, hi, lo) (((x) >> (lo)) & BITMASK((hi) - (lo) + 1)) // similar to x[hi:lo] in verilog
 #define SEXT(x, len) ({ struct { int64_t n : len; } __x = { .n = x }; (uint64_t)__x.n; })
 
+#define CLEAR_BYTE(x, n) ((x) & ~(0xFFu << ((n) * 8)))
+// replace Nth byte in x with Nth byte in y
+#define REPLACE_BYTE(x, y, n) (((x) & ~(0xFFu << ((n) * 8))) | (((y) >> ((n) * 8)) & 0xFFu) << ((n) * 8))
+
+
 #endif

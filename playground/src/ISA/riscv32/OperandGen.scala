@@ -45,9 +45,18 @@ class RV32OperandGen extends OperandGenerator {
         SelImm.IMM_J -> imm_J,
         SelImm.IMM_S -> imm_S
     )
-    val imm_sel   = io.decoded_inst.selImm
-    val imm       = MuxLookup(imm_sel, DEBUG_MAGICNUM.U)(imm_table)
-    io.operand_a := Mux(needRs1, rs1_data, io.pc)
+
+    val is_uimm = io.decoded_inst.futype === FuType.csr
+    val imm_sel = io.decoded_inst.selImm
+    val imm     = MuxLookup(imm_sel, DEBUG_MAGICNUM.U)(imm_table)
+    io.operand_a := MuxCase(
+        io.pc,
+        Seq(
+            needRs1 -> rs1_data,
+            is_uimm -> rs1_num
+        )
+    )
+    // io.operand_a := Mux(needRs1, rs1_data, io.pc)
     io.operand_b := Mux(needRs2, rs2_data, imm)
     io.operand_c := Mux(needRd, rd_data, imm)
 

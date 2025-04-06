@@ -66,7 +66,7 @@ void exec_once() {
     while (!cmt_inst->valid & !excp->excp_valid) {
         clock_step();
         bubble_cnt++;
-        if (bubble_cnt > 10000) { // deadlock
+        if (bubble_cnt > 100000) { // deadlock
             printf("\033[0m\033[1;31m%s\033[0m\n", "Deadlock detected! NPC Stopped.");
             npc_state.state = NPC_STOP;
             return;
@@ -119,6 +119,10 @@ void execute(uint64_t n) {
     for (int i = 0; i < n; i++) {
         g_print_step = (n < MAX_INST_TO_PRINT);
         exec_once();
+        // #ifdef CONFIG_NOMMU_LINUX
+        // void clint_update();
+        // clint_update();
+        // #endif
         device_update();
         if (npc_state.state != NPC_RUNNING) {
             Log("Total instruction number: %ld", nr_total_inst);

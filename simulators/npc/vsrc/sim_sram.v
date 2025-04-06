@@ -45,8 +45,37 @@ module sim_sram(
     output      [3: 0]      bid         ,
     output      [1: 0]      bresp       ,
     output                  bvalid      ,
-    input                   bready
+    input                   bready      
 );
+
+    // // CLINT
+    // parameter CLINT_BASE = 32'h11000000;
+    // parameter CLINT_END = 32'h1100C000;
+
+    // wire clint_wen, clint_ren;
+    // wire [31:0] clint_wdata, clint_rdata;
+    // wire [15:0] clint_addr;
+
+    // assign clint_wen = wvalid && wready && (awaddr_r >= CLINT_BASE) && (awaddr_r < CLINT_END);
+    // assign clint_ren = arvalid && arready && (araddr >= CLINT_BASE) && (awaddr < CLINT_END);
+    // assign clint_addr = clint_ren ? araddr & 16'hFFFC :
+    //                     clint_wen ? awaddr_r & 16'hFFFC : 
+    //                     0;
+    // // assign clint_wdata = 
+
+
+    // CLINT rv32_clint(
+    //     .clock(aclk),
+    //     .reset(!aresetn),
+    //     .addr(clint_addr),
+    //     .wdata(clint_wdata),
+    //     .wen(clint_wen),
+    //     .ren(clint_ren),
+    //     .rdata(clint_rdata),
+    //     .mtimer_irq(mtimer_irq)
+    // );
+
+
 
     reg arready_r, rvalid_r, awready_r, wready_r, bvalid_r, rlast_r;
     reg [1:0] rresp_r, bresp_r, arburst_r, awburst_r;
@@ -69,7 +98,6 @@ module sim_sram(
     assign rlast = rlast_r;
     assign rresp = rresp_r;
     assign bresp = bresp_r;
-    // assign rdata = rdata_r;
 
     //ar
     always@(posedge aclk) begin
@@ -135,10 +163,18 @@ module sim_sram(
 
     always_latch@(*) begin
         if(arvalid && arready_r && !arv_arr_flag) begin
-            dci_pmem_read({32'b0, araddr}, rdata, 8'H0F);
+            // if(araddr >= CLINT_BASE && araddr < CLINT_END) begin
+            //     assign rdata = clint_rdata;
+            // end 
+            // else 
+                dci_pmem_read({32'b0, araddr}, rdata, 8'H0F);
         end
         else if(arv_arr_flag)begin
-            dci_pmem_read({32'b0, araddr_r}, rdata, 8'H0F);
+            // if(araddr >= CLINT_BASE && araddr < CLINT_END) begin
+            //     assign rdata = clint_rdata;
+            // end
+            // else 
+                dci_pmem_read({32'b0, araddr_r}, rdata, 8'H0F);
         end
     end
     

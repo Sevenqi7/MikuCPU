@@ -76,6 +76,7 @@ abstract class MkTop extends MkModule {
     csr.io.write_io    <> excute.csr_io.write_io
     csr.io.excp_commit := issue.io.excp_commit
     csr.io.ertn_commit := issue.io.ertn_commit
+    csr.io.idle_commit := issue.io.idle_commit
     csr.io.interrupt   := io.ext_int
 
     val axi_arb = Module(new PriorityAXIArbiter(2, 32, 32, 5))

@@ -14,6 +14,7 @@ class CSRRegfilesIO extends MkBundle {
     val timer64_o   = UInt(64.W)
     val excp_commit = Flipped(ValidIO(ArchExceptionInfo()))
     val ertn_commit = Input(Bool())
+    val idle_commit = Input(Bool())
     val interrupt   = Input(UInt(8.W))
     val int_flag    = Bool()
 }
@@ -44,6 +45,8 @@ abstract class CSRRegfiles extends MkModule {
 
     io.read_io.rdata := 0.U
 
+
+    // val csr_list : Seq[MkCSRBundle]
     for ((addr, csr) <- csr_list) {
         when(io.read_io.raddr === addr) {
             io.read_io.rdata := csr.rdata

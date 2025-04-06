@@ -294,7 +294,7 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
                 }.otherwise {
                     val araddr    = Mux(
                         req_uncached,
-                        req_addr(VADDR_WIDTH - 1, 2) << 2,
+                        req_addr,
                         req_addr(VADDR_WIDTH - 1, offsetWidth) << offsetWidth
                     )
                     val arlen     = Mux(req_uncached, 0.U, (WORDS_PER_LINE - 1).U)

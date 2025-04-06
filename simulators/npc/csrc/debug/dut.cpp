@@ -1,7 +1,7 @@
 #include "difftest.h"
 #include <cstring>
 #include <dlfcn.h>
-#include <memory.h>
+#include "memory.h"
 #include <npc.h>
 #include <verilator.h>
 
@@ -62,7 +62,7 @@ void init_difftest(const char *ref_so_file, long img_size, int port) {
     REF_GPR to_ref = {.pc = RESET_VECTOR};
     memcpy(to_ref.gpr, dut_regs_ptr, sizeof(to_ref.gpr));
     ref_difftest_init(port);
-    ref_difftest_memcpy(RESET_VECTOR, guest_to_host(RESET_VECTOR), img_size, DIFFTEST_TO_REF);
+    ref_difftest_memcpy(RESET_VECTOR, guest_to_host(RESET_VECTOR), MEMSIZE, DIFFTEST_TO_REF);
     ref_difftest_regcpy(&to_ref, DIFFTEST_TO_REF);
     dut.commit.valid = 0;
 }
@@ -106,11 +106,17 @@ void difftest_step(vaddr_t pc) {
         memcpy(from_ref.gpr, dut_regs_ptr, sizeof(from_ref.gpr));
         ref_difftest_regcpy(&from_ref, DIFFTEST_TO_REF);
         // Log("skip, pc: " VADDR_FMT, npc_state.pc);
-        is_skip_ref = false;
+        // is_skip_ref = false;
     }
     if (dut.excp.excp_valid) {
-        printf("excp detected\n");
-        ref_difftest_raise_intr(false, dut.excp.exception);
+        // printf("excp detected\n");
+        if(dut.excp.exception == 0x7)
+            ref_difftest_raise_intr(true, dut.excp.exception);
+        else{
+            // Log("exception detected");
+            // npc_state.state = NPC_STOP;
+            ref_difftest_raise_intr(false, dut.excp.exception);
+        }
         return;
     }
     ref_difftest_regcpy(&from_ref, DIFFTEST_TO_DUT);
@@ -129,7 +135,8 @@ void difftest_step(vaddr_t pc) {
 
     // Log("pc2:" VADDR_FMT, from_ref.pc);
     memcpy(ref_regs_ptr, &from_ref.gpr, sizeof(from_ref.gpr));
-    checkregs();
+    if(is_skip_ref) is_skip_ref = false;
+    else checkregs();
 }
 
 #endif

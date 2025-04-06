@@ -54,8 +54,10 @@ class IssueStageIO extends MkBundle {
     val csr_commit   = new ReadyValidBundle
     val excp_commit  = ValidIO(ArchExceptionInfo())
     val ertn_commit  = Bool()
+    val idle_commit  = Bool()
     val ll_commit    = Bool()
     val sc_commit    = Bool()
+    val lr_sc_addr   = UInt(VADDR_WIDTH.W)
     val int_flag     = Input(Bool())
     val llbit        = Input(Bool())
     val timer64      = Input(UInt(64.W))
@@ -141,11 +143,25 @@ class IssueStage extends MkModule {
         (commit_inst_sbe.decoded_inst.futype === FuType.lsu) && (commit_inst_sbe.decoded_inst.fuoptype === LSUOpType.llw)
     val is_commit_sc    =
         (commit_inst_sbe.decoded_inst.futype === FuType.lsu) && (commit_inst_sbe.decoded_inst.fuoptype === LSUOpType.scw)
+
     io.csr_commit.valid   := is_commit_csr & commit_inst.valid & !inst_excp & !io.int_flag
     io.store_commit.valid := is_commit_store & commit_inst.valid & !inst_excp & !io.int_flag
     io.ertn_commit        := is_commit_ertn & commit_inst.valid & !inst_excp & !io.int_flag
     io.ll_commit          := is_commit_ll & commit_inst.valid & !inst_excp & !io.int_flag
     io.sc_commit          := is_commit_sc & commit_inst.valid & commit_inst.ready & !inst_excp & !io.int_flag
+    io.idle_commit        := is_commit_idle & commit_inst.valid
+
+    // For RV32
+    val lr_sc_addr = RegInit(0.U(VADDR_WIDTH.W))
+    when(
+        io.trans.valid &&
+            io.trans.bits.futype === FuType.lsu &&
+            (io.trans.bits.fuinput.optype === LSUOpType.scw ||
+                io.trans.bits.fuinput.optype === LSUOpType.llw)
+    ) {
+        lr_sc_addr := io.trans.bits.fuinput.operand_a
+    }
+    io.lr_sc_addr := lr_sc_addr
 
     commit_inst.ready := MuxCase(
         true.B,

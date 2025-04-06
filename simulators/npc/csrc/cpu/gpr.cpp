@@ -32,7 +32,7 @@ bool difftest_checkregs() {
 
     // Check CSR
     word_t *dut_csr = (word_t *)&dut.csr, *ref_csr = (word_t *)&ref.csr;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 7; i++) {
         if (ref_csr[i] != dut_csr[i]) {
             Log("Difftest found %s value is 0x%lx, should be 0x%lx", riscv_csrstr[i], dut_csr[i], ref_csr[i]);
             flag = false;
@@ -47,7 +47,7 @@ void reg_display() {
     for (int i = 0; i < 32; i++) { printf("%d: %s = 0x%016lx\n", i, riscv_regstr[i], dut_regs_ptr[i]); }
     word_t *dut_csr = (word_t *)&dut.csr;
     printf("CSRs: \n");
-    for (int i = 0; i < 4; i++) { printf("    %s: 0x%016lx\n", riscv_csrstr[i], dut_csr[i]); }
+    for (int i = 0; i < 8; i++) { printf("    %s: 0x%016lx\n", riscv_csrstr[i], dut_csr[i]); }
 }
 
 word_t reg_str2val(const char *s, bool *success) {

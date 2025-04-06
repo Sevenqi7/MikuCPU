@@ -20,6 +20,14 @@ class ConstantValCSR(constant: BigInt) extends MkCSRBundle {
     // override def wmask:            UInt = 0.U`
 }
 
+// Not a real CSR
+class RV32CSR_Priv extends MkCSRBundle {
+    val priv = UInt(3.W)
+    def rdata:                     UInt = priv
+    def getRealWdata(wdata: UInt): UInt = wdata(2, 0)
+    override def wmask:            UInt = 0.U
+}
+
 class RV32CSR_Mscratch extends MkCSRBundle {
     val mscratch = UInt(WORD_WIDTH.W)
 
@@ -53,10 +61,10 @@ class RV32CSR_Mstatus extends MkCSRBundle {
     // Unimplemented MPRV BITS(17)
     // Unimplemented XS BITS(16, 15)
     // Unimplemented FS BITS(14, 13)
-    val MPP  = UInt(2.W) // read-only
+    val MPP  = UInt(2.W)
     // Unimplement VS BITS(10, 9)
     // Unimplement SPP BITS(8)
-    val MPIE = Bool()    // read-only
+    val MPIE = Bool()
     // Unimplement UBE BITS(6)
     // Unimplement SPIE BITS(5)
     // RESERVED BITS (4)
@@ -66,8 +74,7 @@ class RV32CSR_Mstatus extends MkCSRBundle {
     // RESERVED BITS (0)
 
     def rdata:                     UInt = Cat(Seq(0.U(19.W), MPP, 0.U(3.W), MPIE, 0.U(3.W), MIE, 0.U(3.W)))
-    def getRealWdata(wdata: UInt): UInt = Cat(wdata(14, 13), wdata(7), wdata(3))
-    override def wmask:            UInt = "b0001".U(this.getWidth.W)
+    def getRealWdata(wdata: UInt): UInt = Cat(wdata(12, 11), wdata(7), wdata(3))
     // override def initData:         UInt = Cat("b11".U(2.W), 0.U(2.W))
 }
 
@@ -88,17 +95,19 @@ class RV32CSR_Mtval extends MkCSRBundle {
 
 // currently only support timer interrput
 class RV32CSR_Mip extends MkCSRBundle {
-    val mtie = Bool()
-
-    def rdata:                     UInt = mtie << 7.U
-    def getRealWdata(wdata: UInt): UInt = wdata(7)
-}
-
-class RV32CSR_Mie extends MkCSRBundle {
-    val mtip = Bool()
+    val mtip = Bool() // read-only
 
     def rdata:                     UInt = mtip << 7.U
     def getRealWdata(wdata: UInt): UInt = wdata(7)
+    override def wmask:            UInt = 0.U
+}
+
+class RV32CSR_Mie extends MkCSRBundle {
+    val mtie = Bool()
+    val msie = Bool()
+
+    def rdata:                     UInt = (mtie << 7.U) | (msie << 3.U)
+    def getRealWdata(wdata: UInt): UInt = Cat(wdata(7), wdata(3))
 }
 
 object RV32CSRRegisters extends CSRRegistersDefns {
@@ -108,6 +117,8 @@ object RV32CSRRegisters extends CSRRegistersDefns {
         mtvec.BASE << 2.U
     }
     def getExcpRetAddr(csr: CSRVecBundle):                UInt = csr.getTargetCSR(MEPC).mepc
+
+    val PRIV = (0x777.U, () => new RV32CSR_Priv)
 
     val FAKECSR  = (0xffff.U, () => new FakeRV32CSR)
     val MSTATUS  = (0x300.U, () => new RV32CSR_Mstatus)
@@ -120,12 +131,12 @@ object RV32CSRRegisters extends CSRRegistersDefns {
     val MIP      = (0x344.U, () => new RV32CSR_Mip)
 
     // csr that implemented as constant
-    val PMPCFG0   = (0x3a0.U, () => new ConstantValCSR(0))
-    val PMPADDR0  = (0x3b0.U, () => new ConstantValCSR(0))
-    val MARCHID   = (0xf12.U, () => new ConstantValCSR(0))
-    val MIMPID    = (0xf13.U, () => new ConstantValCSR(0))
-    val MHARTID   = (0xf14.U, () => new ConstantValCSR(0))
+    val PMPCFG0   = (0x3a0.U, () => new ConstantValCSR(0x0))
+    val PMPADDR0  = (0x3b0.U, () => new ConstantValCSR(0x0))
     val MVENDORID = (0xf11.U, () => new ConstantValCSR(0xff0ff0ffL))
+    val MARCHID   = (0xf12.U, () => new ConstantValCSR(0x0))
+    val MIMPID    = (0xf13.U, () => new ConstantValCSR(0x0))
+    val MHARTID   = (0xf14.U, () => new ConstantValCSR(0x0))
 
     val csr_defns: Seq[(UInt, () => MkCSRBundle)] = Seq(
         MSTATUS,
@@ -135,6 +146,13 @@ object RV32CSRRegisters extends CSRRegistersDefns {
         MEPC,
         MCAUSE,
         MTVAL,
-        MIP
+        MIP,
+        PMPCFG0,
+        PMPADDR0,
+        MVENDORID,
+        MARCHID,
+        MIMPID,
+        MHARTID,
+        PRIV
     )
 }

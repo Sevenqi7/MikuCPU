@@ -10,32 +10,30 @@ import miku.frontend._
 import miku.isa._
 import miku.isa.LSUOpType._
 
-class LSUIO extends MkBundle {
-    val cache_req    = Decoupled(new CacheReqIO(VADDR_WIDTH, WORD_WIDTH))
-    val cache_resp   = Flipped(ValidIO(new CacheRespIO(WORD_WIDTH)))
-    val store_commit = Flipped(new ReadyValidBundle)
-    val data_trans   = Flipped(new AddrTransChannel)
-    val llbit        = Input(Bool())
-    val lr_addr      = Input(UInt(VADDR_WIDTH.W))
+// class LSUIO extends MkBundle {
+//     val cache_req    = Decoupled(new CacheReqIO(VADDR_WIDTH, WORD_WIDTH))
+//     val cache_resp   = Flipped(ValidIO(new CacheRespIO(WORD_WIDTH)))
+//     val store_commit = Flipped(new ReadyValidBundle)
+//     val data_trans   = Flipped(new AddrTransChannel)
 
-    val lsu_diff =
-        if (DIFFTEST_MODE) Some(new Bundle {
-            val paddr = UInt(PADDR_WIDTH.W)
-            val vaddr = UInt(VADDR_WIDTH.W)
-            val wdata = UInt(WORD_WIDTH.W)
-        })
-        else None
-}
+//     val lsu_diff =
+//         if (DIFFTEST_MODE) Some(new Bundle {
+//             val paddr = UInt(PADDR_WIDTH.W)
+//             val vaddr = UInt(VADDR_WIDTH.W)
+//             val wdata = UInt(WORD_WIDTH.W)
+//         })
+//         else None
+// }
 
-class StoreQueueEntry extends MkBundle {
-    val id       = UInt(TRANS_ID_BITS.W)
-    val addr     = UInt(VADDR_WIDTH.W)
-    val wtype    = UInt(2.W)
-    val wdata    = UInt(WORD_WIDTH.W)
-    val uncached = Bool()
-}
+// class StoreQueueEntry extends MkBundle {
+//     val id       = UInt(TRANS_ID_BITS.W)
+//     val addr     = UInt(VADDR_WIDTH.W)
+//     val wtype    = UInt(2.W)
+//     val wdata    = UInt(WORD_WIDTH.W)
+//     val uncached = Bool()
+// }
 
-abstract class MkLSU extends BaseFunctionUnit {
+abstract class MkLSU0 extends BaseFunctionUnit {
     val lsu_io            = IO(new LSUIO)
     val io_tlb_busy_stall = IO(Input(Bool())) // from CSRBuffer
 
@@ -54,26 +52,38 @@ abstract class MkLSU extends BaseFunctionUnit {
     val to_dcache   = lsu_io.cache_req
     val from_dcache = lsu_io.cache_resp
 
-    // Load pipeline
+    // load request bufffer
+
+    val lIdle :: lReq :: lWait :: lWriteback :: Nil = Enum(4)
+    val lstate                                      = RegInit(lIdle)
+
+    val load_buf   = RegInit(0.U.asTypeOf(new Bundle {
+        val id        = UInt(TRANS_ID_BITS.W)
+        val addr      = UInt(VADDR_WIDTH.W)
+        val ldtype    = LSUOpType()
+        val uncached  = Bool()
+        val rdata     = UInt(WORD_WIDTH.W)
+        val exception = ArchExceptionType()
+        val valid     = Bool()
+    }))
     val load_req   = Wire(Decoupled(new CacheReqIO(VADDR_WIDTH, WORD_WIDTH)))
     val load_resp  = lsu_io.cache_resp
     val load_ready = Wire(Bool())
+    val load_vaddr = RegEnable(vaddr, lstate === lIdle)
     val load_wb    = Wire(Decoupled(new BaseFuOutput))
-    // val load_vaddr = RegInit(0.U(VADDR_WIDTH.W))
 
-    val load_buf = RegInit(VecInit.fill(3)(0.U.asTypeOf(new Bundle {
-        val id        = UInt(TRANS_ID_BITS.W)
-        val vaddr     = UInt(VADDR_WIDTH.W)
-        val paddr     = UInt(PADDR_WIDTH.W)
-        val ldtype    = LSUOpType()
-        val uncached  = Bool()
-        // val rdata     = UInt(WORD_WIDTH.W)
-        val exception = ArchExceptionType()
-        val valid     = Bool()
-    })))
-
-    val load_stage_ready = VecInit.fill(3)(0.B)
-    val load_stage_valid = VecInit.fill(3)(0.B)
+    // TODO: need parameterise
+    val real_rdata  = Wire(UInt(32.W))
+    val ldbu_result = MuxLookup(load_buf.addr(1, 0), DEBUG_MAGICNUM.U)(
+        Seq(
+            "b00".U -> real_rdata(7, 0),
+            "b01".U -> real_rdata(15, 8),
+            "b10".U -> real_rdata(23, 16),
+            "b11".U -> real_rdata(31, 24)
+        )
+    )
+    val ldhu_result = Mux(load_buf.addr(1), real_rdata(31, 16), real_rdata(15, 0))
+    val ldw_result  = real_rdata
 
     // initialise
     load_ready          := false.B
@@ -82,71 +92,25 @@ abstract class MkLSU extends BaseFunctionUnit {
     load_wb.bits        := 0.U.asTypeOf(new BaseFuOutput)
     load_wb.valid       := false.B
     load_req.bits.paddr := DontCare
-
-    val load_excp    = Wire(Bool())
-    val load_unalign = MuxLookup(io.in.bits.optype, false.B)(
+    val load_unalign = MuxLookup(load_buf.ldtype, false.B)(
         Seq(
-            ldh  -> vaddr(0),
-            ldhu -> vaddr(0),
-            ldw  -> (vaddr(0) | vaddr(1))
+            ldh  -> load_buf.addr(0),
+            ldhu -> load_buf.addr(0),
+            ldw  -> (load_buf.addr(0) | load_buf.addr(1))
         )
     )
 
-    // stage 0: address transition，
+    val load_excp = Wire(Bool())
 
-    load_ready          := load_stage_ready(0)
-    when(io.in.valid & io.in.ready & LSUOpType.isLoadType(io.in.bits.optype)) {
-        load_buf(0).id        := io.in.bits.id
-        load_buf(0).vaddr     := vaddr
-        load_buf(0).ldtype    := io.in.bits.optype
-        load_buf(0).valid     := true.B
-        load_buf(0).exception := ArchExceptionType.NONE.enum_no
-    }.elsewhen(load_stage_ready(1)) {
-        load_buf(0).valid := false.B
-    }
-    load_stage_ready(0) := !io_tlb_busy_stall & load_stage_ready(1)
-    load_stage_valid(0) := load_buf(0).valid
-
-    // stage 1: send cache request & search in store queue
+    // search in store queue
     val stq_items      = store_queue.io.out.element_vec.get
     val stq_total_hits =
         stq_items.map(st =>
             st.valid && st.bits.addr(VADDR_WIDTH - 1, 2) === lsu_io.data_trans.resp.paddr(VADDR_WIDTH - 1, 2)
         )
-    val stq_hit_en     = load_buf(0).valid
+    val stq_hit_en     = (lstate === lReq) && (RegNext(lstate) =/= lReq)
     val stq_hit        = RegEnable(stq_total_hits.reduce(_ || _), stq_hit_en)
     val stq_hit_item   = RegEnable(stq_items(OHToUInt(stq_total_hits)), stq_hit_en)
-
-    when(load_stage_valid(0) & load_stage_ready(1)) {
-        load_buf(1)          := load_buf(0)
-        load_buf(1).uncached := uncached
-        load_buf(1).paddr    := lsu_io.data_trans.resp.paddr
-    }
-
-    load_req.valid         := load_stage_valid(0) & load_stage_ready(1)
-    load_req.bits.vaddr    := load_buf(0).vaddr
-    load_req.bits.wr       := false.B
-    load_req.bits.uncached := uncached
-
-    load_stage_valid(1) := load_buf(1).valid
-    load_stage_ready(1) := load_req.ready & load_stage_ready(2)
-
-    // stage 2: get return data and write back
-
-    val real_rdata  = Wire(UInt(32.W))
-    val ldbu_result = MuxLookup(load_buf(2).vaddr(1, 0), DEBUG_MAGICNUM.U)(
-        Seq(
-            "b00".U -> real_rdata(7, 0),
-            "b01".U -> real_rdata(15, 8),
-            "b10".U -> real_rdata(23, 16),
-            "b11".U -> real_rdata(31, 24)
-        )
-    )
-    val ldhu_result = Mux(load_buf(2).vaddr(1), real_rdata(31, 16), real_rdata(15, 0))
-    val ldw_result  = real_rdata
-
-    val load_rdata = RegInit(0.U(WORD_WIDTH.W))
-
     real_rdata := Mux(
         !stq_hit,
         load_resp.bits.rdata, {
@@ -167,18 +131,66 @@ abstract class MkLSU extends BaseFunctionUnit {
         }
     )
 
-    when(load_buf(1).valid & load_stage_ready(2)) {
-        load_rdata  := real_rdata
-        load_buf(2) := load_buf(1)
+    switch(lstate) {
+        is(lIdle) {
+            load_ready := !io_tlb_busy_stall
+            when(io.in.valid & io.in.ready & LSUOpType.isLoadType(io.in.bits.optype)) {
+                load_buf.id        := io.in.bits.id
+                load_buf.addr      := vaddr
+                load_buf.ldtype    := io.in.bits.optype
+                load_buf.valid     := true.B
+                load_buf.exception := ArchExceptionType.NONE.enum_no
+                lstate             := lReq
+            }
+        }
+        // lReq: send load request to Cache and receive valid physic address to loadbuf.addr
+        // physic address must be valid in the next cycle after addr-trans request is sent
+        is(lReq) {
+            val paddr_v = (RegNext(lstate) =/= lReq)
+            load_req.valid         := !load_unalign
+            load_req.bits.vaddr    := load_buf.addr
+            load_req.bits.wr       := false.B
+            load_req.bits.wtype    := 0.U
+            load_req.bits.wdata    := 0.U
+            load_req.bits.uncached := Mux(paddr_v, uncached, load_buf.uncached)
+            when(load_req.ready) {
+                lstate := lWait
+            }
+            when(paddr_v) {
+                load_buf.addr     := lsu_io.data_trans.resp.paddr
+                load_buf.uncached := uncached
+                when(load_excp) {
+                    load_buf.addr := load_buf.addr
+                    lstate        := lWriteback
+                    // Set load_buf.exception in ISA-Specified LSU
+                }
+            }
+        }
+        is(lWait) {
+            load_req.bits.paddr := load_buf.addr
+            when(load_resp.valid & load_resp.bits.done) { // TODO: parameterise this state by cache parameters
+                load_buf.rdata := MuxLookup(load_buf.ldtype, DEBUG_MAGICNUM.U)(
+                    Seq(
+                        ldb  -> SEXT(ldbu_result, WORD_WIDTH),
+                        ldbu -> UEXT(ldbu_result, WORD_WIDTH),
+                        ldh  -> SEXT(ldhu_result, WORD_WIDTH),
+                        ldhu -> UEXT(ldhu_result, WORD_WIDTH),
+                        ldw  -> ldw_result,
+                        llw  -> ldw_result
+                    )
+                )
+                lstate         := lWriteback
+            }
+        }
+        is(lWriteback) {
+            lstate                 := Mux(load_wb.ready, lIdle, lWriteback)
+            load_wb.valid          := true.B
+            load_wb.bits.id        := load_buf.id
+            load_wb.bits.exception := load_buf.exception
+            load_wb.bits.mispred   := false.B
+            load_wb.bits.result    := load_buf.rdata
+        }
     }
-    load_req.bits.paddr    := load_buf(1).paddr
-    load_wb.bits.id        := load_buf(2).id
-    load_wb.bits.exception := load_buf(2).exception
-    load_wb.bits.mispred   := false.B
-    load_wb.bits.result    := load_rdata
-    load_wb.valid          := load_buf(2).valid
-
-    load_stage_ready(2) := !load_buf(2).valid || (load_buf(2).valid && load_wb.ready)
 
     // store request queue
     val store_req     = Wire(Decoupled(new CacheReqIO(VADDR_WIDTH, WORD_WIDTH)))
@@ -203,8 +215,7 @@ abstract class MkLSU extends BaseFunctionUnit {
     new_store_inst.wdata    := DelayN(wdata << (vaddr(1, 0) << 3.U), 1)
 
     store_wb.bits.exception := store_wb_exception
-    val store_en = Wire(Bool())
-    store_en :=
+    val store_en =
         LSUOpType.isStoreType(io.in.bits.optype) & io.in.valid & io.in.ready & !(io.flush.ertn | io.flush.exception)
 
     store_wb.bits.mispred       := false.B
@@ -215,7 +226,6 @@ abstract class MkLSU extends BaseFunctionUnit {
     store_queue.io.in.enq_data  := new_store_inst
     store_queue.io.in.enq_valid := DelayN(store_en, 1)
     store_queue.io.in.deq_valid := lsu_io.store_commit.valid & lsu_io.store_commit.ready
-    assert(!(store_queue.io.in.clear & store_queue.io.in.enq_valid))
 
     lsu_io.store_commit.ready := store_req.ready
 
@@ -248,11 +258,10 @@ abstract class MkLSU extends BaseFunctionUnit {
     val wb_arb = Module(new Arbiter(new BaseFuOutput, 2))
     wb_arb.io.in(0) <> store_wb
     wb_arb.io.in(1) <> load_wb
-
     if (DIFFTEST_MODE) {
         val store_vaddr = store_wb.bits.result
-        lsu_io.lsu_diff.get.paddr := Mux(store_wb.valid, lsu_io.data_trans.resp.paddr, load_buf(2).paddr)
-        lsu_io.lsu_diff.get.vaddr := Mux(store_wb.valid, store_vaddr, load_buf(2).vaddr)
+        lsu_io.lsu_diff.get.paddr := Mux(store_wb.valid, lsu_io.data_trans.resp.paddr, load_buf.addr)
+        lsu_io.lsu_diff.get.vaddr := Mux(store_wb.valid, store_vaddr, load_vaddr)
         lsu_io.lsu_diff.get.wdata := MuxLookup(new_store_inst.wtype, DEBUG_MAGICNUM.U)(
             Seq(
                 scw -> new_store_inst.wdata,
@@ -268,7 +277,6 @@ abstract class MkLSU extends BaseFunctionUnit {
     io.in.ready := MuxCase(
         false.B,
         Seq(
-            (LSUOpType.isAtomType(io.in.bits.optype), load_ready),
             (LSUOpType.isLoadType(io.in.bits.optype), load_ready),
             (LSUOpType.isStoreType(io.in.bits.optype), store_ready)
         )

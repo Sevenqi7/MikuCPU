@@ -27,6 +27,14 @@ object MkLA32Factory extends ISAFactory {
     def getCSRBuffer():     CSRBuffer               = new LA32CSRBuffer
     def getCSRRegfiles():   CSRRegfiles             = new LA32CSRRegfiles
 
+    def isBr(inst: UInt) : Bool = {
+        inst(31, 30) === "b01".U
+    }
+
+    def isUncondBr(inst: UInt) : Bool = {
+        isBr(inst) && inst(29, 27) === "b010".U
+    }
+
     val RESET_VECTOR  = 0x1c000000 - 4
     val CSR_ADDR_WD   = 14
     val EXCP_RET_INST = MiscOpType.ertn.litValue.toInt

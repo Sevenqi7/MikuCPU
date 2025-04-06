@@ -68,9 +68,6 @@ object RV32IDecoder extends DecodeConstants {
         OR     -> List(Y, SrcType.reg, SrcType.reg , SrcType.none, FuType.alu, ALUOpType.or   , N, SelImm.X),
         AND    -> List(Y, SrcType.reg, SrcType.reg , SrcType.none, FuType.alu, ALUOpType.and  , N, SelImm.X),
 
-        // FENCE  -> List(Y, SrcType.reg, SrcType.reg, SrcType.none, FuType.alu, MiscOpType.unknown  , N, SelImm.X),
-        // ECALL  -> List(Y, SrcType.reg, SrcType.reg, SrcType.none, FuType.alu, MiscOpType.unknown  , N, SelImm.X),
-        // EBREAk -> List(Y, SrcType.reg, SrcType.reg, SrcType.none, FuType.alu, MiscOpType.unknown  , N, SelImm.X)
     )  
 }
 
@@ -89,23 +86,31 @@ object RV32MDecoder extends DecodeConstants {
 
 object RV32ZicsrDecoder extends DecodeConstants {
     val decodeTable = Array[(BitPat, List[BitPat])](
-        CSRRW   -> List(Y, SrcType.imm , SrcType.reg, SrcType.none, FuType.csr, CSROpType.csrrw, N, SelImm.IMM_I),
-        CSRRS   -> List(Y, SrcType.imm , SrcType.reg, SrcType.none, FuType.csr, CSROpType.csrrs, N, SelImm.IMM_I),
-        CSRRC   -> List(Y, SrcType.imm , SrcType.reg, SrcType.none, FuType.csr, CSROpType.csrrc, N, SelImm.IMM_I)
+        CSRRW    -> List(Y, SrcType.imm , SrcType.reg, SrcType.none, FuType.csr, CSROpType.csrrw, N, SelImm.IMM_I),
+        CSRRS    -> List(Y, SrcType.imm , SrcType.reg, SrcType.none, FuType.csr, CSROpType.csrrs, N, SelImm.IMM_I),
+        CSRRC    -> List(Y, SrcType.imm , SrcType.reg, SrcType.none, FuType.csr, CSROpType.csrrc, N, SelImm.IMM_I),
+        CSRRWI   -> List(Y, SrcType.imm , SrcType.none, SrcType.none, FuType.csr, CSROpType.csrrw, N, SelImm.IMM_I),
+        CSRRSI   -> List(Y, SrcType.imm , SrcType.none, SrcType.none, FuType.csr, CSROpType.csrrs, N, SelImm.IMM_I),
+        CSRRCI   -> List(Y, SrcType.imm , SrcType.none, SrcType.none, FuType.csr, CSROpType.csrrc, N, SelImm.IMM_I)
     )
 }
 
 object RV32ADecoder extends DecodeConstants {
     val decodeTable = Array[(BitPat, List[BitPat])](
-        AMOOR   -> List(Y, SrcType.reg , SrcType.reg, SrcType.none, FuType.lsu, LSUOpType.amoor , N, SelImm.X),
-        AMOADD  -> List(Y, SrcType.reg , SrcType.reg, SrcType.none, FuType.lsu, LSUOpType.amoadd, N, SelImm.X),
+        AMOOR   -> List(Y, SrcType.reg , SrcType.reg, SrcType.none, FuType.lsu, LSUOpType.amoor  , N, SelImm.X),
+        AMOAND  -> List(Y, SrcType.reg , SrcType.reg, SrcType.none, FuType.lsu, LSUOpType.amoand , N, SelImm.X),
+        AMOADD  -> List(Y, SrcType.reg , SrcType.reg, SrcType.none, FuType.lsu, LSUOpType.amoadd , N, SelImm.X),
+        AMOSWAP -> List(Y, SrcType.reg , SrcType.reg, SrcType.none, FuType.lsu, LSUOpType.amoswap, N, SelImm.X),
+        SC      -> List(Y, SrcType.reg, SrcType.reg, SrcType.none, FuType.lsu, LSUOpType.scw, N, SelImm.X),
+        LR      -> List(Y, SrcType.reg, SrcType.reg, SrcType.none, FuType.lsu, LSUOpType.llw, N, SelImm.X),
     )
 }
 
 object RV32MiscDecoder extends DecodeConstants {
     val decodeTable = Array[(BitPat, List[BitPat])](
         ECALL   -> List(N, SrcType.none, SrcType.none, SrcType.none, FuType.misc, MiscOpType.ecall, N, SelImm.X),
-        MRET    -> List(N, SrcType.none, SrcType.none, SrcType.none, FuType.misc, MiscOpType.mret , N, SelImm.X)
+        MRET    -> List(N, SrcType.none, SrcType.none, SrcType.none, FuType.misc, MiscOpType.mret , N, SelImm.X),
+        // WFI     -> List(N, SrcType.none, SrcType.none, SrcType.none, FuType.misc, MiscOpType.idle , N, SelImm.X)  
     )
 }
 

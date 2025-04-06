@@ -44,14 +44,24 @@ class MkParams {
     val DEBUG_MAGICNUM = 0x77777777
 }
 
+object HasMkParams {
+    var isaFactory: ISAFactory = null
+    def setRV32():  Unit       = {
+        isaFactory = riscv32.MkRV32Factory
+    }
+
+    def setLA32(): Unit = {
+        isaFactory = la32.MkLA32Factory
+    }
+}
+
 trait HasMkParams {
-    val mkParams   = new MkParams()
-    val isaFactory = la32.MkLA32Factory
-    // val isaFactory = riscv32.MkRV32Factory
+    val mkParams = new MkParams()
+    def isaFactory = HasMkParams.isaFactory
 
     val FETCH_WIDTH  = mkParams.FETCH_WIDTH
     val DECODE_WIDTH = mkParams.DECODE_WIDTH
-    val RETIRE_WIDTH = mkParams.RETIRE_WIDTH
+    // val RETIRE_WIDTH = mkParams.RETIRE_WIDTH
     val INST_BITS    = mkParams.INST_BITS
     val VADDR_WIDTH  = mkParams.VADDR_WIDTH
     val PADDR_WIDTH  = mkParams.PADDR_WIDTH
@@ -79,20 +89,20 @@ trait HasMkParams {
     val DEBUG_MAGICNUM = mkParams.DEBUG_MAGICNUM
     val NR_WB_PORTS    = mkParams.NR_WB_PORTS
 
-    val RESET_VECTOR:  Int = isaFactory.RESET_VECTOR
-    val CSR_ADDR_WD:   Int = isaFactory.CSR_ADDR_WD
-    val EXCP_RET_INST: Int = isaFactory.EXCP_RET_INST
-    def ArchExceptionType   = isaFactory.getExcepDefns()
-    def ArchExceptionInfo() = isaFactory.getExcepInfo()
-    def ArchFetchUnit()     = isaFactory.getFetchUnit()
-    def ArchDecodedUnit()   = isaFactory.getDecoder()
-    def ArchDecodedInst()   = isaFactory.getDecodedInst()
-    def ArchLSU()           = isaFactory.getLoadStoreUnit()
-    def ArchBRU()           = isaFactory.getBranchUnit()
-    def ArchMiscFu()        = isaFactory.getMiscFu()
-    def ArchCSRDefns        = isaFactory.getCSRDefns()
-    def ArchCSRBuffer()     = isaFactory.getCSRBuffer()
-    def ArchCSRRegfiles()   = isaFactory.getCSRRegfiles()
+    val RESET_VECTOR:  Int = HasMkParams.isaFactory.RESET_VECTOR
+    val CSR_ADDR_WD:   Int = HasMkParams.isaFactory.CSR_ADDR_WD
+    val EXCP_RET_INST: Int = HasMkParams.isaFactory.EXCP_RET_INST
+    def ArchExceptionType   = HasMkParams.isaFactory.getExcepDefns()
+    def ArchExceptionInfo() = HasMkParams.isaFactory.getExcepInfo()
+    def ArchFetchUnit()     = HasMkParams.isaFactory.getFetchUnit()
+    def ArchDecodedUnit()   = HasMkParams.isaFactory.getDecoder()
+    def ArchDecodedInst()   = HasMkParams.isaFactory.getDecodedInst()
+    def ArchLSU()           = HasMkParams.isaFactory.getLoadStoreUnit()
+    def ArchBRU()           = HasMkParams.isaFactory.getBranchUnit()
+    def ArchMiscFu()        = HasMkParams.isaFactory.getMiscFu()
+    def ArchCSRDefns        = HasMkParams.isaFactory.getCSRDefns()
+    def ArchCSRBuffer()     = HasMkParams.isaFactory.getCSRBuffer()
+    def ArchCSRRegfiles()   = HasMkParams.isaFactory.getCSRRegfiles()
 
     def instBytes = INST_BITS / 8
     def wordBytes = WORD_WIDTH / 8
