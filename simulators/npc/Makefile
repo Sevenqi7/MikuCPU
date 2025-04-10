@@ -8,7 +8,7 @@ clean:
 	-rm -rf $(BUILD_DIR)
 	mkdir -p $(BUILD_DIR)
 
-.PHONY: test verilog help compile bsp reformat checkformat clean
+.PHONY: test help compile bsp reformat checkformat clean
 
 ifeq ($(VERILATOR_ROOT),)
 VERILATOR = verilator
