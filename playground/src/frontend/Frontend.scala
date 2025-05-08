@@ -59,7 +59,7 @@ class MkFrontend extends MkModule {
     to_icache.bits.vaddr      := ifu.io.stage_info.s0.bits.pc
     to_icache.bits.paddr      := io.inst_trans.resp.paddr
     to_icache.bits.wdata      := 0.U
-    to_icache.bits.wtype      := 0.U
+    to_icache.bits.wtype      := "b10".U
     to_icache.bits.uncached   := ifu.io.s0_uncached
     to_icache.bits.cacop_en   := false.B
     to_icache.bits.cacop_func := 0.U

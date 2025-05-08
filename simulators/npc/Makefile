@@ -36,7 +36,7 @@ CSRC_OBJ := $(shell find $(abspath ./csrc) -name "*.c" -or -name "*.cc" -or -nam
 
 INCFLAGS = $(addprefix -I , $(INC_PATH))
 CFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\""
-CFLAGS += -I/usr/lib/llvm-14/include -std=c++17 -fexceptions -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -fPIE
+CFLAGS += -I/usr/lib/llvm-14/include -std=c++17 -g -fexceptions -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -fPIE
 LDFLAGS += -lreadline $(shell llvm-config --libs) -lSDL2
 # LDFLAGS += -$(DIFF_REF_SO)
 VERILATOR_FLAGS += -cc --exe -MMD -x-assign 0 -j 12 --trace --build -Wno-WIDTH
@@ -50,7 +50,21 @@ $(BIN): $(VSRC_OBJ) $(CSRC_OBJ)
 
 run: $(BIN)
 	$(abspath $(BIN)) +trace --binary $(IMG) --diff $(DIFF_REF_SO) 
-	
+
+MCONF := $(abspath tools/kconfig/build/mconf)
+CONF := $(abspath tools/kconfig/build/conf)
+KCONFIG := $(abspath ./Kconfig)
+
+$(MCONF): 
+	make -C  tools/kconfig mconf
+$(CONF):
+	make -C  tools/kconfig conf
+
+menuconfig: Kconfig $(MCONF) $(CONF)
+	$(MCONF) $(KCONFIG)
+	KCONFIG_AUTOHEADER=$(abspath ./csrc/include)/autoconf.h $(CONF) -s --syncconfig $(KCONFIG)
+	rm -rf include/configs
+
 sim: $(BIN)
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	# @echo "Write this Makefile by yourself."

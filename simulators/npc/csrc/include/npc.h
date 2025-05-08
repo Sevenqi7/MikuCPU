@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <assert.h>
 #include <inttypes.h>
 
@@ -48,9 +49,6 @@ typedef int32_t  sword_t;
 extern void   reg_display();
 extern word_t reg_str2val(const char *s, bool *success);
 
-#define PIPELINE_STAGES 5
-
-// 仿照NEMU的一个状态。NPC里可以直接接收ebreak指令，所以只需要一个状态位就够了。
 typedef struct NPCState {
     word_t   pc;
     word_t   inst;

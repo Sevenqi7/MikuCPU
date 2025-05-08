@@ -301,7 +301,8 @@ class MkCache(tagWidth: Int, offsetWidth: Int, wayNum: Int, lineWidth: Int, read
                     val handshake =
                         io.sendReadReq(
                             araddr,
-                            "b010".U,
+                            // "b010".U,
+                            req_wtype,
                             arlen,
                             0.U
                         )

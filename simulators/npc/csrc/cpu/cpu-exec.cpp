@@ -123,7 +123,7 @@ void execute(uint64_t n) {
         // void clint_update();
         // clint_update();
         // #endif
-        device_update();
+        IFDEF(CONFIG_DEVICE, device_update());
         if (npc_state.state != NPC_RUNNING) {
             Log("Total instruction number: %ld", nr_total_inst);
             Log("Recieve %ld bubbles when pipelines running", nr_bubble);
@@ -133,8 +133,6 @@ void execute(uint64_t n) {
 
     if (npc_state.state == NPC_ABORT) {
         printf("\n\033[0m\033[1;31mNPC ABORT \033[0mat pc = " VADDR_FMT "\n", npc_state.pc);
-#ifdef CONFIG_ITRACE
-        display_itrace();
-#endif
+        IFDEF(CONFIG_ITRACE, display_itrace());
     }
 }

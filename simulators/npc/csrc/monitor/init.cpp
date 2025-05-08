@@ -1,9 +1,7 @@
-#include "Vsimu_top.h"
-#include "macro.h"
-#include "verilated.h"
 #include "verilator.h"
 #include "npc.h"
 #include "memory.h"
+#include "mmio.h"
 #include "cmdline.h"
 #include "default64mbdtc.h"
 
@@ -22,16 +20,13 @@ void init_device();
 void init_difftest(const char *ref_so_file, long img_size, int port);
 #endif
 
-void sigint_handler(int sig){
-    if(sig == SIGINT){
-        npc_state.state = NPC_STOP;
-    }
+void sigint_handler(int sig) {
+    if (sig == SIGINT) { npc_state.state = NPC_STOP; }
 }
 
 void init_npc(int argc, char **argv) {
     Log("npc initialize...");
     signal(SIGINT, sigint_handler);
-    
 
     tfp = new VerilatedVcdC;
     Verilated::mkdir("logs");
@@ -45,9 +40,10 @@ void init_npc(int argc, char **argv) {
     tfp->open("./logs/simu_trace.vcd");
     top->aclk = 0;
 
-    init_device();
     init_sdb();
-    
+    init_mmio();
+    IFDEF(CONFIG_DEVICE, init_device());
+
     reset(10);
 
     cmdline::parser cmd_parser;
@@ -59,12 +55,10 @@ void init_npc(int argc, char **argv) {
     const char *img_path    = strdup(cmd_parser.get<std::string>("binary").c_str());
     const char *elf_path    = strdup(cmd_parser.get<std::string>("elf").c_str());
     const char *ref_so_path = strdup(cmd_parser.get<std::string>("diff").c_str());
-    img_size = init_img(img_path);
+    img_size                = init_img(img_path);
     init_disasm("riscv32");
-    if (cmd_parser.exist("elf")) { init_ftrace(elf_path); }
-#ifdef CONFIG_DIFFTEST
-    if (cmd_parser.exist("diff")) { init_difftest(ref_so_path, img_size, 1234); }
-#endif
+    if (cmd_parser.exist("elf")) { IFDEF(CONFIG_FTRACE, init_ftrace(elf_path)); }
+    if (cmd_parser.exist("diff")) { IFDEF(CONFIG_DIFFTEST, init_difftest(ref_so_path, img_size, 1234)); }
 }
 
 long init_img(const char *img_path) {
@@ -80,19 +74,15 @@ long init_img(const char *img_path) {
     printf("\033[0m\033[1;36mThe image is %s, size=%ld\033[0m\n", img_path, size);
     fseek(fp, 0, SEEK_SET);
 
-    #ifdef CONFIG_NOMMU_LINUX
-    uint32_t boot_codes[] = {
-        0x00500593, 0x01d59593, 0xa0058593, 0x40100513, 0x01551513, 0x00050067
-    };
+#ifdef CONFIG_NOMMU_LINUX
+    uint32_t boot_codes[] = {0x00500593, 0x01d59593, 0xa0058593, 0x40100513, 0x01551513, 0x00050067};
     memcpy(pmem_addr(MEMSIZE - sizeof(default64mbdtb)), default64mbdtb, sizeof(default64mbdtb));
     // memcpy(pmem_addr(0), boot_codes, sizeof(boot_codes));
-    // int ret = fread(pmem_addr(0x200000), size , 1, fp);    
+    // int ret = fread(pmem_addr(0x200000), size , 1, fp);
     Log("DTB addr:0x%x", RESET_VECTOR + MEMSIZE - sizeof(default64mbdtb));
     Log("ntaddr:0x%x", *pmem_addr(0x8035174c));
-    int ret = fread(pmem_addr(0), size , 1, fp);    
-    #else
+#endif
     int ret = fread(pmem_addr(0), size, 1, fp);
-    #endif
 
     if (ret == -1) {
         printf("\033[0m\033[1;31m%s\033[0m", "Error: Failed to read image file!\n");

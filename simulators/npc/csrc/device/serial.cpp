@@ -1,6 +1,8 @@
 #include "npc.h"
 #include "string.h"
 #include "device.h"
+#include "mmio.h"
+#include <cstddef>
 
 /* http://en.wikibooks.org/wiki/Serial_Programming/8250_UART_Programming */
 // NOTE: this is compatible to 16550
@@ -13,19 +15,19 @@
 #define LSR_OFFSET 5
 #define MSR_OFFSET 6
 
-static uint8_t serial_base[12] = {0, 0, 0, 0, 0, 0x60, 0, 0, 0, 0, 0, 0};
+// static uint8_t serial_base[12] = {0, 0, 0, 0, 0, 0x60, 0, 0, 0, 0, 0, 0};
+static uint8_t *serial_base = nullptr;
 
 static void serial_putc(char ch) {
-  printf("\033[0m\033[1;31m%c\033[0m", ch);
-  fflush(stdout);
-  // MUXDEF(CONFIG_TARGET_AM, putch(ch), putc(ch, stderr));
+    printf("\033[0m\033[1;31m%c\033[0m", ch);
+    fflush(stdout);
+    // MUXDEF(CONFIG_TARGET_AM, putch(ch), putc(ch, stderr));
 }
 
 void serial_write(uint32_t offset, word_t data, int len) {
-  
-//   assert(len == 1);
+    //   assert(len == 1);
     // Log("offset: %d data: 0x%x, len:%d", offset, data, len);
-    if(len != 1){
+    if (len != 1) {
         Log("unsupported write len");
         npc_state.state = NPC_STOP;
         return;
@@ -33,21 +35,62 @@ void serial_write(uint32_t offset, word_t data, int len) {
     switch (offset) {
         /* We bind the serial port with the host stderr in NEMU. */
         case CH_OFFSET:
-        serial_putc((char) data);
-        serial_base[0] = 0;
-        break;
-        #ifdef CONFIG_NOMMU_LINUX
+            serial_putc((char)data);
+            serial_base[0] = 0;
+            break;
+#ifdef CONFIG_NOMMU_LINUX
         case IER_OFFSET:
         case IIR_OFFSET:
-        case MCR_OFFSET:  
-        case MSR_OFFSET:  
-        case LCR_OFFSET: memset(serial_base + 1, 0, 4); return;
-        case LSR_OFFSET: serial_base[5] = 0x60; return ;
-        #endif
-        default: 
+        case MCR_OFFSET:
+        case MSR_OFFSET:
+        case LCR_OFFSET:
+            memset(serial_base + 1, 0, 4);
+            return;
+        case LSR_OFFSET:
+            serial_base[5] = 0x60;
+            return;
+#endif
+        default:
             Log("do not support offset = %d", offset);
             npc_state.state = NPC_STOP;
     }
+}
+
+static void serial_io_handler(uint32_t offset, int len, bool is_write) {
+    // assert(len == 1);
+    if(len != 1) {
+        Log("unsupported write len:%d, offset = %d", len, offset);
+        npc_state.state = NPC_STOP;
+        return;
+    }
+    switch (offset) {
+        /* We bind the serial port with the host stderr in NEMU. */
+        case CH_OFFSET:
+            if (is_write)
+                serial_putc(serial_base[0]);
+            else
+                serial_base[0] = 0;
+            break;
+        case IER_OFFSET:
+        case IIR_OFFSET:
+        case MCR_OFFSET:
+        case MSR_OFFSET:
+        case LCR_OFFSET:
+            if (is_write) memset(serial_base + 1, 0, 4);
+            return;
+        case LSR_OFFSET:
+            serial_base[5] = 0x60;
+            return;
+        default:
+            panic("do not support offset = %d", offset);
+    }
+}
+
+void init_serial() {
+    serial_base = new_space(8);
+    add_mmio_map("serial", CONFIG_SERIAL_MMIO, serial_base, 8, serial_io_handler);
+    memset(serial_base, 0, 8);
+    serial_base[5] = 0x60;
 }
 
 word_t serial_read(uint32_t offset, int len) {

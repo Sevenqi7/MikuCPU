@@ -1,5 +1,5 @@
 import "DPI-C" function void dci_pmem_write(input longint waddr, input longint wdata, input byte wmask);
-import "DPI-C" function void dci_pmem_read(input longint raddr, output longint rdata, input byte rmask);
+import "DPI-C" function void dci_pmem_read(input longint raddr, output longint rdata, input byte rsize);
 
 module sim_sram(
     input       [63:0]      pc          ,         //for debug
@@ -167,14 +167,16 @@ module sim_sram(
             //     assign rdata = clint_rdata;
             // end 
             // else 
-                dci_pmem_read({32'b0, araddr}, rdata, 8'H0F);
+                // dci_pmem_read({32'b0, araddr}, rdata, 8'H0F);
+                dci_pmem_read({32'b0, araddr}, rdata, arsize);
         end
         else if(arv_arr_flag)begin
             // if(araddr >= CLINT_BASE && araddr < CLINT_END) begin
             //     assign rdata = clint_rdata;
             // end
             // else 
-                dci_pmem_read({32'b0, araddr_r}, rdata, 8'H0F);
+                // dci_pmem_read({32'b0, araddr_r}, rdata, 8'H0F);
+                dci_pmem_read({32'b0, araddr_r}, rdata, arsize_r);
         end
     end
     

@@ -152,7 +152,7 @@ abstract class MkLSU extends BaseFunctionUnit {
             load_req.valid         := !load_unalign
             load_req.bits.vaddr    := load_buf.addr
             load_req.bits.wr       := false.B
-            load_req.bits.wtype    := 0.U
+            load_req.bits.wtype    := load_buf.ldtype(1, 0)
             load_req.bits.wdata    := 0.U
             load_req.bits.uncached := Mux(paddr_v, uncached, load_buf.uncached)
             when(load_req.ready) {

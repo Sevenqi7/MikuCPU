@@ -126,12 +126,13 @@ object LSUOpType {
     def isStoreType(optype: UInt) = optype <= scw
     def isAtomType(optype: UInt)  = optype(4)
 
+    // The least 2 significant bits are used to specify load/store data size
     def ldb     = "b01000".U(log2Ceil(MaxOpNum).W)
     def ldh     = "b01001".U(log2Ceil(MaxOpNum).W)
     def ldw     = "b01010".U(log2Ceil(MaxOpNum).W)
-    def ldbu    = "b01011".U(log2Ceil(MaxOpNum).W)
-    def ldhu    = "b01100".U(log2Ceil(MaxOpNum).W)
-    def llw     = "b01101".U(log2Ceil(MaxOpNum).W)
+    def ldbu    = "b01100".U(log2Ceil(MaxOpNum).W)
+    def ldhu    = "b01101".U(log2Ceil(MaxOpNum).W)
+    def llw     = "b01110".U(log2Ceil(MaxOpNum).W)
     def amoswap = "b10000".U(log2Ceil(MaxOpNum).W)
     def amoadd  = "b10001".U(log2Ceil(MaxOpNum).W)
     def amoxor  = "b10010".U(log2Ceil(MaxOpNum).W)
